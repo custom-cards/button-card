@@ -24,6 +24,8 @@ Simple button card for your entities.
 | color | string | `var(--primary-text-color)` | `rgb(28, 128, 199)` |  Color of the icon when state is `on`. Can be any html color
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
 | action | string | `toggle` | `toggle` \| `more_info` | Define the type of action
+| name | string | optional | `Air conditioner` | Define an optional text to show below the icon
+| style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
 
 ## Instructions
 
@@ -65,6 +67,33 @@ Light entity with custom icon and "more info" pop-in
   action: more_info
 ```
 ![sofa](sofa.png)
+
+Light card with text
+
+```yaml
+- type: "custom:button-card"
+  entity: light.living_room_lights
+  icon: mdi:sofa
+  name: Living room
+```
+
+![text](text.png)
+
+Light card with text and custom style
+
+```yaml
+- type: "custom:button-card"
+  entity: light._
+  icon: mdi:home
+  action: more_info
+  name: Home
+  style:
+    - text-transform: none
+    - color: rgb(28, 128, 199)
+    - font-weight: bold
+```
+
+![home-custom](home-custom.png)
 
 ## Credits
 

@@ -42,18 +42,31 @@ class ButtonCard extends LitElement {
       config.color ? config.color : "var(--primary-text-color)"
     )
     const color_on = state.state === 'on' ? color : "var(--disabled-text-color)";
+    let card_style = '';
+    if (config.style){
+      config.style.forEach( cssObject => {
+        const attribute = Object.keys(cssObject)[0]
+        const value = cssObject[attribute]
+        card_style += `${attribute}: ${value};\n`
+      })
+    }
+    
     return html`
     <style>
-    ha-icon {
-      width: ${config.size ? config.size : "40%"};
-      height: ${config.size ? config.size : "40%"};
+    ha-icon {  
       display: block;
       margin: auto;
     }
+    paper-button {
+      display: block;
+      margin: auto;
+      text-align: center;
+    }
     </style>
     <ha-card>
-      <paper-button on-tap="${ev => this._toggle(state, config)}">
-       <ha-icon style="color: ${color_on};" icon="${config.icon}"></ha-icon>
+      <paper-button style="${card_style != '' ? card_style : ""}" on-tap="${ev => this._toggle(state, config)}">
+       <ha-icon style="color: ${color_on}; width: ${config.size ? config.size : "40%"}; height: ${config.size ? config.size : "40%"};" icon="${config.icon}"></ha-icon>
+       ${config.name ? config.name : ""}
       </paper-button>
     </ha-card>
     `;
