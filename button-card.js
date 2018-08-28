@@ -12,15 +12,15 @@ class ButtonCard extends LitElement {
   }
 
   _render({ hass, config }) {
-    let state = hass.states[config.entity];
-    if (config.icon){
-      return this.icon(state,config);
+    const state = hass.states[config.entity];
+    if (config.icon) {
+      return this.icon(state, config);
     }
-    return this.no_icon(state);
+    return this.no_icon(state, config);
   }
 
 
-  no_icon(state) {
+  no_icon(state, config) {
     return html`
     <style>
     paper-button {
@@ -30,28 +30,30 @@ class ButtonCard extends LitElement {
     }
     </style>
     <ha-card>
-      <paper-button on-tap="${ev => this._toggle(state)}">
+      <paper-button on-tap="${ev => this._toggle(state, config)}">
        ${state.state}
       </paper-button>
     </ha-card>
     `;
   }
 
-  icon(state,config) {
+  icon(state, config) {
+    const color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : (
+      config.color ? config.color : "var(--primary-text-color)"
+    )
+    const color_on = state.state === 'on' ? color : "var(--disabled-text-color)";
     return html`
     <style>
     ha-icon {
-      width: ${config.size ? config.size : "40%" };
-      height: ${config.size ? config.size : "40%" };
+      width: ${config.size ? config.size : "40%"};
+      height: ${config.size ? config.size : "40%"};
       display: block;
       margin: auto;
-      color: ${state.state === 'on' ? (config.color ? config.color : "var(--primary-text-color)") : "var(--disabled-text-color)"};
     }
     </style>
-    
     <ha-card>
-      <paper-button state="${state.state}" on-tap="${ev => this._toggle(state)}">
-       <ha-icon icon="${config.icon}"></ha-icon>
+      <paper-button on-tap="${ev => this._toggle(state, config)}">
+       <ha-icon style="color: ${color_on};" icon="${config.icon}"></ha-icon>
       </paper-button>
     </ha-card>
     `;
@@ -70,10 +72,33 @@ class ButtonCard extends LitElement {
     return 3;
   }
 
-  _toggle(state) {
-    this.hass.callService('homeassistant', 'toggle', {
-      entity_id: state.entity_id
-    });
+  _toggle(state, config) {
+    switch (config.action) {
+      case 'toggle':
+        this.hass.callService('homeassistant', 'toggle', {
+          entity_id: state.entity_id
+        });
+        break;
+      case 'more_info':
+        const node = this.shadowRoot;
+        let options = {};
+        const detail = { entityId: state.entity_id };
+        const event = new Event('hass-more-info', {
+          bubbles: options.bubbles === undefined ? true : options.bubbles,
+          cancelable: Boolean(options.cancelable),
+          composed: options.composed === undefined ? true : options.composed
+        });
+        event.detail = detail;
+        node.dispatchEvent(event);
+        return event;
+        break;
+      default:
+        this.hass.callService('homeassistant', 'toggle', {
+          entity_id: state.entity_id
+        });
+        break;
+    }
+
   }
 }
 
