@@ -1,8 +1,6 @@
 # Button card
 
-Button card is a simple button card to toggle your entities. 
-
-The card toggles on click/tap.
+Simple button card for your entities. 
 
 ![all](all.png)
 
@@ -10,6 +8,7 @@ The card toggles on click/tap.
 
   - works with any toggleable entity
   - 2 actions on tap `toggle` and `more_info` (more to come)
+  - shows state if no icon specified for a very simple on/off button
   - custom color for `on` state
   - custom size
   - custom icon
@@ -17,14 +16,14 @@ The card toggles on click/tap.
 
 ## Options
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| type | string | **Required** | `custom:button-card`
-| entity | string | **Required** | `switch.ac`
-| icon | string | optional | Icon to display in place of the state e.g. `mdi:air-conditioner`
-| color | string | `var(--primary-text-color)` | Color of the icon when state is `on`. Can be any html color e.g. `rgb(28, 128, 199)`
-| size | string | `40%` | Size of the icon. Can be percentage or pixel
-| action | string | `toggle` | Define the type of action. Can be `toggle` to toggle the state or `more_info` to show the more info pop-in
+| Name | Type | Default | Example   | Description
+| ---- | ---- | ------- | --------- | -----------
+| type | string | **Required** | `custom:button-card` | Type of the card
+| entity | string | **Required** | `switch.ac` | entity_id
+| icon | string | optional | `mdi:air-conditioner` | Icon to display in place of the state
+| color | string | `var(--primary-text-color)` | `rgb(28, 128, 199)` |  Color of the icon when state is `on`. Can be any html color
+| size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
+| action | string | `toggle` | `toggle` \| `more_info` | Define the type of action
 
 ## Instructions
 
