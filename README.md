@@ -37,6 +37,8 @@ title: Home
 resources:
   - url: /local/button-card.js
     type: module
+  - url: /local/custom_ui/no-card.js
+    type: module
 ```
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
@@ -94,6 +96,125 @@ Light card with text and custom style
 ```
 
 ![home-custom](home-custom.png)
+
+
+Empty space
+
+```yaml
+- type: "custom:no-card"
+```
+
+Remote Controller
+
+```yaml
+- type: vertical-stack
+  cards:
+   - type: horizontal-stack
+     cards:
+      - type: "custom:button-card"
+        entity: script.projector_on_off
+        icon: mdi:power
+        size: 40px
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: red
+      - type: "custom:button-card"
+        entity: script.projector_source
+        icon: mdi:login-variant
+        color: lightgrey
+        size: 40px
+      - type: "custom:button-card"
+        entity: script.projector_menu
+        icon: mdi:menu
+        size: 40px
+        
+   - type: horizontal-stack
+     cards:
+      - type: "custom:no-card"
+      - type: "custom:button-card"
+        entity: script.projector_up
+        icon: mdi:menu-up
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+      - type: "custom:no-card"
+      
+   - type: horizontal-stack
+     cards:
+      - type: "custom:button-card"
+        entity: script.projector_left
+        icon: mdi:menu-left
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+      - type: "custom:button-card"
+        entity: script.projector_ok
+        icon: mdi:check-circle
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+      - type: "custom:button-card"
+        entity: script.projector_right
+        icon: mdi:menu-right
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+
+   - type: horizontal-stack
+     cards:
+      - type: "custom:no-card"
+      - type: "custom:button-card"
+        entity: script.projector_down
+        icon: mdi:menu-down
+        size: 40px
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+      - type: "custom:no-card"
+
+   - type: horizontal-stack
+     cards:
+      - type: "custom:button-card"
+        entity: script.projector_back
+        icon: mdi:undo-variant
+        size: 40px
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: var(--primary-color)
+
+   - type: horizontal-stack
+     cards:
+      - type: "custom:button-card"
+        entity: script.projector_volume_up
+        icon: mdi:volume-plus
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: green
+      - type: "custom:button-card"
+        entity: script.projector_volume_mute
+        icon: mdi:volume-off
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: lightgreen
+      - type: "custom:button-card"
+        entity: script.projector_volume_down
+        icon: mdi:volume-minus
+        style:
+         - text-transform: none
+         - color: white
+         - background-color: green
+```
+![remote-controller](remote-controller.png)
+
 
 ## Credits
 

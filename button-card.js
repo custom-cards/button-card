@@ -28,6 +28,9 @@ class ButtonCard extends LitElement {
       margin: auto;
       text-align: center;
     }
+    ha-card {
+        margin: 0 5px;
+    }
     </style>
     <ha-card>
       <paper-button on-tap="${ev => this._toggle(state, config)}">
@@ -41,21 +44,28 @@ class ButtonCard extends LitElement {
     const color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : (
       config.color ? config.color : "var(--primary-text-color)"
     )
-    const color_on = state.state === 'on' ? color : "var(--disabled-text-color)";
+    
+    let color_custom='';
     let card_style = '';
     if (config.style){
       config.style.forEach( cssObject => {
         const attribute = Object.keys(cssObject)[0]
         const value = cssObject[attribute]
+        
+        if (attribute=="color") color_custom=value;
+
         card_style += `${attribute}: ${value};\n`
       })
     }
-    
+    const color_on = state.state === 'on' ? color : ( color_custom!==''? color_custom : "var(--disabled-text-color)"); 
     return html`
     <style>
     ha-icon {  
       display: block;
       margin: auto;
+    }
+    ha-card {
+        margin: 0 5px;
     }
     paper-button {
       display: block;
