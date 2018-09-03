@@ -1,0 +1,27 @@
+{
+  "name": "button-card",
+  "version": "0.0.2",
+  "description": "Button card for lovelace",
+  "main": "button-card.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuuji/button-card.git"
+  },
+  "keywords": [
+    "lovelace"
+  ],
+  "author": "kuuji",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kuuji/button-card/issues"
+  },
+  "homepage": "https://github.com/kuuji/button-card#readme",
+  "devDependencies": {
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}

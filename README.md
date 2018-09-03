@@ -2,12 +2,12 @@
 
 Lovelace Button card for your entities. 
 
-![all](all.gif)
+![all](examples/all.gif)
 
 ## Features
 
   - works with any toggleable entity
-  - 2 actions on tap `toggle` and `more_info` (more to come)
+  - 3 actions on tap `toggle`, `more_info` and `service`
   - state display (optional)
   - custom color for `on` and `off` state (optional)
   - custom size (optional)
@@ -19,6 +19,8 @@ Lovelace Button card for your entities.
     - `icon` : apply color settings to the icon only
     - `card` : apply color settings to the card only
   - automatic font color if color_type is set to `card`
+  - blank card (for organization)
+  - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Options
 
@@ -27,11 +29,12 @@ Lovelace Button card for your entities.
 | type | string | **Required** | `custom:button-card` | Type of the card
 | entity | string | **Required** | `switch.ac` | entity_id
 | icon | string | optional | `mdi:air-conditioner` | Icon to display in place of the state
-| color_type | string | `icon` | `icon` \| `card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark.
+| color_type | string | `icon` | `icon` \| `card` \| `blank-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark.
 | color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
-| action | string | `toggle` | `toggle` \| `more_info` | Define the type of action
+| action | string | `toggle` | `toggle` \| `more_info` \| `service` | Define the type of action
+| service | Object | optional | See [example section](examples) | Service to call and service data when action is set to `service`
 | name | string | optional | `Air conditioner` | Define an optional text to show below the icon
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
 | style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
@@ -49,12 +52,24 @@ resources:
 ```
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
+----
+
+To configure custom_updater with button-card
+
+```
+custom_updater:
+  card_urls: 
+    - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
+```
+
 ## Examples
 
 
+More examples in [here](./examples)
+
 Show a button for the air conditioner (blue when on):
 
-![ac](ac.png)
+![ac](examples/ac.png)
 
 ```yaml
 - type: "custom:button-card"
@@ -66,7 +81,7 @@ Show a button for the air conditioner (blue when on):
 
 Show an ON/OFF button for the home_lights group:
 
-![no-icon](no_icon.png)
+![no-icon](examples/no_icon.png)
 
 ```yaml
 - type: "custom:button-card"
@@ -77,9 +92,9 @@ Show an ON/OFF button for the home_lights group:
 
 ----------------
 
-Light entity with custom icon and "more info" pop-in:6
+Light entity with custom icon and "more info" pop-in:
 
-![sofa](sofa.png)
+![sofa](examples/sofa.png)
 
 ```yaml
 - type: "custom:button-card"
@@ -88,49 +103,14 @@ Light entity with custom icon and "more info" pop-in:6
   color: auto
   action: more_info
 ```
-
-
--------------------------
-
-Light card with text:
-
-![text](text.png)
-
-```yaml
-- type: "custom:button-card"
-  entity: light.living_room_lights
-  icon: mdi:sofa
-  color: auto
-  name: Living room
-```
-
 
 
 -------------
 
-Light card with text and custom style:
-
-![home-custom](home-custom.png)
-
-```yaml
-- type: "custom:button-card"
-  entity: light._
-  icon: mdi:home
-  color: auto
-  action: more_info
-  name: Home
-  style:
-    - text-transform: none
-    - color: rgb(28, 128, 199)
-    - font-weight: bold
-```
-
-
------
 
 Light card with card color type, name, and automatic color:
 
-![color](color.gif)
+![color](examples/color.gif)
 
 ```yaml
 - type: "custom:button-card"
@@ -146,56 +126,49 @@ Light card with card color type, name, and automatic color:
     - font-weight: bold
 ```
 
----------------
+------------
 
-Home + all rooms in an horizontal stack
+Horizontal stack with :
+  - 2x blank cards
+  - 1x volume up button with service call
+  - 1x volume down button with service call
+  - 2x blank cards
 
-![all-home](all-home.png)
+![volume](examples/volume.png)
 
 
 ```yaml
 - type: horizontal-stack
   cards:
     - type: "custom:button-card"
-      entity: light.living_room_lights
-      icon: mdi:sofa
-      color: auto
-      action: more_info
-      default_color: rgb(255, 233, 155)
+      color_type: blank-card
+    - type: "custom:button-card"
+      color_type: blank-card
+    - type: "custom:button-card"
       color_type: card
-      name: Living room
-      style:
-        - font-size: 12px
-        - font-weight: bold
+      color: rgb(223, 255, 97)
+      icon: mdi:volume-plus
+      action: service
+      service:
+        domain: media_player
+        action: volume_up
+        data:
+          entity_id: media_player.livimg_room_speaker
     - type: "custom:button-card"
-      entity: light.harry
-      color: auto
-      icon: mdi:ceiling-light
-      action: more_info
-      name: Ceiling
-      style:
-        - font-size: 12px
-        - font-weight: bold
+      color_type: card
+      color: rgb(223, 255, 97)
+      icon: mdi:volume-minus
+      action: service
+      service:
+        domain: media_player
+        action: volume_down
+        data:
+          entity_id: media_player.livimg_room_speaker
     - type: "custom:button-card"
-      entity: light.ron
-      color: auto
-      icon: mdi:lamp
-      action: more_info
-      name: TV
-      style:
-        - font-size: 12px
-        - font-weight: bold
+      color_type: blank-card
     - type: "custom:button-card"
-      entity: light.snape
-      icon: mdi:floor-lamp
-      color: auto
-      action: more_info
-      name: Floor
-      style:
-        - font-size: 12px
-        - font-weight: bold
+      color_type: blank-card
 ```
-
 
 
 
