@@ -1,3 +1,21 @@
+## 0.0.2
+Custom service, blank card and custom_updater support
+
+### New features :
+
+ - New action type `service`
+ - Service + data configuration
+ - Blank-card
+ - Support for custom_updater
+
+![volume](examples/volume.png)
+
+### Other
+
+  - Refactoring
+  - Linting
+
+
 ## 0.0.1
 Initial release that supports versioning
 
