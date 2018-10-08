@@ -25,7 +25,7 @@ class ButtonCard extends LitElement {
 
 
   getFontColorBasedOnBackgroundColor(backgroundColor) {
-    const parsedBackgroundColor = backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+    const parsedBackgroundColor = backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i) ? backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i) : this.hexToRgb(backgroundColor.substring(1));
     let fontColor = ''; // don't override by default
     if (parsedBackgroundColor) {
       // Counting the perceptive luminance - human eye favors green color...
@@ -38,6 +38,16 @@ class ButtonCard extends LitElement {
     }
     return fontColor;
   }
+
+  hexToRgb(hex) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+
+    return [,r,g,b];
+  }
+
 
   buildCssColorAttribute(state, config) {
     let colorOn = config.color;
