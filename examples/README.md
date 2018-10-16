@@ -10,6 +10,7 @@
 1. [Stack of light buttons](#stack-of-light-buttons)
 1. [Volume up buttons with service call and blank cards](#volume-up-buttons-with-service-call-and-blank-cards)
 1. [Scene setting buttons with label card](#scene-setting-buttons-with-label-card)
+1. [Input select card with select next service and custom color for states](#input-select-card-with-select-next-service-and-custom-color-for-states)
 
 ### Simple icon button
 
@@ -225,7 +226,7 @@ Horizontal stack with :
      - 1x Scene 4 Button
      - 1x Scene Off Button
      
- ![scenes](examples/scenes.png)
+ ![scenes](scenes.png)
  
  ```yaml
 - type: vertical-stack
@@ -262,3 +263,24 @@ Horizontal stack with :
           color: rgb(66, 134, 244)
           icon: mdi:eye-off-outline
  ```
+
+
+## Input select card with select next service and custom color for states.
+
+![cube](cube.png)
+
+
+```yaml
+              - type: "custom:button-card"
+                entity: input_select.cube_mode
+                icon: mdi:cube
+                action: service
+                show_state: true
+                state:
+                  - value: 'sleeping'
+                    color: var(--disabled-text-color)
+                  - value: 'media'
+                    color: rgb(5, 147, 255)
+                  - value: 'light'
+                    color: rgb(189, 255, 5)
+```

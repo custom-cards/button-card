@@ -10,6 +10,7 @@ Lovelace Button card for your entities.
   - 3 actions on tap `toggle`, `more_info` and `service`
   - state display (optional)
   - custom color for `on` and `off` state (optional)
+  - custom state definition with customizable color (optional)
   - custom size (optional)
   - custom icon (optional)
   - custom css style (optional)
@@ -19,6 +20,7 @@ Lovelace Button card for your entities.
     - `icon` : apply color settings to the icon only
     - `card` : apply color settings to the card only
   - automatic font color if color_type is set to `card`
+  - support unit of measurement
   - blank card and label card (for organization)
   - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
@@ -38,7 +40,7 @@ Lovelace Button card for your entities.
 | name | string | optional | `Air conditioner` | Define an optional text to show below the icon
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
 | style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
-
+| state | list | optional | See [example section](examples) | State to use for the color of the button. Multiple states can be defined
 ## Instructions
 
 1. Download the [button-card](https://raw.githubusercontent.com/kuuji/button-card/master/button-card.js)
@@ -219,6 +221,26 @@ Vertical Stack with :
           color: rgb(66, 134, 244)
           icon: mdi:eye-off-outline
 
+```
+
+Input select card with select next service and custom color for states.
+
+![cube](examples/cube.png)
+
+
+```yaml
+              - type: "custom:button-card"
+                entity: input_select.cube_mode
+                icon: mdi:cube
+                action: service
+                show_state: true
+                state:
+                  - value: 'sleeping'
+                    color: var(--disabled-text-color)
+                  - value: 'media'
+                    color: rgb(5, 147, 255)
+                  - value: 'light'
+                    color: rgb(189, 255, 5)
 ```
 
 
