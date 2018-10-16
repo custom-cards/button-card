@@ -19,7 +19,7 @@ Lovelace Button card for your entities.
     - `icon` : apply color settings to the icon only
     - `card` : apply color settings to the card only
   - automatic font color if color_type is set to `card`
-  - blank card (for organization)
+  - blank card and label card (for organization)
   - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Options
@@ -29,7 +29,7 @@ Lovelace Button card for your entities.
 | type | string | **Required** | `custom:button-card` | Type of the card
 | entity | string | **Required** | `switch.ac` | entity_id
 | icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. If you use attribute it will fetch the icon configured on the entity.
-| color_type | string | `icon` | `icon` \| `card` \| `blank-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark.
+| color_type | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).
 | color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
@@ -168,6 +168,57 @@ Horizontal stack with :
       color_type: blank-card
     - type: "custom:button-card"
       color_type: blank-card
+```
+
+------------
+
+Vertical Stack with :
+  - 1x label card
+  - Horizontal Stack with :
+     - 1x Scene 1 Button 
+     - 1x Scene 2 Button
+     - 1x Scene 3 Button 
+     - 1x Scene 4 Button
+     - 1x Scene Off Button
+
+![scenes](examples/scenes.png)
+
+
+```yaml
+- type: vertical-stack
+  cards:
+    - type: "custom:button-card"
+      color_type: label-card
+      color: rgb(44, 109, 214)
+      name: Kitchen
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_1
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-1-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_2
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-2-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_3
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-3-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_4
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-4-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_off
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:eye-off-outline
+
 ```
 
 

@@ -15,6 +15,8 @@ class ButtonCard extends LitElement {
     switch (config.color_type) {
       case 'blank-card':
         return this.blankCardColoredHtml(state, config);
+      case 'label-card':
+        return this.labelCardColoredHtml(state, config);
       case 'card':
         return this.cardColoredHtml(state, config);
       case 'icon':
@@ -79,6 +81,32 @@ class ButtonCard extends LitElement {
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
     <ha-card style="color: ${fontColor}; background-color: ${color}; ${config.card_style}" on-tap="${ev => this._toggle(state, config)}">
+    </ha-card>
+    `;
+  }
+
+  labelCardColoredHtml(state, config) {
+    const color = this.buildCssColorAttribute(state, config);
+    const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+    return html`
+    <style>
+    ha-icon {  
+      display: flex;
+      margin: auto;
+    }
+    paper-button {
+      display: flex;
+      margin: auto;
+      text-align: center;
+    }
+    </style>
+    <ha-card style="color: ${fontColor};">
+      <paper-button noink style="background-color: ${color}; ${config.card_style}">
+      <div>
+        ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
+        ${config.name ? html`<span>${config.name}</span>` : ''}
+       </div>
+      </paper-button>
     </ha-card>
     `;
   }
