@@ -1,6 +1,6 @@
 # Button card
 
-Lovelace Button card for your entities. 
+Lovelace Button card for your entities.
 
 ![all](examples/all.gif)
 
@@ -28,7 +28,7 @@ Lovelace Button card for your entities.
 | ---- | ---- | ------- | --------- | -----------
 | type | string | **Required** | `custom:button-card` | Type of the card
 | entity | string | **Required** | `switch.ac` | entity_id
-| icon | string | optional | `mdi:air-conditioner` | Icon to display in place of the state
+| icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. If you use attribute it will fetch the icon configured on the entity.
 | color_type | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).
 | color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
@@ -58,7 +58,7 @@ To configure custom_updater with button-card
 
 ```
 custom_updater:
-  card_urls: 
+  card_urls:
     - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
 ```
 
