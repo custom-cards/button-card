@@ -9,6 +9,8 @@
 1. [Light icon card button](#light-icon-card-button)
 1. [Stack of light buttons](#stack-of-light-buttons)
 1. [Volume up buttons with service call and blank cards](#volume-up-buttons-with-service-call-and-blank-cards)
+1. [Scene setting buttons with label card](#scene-setting-buttons-with-label-card)
+1. [Input select card with select next service and custom color for states](#input-select-card-with-select-next-service-and-custom-color-for-states)
 
 ### Simple icon button
 
@@ -211,4 +213,74 @@ Horizontal stack with :
       color_type: blank-card
     - type: "custom:button-card"
       color_type: blank-card
+```
+------------
+### Scene setting buttons with label card
+
+ Vertical Stack with :
+  - 1x label card
+  - Horizontal Stack with :
+     - 1x Scene 1 Button 
+     - 1x Scene 2 Button
+     - 1x Scene 3 Button 
+     - 1x Scene 4 Button
+     - 1x Scene Off Button
+     
+ ![scenes](scenes.png)
+ 
+ ```yaml
+- type: vertical-stack
+  cards:
+    - type: "custom:button-card"
+      color_type: label-card
+      color: rgb(44, 109, 214)
+      name: Kitchen
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_1
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-1-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_2
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-2-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_3
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-3-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_4
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-4-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_off
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:eye-off-outline
+ ```
+
+
+## Input select card with select next service and custom color for states.
+
+![cube](cube.png)
+
+
+```yaml
+              - type: "custom:button-card"
+                entity: input_select.cube_mode
+                icon: mdi:cube
+                action: service
+                show_state: true
+                state:
+                  - value: 'sleeping'
+                    color: var(--disabled-text-color)
+                  - value: 'media'
+                    color: rgb(5, 147, 255)
+                  - value: 'light'
+                    color: rgb(189, 255, 5)
 ```

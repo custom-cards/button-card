@@ -1,6 +1,6 @@
 # Button card
 
-Lovelace Button card for your entities. 
+Lovelace Button card for your entities.
 
 ![all](examples/all.gif)
 
@@ -10,6 +10,7 @@ Lovelace Button card for your entities.
   - 3 actions on tap `toggle`, `more_info` and `service`
   - state display (optional)
   - custom color for `on` and `off` state (optional)
+  - custom state definition with customizable color (optional)
   - custom size (optional)
   - custom icon (optional)
   - custom css style (optional)
@@ -19,7 +20,8 @@ Lovelace Button card for your entities.
     - `icon` : apply color settings to the icon only
     - `card` : apply color settings to the card only
   - automatic font color if color_type is set to `card`
-  - blank card (for organization)
+  - support unit of measurement
+  - blank card and label card (for organization)
   - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Options
@@ -28,8 +30,8 @@ Lovelace Button card for your entities.
 | ---- | ---- | ------- | --------- | -----------
 | type | string | **Required** | `custom:button-card` | Type of the card
 | entity | string | **Required** | `switch.ac` | entity_id
-| icon | string | optional | `mdi:air-conditioner` | Icon to display in place of the state
-| color_type | string | `icon` | `icon` \| `card` \| `blank-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark.
+| icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. If you use attribute it will fetch the icon configured on the entity.
+| color_type | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).
 | color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
@@ -38,7 +40,7 @@ Lovelace Button card for your entities.
 | name | string | optional | `Air conditioner` | Define an optional text to show below the icon
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
 | style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
-
+| state | list | optional | See [example section](examples) | State to use for the color of the button. Multiple states can be defined
 ## Instructions
 
 1. Download the [button-card](https://raw.githubusercontent.com/kuuji/button-card/master/button-card.js)
@@ -58,7 +60,7 @@ To configure custom_updater with button-card
 
 ```
 custom_updater:
-  card_urls: 
+  card_urls:
     - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
 ```
 
@@ -168,6 +170,77 @@ Horizontal stack with :
       color_type: blank-card
     - type: "custom:button-card"
       color_type: blank-card
+```
+
+------------
+
+Vertical Stack with :
+  - 1x label card
+  - Horizontal Stack with :
+     - 1x Scene 1 Button 
+     - 1x Scene 2 Button
+     - 1x Scene 3 Button 
+     - 1x Scene 4 Button
+     - 1x Scene Off Button
+
+![scenes](examples/scenes.png)
+
+
+```yaml
+- type: vertical-stack
+  cards:
+    - type: "custom:button-card"
+      color_type: label-card
+      color: rgb(44, 109, 214)
+      name: Kitchen
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_1
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-1-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_2
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-2-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_3
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-3-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_scene_4
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:numeric-4-box-outline
+        - type: "custom:button-card"
+          entity: switch.kitchen_off
+          color_type: card
+          color: rgb(66, 134, 244)
+          icon: mdi:eye-off-outline
+
+```
+
+Input select card with select next service and custom color for states.
+
+![cube](examples/cube.png)
+
+
+```yaml
+              - type: "custom:button-card"
+                entity: input_select.cube_mode
+                icon: mdi:cube
+                action: service
+                show_state: true
+                state:
+                  - value: 'sleeping'
+                    color: var(--disabled-text-color)
+                  - value: 'media'
+                    color: rgb(5, 147, 255)
+                  - value: 'light'
+                    color: rgb(189, 255, 5)
 ```
 
 
