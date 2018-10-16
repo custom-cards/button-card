@@ -4,8 +4,9 @@ Custom state, label card and icon attribute
 ### New features :
 
  - New setting for custom states
- - Label card for organization
- - Use icon attribute from entity if it exists
+ - Label card for organization https://github.com/kuuji/button-card/pull/23 by [jxwolstenholme](https://github.com/jxwolstenholme)
+ - Use icon attribute from entity if it exists https://github.com/kuuji/button-card/pull/21 by [emilp333](https://github.com/emilp333)
+ - Support for hex color in auto mode https://github.com/kuuji/button-card/pull/10 by [simo878](https://github.com/simo878)
 
 #### Custom state example with input select entity
 
