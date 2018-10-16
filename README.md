@@ -61,7 +61,7 @@ To configure custom_updater with button-card
 ```
 custom_updater:
   card_urls:
-    - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
+    - https://raw.githubusercontent.com/kuuji/button-card/master/tracker.json
 ```
 
 ## Examples
