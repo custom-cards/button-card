@@ -7,10 +7,17 @@ class ButtonCard extends LitElement {
     return {
       hass: Object,
       config: Object,
+      held: Boolean,
+      cancel: Boolean,
+      timer: Number,
+      holdTime: Number,
+      xStart: Number,
+      yStart: Number
     };
   }
 
   _render({ hass, config }) {
+    this.holdTime = 500;
     const state = hass.states[config.entity];
     switch (config.color_type) {
       case 'blank-card':
@@ -87,7 +94,7 @@ class ButtonCard extends LitElement {
     const color = this.buildCssColorAttribute(state, config);
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
-    <ha-card style="color: ${fontColor}; background-color: ${color}; ${config.card_style}" on-tap="${ev => this._toggle(state, config)}">
+    <ha-card style="color: ${fontColor}; background-color: ${color}; ${config.card_style}" on-down="${ev => this._down(ev, state, config)}" on-up="${ev => this._up(ev, state, config)}">
     </ha-card>
     `;
   }
@@ -133,7 +140,7 @@ class ButtonCard extends LitElement {
       text-align: center;
     }
     </style>
-    <ha-card style="color: ${fontColor};" on-tap="${ev => this._toggle(state, config)}">
+    <ha-card style="color: ${fontColor};" on-down="${ev => this._down(ev, state, config)}" on-up="${ev => this._up(ev, state, config)}">
       <paper-button style="background-color: ${color}; ${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
@@ -160,11 +167,11 @@ class ButtonCard extends LitElement {
       text-align: center;
     }
     </style>
-    <ha-card on-tap="${ev => this._toggle(state, config)}">
-      <paper-button style="${config.card_style}">
+    <ha-card on-down="${ev => this._down(ev, state, config)}" on-up="${ev => this._up(ev, state, config)}">
+      <paper-button style="${config.card_style}" >
       <div>
         ${config.icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-        ${config.name ? html`<div>${config.name}</div>` : ''}
+        ${config.name ? html`<div class="longPress">${config.name}</div>` : ''}
         ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
       </div>
       </paper-button>
@@ -201,13 +208,43 @@ class ButtonCard extends LitElement {
     return 3;
   }
 
-  _toggle(state, config) {
-    switch (config.action) {
-      case 'toggle':
-        this.hass.callService('homeassistant', 'toggle', {
-          entity_id: state.entity_id,
-        });
-        break;
+  _down(event) {
+    this.cancel = false;
+    this.held = false;
+    this.xStart = event.detail.x;
+    this.yStart = event.detail.y;
+    this.timer = window.setTimeout(() => {
+        this.held = true;
+      }, this.holdTime);
+  }
+
+  _up(event, state, config) {
+    // on all up events clear the timer
+    this.timer = undefined;
+    // check if the start x and y positions are within 100px of the original (did user drag finger away, if so no hold)
+    if (Math.abs(this.xStart - event.detail.x) > 100) {
+      this.held = false;
+      this.cancel = true;
+    } else if (Math.abs(this.yStart - event.detail.y) > 100) {
+      this.held = false;
+      this.cancel = true;
+    }
+
+    if (this.cancel === false) {
+      this._action(state, config);
+    }
+  }
+
+  _action(state, config) {
+    var actionType;
+    if (this.held === false) {
+      actionType = config.action
+    } else {
+      actionType = config.long_press_action
+    }
+
+    switch (actionType) {
+      case 'more-info': //added since this is the defualt for Lovelace, if user uses it this makes it ok
       case 'more_info': {
         const node = this.shadowRoot;
         const options = {};
@@ -221,14 +258,17 @@ class ButtonCard extends LitElement {
         node.dispatchEvent(event);
         return event;
       }
-      case 'service':
+      case 'service': {
         this.hass.callService(config.service.domain, config.service.action, config.service.data);
-        break;
-      default:
+        break; 
+      }
+      case 'toggle':
+      default: {
         this.hass.callService('homeassistant', 'toggle', {
           entity_id: state.entity_id,
         });
         break;
+      }
     }
   }
 }
