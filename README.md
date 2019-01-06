@@ -8,6 +8,7 @@ Lovelace Button card for your entities.
 
   - works with any toggleable entity
   - 3 actions on tap `toggle`, `more_info` and `service`
+  - 3 actions on longpress `toggle`, `more_info` and `service`
   - state display (optional)
   - custom color for `on` and `off` state (optional)
   - custom state definition with customizable color (optional)
@@ -36,6 +37,7 @@ Lovelace Button card for your entities.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
 | action | string | `toggle` | `toggle` \| `more_info` \| `service` | Define the type of action
+| long_press_action | string | `toggle` | `toggle` \| `more_info` \| `service` | Define the type of action for a long press (>500 milliseconds)
 | service | Object | optional | See [example section](examples) | Service to call and service data when action is set to `service`
 | name | string | optional | `Air conditioner` | Define an optional text to show below the icon
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
