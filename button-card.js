@@ -10,14 +10,12 @@ class ButtonCard extends LitElement {
       held: Boolean,
       cancel: Boolean,
       timer: Number,
-      holdTime: Number,
       xStart: Number,
       yStart: Number
     };
   }
 
   _render({ hass, config }) {
-    this.holdTime = 500;
     const state = hass.states[config.entity];
     switch (config.color_type) {
       case 'blank-card':
@@ -215,7 +213,7 @@ class ButtonCard extends LitElement {
     this.yStart = event.detail.y;
     this.timer = window.setTimeout(() => {
         this.held = true;
-      }, this.holdTime);
+      }, 500);
   }
 
   _up(event, state, config) {
