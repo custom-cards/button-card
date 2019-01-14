@@ -30,17 +30,17 @@ Lovelace Button card for your entities.
 | ---- | ---- | ------- | --------- | -----------
 | type | string | **Required** | `custom:button-card` | Type of the card
 | entity | string | **Required** | `switch.ac` | entity_id
-| icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. If you use attribute it will fetch the icon configured on the entity.
+| icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. Will be overriden by the icon defined defined in a state (if present). If you use keywork `attribute` it will fetch the icon configured on the entity (overrides all icons defined). 
 | color_type | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).
 | color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
 | color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
 | size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
 | action | string | `toggle` | `toggle` \| `more_info` \| `service` | Define the type of action
-| service | Object | optional | See [example section](examples) | Service to call and service data when action is set to `service`
+| service | Object | optional | See [example section](#Examples) | Service to call and service data when action is set to `service`
 | name | string | optional | `Air conditioner` | Define an optional text to show below the icon
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
 | style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
-| state | list | optional | See [example section](examples) | State to use for the color of the button. Multiple states can be defined
+| state | list | optional | See [state example section](#Configuration-with-states) | State to use for the color of the button. Multiple states can be defined
 ## Instructions
 
 1. Download the [button-card](https://raw.githubusercontent.com/kuuji/button-card/master/button-card.js)
@@ -223,7 +223,8 @@ Vertical Stack with :
 
 ```
 
-Input select card with select next service and custom color for states.
+### Configuration with states
+Input select card with select next service and custom color and icon for states. In the example below the icon `mdi:cube-outline` will be used when value is `sleeping` and `mdi:cube` in other cases.
 
 ![cube](examples/cube.png)
 
@@ -237,6 +238,7 @@ Input select card with select next service and custom color for states.
                 state:
                   - value: 'sleeping'
                     color: var(--disabled-text-color)
+                    icon: mdi:cube-outline
                   - value: 'media'
                     color: rgb(5, 147, 255)
                   - value: 'light'
