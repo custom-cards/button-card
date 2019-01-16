@@ -80,6 +80,11 @@ class ButtonCard extends LitElement {
       }
       return iconOff;
     }
+    let configState = config.state ? config.state.find(configState => { return configState.value === state.state; }) : false;
+    if (configState && configState.icon) {
+      const icon = configState.icon;
+      return icon;
+    }
     return iconOff;
   }
 
