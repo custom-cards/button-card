@@ -1,7 +1,7 @@
 {
     "button-card": {
-      "updated_at": "2018-10-15",
-      "version": "0.0.3",
+      "updated_at": "2019-01-15",
+      "version": "0.0.4",
       "remote_location": "https://raw.githubusercontent.com/kuuji/button-card/master/button-card.js",
       "visit_repo": "https://github.com/kuuji/button-card",
       "changelog": "https://github.com/kuuji/button-card/releases/latest"
