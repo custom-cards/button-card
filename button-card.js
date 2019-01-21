@@ -1,6 +1,5 @@
-import {
-  LitElement, html,
-} from 'https://unpkg-gcp.firebaseapp.com/@polymer/lit-element@0.5.2/lit-element.js?module';
+var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-error-entity-row"));
+var html = LitElement.prototype.html;
 
 class ButtonCard extends LitElement {
   static get properties() {
@@ -10,18 +9,18 @@ class ButtonCard extends LitElement {
     };
   }
 
-  _render({ hass, config }) {
-    const state = hass.states[config.entity];
-    switch (config.color_type) {
+  render() {
+    const state = this.__hass.states[this.config.entity];
+    switch (this.config.color_type) {
       case 'blank-card':
-        return this.blankCardColoredHtml(state, config);
+        return this.blankCardColoredHtml(state, this.config);
       case 'label-card':
-        return this.labelCardColoredHtml(state, config);
+        return this.labelCardColoredHtml(state, this.config);
       case 'card':
-        return this.cardColoredHtml(state, config);
+        return this.cardColoredHtml(state, this.config);
       case 'icon':
       default:
-        return this.iconColoredHtml(state, config);
+        return this.iconColoredHtml(state, this.config);
     }
   }
 
@@ -102,7 +101,7 @@ class ButtonCard extends LitElement {
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
     <style>
-    ha-icon {
+    ha-icon {  
       display: flex;
       margin: auto;
     }
@@ -138,7 +137,7 @@ class ButtonCard extends LitElement {
       text-align: center;
     }
     </style>
-    <ha-card style="color: ${fontColor};" on-tap="${ev => this._toggle(state, config)}">
+    <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
       <paper-button style="background-color: ${color}; ${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
@@ -165,7 +164,7 @@ class ButtonCard extends LitElement {
       text-align: center;
     }
     </style>
-    <ha-card on-tap="${ev => this._toggle(state, config)}">
+    <ha-card @tap="${ev => this._toggle(state, config)}">
       <paper-button style="${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
@@ -181,8 +180,9 @@ class ButtonCard extends LitElement {
     // if (!config.entity) {
     //   throw new Error('You need to define entity');
     // }
-    this.config = {...config};
+    this.config = config;
     this.config.color = config.color ? config.color : 'var(--primary-text-color)';
+    this.config.state = config.state;
     this.config.size = config.size ? config.size : '40%';
     let cardStyle = '';
     if (config.style) {
