@@ -182,7 +182,6 @@ class ButtonCard extends LitElement {
     // }
     this.config = {...config};
     this.config.color = config.color ? config.color : 'var(--primary-text-color)';
-    this.config.state = config.state;
     this.config.size = config.size ? config.size : '40%';
     let cardStyle = '';
     if (config.style) {
