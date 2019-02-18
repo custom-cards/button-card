@@ -1,4 +1,4 @@
-var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-error-entity-row"));
+var LitElement = LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main"));
 var html = LitElement.prototype.html;
 
 class ButtonCard extends LitElement {
