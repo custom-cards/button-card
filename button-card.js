@@ -1,6 +1,13 @@
 var LitElement = LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main"));
 var html = LitElement.prototype.html;
 
+if (!customElements.get('mwc-button')) {
+  customElements.define(
+    'mwc-button',
+    class extends customElements.get('paper-button') {},
+  );
+}
+
 class ButtonCard extends LitElement {
   static get properties() {
     return {
