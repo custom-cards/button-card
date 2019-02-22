@@ -1,5 +1,24 @@
-var LitElement = LitElement || Object.getPrototypeOf(customElements.get("hui-error-entity-row"));
+var LitElement = LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main"));
 var html = LitElement.prototype.html;
+var css = LitElement.prototype.css;
+
+((ButtonBase) => {
+  customElements.define(
+    'button-card-button',
+    class extends ButtonBase {
+      static get styles() {
+        return css`
+          ${ButtonBase.styles}
+          .mdc-button {
+            height: auto;
+            padding: 8px;
+            color: inherit !important;
+          }
+        `
+      }
+    },
+  );
+})(customElements.get('mwc-button') || customElements.get('paper-button'))
 
 class ButtonCard extends LitElement {
   static get properties() {
@@ -7,6 +26,20 @@ class ButtonCard extends LitElement {
       hass: Object,
       config: Object,
     };
+  }
+
+  static get styles() {
+    return css`
+      ha-icon {
+        display: flex;
+        margin: auto;
+      }
+      button-card-button {
+        display: flex;
+        margin: auto;
+        text-align: center;
+      }
+    `;
   }
 
   render() {
@@ -100,24 +133,13 @@ class ButtonCard extends LitElement {
     const color = this.buildCssColorAttribute(state, config);
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
-    <style>
-    ha-icon {  
-      display: flex;
-      margin: auto;
-    }
-    paper-button {
-      display: flex;
-      margin: auto;
-      text-align: center;
-    }
-    </style>
     <ha-card style="color: ${fontColor};">
-      <paper-button noink style="background-color: ${color}; ${config.card_style}">
+      <button-card-button noink style="background-color: ${color}; ${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
         ${config.name ? html`<span>${config.name}</span>` : ''}
        </div>
-      </paper-button>
+      </button-card-button>
     </ha-card>
     `;
   }
@@ -126,25 +148,14 @@ class ButtonCard extends LitElement {
     const color = this.buildCssColorAttribute(state, config);
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
-    <style>
-    ha-icon {
-      display: flex;
-      margin: auto;
-    }
-    paper-button {
-      display: flex;
-      margin: auto;
-      text-align: center;
-    }
-    </style>
     <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
-      <paper-button style="background-color: ${color}; ${config.card_style}">
+      <button-card-button style="background-color: ${color}; ${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
         ${config.name ? html`<span>${config.name}</span>` : ''}
         ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
        </div>
-      </paper-button>
+      </button-card-button>
     </ha-card>
     `;
   }
@@ -153,25 +164,14 @@ class ButtonCard extends LitElement {
     const color = this.buildCssColorAttribute(state, config);
     const icon = this.buildIcon(state, config);
     return html`
-    <style>
-    ha-icon {
-      display: flex;
-      margin: auto;
-    }
-    paper-button {
-      display: flex;
-      margin: auto;
-      text-align: center;
-    }
-    </style>
     <ha-card @tap="${ev => this._toggle(state, config)}">
-      <paper-button style="${config.card_style}">
+      <button-card-button style="${config.card_style}">
       <div>
         ${config.icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
         ${config.name ? html`<div>${config.name}</div>` : ''}
         ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
       </div>
-      </paper-button>
+      </button-card-button>
     </ha-card>
     `;
   }
