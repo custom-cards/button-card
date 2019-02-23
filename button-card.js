@@ -100,7 +100,8 @@
           if (config.color === 'auto') {
             color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
           }
-          color = state.state === 'on' ? color : config.color_off;
+          color = state.state === 'heat' ? color : state.state === 'on' ? color : config.color_off;
+
         }
       }
       return color;
