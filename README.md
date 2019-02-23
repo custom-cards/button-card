@@ -41,28 +41,37 @@ Lovelace Button card for your entities.
 | show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
 | style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
 | state | list | optional | See [state example section](#Configuration-with-states) | State to use for the color of the button. Multiple states can be defined
-## Instructions
 
-1. Download the [button-card](https://raw.githubusercontent.com/kuuji/button-card/master/button-card.js)
+## Installaion
+
+### Manual Installation
+
+1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
+
 ```yaml
 title: Home
 resources:
   - url: /local/button-card.js
     type: module
 ```
+
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
-----
+### Installation and tracking with `custom_updater`
 
-To configure custom_updater with button-card
+1. Make sure the [custom_updater](https://github.com/custom-components/custom_updater) component is installed and working.
+2. Configure Lovelace to load the card.
 
+```yaml
+resources:
+  - url: /customcards/github/custom-cards/button-card.js?track=true
+    type: module
 ```
-custom_updater:
-  card_urls:
-    - https://raw.githubusercontent.com/kuuji/button-card/master/tracker.json
-```
+
+3. Run the service `custom_updater.check_all` or click the "CHECK" button if you use the [`tracker-card`](https://github.com/custom-cards/tracker-card).
+4. Refresh the website.
 
 ## Examples
 
