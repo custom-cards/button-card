@@ -1,4 +1,11 @@
-[![Version](https://img.shields.io/badge/version-0.0.6-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+[![GitHub Release][releases-shield]][releases]
+[![License][license-shield]](LICENSE.md)
+
+[![Project Maintenance][maintenance-shield]]
+[![GitHub Activity][commits-shield]][commits]
+
+[![Discord][discord-shield]][discord]
+[![Community Forum][forum-shield]][forum]
 
 # Button card
 
@@ -261,3 +268,14 @@ Input select card with select next service and custom color and icon for states.
 ## Credits
 
   - [ciotlosm](https://github.com/ciotlosm) for the readme template and the awesome examples
+
+[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg
+[commits]: https://github.com/custom-cards/button-card/commits/master
+[discord]: https://discord.gg/Qa5fW2R
+[discord-shield]: https://img.shields.io/discord/478094546522079232.svg
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
+[forum]: https://community.home-assistant.io/t/lovelace-button-card/65981
+[license-shield]: https://img.shields.io/github/license/hassio-addons/addon-ide.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2019.svg
+[releases-shield]: https://img.shields.io/github/release/custom-cards/button-card.svg
+[releases]: https://github.com/custom-cards/button-card/releases
