@@ -1,4 +1,4 @@
-# Button card
+# Button Card
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
