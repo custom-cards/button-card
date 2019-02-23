@@ -1,3 +1,5 @@
+# Button card
+
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
 
@@ -6,8 +8,6 @@
 
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
-
-# Button card
 
 Lovelace Button card for your entities.
 
