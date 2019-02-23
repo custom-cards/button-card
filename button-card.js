@@ -41,6 +41,7 @@
           padding: 4%;
           text-transform: none;
           font-size: 1.2rem;
+          font-weight: 400;
         }
       `;
     }
