@@ -1,7 +1,7 @@
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
 
-[![Project Maintenance][maintenance-shield]]
+![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
 
 [![Discord][discord-shield]][discord]
