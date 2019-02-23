@@ -38,7 +38,9 @@
           text-align: center;
         }
         button-card-button div {
-          padding: 8px;
+          padding: 4%;
+          text-transform: none;
+          font-size: 1.2rem;
         }
       `;
     }
