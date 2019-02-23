@@ -42,6 +42,7 @@
           text-transform: none;
           font-size: 1.2rem;
           font-weight: 400;
+          white-space: nowrap;
         }
       `;
     }
