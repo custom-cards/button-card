@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/badge/version-0.0.6-green.svg?style=for-the-badge)](#) [![mantained](https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge)](#)
+
 # Button card
 
 Lovelace Button card for your entities.
