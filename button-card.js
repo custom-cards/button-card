@@ -1,243 +1,764 @@
-((LitElement, ButtonBase) => {
-  var html = LitElement.prototype.html;
-  var css = LitElement.prototype.css;
+function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.getOwnPropertyDescriptor(t,i):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)o=Reflect.decorate(e,t,i,s);else for(var a=e.length-1;a>=0;a--)(n=e[a])&&(o=(r<3?n(o):r>3?n(t,i,o):n(t,i))||o);return r>3&&o&&Object.defineProperty(t,i,o),o}const directives=new WeakMap,isDirective=e=>"function"==typeof e&&directives.has(e),isCEPolyfill=void 0!==window.customElements&&void 0!==window.customElements.polyfillWrapFlushCallback,removeNodes=(e,t,i=null)=>{let s=t;for(;s!==i;){const t=s.nextSibling;e.removeChild(s),s=t}},noChange={},nothing={},marker=`{{lit-${String(Math.random()).slice(2)}}}`,nodeMarker=`\x3c!--${marker}--\x3e`,markerRegex=new RegExp(`${marker}|${nodeMarker}`),boundAttributeSuffix="$lit$";class Template{constructor(e,t){this.parts=[],this.element=t;let i=-1,s=0;const n=[],r=t=>{const o=t.content,a=document.createTreeWalker(o,133,null,!1);let l=0;for(;a.nextNode();){i++;const t=a.currentNode;if(1===t.nodeType){if(t.hasAttributes()){const n=t.attributes;let r=0;for(let e=0;e<n.length;e++)n[e].value.indexOf(marker)>=0&&r++;for(;r-- >0;){const n=e.strings[s],r=lastAttributeNameRegex.exec(n)[2],o=r.toLowerCase()+boundAttributeSuffix,a=t.getAttribute(o).split(markerRegex);this.parts.push({type:"attribute",index:i,name:r,strings:a}),t.removeAttribute(o),s+=a.length-1}}"TEMPLATE"===t.tagName&&r(t)}else if(3===t.nodeType){const e=t.data;if(e.indexOf(marker)>=0){const r=t.parentNode,o=e.split(markerRegex),a=o.length-1;for(let e=0;e<a;e++)r.insertBefore(""===o[e]?createMarker():document.createTextNode(o[e]),t),this.parts.push({type:"node",index:++i});""===o[a]?(r.insertBefore(createMarker(),t),n.push(t)):t.data=o[a],s+=a}}else if(8===t.nodeType)if(t.data===marker){const e=t.parentNode;null!==t.previousSibling&&i!==l||(i++,e.insertBefore(createMarker(),t)),l=i,this.parts.push({type:"node",index:i}),null===t.nextSibling?t.data="":(n.push(t),i--),s++}else{let e=-1;for(;-1!==(e=t.data.indexOf(marker,e+1));)this.parts.push({type:"node",index:-1})}}};r(t);for(const e of n)e.parentNode.removeChild(e)}}const isTemplatePartActive=e=>-1!==e.index,createMarker=()=>document.createComment(""),lastAttributeNameRegex=/([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=\/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;class TemplateInstance{constructor(e,t,i){this._parts=[],this.template=e,this.processor=t,this.options=i}update(e){let t=0;for(const i of this._parts)void 0!==i&&i.setValue(e[t]),t++;for(const e of this._parts)void 0!==e&&e.commit()}_clone(){const e=isCEPolyfill?this.template.element.content.cloneNode(!0):document.importNode(this.template.element.content,!0),t=this.template.parts;let i=0,s=0;const n=e=>{const r=document.createTreeWalker(e,133,null,!1);let o=r.nextNode();for(;i<t.length&&null!==o;){const e=t[i];if(isTemplatePartActive(e))if(s===e.index){if("node"===e.type){const e=this.processor.handleTextExpression(this.options);e.insertAfterNode(o.previousSibling),this._parts.push(e)}else this._parts.push(...this.processor.handleAttributeExpressions(o,e.name,e.strings,this.options));i++}else s++,"TEMPLATE"===o.nodeName&&n(o.content),o=r.nextNode();else this._parts.push(void 0),i++}};return n(e),isCEPolyfill&&(document.adoptNode(e),customElements.upgrade(e)),e}}class TemplateResult{constructor(e,t,i,s){this.strings=e,this.values=t,this.type=i,this.processor=s}getHTML(){const e=this.strings.length-1;let t="";for(let i=0;i<e;i++){const e=this.strings[i],s=lastAttributeNameRegex.exec(e);t+=s?e.substr(0,s.index)+s[1]+s[2]+boundAttributeSuffix+s[3]+marker:e+nodeMarker}return t+this.strings[e]}getTemplateElement(){const e=document.createElement("template");return e.innerHTML=this.getHTML(),e}}const isPrimitive=e=>null===e||!("object"==typeof e||"function"==typeof e);class AttributeCommitter{constructor(e,t,i){this.dirty=!0,this.element=e,this.name=t,this.strings=i,this.parts=[];for(let e=0;e<i.length-1;e++)this.parts[e]=this._createPart()}_createPart(){return new AttributePart(this)}_getValue(){const e=this.strings,t=e.length-1;let i="";for(let s=0;s<t;s++){i+=e[s];const t=this.parts[s];if(void 0!==t){const e=t.value;if(null!=e&&(Array.isArray(e)||"string"!=typeof e&&e[Symbol.iterator]))for(const t of e)i+="string"==typeof t?t:String(t);else i+="string"==typeof e?e:String(e)}}return i+=e[t]}commit(){this.dirty&&(this.dirty=!1,this.element.setAttribute(this.name,this._getValue()))}}class AttributePart{constructor(e){this.value=void 0,this.committer=e}setValue(e){e===noChange||isPrimitive(e)&&e===this.value||(this.value=e,isDirective(e)||(this.committer.dirty=!0))}commit(){for(;isDirective(this.value);){const e=this.value;this.value=noChange,e(this)}this.value!==noChange&&this.committer.commit()}}class NodePart{constructor(e){this.value=void 0,this._pendingValue=void 0,this.options=e}appendInto(e){this.startNode=e.appendChild(createMarker()),this.endNode=e.appendChild(createMarker())}insertAfterNode(e){this.startNode=e,this.endNode=e.nextSibling}appendIntoPart(e){e._insert(this.startNode=createMarker()),e._insert(this.endNode=createMarker())}insertAfterPart(e){e._insert(this.startNode=createMarker()),this.endNode=e.endNode,e.endNode=this.startNode}setValue(e){this._pendingValue=e}commit(){for(;isDirective(this._pendingValue);){const e=this._pendingValue;this._pendingValue=noChange,e(this)}const e=this._pendingValue;e!==noChange&&(isPrimitive(e)?e!==this.value&&this._commitText(e):e instanceof TemplateResult?this._commitTemplateResult(e):e instanceof Node?this._commitNode(e):Array.isArray(e)||e[Symbol.iterator]?this._commitIterable(e):e===nothing?(this.value=nothing,this.clear()):this._commitText(e))}_insert(e){this.endNode.parentNode.insertBefore(e,this.endNode)}_commitNode(e){this.value!==e&&(this.clear(),this._insert(e),this.value=e)}_commitText(e){const t=this.startNode.nextSibling;e=null==e?"":e,t===this.endNode.previousSibling&&3===t.nodeType?t.data=e:this._commitNode(document.createTextNode("string"==typeof e?e:String(e))),this.value=e}_commitTemplateResult(e){const t=this.options.templateFactory(e);if(this.value instanceof TemplateInstance&&this.value.template===t)this.value.update(e.values);else{const i=new TemplateInstance(t,e.processor,this.options),s=i._clone();i.update(e.values),this._commitNode(s),this.value=i}}_commitIterable(e){Array.isArray(this.value)||(this.value=[],this.clear());const t=this.value;let i,s=0;for(const n of e)void 0===(i=t[s])&&(i=new NodePart(this.options),t.push(i),0===s?i.appendIntoPart(this):i.insertAfterPart(t[s-1])),i.setValue(n),i.commit(),s++;s<t.length&&(t.length=s,this.clear(i&&i.endNode))}clear(e=this.startNode){removeNodes(this.startNode.parentNode,e.nextSibling,this.endNode)}}class BooleanAttributePart{constructor(e,t,i){if(this.value=void 0,this._pendingValue=void 0,2!==i.length||""!==i[0]||""!==i[1])throw new Error("Boolean attributes can only contain a single expression");this.element=e,this.name=t,this.strings=i}setValue(e){this._pendingValue=e}commit(){for(;isDirective(this._pendingValue);){const e=this._pendingValue;this._pendingValue=noChange,e(this)}if(this._pendingValue===noChange)return;const e=!!this._pendingValue;this.value!==e&&(e?this.element.setAttribute(this.name,""):this.element.removeAttribute(this.name)),this.value=e,this._pendingValue=noChange}}class PropertyCommitter extends AttributeCommitter{constructor(e,t,i){super(e,t,i),this.single=2===i.length&&""===i[0]&&""===i[1]}_createPart(){return new PropertyPart(this)}_getValue(){return this.single?this.parts[0].value:super._getValue()}commit(){this.dirty&&(this.dirty=!1,this.element[this.name]=this._getValue())}}class PropertyPart extends AttributePart{}let eventOptionsSupported=!1;try{const e={get capture(){return eventOptionsSupported=!0,!1}};window.addEventListener("test",e,e),window.removeEventListener("test",e,e)}catch(e){}class EventPart{constructor(e,t,i){this.value=void 0,this._pendingValue=void 0,this.element=e,this.eventName=t,this.eventContext=i,this._boundHandleEvent=(e=>this.handleEvent(e))}setValue(e){this._pendingValue=e}commit(){for(;isDirective(this._pendingValue);){const e=this._pendingValue;this._pendingValue=noChange,e(this)}if(this._pendingValue===noChange)return;const e=this._pendingValue,t=this.value,i=null==e||null!=t&&(e.capture!==t.capture||e.once!==t.once||e.passive!==t.passive),s=null!=e&&(null==t||i);i&&this.element.removeEventListener(this.eventName,this._boundHandleEvent,this._options),s&&(this._options=getOptions(e),this.element.addEventListener(this.eventName,this._boundHandleEvent,this._options)),this.value=e,this._pendingValue=noChange}handleEvent(e){"function"==typeof this.value?this.value.call(this.eventContext||this.element,e):this.value.handleEvent(e)}}const getOptions=e=>e&&(eventOptionsSupported?{capture:e.capture,passive:e.passive,once:e.once}:e.capture);class DefaultTemplateProcessor{handleAttributeExpressions(e,t,i,s){const n=t[0];if("."===n){return new PropertyCommitter(e,t.slice(1),i).parts}return"@"===n?[new EventPart(e,t.slice(1),s.eventContext)]:"?"===n?[new BooleanAttributePart(e,t.slice(1),i)]:new AttributeCommitter(e,t,i).parts}handleTextExpression(e){return new NodePart(e)}}const defaultTemplateProcessor=new DefaultTemplateProcessor;function templateFactory(e){let t=templateCaches.get(e.type);void 0===t&&(t={stringsArray:new WeakMap,keyString:new Map},templateCaches.set(e.type,t));let i=t.stringsArray.get(e.strings);if(void 0!==i)return i;const s=e.strings.join(marker);return void 0===(i=t.keyString.get(s))&&(i=new Template(e,e.getTemplateElement()),t.keyString.set(s,i)),t.stringsArray.set(e.strings,i),i}const templateCaches=new Map,parts=new WeakMap,render=(e,t,i)=>{let s=parts.get(t);void 0===s&&(removeNodes(t,t.firstChild),parts.set(t,s=new NodePart(Object.assign({templateFactory:templateFactory},i))),s.appendInto(t)),s.setValue(e),s.commit()};(window.litHtmlVersions||(window.litHtmlVersions=[])).push("1.0.0");const html=(e,...t)=>new TemplateResult(e,t,"html",defaultTemplateProcessor),walkerNodeFilter=133;function removeNodesFromTemplate(e,t){const{element:{content:i},parts:s}=e,n=document.createTreeWalker(i,walkerNodeFilter,null,!1);let r=nextActiveIndexInTemplateParts(s),o=s[r],a=-1,l=0;const c=[];let d=null;for(;n.nextNode();){a++;const e=n.currentNode;for(e.previousSibling===d&&(d=null),t.has(e)&&(c.push(e),null===d&&(d=e)),null!==d&&l++;void 0!==o&&o.index===a;)o.index=null!==d?-1:o.index-l,o=s[r=nextActiveIndexInTemplateParts(s,r)]}c.forEach(e=>e.parentNode.removeChild(e))}const countNodes=e=>{let t=11===e.nodeType?0:1;const i=document.createTreeWalker(e,walkerNodeFilter,null,!1);for(;i.nextNode();)t++;return t},nextActiveIndexInTemplateParts=(e,t=-1)=>{for(let i=t+1;i<e.length;i++){const t=e[i];if(isTemplatePartActive(t))return i}return-1};function insertNodeIntoTemplate(e,t,i=null){const{element:{content:s},parts:n}=e;if(null==i)return void s.appendChild(t);const r=document.createTreeWalker(s,walkerNodeFilter,null,!1);let o=nextActiveIndexInTemplateParts(n),a=0,l=-1;for(;r.nextNode();){for(l++,r.currentNode===i&&(a=countNodes(t),i.parentNode.insertBefore(t,i));-1!==o&&n[o].index===l;){if(a>0){for(;-1!==o;)n[o].index+=a,o=nextActiveIndexInTemplateParts(n,o);return}o=nextActiveIndexInTemplateParts(n,o)}}}const getTemplateCacheKey=(e,t)=>`${e}--${t}`;let compatibleShadyCSSVersion=!0;void 0===window.ShadyCSS?compatibleShadyCSSVersion=!1:void 0===window.ShadyCSS.prepareTemplateDom&&(console.warn("Incompatible ShadyCSS version detected.Please update to at least @webcomponents/webcomponentsjs@2.0.2 and@webcomponents/shadycss@1.3.1."),compatibleShadyCSSVersion=!1);const shadyTemplateFactory=e=>t=>{const i=getTemplateCacheKey(t.type,e);let s=templateCaches.get(i);void 0===s&&(s={stringsArray:new WeakMap,keyString:new Map},templateCaches.set(i,s));let n=s.stringsArray.get(t.strings);if(void 0!==n)return n;const r=t.strings.join(marker);if(void 0===(n=s.keyString.get(r))){const i=t.getTemplateElement();compatibleShadyCSSVersion&&window.ShadyCSS.prepareTemplateDom(i,e),n=new Template(t,i),s.keyString.set(r,n)}return s.stringsArray.set(t.strings,n),n},TEMPLATE_TYPES=["html","svg"],removeStylesFromLitTemplates=e=>{TEMPLATE_TYPES.forEach(t=>{const i=templateCaches.get(getTemplateCacheKey(t,e));void 0!==i&&i.keyString.forEach(e=>{const{element:{content:t}}=e,i=new Set;Array.from(t.querySelectorAll("style")).forEach(e=>{i.add(e)}),removeNodesFromTemplate(e,i)})})},shadyRenderSet=new Set,prepareTemplateStyles=(e,t,i)=>{shadyRenderSet.add(i);const s=e.querySelectorAll("style");if(0===s.length)return void window.ShadyCSS.prepareTemplateStyles(t.element,i);const n=document.createElement("style");for(let e=0;e<s.length;e++){const t=s[e];t.parentNode.removeChild(t),n.textContent+=t.textContent}if(removeStylesFromLitTemplates(i),insertNodeIntoTemplate(t,n,t.element.content.firstChild),window.ShadyCSS.prepareTemplateStyles(t.element,i),window.ShadyCSS.nativeShadow){const i=t.element.content.querySelector("style");e.insertBefore(i.cloneNode(!0),e.firstChild)}else{t.element.content.insertBefore(n,t.element.content.firstChild);const e=new Set;e.add(n),removeNodesFromTemplate(t,e)}},render$1=(e,t,i)=>{const s=i.scopeName,n=parts.has(t),r=t instanceof ShadowRoot&&compatibleShadyCSSVersion&&e instanceof TemplateResult,o=r&&!shadyRenderSet.has(s),a=o?document.createDocumentFragment():t;if(render(e,a,Object.assign({templateFactory:shadyTemplateFactory(s)},i)),o){const e=parts.get(a);parts.delete(a),e.value instanceof TemplateInstance&&prepareTemplateStyles(a,e.value.template,s),removeNodes(t,t.firstChild),t.appendChild(a),parts.set(t,e)}!n&&r&&window.ShadyCSS.styleElement(t.host)};window.JSCompiler_renameProperty=((e,t)=>e);const defaultConverter={toAttribute(e,t){switch(t){case Boolean:return e?"":null;case Object:case Array:return null==e?e:JSON.stringify(e)}return e},fromAttribute(e,t){switch(t){case Boolean:return null!==e;case Number:return null===e?null:Number(e);case Object:case Array:return JSON.parse(e)}return e}},notEqual=(e,t)=>t!==e&&(t==t||e==e),defaultPropertyDeclaration={attribute:!0,type:String,converter:defaultConverter,reflect:!1,hasChanged:notEqual},microtaskPromise=Promise.resolve(!0),STATE_HAS_UPDATED=1,STATE_UPDATE_REQUESTED=4,STATE_IS_REFLECTING_TO_ATTRIBUTE=8,STATE_IS_REFLECTING_TO_PROPERTY=16,STATE_HAS_CONNECTED=32;class UpdatingElement extends HTMLElement{constructor(){super(),this._updateState=0,this._instanceProperties=void 0,this._updatePromise=microtaskPromise,this._hasConnectedResolver=void 0,this._changedProperties=new Map,this._reflectingProperties=void 0,this.initialize()}static get observedAttributes(){this.finalize();const e=[];return this._classProperties.forEach((t,i)=>{const s=this._attributeNameForProperty(i,t);void 0!==s&&(this._attributeToPropertyMap.set(s,i),e.push(s))}),e}static _ensureClassProperties(){if(!this.hasOwnProperty(JSCompiler_renameProperty("_classProperties",this))){this._classProperties=new Map;const e=Object.getPrototypeOf(this)._classProperties;void 0!==e&&e.forEach((e,t)=>this._classProperties.set(t,e))}}static createProperty(e,t=defaultPropertyDeclaration){if(this._ensureClassProperties(),this._classProperties.set(e,t),t.noAccessor||this.prototype.hasOwnProperty(e))return;const i="symbol"==typeof e?Symbol():`__${e}`;Object.defineProperty(this.prototype,e,{get(){return this[i]},set(t){const s=this[e];this[i]=t,this.requestUpdate(e,s)},configurable:!0,enumerable:!0})}static finalize(){if(this.hasOwnProperty(JSCompiler_renameProperty("finalized",this))&&this.finalized)return;const e=Object.getPrototypeOf(this);if("function"==typeof e.finalize&&e.finalize(),this.finalized=!0,this._ensureClassProperties(),this._attributeToPropertyMap=new Map,this.hasOwnProperty(JSCompiler_renameProperty("properties",this))){const e=this.properties,t=[...Object.getOwnPropertyNames(e),..."function"==typeof Object.getOwnPropertySymbols?Object.getOwnPropertySymbols(e):[]];for(const i of t)this.createProperty(i,e[i])}}static _attributeNameForProperty(e,t){const i=t.attribute;return!1===i?void 0:"string"==typeof i?i:"string"==typeof e?e.toLowerCase():void 0}static _valueHasChanged(e,t,i=notEqual){return i(e,t)}static _propertyValueFromAttribute(e,t){const i=t.type,s=t.converter||defaultConverter,n="function"==typeof s?s:s.fromAttribute;return n?n(e,i):e}static _propertyValueToAttribute(e,t){if(void 0===t.reflect)return;const i=t.type,s=t.converter;return(s&&s.toAttribute||defaultConverter.toAttribute)(e,i)}initialize(){this._saveInstanceProperties()}_saveInstanceProperties(){this.constructor._classProperties.forEach((e,t)=>{if(this.hasOwnProperty(t)){const e=this[t];delete this[t],this._instanceProperties||(this._instanceProperties=new Map),this._instanceProperties.set(t,e)}})}_applyInstanceProperties(){this._instanceProperties.forEach((e,t)=>this[t]=e),this._instanceProperties=void 0}connectedCallback(){this._updateState=this._updateState|STATE_HAS_CONNECTED,this._hasConnectedResolver?(this._hasConnectedResolver(),this._hasConnectedResolver=void 0):this.requestUpdate()}disconnectedCallback(){}attributeChangedCallback(e,t,i){t!==i&&this._attributeToProperty(e,i)}_propertyToAttribute(e,t,i=defaultPropertyDeclaration){const s=this.constructor,n=s._attributeNameForProperty(e,i);if(void 0!==n){const e=s._propertyValueToAttribute(t,i);if(void 0===e)return;this._updateState=this._updateState|STATE_IS_REFLECTING_TO_ATTRIBUTE,null==e?this.removeAttribute(n):this.setAttribute(n,e),this._updateState=this._updateState&~STATE_IS_REFLECTING_TO_ATTRIBUTE}}_attributeToProperty(e,t){if(this._updateState&STATE_IS_REFLECTING_TO_ATTRIBUTE)return;const i=this.constructor,s=i._attributeToPropertyMap.get(e);if(void 0!==s){const e=i._classProperties.get(s)||defaultPropertyDeclaration;this._updateState=this._updateState|STATE_IS_REFLECTING_TO_PROPERTY,this[s]=i._propertyValueFromAttribute(t,e),this._updateState=this._updateState&~STATE_IS_REFLECTING_TO_PROPERTY}}requestUpdate(e,t){let i=!0;if(void 0!==e&&!this._changedProperties.has(e)){const s=this.constructor,n=s._classProperties.get(e)||defaultPropertyDeclaration;s._valueHasChanged(this[e],t,n.hasChanged)?(this._changedProperties.set(e,t),!0!==n.reflect||this._updateState&STATE_IS_REFLECTING_TO_PROPERTY||(void 0===this._reflectingProperties&&(this._reflectingProperties=new Map),this._reflectingProperties.set(e,n))):i=!1}return!this._hasRequestedUpdate&&i&&this._enqueueUpdate(),this.updateComplete}async _enqueueUpdate(){let e;this._updateState=this._updateState|STATE_UPDATE_REQUESTED;const t=this._updatePromise;this._updatePromise=new Promise(t=>e=t),await t,this._hasConnected||await new Promise(e=>this._hasConnectedResolver=e);const i=this.performUpdate();null!=i&&"function"==typeof i.then&&await i,e(!this._hasRequestedUpdate)}get _hasConnected(){return this._updateState&STATE_HAS_CONNECTED}get _hasRequestedUpdate(){return this._updateState&STATE_UPDATE_REQUESTED}get hasUpdated(){return this._updateState&STATE_HAS_UPDATED}performUpdate(){if(this._instanceProperties&&this._applyInstanceProperties(),this.shouldUpdate(this._changedProperties)){const e=this._changedProperties;this.update(e),this._markUpdated(),this._updateState&STATE_HAS_UPDATED||(this._updateState=this._updateState|STATE_HAS_UPDATED,this.firstUpdated(e)),this.updated(e)}else this._markUpdated()}_markUpdated(){this._changedProperties=new Map,this._updateState=this._updateState&~STATE_UPDATE_REQUESTED}get updateComplete(){return this._updatePromise}shouldUpdate(e){return!0}update(e){void 0!==this._reflectingProperties&&this._reflectingProperties.size>0&&(this._reflectingProperties.forEach((e,t)=>this._propertyToAttribute(t,this[t],e)),this._reflectingProperties=void 0)}updated(e){}firstUpdated(e){}}UpdatingElement.finalized=!0;const legacyCustomElement=(e,t)=>(window.customElements.define(e,t),t),standardCustomElement=(e,t)=>{const{kind:i,elements:s}=t;return{kind:i,elements:s,finisher(t){window.customElements.define(e,t)}}},customElement=e=>t=>"function"==typeof t?legacyCustomElement(e,t):standardCustomElement(e,t),standardProperty=(e,t)=>"method"!==t.kind||!t.descriptor||"value"in t.descriptor?{kind:"field",key:Symbol(),placement:"own",descriptor:{},initializer(){"function"==typeof t.initializer&&(this[t.key]=t.initializer.call(this))},finisher(i){i.createProperty(t.key,e)}}:Object.assign({},t,{finisher(i){i.createProperty(t.key,e)}}),legacyProperty=(e,t,i)=>{t.constructor.createProperty(i,e)};function property(e){return(t,i)=>void 0!==i?legacyProperty(e,t,i):standardProperty(e,t)}const supportsAdoptingStyleSheets="adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype;function arrayFlat(e,t=[]){for(let i=0,s=e.length;i<s;i++){const s=e[i];Array.isArray(s)?arrayFlat(s,t):t.push(s)}return t}(window.litElementVersions||(window.litElementVersions=[])).push("2.0.1");const flattenStyles=e=>e.flat?e.flat(1/0):arrayFlat(e);class LitElement extends UpdatingElement{static finalize(){super.finalize(),this._styles=this.hasOwnProperty(JSCompiler_renameProperty("styles",this))?this._getUniqueStyles():this._styles||[]}static _getUniqueStyles(){const e=this.styles,t=[];if(Array.isArray(e)){flattenStyles(e).reduceRight((e,t)=>(e.add(t),e),new Set).forEach(e=>t.unshift(e))}else e&&t.push(e);return t}initialize(){super.initialize(),this.renderRoot=this.createRenderRoot(),window.ShadowRoot&&this.renderRoot instanceof window.ShadowRoot&&this.adoptStyles()}createRenderRoot(){return this.attachShadow({mode:"open"})}adoptStyles(){const e=this.constructor._styles;0!==e.length&&(void 0===window.ShadyCSS||window.ShadyCSS.nativeShadow?supportsAdoptingStyleSheets?this.renderRoot.adoptedStyleSheets=e.map(e=>e.styleSheet):this._needsShimAdoptedStyleSheets=!0:window.ShadyCSS.ScopingShim.prepareAdoptedCssText(e.map(e=>e.cssText),this.localName))}connectedCallback(){super.connectedCallback(),this.hasUpdated&&void 0!==window.ShadyCSS&&window.ShadyCSS.styleElement(this)}update(e){super.update(e);const t=this.render();t instanceof TemplateResult&&this.constructor.render(t,this.renderRoot,{scopeName:this.localName,eventContext:this}),this._needsShimAdoptedStyleSheets&&(this._needsShimAdoptedStyleSheets=!1,this.constructor._styles.forEach(e=>{const t=document.createElement("style");t.textContent=e.cssText,this.renderRoot.appendChild(t)}))}render(){}}LitElement.finalized=!0,LitElement.render=render$1;const nativeShadow=!(window.ShadyDOM&&window.ShadyDOM.inUse);let nativeCssVariables_,cssBuild;function calcCssVariables(e){nativeCssVariables_=(!e||!e.shimcssproperties)&&(nativeShadow||Boolean(!navigator.userAgent.match(/AppleWebKit\/601|Edge\/15/)&&window.CSS&&CSS.supports&&CSS.supports("box-shadow","0 0 0 var(--foo)")))}window.ShadyCSS&&void 0!==window.ShadyCSS.cssBuild&&(cssBuild=window.ShadyCSS.cssBuild);const disableRuntime=Boolean(window.ShadyCSS&&window.ShadyCSS.disableRuntime);window.ShadyCSS&&void 0!==window.ShadyCSS.nativeCss?nativeCssVariables_=window.ShadyCSS.nativeCss:window.ShadyCSS?(calcCssVariables(window.ShadyCSS),window.ShadyCSS=void 0):calcCssVariables(window.WebComponents&&window.WebComponents.flags);const nativeCssVariables=nativeCssVariables_;class StyleNode{constructor(){this.start=0,this.end=0,this.previous=null,this.parent=null,this.rules=null,this.parsedCssText="",this.cssText="",this.atRule=!1,this.type=0,this.keyframesName="",this.selector="",this.parsedSelector=""}}function parse(e){return parseCss(lex(e=clean(e)),e)}function clean(e){return e.replace(RX.comments,"").replace(RX.port,"")}function lex(e){let t=new StyleNode;t.start=0,t.end=e.length;let i=t;for(let s=0,n=e.length;s<n;s++)if(e[s]===OPEN_BRACE){i.rules||(i.rules=[]);let e=i,t=e.rules[e.rules.length-1]||null;(i=new StyleNode).start=s+1,i.parent=e,i.previous=t,e.rules.push(i)}else e[s]===CLOSE_BRACE&&(i.end=s+1,i=i.parent||t);return t}function parseCss(e,t){let i=t.substring(e.start,e.end-1);if(e.parsedCssText=e.cssText=i.trim(),e.parent){let s=e.previous?e.previous.end:e.parent.start;i=(i=(i=_expandUnicodeEscapes(i=t.substring(s,e.start-1))).replace(RX.multipleSpaces," ")).substring(i.lastIndexOf(";")+1);let n=e.parsedSelector=e.selector=i.trim();e.atRule=0===n.indexOf(AT_START),e.atRule?0===n.indexOf(MEDIA_START)?e.type=types.MEDIA_RULE:n.match(RX.keyframesRule)&&(e.type=types.KEYFRAMES_RULE,e.keyframesName=e.selector.split(RX.multipleSpaces).pop()):0===n.indexOf(VAR_START)?e.type=types.MIXIN_RULE:e.type=types.STYLE_RULE}let s=e.rules;if(s)for(let e,i=0,n=s.length;i<n&&(e=s[i]);i++)parseCss(e,t);return e}function _expandUnicodeEscapes(e){return e.replace(/\\([0-9a-f]{1,6})\s/gi,function(){let e=arguments[1],t=6-e.length;for(;t--;)e="0"+e;return"\\"+e})}function stringify(e,t,i=""){let s="";if(e.cssText||e.rules){let i=e.rules;if(i&&!_hasMixinRules(i))for(let e,n=0,r=i.length;n<r&&(e=i[n]);n++)s=stringify(e,t,s);else(s=(s=t?e.cssText:removeCustomProps(e.cssText)).trim())&&(s="  "+s+"\n")}return s&&(e.selector&&(i+=e.selector+" "+OPEN_BRACE+"\n"),i+=s,e.selector&&(i+=CLOSE_BRACE+"\n\n")),i}function _hasMixinRules(e){let t=e[0];return Boolean(t)&&Boolean(t.selector)&&0===t.selector.indexOf(VAR_START)}function removeCustomProps(e){return removeCustomPropApply(e=removeCustomPropAssignment(e))}function removeCustomPropAssignment(e){return e.replace(RX.customProp,"").replace(RX.mixinProp,"")}function removeCustomPropApply(e){return e.replace(RX.mixinApply,"").replace(RX.varApply,"")}const types={STYLE_RULE:1,KEYFRAMES_RULE:7,MEDIA_RULE:4,MIXIN_RULE:1e3},OPEN_BRACE="{",CLOSE_BRACE="}",RX={comments:/\/\*[^*]*\*+([^\/*][^*]*\*+)*\//gim,port:/@import[^;]*;/gim,customProp:/(?:^[^;\-\s}]+)?--[^;{}]*?:[^{};]*?(?:[;\n]|$)/gim,mixinProp:/(?:^[^;\-\s}]+)?--[^;{}]*?:[^{};]*?{[^}]*?}(?:[;\n]|$)?/gim,mixinApply:/@apply\s*\(?[^);]*\)?\s*(?:[;\n]|$)?/gim,varApply:/[^;:]*?:[^;]*?var\([^;]*\)(?:[;\n]|$)?/gim,keyframesRule:/^@[^\s]*keyframes/,multipleSpaces:/\s+/g},VAR_START="--",MEDIA_START="@media",AT_START="@",VAR_ASSIGN=/(?:^|[;\s{]\s*)(--[\w-]*?)\s*:\s*(?:((?:'(?:\\'|.)*?'|"(?:\\"|.)*?"|\([^)]*?\)|[^};{])+)|\{([^}]*)\}(?:(?=[;\s}])|$))/gi,MIXIN_MATCH=/(?:^|\W+)@apply\s*\(?([^);\n]*)\)?/gi,MEDIA_MATCH=/@media\s(.*)/,styleTextSet=new Set,scopingAttribute="shady-unscoped";function processUnscopedStyle(e){const t=e.textContent;if(!styleTextSet.has(t)){styleTextSet.add(t);const i=e.cloneNode(!0);document.head.appendChild(i)}}function isUnscopedStyle(e){return e.hasAttribute(scopingAttribute)}function toCssText(e,t){return e?("string"==typeof e&&(e=parse(e)),t&&forEachRule(e,t),stringify(e,nativeCssVariables)):""}function rulesForStyle(e){return!e.__cssRules&&e.textContent&&(e.__cssRules=parse(e.textContent)),e.__cssRules||null}function forEachRule(e,t,i,s){if(!e)return;let n=!1,r=e.type;if(s&&r===types.MEDIA_RULE){let t=e.selector.match(MEDIA_MATCH);t&&(window.matchMedia(t[1]).matches||(n=!0))}r===types.STYLE_RULE?t(e):i&&r===types.KEYFRAMES_RULE?i(e):r===types.MIXIN_RULE&&(n=!0);let o=e.rules;if(o&&!n)for(let e,n=0,r=o.length;n<r&&(e=o[n]);n++)forEachRule(e,t,i,s)}function findMatchingParen(e,t){let i=0;for(let s=t,n=e.length;s<n;s++)if("("===e[s])i++;else if(")"===e[s]&&0==--i)return s;return-1}function processVariableAndFallback(e,t){let i=e.indexOf("var(");if(-1===i)return t(e,"","","");let s=findMatchingParen(e,i+3),n=e.substring(i+4,s),r=e.substring(0,i),o=processVariableAndFallback(e.substring(s+1),t),a=n.indexOf(",");return-1===a?t(r,n.trim(),"",o):t(r,n.substring(0,a).trim(),n.substring(a+1).trim(),o)}const wrap=window.ShadyDOM&&window.ShadyDOM.wrap||(e=>e);function getIsExtends(e){let t=e.localName,i="",s="";return t?t.indexOf("-")>-1?i=t:(s=t,i=e.getAttribute&&e.getAttribute("is")||""):(i=e.is,s=e.extends),{is:i,typeExtension:s}}function gatherStyleText(e){const t=[],i=e.querySelectorAll("style");for(let e=0;e<i.length;e++){const s=i[e];isUnscopedStyle(s)?nativeShadow||(processUnscopedStyle(s),s.parentNode.removeChild(s)):(t.push(s.textContent),s.parentNode.removeChild(s))}return t.join("").trim()}const CSS_BUILD_ATTR="css-build";function getCssBuild(e){if(void 0!==cssBuild)return cssBuild;if(void 0===e.__cssBuild){const t=e.getAttribute(CSS_BUILD_ATTR);if(t)e.__cssBuild=t;else{const t=getBuildComment(e);""!==t&&removeBuildComment(e),e.__cssBuild=t}}return e.__cssBuild||""}function elementHasBuiltCss(e){return""!==getCssBuild(e)}function getBuildComment(e){const t="template"===e.localName?e.content.firstChild:e.firstChild;if(t instanceof Comment){const e=t.textContent.trim().split(":");if(e[0]===CSS_BUILD_ATTR)return e[1]}return""}function removeBuildComment(e){const t="template"===e.localName?e.content.firstChild:e.firstChild;t.parentNode.removeChild(t)}function updateNativeProperties(e,t){for(let i in t)null===i?e.style.removeProperty(i):e.style.setProperty(i,t[i])}function getComputedStyleValue(e,t){const i=window.getComputedStyle(e).getPropertyValue(t);return i?i.trim():""}function detectMixin(e){const t=MIXIN_MATCH.test(e)||VAR_ASSIGN.test(e);return MIXIN_MATCH.lastIndex=0,VAR_ASSIGN.lastIndex=0,t}const APPLY_NAME_CLEAN=/;\s*/m,INITIAL_INHERIT=/^\s*(initial)|(inherit)\s*$/,IMPORTANT=/\s*!important/,MIXIN_VAR_SEP="_-_";class MixinMap{constructor(){this._map={}}set(e,t){e=e.trim(),this._map[e]={properties:t,dependants:{}}}get(e){return e=e.trim(),this._map[e]||null}}let invalidCallback=null;class ApplyShim{constructor(){this._currentElement=null,this._measureElement=null,this._map=new MixinMap}detectMixin(e){return detectMixin(e)}gatherStyles(e){const t=gatherStyleText(e.content);if(t){const i=document.createElement("style");return i.textContent=t,e.content.insertBefore(i,e.content.firstChild),i}return null}transformTemplate(e,t){void 0===e._gatheredStyle&&(e._gatheredStyle=this.gatherStyles(e));const i=e._gatheredStyle;return i?this.transformStyle(i,t):null}transformStyle(e,t=""){let i=rulesForStyle(e);return this.transformRules(i,t),e.textContent=toCssText(i),i}transformCustomStyle(e){let t=rulesForStyle(e);return forEachRule(t,e=>{":root"===e.selector&&(e.selector="html"),this.transformRule(e)}),e.textContent=toCssText(t),t}transformRules(e,t){this._currentElement=t,forEachRule(e,e=>{this.transformRule(e)}),this._currentElement=null}transformRule(e){e.cssText=this.transformCssText(e.parsedCssText,e),":root"===e.selector&&(e.selector=":host > *")}transformCssText(e,t){return e=e.replace(VAR_ASSIGN,(e,i,s,n)=>this._produceCssProperties(e,i,s,n,t)),this._consumeCssProperties(e,t)}_getInitialValueForProperty(e){return this._measureElement||(this._measureElement=document.createElement("meta"),this._measureElement.setAttribute("apply-shim-measure",""),this._measureElement.style.all="initial",document.head.appendChild(this._measureElement)),window.getComputedStyle(this._measureElement).getPropertyValue(e)}_fallbacksFromPreviousRules(e){let t=e;for(;t.parent;)t=t.parent;const i={};let s=!1;return forEachRule(t,t=>{(s=s||t===e)||t.selector===e.selector&&Object.assign(i,this._cssTextToMap(t.parsedCssText))}),i}_consumeCssProperties(e,t){let i=null;for(;i=MIXIN_MATCH.exec(e);){let s=i[0],n=i[1],r=i.index,o=r+s.indexOf("@apply"),a=r+s.length,l=e.slice(0,o),c=e.slice(a),d=t?this._fallbacksFromPreviousRules(t):{};Object.assign(d,this._cssTextToMap(l));let h=this._atApplyToCssProperties(n,d);e=`${l}${h}${c}`,MIXIN_MATCH.lastIndex=r+h.length}return e}_atApplyToCssProperties(e,t){e=e.replace(APPLY_NAME_CLEAN,"");let i=[],s=this._map.get(e);if(s||(this._map.set(e,{}),s=this._map.get(e)),s){let n,r,o;this._currentElement&&(s.dependants[this._currentElement]=!0);const a=s.properties;for(n in a)o=t&&t[n],r=[n,": var(",e,MIXIN_VAR_SEP,n],o&&r.push(",",o.replace(IMPORTANT,"")),r.push(")"),IMPORTANT.test(a[n])&&r.push(" !important"),i.push(r.join(""))}return i.join("; ")}_replaceInitialOrInherit(e,t){let i=INITIAL_INHERIT.exec(t);return i&&(t=i[1]?this._getInitialValueForProperty(e):"apply-shim-inherit"),t}_cssTextToMap(e,t=!1){let i,s,n=e.split(";"),r={};for(let e,o,a=0;a<n.length;a++)(e=n[a])&&(o=e.split(":")).length>1&&(i=o[0].trim(),s=o.slice(1).join(":"),t&&(s=this._replaceInitialOrInherit(i,s)),r[i]=s);return r}_invalidateMixinEntry(e){if(invalidCallback)for(let t in e.dependants)t!==this._currentElement&&invalidCallback(t)}_produceCssProperties(e,t,i,s,n){if(i&&processVariableAndFallback(i,(e,t)=>{t&&this._map.get(t)&&(s=`@apply ${t};`)}),!s)return e;let r=this._consumeCssProperties(""+s,n),o=e.slice(0,e.indexOf("--")),a=this._cssTextToMap(r,!0),l=a,c=this._map.get(t),d=c&&c.properties;d?l=Object.assign(Object.create(d),a):this._map.set(t,l);let h,p,u=[],_=!1;for(h in l)void 0===(p=a[h])&&(p="initial"),!d||h in d||(_=!0),u.push(`${t}${MIXIN_VAR_SEP}${h}: ${p}`);return _&&this._invalidateMixinEntry(c),c&&(c.properties=l),i&&(o=`${e};${o}`),`${o}${u.join("; ")};`}}ApplyShim.prototype.detectMixin=ApplyShim.prototype.detectMixin,ApplyShim.prototype.transformStyle=ApplyShim.prototype.transformStyle,ApplyShim.prototype.transformCustomStyle=ApplyShim.prototype.transformCustomStyle,ApplyShim.prototype.transformRules=ApplyShim.prototype.transformRules,ApplyShim.prototype.transformRule=ApplyShim.prototype.transformRule,ApplyShim.prototype.transformTemplate=ApplyShim.prototype.transformTemplate,ApplyShim.prototype._separator=MIXIN_VAR_SEP,Object.defineProperty(ApplyShim.prototype,"invalidCallback",{get:()=>invalidCallback,set(e){invalidCallback=e}});const templateMap={},CURRENT_VERSION="_applyShimCurrentVersion",NEXT_VERSION="_applyShimNextVersion",VALIDATING_VERSION="_applyShimValidatingVersion",promise=Promise.resolve();function invalidate(e){let t=templateMap[e];t&&invalidateTemplate(t)}function invalidateTemplate(e){e[CURRENT_VERSION]=e[CURRENT_VERSION]||0,e[VALIDATING_VERSION]=e[VALIDATING_VERSION]||0,e[NEXT_VERSION]=(e[NEXT_VERSION]||0)+1}function templateIsValid(e){return e[CURRENT_VERSION]===e[NEXT_VERSION]}function templateIsValidating(e){return!templateIsValid(e)&&e[VALIDATING_VERSION]===e[NEXT_VERSION]}function startValidatingTemplate(e){e[VALIDATING_VERSION]=e[NEXT_VERSION],e._validating||(e._validating=!0,promise.then(function(){e[CURRENT_VERSION]=e[NEXT_VERSION],e._validating=!1}))}let resolveFn,readyPromise=null,whenReady=window.HTMLImports&&window.HTMLImports.whenReady||null;function documentWait(e){requestAnimationFrame(function(){whenReady?whenReady(e):(readyPromise||(readyPromise=new Promise(e=>{resolveFn=e}),"complete"===document.readyState?resolveFn():document.addEventListener("readystatechange",()=>{"complete"===document.readyState&&resolveFn()})),readyPromise.then(function(){e&&e()}))})}const SEEN_MARKER="__seenByShadyCSS",CACHED_STYLE="__shadyCSSCachedStyle";let transformFn=null,validateFn=null;class CustomStyleInterface{constructor(){this.customStyles=[],this.enqueued=!1,documentWait(()=>{window.ShadyCSS.flushCustomStyles&&window.ShadyCSS.flushCustomStyles()})}enqueueDocumentValidation(){!this.enqueued&&validateFn&&(this.enqueued=!0,documentWait(validateFn))}addCustomStyle(e){e[SEEN_MARKER]||(e[SEEN_MARKER]=!0,this.customStyles.push(e),this.enqueueDocumentValidation())}getStyleForCustomStyle(e){if(e[CACHED_STYLE])return e[CACHED_STYLE];let t;return t=e.getStyle?e.getStyle():e}processStyles(){const e=this.customStyles;for(let t=0;t<e.length;t++){const i=e[t];if(i[CACHED_STYLE])continue;const s=this.getStyleForCustomStyle(i);if(s){const e=s.__appliedElement||s;transformFn&&transformFn(e),i[CACHED_STYLE]=e}}return e}}CustomStyleInterface.prototype.addCustomStyle=CustomStyleInterface.prototype.addCustomStyle,CustomStyleInterface.prototype.getStyleForCustomStyle=CustomStyleInterface.prototype.getStyleForCustomStyle,CustomStyleInterface.prototype.processStyles=CustomStyleInterface.prototype.processStyles,Object.defineProperties(CustomStyleInterface.prototype,{transformCallback:{get:()=>transformFn,set(e){transformFn=e}},validateCallback:{get:()=>validateFn,set(e){let t=!1;validateFn||(t=!0),validateFn=e,t&&this.enqueueDocumentValidation()}}});const applyShim=new ApplyShim;class ApplyShimInterface{constructor(){this.customStyleInterface=null,applyShim.invalidCallback=invalidate}ensure(){this.customStyleInterface||window.ShadyCSS.CustomStyleInterface&&(this.customStyleInterface=window.ShadyCSS.CustomStyleInterface,this.customStyleInterface.transformCallback=(e=>{applyShim.transformCustomStyle(e)}),this.customStyleInterface.validateCallback=(()=>{requestAnimationFrame(()=>{this.customStyleInterface.enqueued&&this.flushCustomStyles()})}))}prepareTemplate(e,t){if(this.ensure(),elementHasBuiltCss(e))return;templateMap[t]=e;let i=applyShim.transformTemplate(e,t);e._styleAst=i}flushCustomStyles(){if(this.ensure(),!this.customStyleInterface)return;let e=this.customStyleInterface.processStyles();if(this.customStyleInterface.enqueued){for(let t=0;t<e.length;t++){let i=e[t],s=this.customStyleInterface.getStyleForCustomStyle(i);s&&applyShim.transformCustomStyle(s)}this.customStyleInterface.enqueued=!1}}styleSubtree(e,t){if(this.ensure(),t&&updateNativeProperties(e,t),e.shadowRoot){this.styleElement(e);let t=e.shadowRoot.children||e.shadowRoot.childNodes;for(let e=0;e<t.length;e++)this.styleSubtree(t[e])}else{let t=e.children||e.childNodes;for(let e=0;e<t.length;e++)this.styleSubtree(t[e])}}styleElement(e){this.ensure();let{is:t}=getIsExtends(e),i=templateMap[t];if((!i||!elementHasBuiltCss(i))&&i&&!templateIsValid(i)){templateIsValidating(i)||(this.prepareTemplate(i,t),startValidatingTemplate(i));let s=e.shadowRoot;if(s){let e=s.querySelector("style");e&&(e.__cssRules=i._styleAst,e.textContent=toCssText(i._styleAst))}}}styleDocument(e){this.ensure(),this.styleSubtree(document.body,e)}}if(!window.ShadyCSS||!window.ShadyCSS.ScopingShim){const e=new ApplyShimInterface;let t=window.ShadyCSS&&window.ShadyCSS.CustomStyleInterface;window.ShadyCSS={prepareTemplate(t,i,s){e.flushCustomStyles(),e.prepareTemplate(t,i)},prepareTemplateStyles(e,t,i){window.ShadyCSS.prepareTemplate(e,t,i)},prepareTemplateDom(e,t){},styleSubtree(t,i){e.flushCustomStyles(),e.styleSubtree(t,i)},styleElement(t){e.flushCustomStyles(),e.styleElement(t)},styleDocument(t){e.flushCustomStyles(),e.styleDocument(t)},getComputedStyleValue:(e,t)=>getComputedStyleValue(e,t),flushCustomStyles(){e.flushCustomStyles()},nativeCss:nativeCssVariables,nativeShadow:nativeShadow,cssBuild:cssBuild,disableRuntime:disableRuntime},t&&(window.ShadyCSS.CustomStyleInterface=t)}window.ShadyCSS.ApplyShim=applyShim,window.JSCompiler_renameProperty=function(e,t){return e};let workingURL,resolveDoc,CSS_URL_RX=/(url\()([^)]*)(\))/g,ABS_URL=/(^\/)|(^#)|(^[\w-\d]*:)/;function resolveUrl(e,t){if(e&&ABS_URL.test(e))return e;if(void 0===workingURL){workingURL=!1;try{const e=new URL("b","http://a");e.pathname="c%20d",workingURL="http://a/c%20d"===e.href}catch(e){}}return t||(t=document.baseURI||window.location.href),workingURL?new URL(e,t).href:(resolveDoc||((resolveDoc=document.implementation.createHTMLDocument("temp")).base=resolveDoc.createElement("base"),resolveDoc.head.appendChild(resolveDoc.base),resolveDoc.anchor=resolveDoc.createElement("a"),resolveDoc.body.appendChild(resolveDoc.anchor)),resolveDoc.base.href=t,resolveDoc.anchor.href=e,resolveDoc.anchor.href||e)}function resolveCss(e,t){return e.replace(CSS_URL_RX,function(e,i,s,n){return i+"'"+resolveUrl(s.replace(/["']/g,""),t)+"'"+n})}function pathFromUrl(e){return e.substring(0,e.lastIndexOf("/")+1)}const useShadow=!window.ShadyDOM,useNativeCSSProperties=Boolean(!window.ShadyCSS||window.ShadyCSS.nativeCss),useNativeCustomElements=!window.customElements.polyfillWrapFlushCallback;let rootPath=pathFromUrl(document.baseURI||window.location.href),sanitizeDOMValue=window.Polymer&&window.Polymer.sanitizeDOMValue||void 0,passiveTouchGestures=!1,strictTemplatePolicy=!1,allowTemplateFromDomModule=!1,dedupeId=0;const dedupingMixin=function(e){let t=e.__mixinApplications;t||(t=new WeakMap,e.__mixinApplications=t);let i=dedupeId++;return function(s){let n=s.__mixinSet;if(n&&n[i])return s;let r=t,o=r.get(s);o||(o=e(s),r.set(s,o));let a=Object.create(o.__mixinSet||n||null);return a[i]=!0,o.__mixinSet=a,o}};let modules={},lcModules={};function setModule(e,t){modules[e]=lcModules[e.toLowerCase()]=t}function findModule(e){return modules[e]||lcModules[e.toLowerCase()]}function styleOutsideTemplateCheck(e){e.querySelector("style")&&console.warn("dom-module %s has style outside template",e.id)}class DomModule extends HTMLElement{static get observedAttributes(){return["id"]}static import(e,t){if(e){let i=findModule(e);return i&&t?i.querySelector(t):i}return null}attributeChangedCallback(e,t,i,s){t!==i&&this.register()}get assetpath(){if(!this.__assetpath){const e=window.HTMLImports&&HTMLImports.importForElement?HTMLImports.importForElement(this)||document:this.ownerDocument,t=resolveUrl(this.getAttribute("assetpath")||"",e.baseURI);this.__assetpath=pathFromUrl(t)}return this.__assetpath}register(e){if(e=e||this.id){if(strictTemplatePolicy&&void 0!==findModule(e))throw setModule(e,null),new Error(`strictTemplatePolicy: dom-module ${e} re-registered`);this.id=e,setModule(e,this),styleOutsideTemplateCheck(this)}}}DomModule.prototype.modules=modules,customElements.define("dom-module",DomModule);const MODULE_STYLE_LINK_SELECTOR="link[rel=import][type~=css]",INCLUDE_ATTR="include",SHADY_UNSCOPED_ATTR="shady-unscoped";function importModule(e){return DomModule.import(e)}function styleForImport(e){const t=resolveCss((e.body?e.body:e).textContent,e.baseURI),i=document.createElement("style");return i.textContent=t,i}function stylesFromModules(e){const t=e.trim().split(/\s+/),i=[];for(let e=0;e<t.length;e++)i.push(...stylesFromModule(t[e]));return i}function stylesFromModule(e){const t=importModule(e);if(!t)return console.warn("Could not find style data in module named",e),[];if(void 0===t._styles){const e=[];e.push(..._stylesFromModuleImports(t));const i=t.querySelector("template");i&&e.push(...stylesFromTemplate(i,t.assetpath)),t._styles=e}return t._styles}function stylesFromTemplate(e,t){if(!e._styles){const i=[],s=e.content.querySelectorAll("style");for(let e=0;e<s.length;e++){let n=s[e],r=n.getAttribute(INCLUDE_ATTR);r&&i.push(...stylesFromModules(r).filter(function(e,t,i){return i.indexOf(e)===t})),t&&(n.textContent=resolveCss(n.textContent,t)),i.push(n)}e._styles=i}return e._styles}function stylesFromModuleImports(e){let t=importModule(e);return t?_stylesFromModuleImports(t):[]}function _stylesFromModuleImports(e){const t=[],i=e.querySelectorAll(MODULE_STYLE_LINK_SELECTOR);for(let e=0;e<i.length;e++){let s=i[e];if(s.import){const e=s.import,i=s.hasAttribute(SHADY_UNSCOPED_ATTR);if(i&&!e._unscopedStyle){const t=styleForImport(e);t.setAttribute(SHADY_UNSCOPED_ATTR,""),e._unscopedStyle=t}else e._style||(e._style=styleForImport(e));t.push(i?e._unscopedStyle:e._style)}}return t}function cssFromModules(e){let t=e.trim().split(/\s+/),i="";for(let e=0;e<t.length;e++)i+=cssFromModule(t[e]);return i}function cssFromModule(e){let t=importModule(e);if(t&&void 0===t._cssText){let e=_cssFromModuleImports(t),i=t.querySelector("template");i&&(e+=cssFromTemplate(i,t.assetpath)),t._cssText=e||null}return t||console.warn("Could not find style data in module named",e),t&&t._cssText||""}function cssFromTemplate(e,t){let i="";const s=stylesFromTemplate(e,t);for(let e=0;e<s.length;e++){let t=s[e];t.parentNode&&t.parentNode.removeChild(t),i+=t.textContent}return i}function _cssFromModuleImports(e){let t="",i=_stylesFromModuleImports(e);for(let e=0;e<i.length;e++)t+=i[e].textContent;return t}function isPath(e){return e.indexOf(".")>=0}function root(e){let t=e.indexOf(".");return-1===t?e:e.slice(0,t)}function isAncestor(e,t){return 0===e.indexOf(t+".")}function isDescendant(e,t){return 0===t.indexOf(e+".")}function translate(e,t,i){return t+i.slice(e.length)}function matches(e,t){return e===t||isAncestor(e,t)||isDescendant(e,t)}function normalize(e){if(Array.isArray(e)){let t=[];for(let i=0;i<e.length;i++){let s=e[i].toString().split(".");for(let e=0;e<s.length;e++)t.push(s[e])}return t.join(".")}return e}function split(e){return Array.isArray(e)?normalize(e).split("."):e.toString().split(".")}function get(e,t,i){let s=e,n=split(t);for(let e=0;e<n.length;e++){if(!s)return;s=s[n[e]]}return i&&(i.path=n.join(".")),s}function set(e,t,i){let s=e,n=split(t),r=n[n.length-1];if(n.length>1){for(let e=0;e<n.length-1;e++){if(!(s=s[n[e]]))return}s[r]=i}else s[t]=i;return n.join(".")}const caseMap={},DASH_TO_CAMEL=/-[a-z]/g,CAMEL_TO_DASH=/([A-Z])/g;function dashToCamelCase(e){return caseMap[e]||(caseMap[e]=e.indexOf("-")<0?e:e.replace(DASH_TO_CAMEL,e=>e[1].toUpperCase()))}function camelToDashCase(e){return caseMap[e]||(caseMap[e]=e.replace(CAMEL_TO_DASH,"-$1").toLowerCase())}let microtaskCurrHandle=0,microtaskLastHandle=0,microtaskCallbacks=[],microtaskNodeContent=0,microtaskNode=document.createTextNode("");function microtaskFlush(){const e=microtaskCallbacks.length;for(let t=0;t<e;t++){let e=microtaskCallbacks[t];if(e)try{e()}catch(e){setTimeout(()=>{throw e})}}microtaskCallbacks.splice(0,e),microtaskLastHandle+=e}new window.MutationObserver(microtaskFlush).observe(microtaskNode,{characterData:!0});const timeOut={after:e=>({run:t=>window.setTimeout(t,e),cancel(e){window.clearTimeout(e)}}),run:(e,t)=>window.setTimeout(e,t),cancel(e){window.clearTimeout(e)}},microTask={run:e=>(microtaskNode.textContent=microtaskNodeContent++,microtaskCallbacks.push(e),microtaskCurrHandle++),cancel(e){const t=e-microtaskLastHandle;if(t>=0){if(!microtaskCallbacks[t])throw new Error("invalid async handle: "+e);microtaskCallbacks[t]=null}}},microtask=microTask,PropertiesChanged=dedupingMixin(e=>{return class extends e{static createProperties(e){const t=this.prototype;for(let i in e)i in t||t._createPropertyAccessor(i)}static attributeNameForProperty(e){return e.toLowerCase()}static typeForProperty(e){}_createPropertyAccessor(e,t){this._addPropertyToAttributeMap(e),this.hasOwnProperty("__dataHasAccessor")||(this.__dataHasAccessor=Object.assign({},this.__dataHasAccessor)),this.__dataHasAccessor[e]||(this.__dataHasAccessor[e]=!0,this._definePropertyAccessor(e,t))}_addPropertyToAttributeMap(e){if(this.hasOwnProperty("__dataAttributes")||(this.__dataAttributes=Object.assign({},this.__dataAttributes)),!this.__dataAttributes[e]){const t=this.constructor.attributeNameForProperty(e);this.__dataAttributes[t]=e}}_definePropertyAccessor(e,t){Object.defineProperty(this,e,{get(){return this._getProperty(e)},set:t?function(){}:function(t){this._setProperty(e,t)}})}constructor(){super(),this.__dataEnabled=!1,this.__dataReady=!1,this.__dataInvalid=!1,this.__data={},this.__dataPending=null,this.__dataOld=null,this.__dataInstanceProps=null,this.__serializing=!1,this._initializeProperties()}ready(){this.__dataReady=!0,this._flushProperties()}_initializeProperties(){for(let e in this.__dataHasAccessor)this.hasOwnProperty(e)&&(this.__dataInstanceProps=this.__dataInstanceProps||{},this.__dataInstanceProps[e]=this[e],delete this[e])}_initializeInstanceProperties(e){Object.assign(this,e)}_setProperty(e,t){this._setPendingProperty(e,t)&&this._invalidateProperties()}_getProperty(e){return this.__data[e]}_setPendingProperty(e,t,i){let s=this.__data[e],n=this._shouldPropertyChange(e,t,s);return n&&(this.__dataPending||(this.__dataPending={},this.__dataOld={}),!this.__dataOld||e in this.__dataOld||(this.__dataOld[e]=s),this.__data[e]=t,this.__dataPending[e]=t),n}_invalidateProperties(){!this.__dataInvalid&&this.__dataReady&&(this.__dataInvalid=!0,microtask.run(()=>{this.__dataInvalid&&(this.__dataInvalid=!1,this._flushProperties())}))}_enableProperties(){this.__dataEnabled||(this.__dataEnabled=!0,this.__dataInstanceProps&&(this._initializeInstanceProperties(this.__dataInstanceProps),this.__dataInstanceProps=null),this.ready())}_flushProperties(){const e=this.__data,t=this.__dataPending,i=this.__dataOld;this._shouldPropertiesChange(e,t,i)&&(this.__dataPending=null,this.__dataOld=null,this._propertiesChanged(e,t,i))}_shouldPropertiesChange(e,t,i){return Boolean(t)}_propertiesChanged(e,t,i){}_shouldPropertyChange(e,t,i){return i!==t&&(i==i||t==t)}attributeChangedCallback(e,t,i,s){t!==i&&this._attributeToProperty(e,i),super.attributeChangedCallback&&super.attributeChangedCallback(e,t,i,s)}_attributeToProperty(e,t,i){if(!this.__serializing){const s=this.__dataAttributes,n=s&&s[e]||e;this[n]=this._deserializeValue(t,i||this.constructor.typeForProperty(n))}}_propertyToAttribute(e,t,i){this.__serializing=!0,i=arguments.length<3?this[e]:i,this._valueToNodeAttribute(this,i,t||this.constructor.attributeNameForProperty(e)),this.__serializing=!1}_valueToNodeAttribute(e,t,i){const s=this._serializeValue(t);void 0===s?e.removeAttribute(i):e.setAttribute(i,s)}_serializeValue(e){switch(typeof e){case"boolean":return e?"":void 0;default:return null!=e?e.toString():void 0}}_deserializeValue(e,t){switch(t){case Boolean:return null!==e;case Number:return Number(e);default:return e}}}}),nativeProperties={};let proto=HTMLElement.prototype;for(;proto;){let e=Object.getOwnPropertyNames(proto);for(let t=0;t<e.length;t++)nativeProperties[e[t]]=!0;proto=Object.getPrototypeOf(proto)}function saveAccessorValue(e,t){if(!nativeProperties[t]){let i=e[t];void 0!==i&&(e.__data?e._setPendingProperty(t,i):(e.__dataProto?e.hasOwnProperty(JSCompiler_renameProperty("__dataProto",e))||(e.__dataProto=Object.create(e.__dataProto)):e.__dataProto={},e.__dataProto[t]=i))}}const PropertyAccessors=dedupingMixin(e=>{const t=PropertiesChanged(e);return class extends t{static createPropertiesForAttributes(){let e=this.observedAttributes;for(let t=0;t<e.length;t++)this.prototype._createPropertyAccessor(dashToCamelCase(e[t]))}static attributeNameForProperty(e){return camelToDashCase(e)}_initializeProperties(){this.__dataProto&&(this._initializeProtoProperties(this.__dataProto),this.__dataProto=null),super._initializeProperties()}_initializeProtoProperties(e){for(let t in e)this._setProperty(t,e[t])}_ensureAttribute(e,t){const i=this;i.hasAttribute(e)||this._valueToNodeAttribute(i,t,e)}_serializeValue(e){switch(typeof e){case"object":if(e instanceof Date)return e.toString();if(e)try{return JSON.stringify(e)}catch(e){return""}default:return super._serializeValue(e)}}_deserializeValue(e,t){let i;switch(t){case Object:try{i=JSON.parse(e)}catch(t){i=e}break;case Array:try{i=JSON.parse(e)}catch(t){i=null,console.warn(`Polymer::Attributes: couldn't decode Array as JSON: ${e}`)}break;case Date:i=isNaN(e)?String(e):Number(e),i=new Date(i);break;default:i=super._deserializeValue(e,t)}return i}_definePropertyAccessor(e,t){saveAccessorValue(this,e),super._definePropertyAccessor(e,t)}_hasAccessor(e){return this.__dataHasAccessor&&this.__dataHasAccessor[e]}_isPropertyPending(e){return Boolean(this.__dataPending&&e in this.__dataPending)}}}),templateExtensions={"dom-if":!0,"dom-repeat":!0};function wrapTemplateExtension(e){let t=e.getAttribute("is");if(t&&templateExtensions[t]){let i=e;for(i.removeAttribute("is"),e=i.ownerDocument.createElement(t),i.parentNode.replaceChild(e,i),e.appendChild(i);i.attributes.length;)e.setAttribute(i.attributes[0].name,i.attributes[0].value),i.removeAttribute(i.attributes[0].name)}return e}function findTemplateNode(e,t){let i=t.parentInfo&&findTemplateNode(e,t.parentInfo);if(!i)return e;for(let e=i.firstChild,s=0;e;e=e.nextSibling)if(t.parentIndex===s++)return e}function applyIdToMap(e,t,i,s){s.id&&(t[s.id]=i)}function applyEventListener(e,t,i){if(i.events&&i.events.length)for(let s,n=0,r=i.events;n<r.length&&(s=r[n]);n++)e._addMethodEventListenerToNode(t,s.name,s.value,e)}function applyTemplateContent(e,t,i){i.templateInfo&&(t._templateInfo=i.templateInfo)}function createNodeEventHandler(e,t,i){e=e._methodHost||e;return function(t){e[i]?e[i](t,t.detail):console.warn("listener method `"+i+"` not defined")}}const TemplateStamp=dedupingMixin(e=>{return class extends e{static _parseTemplate(e,t){if(!e._templateInfo){let i=e._templateInfo={};i.nodeInfoList=[],i.stripWhiteSpace=t&&t.stripWhiteSpace||e.hasAttribute("strip-whitespace"),this._parseTemplateContent(e,i,{parent:null})}return e._templateInfo}static _parseTemplateContent(e,t,i){return this._parseTemplateNode(e.content,t,i)}static _parseTemplateNode(e,t,i){let s,n=e;return"template"!=n.localName||n.hasAttribute("preserve-content")?"slot"===n.localName&&(t.hasInsertionPoint=!0):s=this._parseTemplateNestedTemplate(n,t,i)||s,n.firstChild&&(s=this._parseTemplateChildNodes(n,t,i)||s),n.hasAttributes&&n.hasAttributes()&&(s=this._parseTemplateNodeAttributes(n,t,i)||s),s}static _parseTemplateChildNodes(e,t,i){if("script"!==e.localName&&"style"!==e.localName)for(let s,n=e.firstChild,r=0;n;n=s){if("template"==n.localName&&(n=wrapTemplateExtension(n)),s=n.nextSibling,n.nodeType===Node.TEXT_NODE){let i=s;for(;i&&i.nodeType===Node.TEXT_NODE;)n.textContent+=i.textContent,s=i.nextSibling,e.removeChild(i),i=s;if(t.stripWhiteSpace&&!n.textContent.trim()){e.removeChild(n);continue}}let o={parentIndex:r,parentInfo:i};this._parseTemplateNode(n,t,o)&&(o.infoIndex=t.nodeInfoList.push(o)-1),n.parentNode&&r++}}static _parseTemplateNestedTemplate(e,t,i){let s=this._parseTemplate(e,t);return(s.content=e.content.ownerDocument.createDocumentFragment()).appendChild(e.content),i.templateInfo=s,!0}static _parseTemplateNodeAttributes(e,t,i){let s=!1,n=Array.from(e.attributes);for(let r,o=n.length-1;r=n[o];o--)s=this._parseTemplateNodeAttribute(e,t,i,r.name,r.value)||s;return s}static _parseTemplateNodeAttribute(e,t,i,s,n){return"on-"===s.slice(0,3)?(e.removeAttribute(s),i.events=i.events||[],i.events.push({name:s.slice(3),value:n}),!0):"id"===s&&(i.id=n,!0)}static _contentForTemplate(e){let t=e._templateInfo;return t&&t.content||e.content}_stampTemplate(e){e&&!e.content&&window.HTMLTemplateElement&&HTMLTemplateElement.decorate&&HTMLTemplateElement.decorate(e);let t=this.constructor._parseTemplate(e),i=t.nodeInfoList,s=t.content||e.content,n=document.importNode(s,!0);n.__noInsertionPoint=!t.hasInsertionPoint;let r=n.nodeList=new Array(i.length);n.$={};for(let e,t=0,s=i.length;t<s&&(e=i[t]);t++){let i=r[t]=findTemplateNode(n,e);applyIdToMap(this,n.$,i,e),applyTemplateContent(this,i,e),applyEventListener(this,i,e)}return n=n}_addMethodEventListenerToNode(e,t,i,s){let n=createNodeEventHandler(s=s||e,t,i);return this._addEventListenerToNode(e,t,n),n}_addEventListenerToNode(e,t,i){e.addEventListener(t,i)}_removeEventListenerFromNode(e,t,i){e.removeEventListener(t,i)}}});let dedupeId$1=0;const TYPES={COMPUTE:"__computeEffects",REFLECT:"__reflectEffects",NOTIFY:"__notifyEffects",PROPAGATE:"__propagateEffects",OBSERVE:"__observeEffects",READ_ONLY:"__readOnly"},capitalAttributeRegex=/[A-Z]/;function ensureOwnEffectMap(e,t){let i=e[t];if(i){if(!e.hasOwnProperty(t)){i=e[t]=Object.create(e[t]);for(let e in i){let t=i[e],s=i[e]=Array(t.length);for(let e=0;e<t.length;e++)s[e]=t[e]}}}else i=e[t]={};return i}function runEffects(e,t,i,s,n,r){if(t){let o=!1,a=dedupeId$1++;for(let l in i)runEffectsForProperty(e,t,a,l,i,s,n,r)&&(o=!0);return o}return!1}function runEffectsForProperty(e,t,i,s,n,r,o,a){let l=!1,c=t[o?root(s):s];if(c)for(let t,d=0,h=c.length;d<h&&(t=c[d]);d++)t.info&&t.info.lastRun===i||o&&!pathMatchesTrigger(s,t.trigger)||(t.info&&(t.info.lastRun=i),t.fn(e,s,n,r,t.info,o,a),l=!0);return l}function pathMatchesTrigger(e,t){if(t){let i=t.name;return i==e||t.structured&&isAncestor(i,e)||t.wildcard&&isDescendant(i,e)}return!0}function runObserverEffect(e,t,i,s,n){let r="string"==typeof n.method?e[n.method]:n.method,o=n.property;r?r.call(e,e.__data[o],s[o]):n.dynamicFn||console.warn("observer method `"+n.method+"` not defined")}function runNotifyEffects(e,t,i,s,n){let r,o,a=e[TYPES.NOTIFY],l=dedupeId$1++;for(let o in t)t[o]&&(a&&runEffectsForProperty(e,a,l,o,i,s,n)?r=!0:n&&notifyPath(e,o,i)&&(r=!0));r&&(o=e.__dataHost)&&o._invalidateProperties&&o._invalidateProperties()}function notifyPath(e,t,i){let s=root(t);if(s!==t){return dispatchNotifyEvent(e,camelToDashCase(s)+"-changed",i[t],t),!0}return!1}function dispatchNotifyEvent(e,t,i,s){let n={value:i,queueProperty:!0};s&&(n.path=s),e.dispatchEvent(new CustomEvent(t,{detail:n}))}function runNotifyEffect(e,t,i,s,n,r){let o=(r?root(t):t)!=t?t:null,a=o?get(e,o):e.__data[t];o&&void 0===a&&(a=i[t]),dispatchNotifyEvent(e,n.eventName,a,o)}function handleNotification(e,t,i,s,n){let r,o=e.detail,a=o&&o.path;a?(s=translate(i,s,a),r=o&&o.value):r=e.currentTarget[i],r=n?!r:r,t[TYPES.READ_ONLY]&&t[TYPES.READ_ONLY][s]||!t._setPendingPropertyOrPath(s,r,!0,Boolean(a))||o&&o.queueProperty||t._invalidateProperties()}function runReflectEffect(e,t,i,s,n){let r=e.__data[t];sanitizeDOMValue&&(r=sanitizeDOMValue(r,n.attrName,"attribute",e)),e._propertyToAttribute(t,n.attrName,r)}function runComputedEffects(e,t,i,s){let n=e[TYPES.COMPUTE];if(n){let r=t;for(;runEffects(e,n,r,i,s);)Object.assign(i,e.__dataOld),Object.assign(t,e.__dataPending),r=e.__dataPending,e.__dataPending=null}}function runComputedEffect(e,t,i,s,n){let r=runMethodEffect(e,t,i,s,n),o=n.methodInfo;e.__dataHasAccessor&&e.__dataHasAccessor[o]?e._setPendingProperty(o,r,!0):e[o]=r}function computeLinkedPaths(e,t,i){let s=e.__dataLinkedPaths;if(s){let n;for(let r in s){let o=s[r];isDescendant(r,t)?(n=translate(r,o,t),e._setPendingPropertyOrPath(n,i,!0,!0)):isDescendant(o,t)&&(n=translate(o,r,t),e._setPendingPropertyOrPath(n,i,!0,!0))}}}function addBinding(e,t,i,s,n,r,o){i.bindings=i.bindings||[];let a={kind:s,target:n,parts:r,literal:o,isCompound:1!==r.length};if(i.bindings.push(a),shouldAddListener(a)){let{event:e,negate:t}=a.parts[0];a.listenerEvent=e||camelToDashCase(n)+"-changed",a.listenerNegate=t}let l=t.nodeInfoList.length;for(let i=0;i<a.parts.length;i++){let s=a.parts[i];s.compoundIndex=i,addEffectForBindingPart(e,t,a,s,l)}}function addEffectForBindingPart(e,t,i,s,n){if(!s.literal)if("attribute"===i.kind&&"-"===i.target[0])console.warn("Cannot set attribute "+i.target+' because "-" is not a valid attribute starting character');else{let r=s.dependencies,o={index:n,binding:i,part:s,evaluator:e};for(let i=0;i<r.length;i++){let s=r[i];"string"==typeof s&&((s=parseArg(s)).wildcard=!0),e._addTemplatePropertyEffect(t,s.rootProperty,{fn:runBindingEffect,info:o,trigger:s})}}}function runBindingEffect(e,t,i,s,n,r,o){let a=o[n.index],l=n.binding,c=n.part;if(r&&c.source&&t.length>c.source.length&&"property"==l.kind&&!l.isCompound&&a.__isPropertyEffectsClient&&a.__dataHasAccessor&&a.__dataHasAccessor[l.target]){let s=i[t];t=translate(c.source,l.target,t),a._setPendingPropertyOrPath(t,s,!1,!0)&&e._enqueueClient(a)}else{applyBindingValue(e,a,l,c,n.evaluator._evaluateBinding(e,c,t,i,s,r))}}function applyBindingValue(e,t,i,s,n){if(n=computeBindingValue(t,n,i,s),sanitizeDOMValue&&(n=sanitizeDOMValue(n,i.target,i.kind,t)),"attribute"==i.kind)e._valueToNodeAttribute(t,n,i.target);else{let s=i.target;t.__isPropertyEffectsClient&&t.__dataHasAccessor&&t.__dataHasAccessor[s]?t[TYPES.READ_ONLY]&&t[TYPES.READ_ONLY][s]||t._setPendingProperty(s,n)&&e._enqueueClient(t):e._setUnmanagedPropertyToNode(t,s,n)}}function computeBindingValue(e,t,i,s){if(i.isCompound){let n=e.__dataCompoundStorage[i.target];n[s.compoundIndex]=t,t=n.join("")}return"attribute"!==i.kind&&("textContent"!==i.target&&("value"!==i.target||"input"!==e.localName&&"textarea"!==e.localName)||(t=null==t?"":t)),t}function shouldAddListener(e){return Boolean(e.target)&&"attribute"!=e.kind&&"text"!=e.kind&&!e.isCompound&&"{"===e.parts[0].mode}function setupBindings(e,t){let{nodeList:i,nodeInfoList:s}=t;if(s.length)for(let t=0;t<s.length;t++){let n=s[t],r=i[t],o=n.bindings;if(o)for(let t=0;t<o.length;t++){let i=o[t];setupCompoundStorage(r,i),addNotifyListener(r,e,i)}r.__dataHost=e}}function setupCompoundStorage(e,t){if(t.isCompound){let i=e.__dataCompoundStorage||(e.__dataCompoundStorage={}),s=t.parts,n=new Array(s.length);for(let e=0;e<s.length;e++)n[e]=s[e].literal;let r=t.target;i[r]=n,t.literal&&"property"==t.kind&&(e[r]=t.literal)}}function addNotifyListener(e,t,i){if(i.listenerEvent){let s=i.parts[0];e.addEventListener(i.listenerEvent,function(e){handleNotification(e,t,i.target,s.source,s.negate)})}}function createMethodEffect(e,t,i,s,n,r){r=t.static||r&&("object"!=typeof r||r[t.methodName]);let o={methodName:t.methodName,args:t.args,methodInfo:n,dynamicFn:r};for(let n,r=0;r<t.args.length&&(n=t.args[r]);r++)n.literal||e._addPropertyEffect(n.rootProperty,i,{fn:s,info:o,trigger:n});r&&e._addPropertyEffect(t.methodName,i,{fn:s,info:o})}function runMethodEffect(e,t,i,s,n){let r=e._methodHost||e,o=r[n.methodName];if(o){let s=e._marshalArgs(n.args,t,i);return o.apply(r,s)}n.dynamicFn||console.warn("method `"+n.methodName+"` not defined")}const emptyArray=[],IDENT="(?:[a-zA-Z_$][\\w.:$\\-*]*)",NUMBER="(?:[-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?)",SQUOTE_STRING="(?:'(?:[^'\\\\]|\\\\.)*')",DQUOTE_STRING='(?:"(?:[^"\\\\]|\\\\.)*")',STRING="(?:"+SQUOTE_STRING+"|"+DQUOTE_STRING+")",ARGUMENT="(?:("+IDENT+"|"+NUMBER+"|"+STRING+")\\s*)",ARGUMENTS="(?:"+ARGUMENT+"(?:,\\s*"+ARGUMENT+")*)",ARGUMENT_LIST="(?:\\(\\s*(?:"+ARGUMENTS+"?)\\)\\s*)",BINDING="("+IDENT+"\\s*"+ARGUMENT_LIST+"?)",OPEN_BRACKET="(\\[\\[|{{)\\s*",CLOSE_BRACKET="(?:]]|}})",NEGATE="(?:(!)\\s*)?",EXPRESSION=OPEN_BRACKET+NEGATE+BINDING+"(?:]]|}})",bindingRegex=new RegExp(EXPRESSION,"g");function literalFromParts(e){let t="";for(let i=0;i<e.length;i++){t+=e[i].literal||""}return t}function parseMethod(e){let t=e.match(/([^\s]+?)\(([\s\S]*)\)/);if(t){let e={methodName:t[1],static:!0,args:emptyArray};if(t[2].trim()){return parseArgs(t[2].replace(/\\,/g,"&comma;").split(","),e)}return e}return null}function parseArgs(e,t){return t.args=e.map(function(e){let i=parseArg(e);return i.literal||(t.static=!1),i},this),t}function parseArg(e){let t=e.trim().replace(/&comma;/g,",").replace(/\\(.)/g,"$1"),i={name:t,value:"",literal:!1},s=t[0];switch("-"===s&&(s=t[1]),s>="0"&&s<="9"&&(s="#"),s){case"'":case'"':i.value=t.slice(1,-1),i.literal=!0;break;case"#":i.value=Number(t),i.literal=!0}return i.literal||(i.rootProperty=root(t),i.structured=isPath(t),i.structured&&(i.wildcard=".*"==t.slice(-2),i.wildcard&&(i.name=t.slice(0,-2)))),i}function notifySplices(e,t,i,s){let n=i+".splices";e.notifyPath(n,{indexSplices:s}),e.notifyPath(i+".length",t.length),e.__data[n]={indexSplices:null}}function notifySplice(e,t,i,s,n,r){notifySplices(e,t,i,[{index:s,addedCount:n,removed:r,object:t,type:"splice"}])}function upper(e){return e[0].toUpperCase()+e.substring(1)}const PropertyEffects=dedupingMixin(e=>{const t=TemplateStamp(PropertyAccessors(e));return class extends t{constructor(){super(),this.__isPropertyEffectsClient=!0,this.__dataCounter=0,this.__dataClientsReady,this.__dataPendingClients,this.__dataToNotify,this.__dataLinkedPaths,this.__dataHasPaths,this.__dataCompoundStorage,this.__dataHost,this.__dataTemp,this.__dataClientsInitialized,this.__data,this.__dataPending,this.__dataOld,this.__computeEffects,this.__reflectEffects,this.__notifyEffects,this.__propagateEffects,this.__observeEffects,this.__readOnly,this.__templateInfo}get PROPERTY_EFFECT_TYPES(){return TYPES}_initializeProperties(){super._initializeProperties(),hostStack.registerHost(this),this.__dataClientsReady=!1,this.__dataPendingClients=null,this.__dataToNotify=null,this.__dataLinkedPaths=null,this.__dataHasPaths=!1,this.__dataCompoundStorage=this.__dataCompoundStorage||null,this.__dataHost=this.__dataHost||null,this.__dataTemp={},this.__dataClientsInitialized=!1}_initializeProtoProperties(e){this.__data=Object.create(e),this.__dataPending=Object.create(e),this.__dataOld={}}_initializeInstanceProperties(e){let t=this[TYPES.READ_ONLY];for(let i in e)t&&t[i]||(this.__dataPending=this.__dataPending||{},this.__dataOld=this.__dataOld||{},this.__data[i]=this.__dataPending[i]=e[i])}_addPropertyEffect(e,t,i){this._createPropertyAccessor(e,t==TYPES.READ_ONLY);let s=ensureOwnEffectMap(this,t)[e];s||(s=this[t][e]=[]),s.push(i)}_removePropertyEffect(e,t,i){let s=ensureOwnEffectMap(this,t)[e],n=s.indexOf(i);n>=0&&s.splice(n,1)}_hasPropertyEffect(e,t){let i=this[t];return Boolean(i&&i[e])}_hasReadOnlyEffect(e){return this._hasPropertyEffect(e,TYPES.READ_ONLY)}_hasNotifyEffect(e){return this._hasPropertyEffect(e,TYPES.NOTIFY)}_hasReflectEffect(e){return this._hasPropertyEffect(e,TYPES.REFLECT)}_hasComputedEffect(e){return this._hasPropertyEffect(e,TYPES.COMPUTE)}_setPendingPropertyOrPath(e,t,i,s){if(s||root(Array.isArray(e)?e[0]:e)!==e){if(!s){let i=get(this,e);if(!(e=set(this,e,t))||!super._shouldPropertyChange(e,t,i))return!1}if(this.__dataHasPaths=!0,this._setPendingProperty(e,t,i))return computeLinkedPaths(this,e,t),!0}else{if(this.__dataHasAccessor&&this.__dataHasAccessor[e])return this._setPendingProperty(e,t,i);this[e]=t}return!1}_setUnmanagedPropertyToNode(e,t,i){i===e[t]&&"object"!=typeof i||(e[t]=i)}_setPendingProperty(e,t,i){let s=this.__dataHasPaths&&isPath(e),n=s?this.__dataTemp:this.__data;return!!this._shouldPropertyChange(e,t,n[e])&&(this.__dataPending||(this.__dataPending={},this.__dataOld={}),e in this.__dataOld||(this.__dataOld[e]=this.__data[e]),s?this.__dataTemp[e]=t:this.__data[e]=t,this.__dataPending[e]=t,(s||this[TYPES.NOTIFY]&&this[TYPES.NOTIFY][e])&&(this.__dataToNotify=this.__dataToNotify||{},this.__dataToNotify[e]=i),!0)}_setProperty(e,t){this._setPendingProperty(e,t,!0)&&this._invalidateProperties()}_invalidateProperties(){this.__dataReady&&this._flushProperties()}_enqueueClient(e){this.__dataPendingClients=this.__dataPendingClients||[],e!==this&&this.__dataPendingClients.push(e)}_flushProperties(){this.__dataCounter++,super._flushProperties(),this.__dataCounter--}_flushClients(){this.__dataClientsReady?this.__enableOrFlushClients():(this.__dataClientsReady=!0,this._readyClients(),this.__dataReady=!0)}__enableOrFlushClients(){let e=this.__dataPendingClients;if(e){this.__dataPendingClients=null;for(let t=0;t<e.length;t++){let i=e[t];i.__dataEnabled?i.__dataPending&&i._flushProperties():i._enableProperties()}}}_readyClients(){this.__enableOrFlushClients()}setProperties(e,t){for(let i in e)!t&&this[TYPES.READ_ONLY]&&this[TYPES.READ_ONLY][i]||this._setPendingPropertyOrPath(i,e[i],!0);this._invalidateProperties()}ready(){this._flushProperties(),this.__dataClientsReady||this._flushClients(),this.__dataPending&&this._flushProperties()}_propertiesChanged(e,t,i){let s=this.__dataHasPaths;this.__dataHasPaths=!1,runComputedEffects(this,t,i,s);let n=this.__dataToNotify;this.__dataToNotify=null,this._propagatePropertyChanges(t,i,s),this._flushClients(),runEffects(this,this[TYPES.REFLECT],t,i,s),runEffects(this,this[TYPES.OBSERVE],t,i,s),n&&runNotifyEffects(this,n,t,i,s),1==this.__dataCounter&&(this.__dataTemp={})}_propagatePropertyChanges(e,t,i){this[TYPES.PROPAGATE]&&runEffects(this,this[TYPES.PROPAGATE],e,t,i);let s=this.__templateInfo;for(;s;)runEffects(this,s.propertyEffects,e,t,i,s.nodeList),s=s.nextTemplateInfo}linkPaths(e,t){e=normalize(e),t=normalize(t),this.__dataLinkedPaths=this.__dataLinkedPaths||{},this.__dataLinkedPaths[e]=t}unlinkPaths(e){e=normalize(e),this.__dataLinkedPaths&&delete this.__dataLinkedPaths[e]}notifySplices(e,t){let i={path:""};notifySplices(this,get(this,e,i),i.path,t)}get(e,t){return get(t||this,e)}set(e,t,i){i?set(i,e,t):this[TYPES.READ_ONLY]&&this[TYPES.READ_ONLY][e]||this._setPendingPropertyOrPath(e,t,!0)&&this._invalidateProperties()}push(e,...t){let i={path:""},s=get(this,e,i),n=s.length,r=s.push(...t);return t.length&&notifySplice(this,s,i.path,n,t.length,[]),r}pop(e){let t={path:""},i=get(this,e,t),s=Boolean(i.length),n=i.pop();return s&&notifySplice(this,i,t.path,i.length,0,[n]),n}splice(e,t,i,...s){let n,r={path:""},o=get(this,e,r);return t<0?t=o.length-Math.floor(-t):t&&(t=Math.floor(t)),n=2===arguments.length?o.splice(t):o.splice(t,i,...s),(s.length||n.length)&&notifySplice(this,o,r.path,t,s.length,n),n}shift(e){let t={path:""},i=get(this,e,t),s=Boolean(i.length),n=i.shift();return s&&notifySplice(this,i,t.path,0,0,[n]),n}unshift(e,...t){let i={path:""},s=get(this,e,i),n=s.unshift(...t);return t.length&&notifySplice(this,s,i.path,0,t.length,[]),n}notifyPath(e,t){let i;if(1==arguments.length){let s={path:""};t=get(this,e,s),i=s.path}else i=Array.isArray(e)?normalize(e):e;this._setPendingPropertyOrPath(i,t,!0,!0)&&this._invalidateProperties()}_createReadOnlyProperty(e,t){this._addPropertyEffect(e,TYPES.READ_ONLY),t&&(this["_set"+upper(e)]=function(t){this._setProperty(e,t)})}_createPropertyObserver(e,t,i){let s={property:e,method:t,dynamicFn:Boolean(i)};this._addPropertyEffect(e,TYPES.OBSERVE,{fn:runObserverEffect,info:s,trigger:{name:e}}),i&&this._addPropertyEffect(t,TYPES.OBSERVE,{fn:runObserverEffect,info:s,trigger:{name:t}})}_createMethodObserver(e,t){let i=parseMethod(e);if(!i)throw new Error("Malformed observer expression '"+e+"'");createMethodEffect(this,i,TYPES.OBSERVE,runMethodEffect,null,t)}_createNotifyingProperty(e){this._addPropertyEffect(e,TYPES.NOTIFY,{fn:runNotifyEffect,info:{eventName:camelToDashCase(e)+"-changed",property:e}})}_createReflectedProperty(e){let t=this.constructor.attributeNameForProperty(e);"-"===t[0]?console.warn("Property "+e+" cannot be reflected to attribute "+t+' because "-" is not a valid starting attribute name. Use a lowercase first letter for the property instead.'):this._addPropertyEffect(e,TYPES.REFLECT,{fn:runReflectEffect,info:{attrName:t}})}_createComputedProperty(e,t,i){let s=parseMethod(t);if(!s)throw new Error("Malformed computed expression '"+t+"'");createMethodEffect(this,s,TYPES.COMPUTE,runComputedEffect,e,i)}_marshalArgs(e,t,i){const s=this.__data;let n=[];for(let r=0,o=e.length;r<o;r++){let o,a=e[r],l=a.name;if(a.literal?o=a.value:a.structured?void 0===(o=get(s,l))&&(o=i[l]):o=s[l],a.wildcard){let e=0===l.indexOf(t+"."),s=0===t.indexOf(l)&&!e;n[r]={path:s?t:l,value:s?i[t]:o,base:o}}else n[r]=o}return n}static addPropertyEffect(e,t,i){this.prototype._addPropertyEffect(e,t,i)}static createPropertyObserver(e,t,i){this.prototype._createPropertyObserver(e,t,i)}static createMethodObserver(e,t){this.prototype._createMethodObserver(e,t)}static createNotifyingProperty(e){this.prototype._createNotifyingProperty(e)}static createReadOnlyProperty(e,t){this.prototype._createReadOnlyProperty(e,t)}static createReflectedProperty(e){this.prototype._createReflectedProperty(e)}static createComputedProperty(e,t,i){this.prototype._createComputedProperty(e,t,i)}static bindTemplate(e){return this.prototype._bindTemplate(e)}_bindTemplate(e,t){let i=this.constructor._parseTemplate(e),s=this.__templateInfo==i;if(!s)for(let e in i.propertyEffects)this._createPropertyAccessor(e);if(t&&((i=Object.create(i)).wasPreBound=s,!s&&this.__templateInfo)){let e=this.__templateInfoLast||this.__templateInfo;return this.__templateInfoLast=e.nextTemplateInfo=i,i.previousTemplateInfo=e,i}return this.__templateInfo=i}static _addTemplatePropertyEffect(e,t,i){(e.hostProps=e.hostProps||{})[t]=!0;let s=e.propertyEffects=e.propertyEffects||{};(s[t]=s[t]||[]).push(i)}_stampTemplate(e){hostStack.beginHosting(this);let t=super._stampTemplate(e);hostStack.endHosting(this);let i=this._bindTemplate(e,!0);if(i.nodeList=t.nodeList,!i.wasPreBound){let e=i.childNodes=[];for(let i=t.firstChild;i;i=i.nextSibling)e.push(i)}return t.templateInfo=i,setupBindings(this,i),this.__dataReady&&runEffects(this,i.propertyEffects,this.__data,null,!1,i.nodeList),t}_removeBoundDom(e){let t=e.templateInfo;t.previousTemplateInfo&&(t.previousTemplateInfo.nextTemplateInfo=t.nextTemplateInfo),t.nextTemplateInfo&&(t.nextTemplateInfo.previousTemplateInfo=t.previousTemplateInfo),this.__templateInfoLast==t&&(this.__templateInfoLast=t.previousTemplateInfo),t.previousTemplateInfo=t.nextTemplateInfo=null;let i=t.childNodes;for(let e=0;e<i.length;e++){let t=i[e];t.parentNode.removeChild(t)}}static _parseTemplateNode(e,t,i){let s=super._parseTemplateNode(e,t,i);if(e.nodeType===Node.TEXT_NODE){let n=this._parseBindings(e.textContent,t);n&&(e.textContent=literalFromParts(n)||" ",addBinding(this,t,i,"text","textContent",n),s=!0)}return s}static _parseTemplateNodeAttribute(e,t,i,s,n){let r=this._parseBindings(n,t);if(r){let n=s,o="property";capitalAttributeRegex.test(s)?o="attribute":"$"==s[s.length-1]&&(s=s.slice(0,-1),o="attribute");let a=literalFromParts(r);return a&&"attribute"==o&&e.setAttribute(s,a),"input"===e.localName&&"value"===n&&e.setAttribute(n,""),e.removeAttribute(n),"property"===o&&(s=dashToCamelCase(s)),addBinding(this,t,i,o,s,r,a),!0}return super._parseTemplateNodeAttribute(e,t,i,s,n)}static _parseTemplateNestedTemplate(e,t,i){let s=super._parseTemplateNestedTemplate(e,t,i),n=i.templateInfo.hostProps;for(let e in n)addBinding(this,t,i,"property","_host_"+e,[{mode:"{",source:e,dependencies:[e]}]);return s}static _parseBindings(e,t){let i,s=[],n=0;for(;null!==(i=bindingRegex.exec(e));){i.index>n&&s.push({literal:e.slice(n,i.index)});let r=i[1][0],o=Boolean(i[2]),a=i[3].trim(),l=!1,c="",d=-1;"{"==r&&(d=a.indexOf("::"))>0&&(c=a.substring(d+2),a=a.substring(0,d),l=!0);let h=parseMethod(a),p=[];if(h){let{args:e,methodName:i}=h;for(let t=0;t<e.length;t++){let i=e[t];i.literal||p.push(i)}let s=t.dynamicFns;(s&&s[i]||h.static)&&(p.push(i),h.dynamicFn=!0)}else p.push(a);s.push({source:a,mode:r,negate:o,customEvent:l,signature:h,dependencies:p,event:c}),n=bindingRegex.lastIndex}if(n&&n<e.length){let t=e.substring(n);t&&s.push({literal:t})}return s.length?s:null}static _evaluateBinding(e,t,i,s,n,r){let o;return o=t.signature?runMethodEffect(e,i,s,n,t.signature):i!=t.source?get(e,t.source):r&&isPath(i)?get(e,i):e.__data[i],t.negate&&(o=!o),o}}});class HostStack{constructor(){this.stack=[]}registerHost(e){if(this.stack.length){this.stack[this.stack.length-1]._enqueueClient(e)}}beginHosting(e){this.stack.push(e)}endHosting(e){let t=this.stack.length;t&&this.stack[t-1]==e&&this.stack.pop()}}const hostStack=new HostStack;function normalizeProperties(e){const t={};for(let i in e){const s=e[i];t[i]="function"==typeof s?{type:s}:s}return t}const PropertiesMixin=dedupingMixin(e=>{const t=PropertiesChanged(e);function i(e){const t=Object.getPrototypeOf(e);return t.prototype instanceof n?t:null}function s(e){if(!e.hasOwnProperty(JSCompiler_renameProperty("__ownProperties",e))){let t=null;if(e.hasOwnProperty(JSCompiler_renameProperty("properties",e))){const i=e.properties;i&&(t=normalizeProperties(i))}e.__ownProperties=t}return e.__ownProperties}class n extends t{static get observedAttributes(){const e=this._properties;return e?Object.keys(e).map(e=>this.attributeNameForProperty(e)):[]}static finalize(){if(!this.hasOwnProperty(JSCompiler_renameProperty("__finalized",this))){const e=i(this);e&&e.finalize(),this.__finalized=!0,this._finalizeClass()}}static _finalizeClass(){const e=s(this);e&&this.createProperties(e)}static get _properties(){if(!this.hasOwnProperty(JSCompiler_renameProperty("__properties",this))){const e=i(this);this.__properties=Object.assign({},e&&e._properties,s(this))}return this.__properties}static typeForProperty(e){const t=this._properties[e];return t&&t.type}_initializeProperties(){this.constructor.finalize(),super._initializeProperties()}connectedCallback(){super.connectedCallback&&super.connectedCallback(),this._enableProperties()}disconnectedCallback(){super.disconnectedCallback&&super.disconnectedCallback()}}return n}),version="3.0.5",ElementMixin=dedupingMixin(e=>{const t=PropertiesMixin(PropertyEffects(e));return class extends t{static get polymerElementVersion(){return version}static _finalizeClass(){super._finalizeClass(),this.hasOwnProperty(JSCompiler_renameProperty("is",this))&&this.is&&register(this.prototype);const e=((t=this).hasOwnProperty(JSCompiler_renameProperty("__ownObservers",t))||(t.__ownObservers=t.hasOwnProperty(JSCompiler_renameProperty("observers",t))?t.observers:null),t.__ownObservers);var t;e&&this.createObservers(e,this._properties);let i=this.template;i&&("string"==typeof i?(console.error("template getter must return HTMLTemplateElement"),i=null):i=i.cloneNode(!0)),this.prototype._template=i}static createProperties(e){for(let r in e)t=this.prototype,i=r,s=e[r],n=e,s.computed&&(s.readOnly=!0),s.computed&&!t._hasReadOnlyEffect(i)&&t._createComputedProperty(i,s.computed,n),s.readOnly&&!t._hasReadOnlyEffect(i)&&t._createReadOnlyProperty(i,!s.computed),s.reflectToAttribute&&!t._hasReflectEffect(i)&&t._createReflectedProperty(i),s.notify&&!t._hasNotifyEffect(i)&&t._createNotifyingProperty(i),s.observer&&t._createPropertyObserver(i,s.observer,n[s.observer]),t._addPropertyToAttributeMap(i);var t,i,s,n}static createObservers(e,t){const i=this.prototype;for(let s=0;s<e.length;s++)i._createMethodObserver(e[s],t)}static get template(){return this.hasOwnProperty(JSCompiler_renameProperty("_template",this))||(this._template=this.prototype.hasOwnProperty(JSCompiler_renameProperty("_template",this.prototype))?this.prototype._template:function(e){let t=null;if(e&&(!strictTemplatePolicy||allowTemplateFromDomModule)&&(t=DomModule.import(e,"template"),strictTemplatePolicy&&!t))throw new Error(`strictTemplatePolicy: expecting dom-module or null template for ${e}`);return t}(this.is)||Object.getPrototypeOf(this.prototype).constructor.template),this._template}static set template(e){this._template=e}static get importPath(){if(!this.hasOwnProperty(JSCompiler_renameProperty("_importPath",this))){const e=this.importMeta;if(e)this._importPath=pathFromUrl(e.url);else{const e=DomModule.import(this.is);this._importPath=e&&e.assetpath||Object.getPrototypeOf(this.prototype).constructor.importPath}}return this._importPath}constructor(){super(),this._template,this._importPath,this.rootPath,this.importPath,this.root,this.$}_initializeProperties(){this.constructor.finalize(),this.constructor._finalizeTemplate(this.localName),super._initializeProperties(),this.rootPath=rootPath,this.importPath=this.constructor.importPath;let e=function(e){if(!e.hasOwnProperty(JSCompiler_renameProperty("__propertyDefaults",e))){e.__propertyDefaults=null;let t=e._properties;for(let i in t){let s=t[i];"value"in s&&(e.__propertyDefaults=e.__propertyDefaults||{},e.__propertyDefaults[i]=s)}}return e.__propertyDefaults}(this.constructor);if(e)for(let t in e){let i=e[t];if(!this.hasOwnProperty(t)){let e="function"==typeof i.value?i.value.call(this):i.value;this._hasAccessor(t)?this._setPendingProperty(t,e,!0):this[t]=e}}}static _processStyleText(e,t){return resolveCss(e,t)}static _finalizeTemplate(e){const t=this.prototype._template;if(t&&!t.__polymerFinalized){t.__polymerFinalized=!0;const i=this.importPath;!function(e,t,i,s){const n=t.content.querySelectorAll("style"),r=stylesFromTemplate(t),o=stylesFromModuleImports(i),a=t.content.firstElementChild;for(let i=0;i<o.length;i++){let n=o[i];n.textContent=e._processStyleText(n.textContent,s),t.content.insertBefore(n,a)}let l=0;for(let t=0;t<r.length;t++){let i=r[t],o=n[l];o!==i?(i=i.cloneNode(!0),o.parentNode.insertBefore(i,o)):l++,i.textContent=e._processStyleText(i.textContent,s)}window.ShadyCSS&&window.ShadyCSS.prepareTemplate(t,i)}(this,t,e,i?resolveUrl(i):""),this.prototype._bindTemplate(t)}}connectedCallback(){window.ShadyCSS&&this._template&&window.ShadyCSS.styleElement(this),super.connectedCallback()}ready(){this._template&&(this.root=this._stampTemplate(this._template),this.$=this.root.$),super.ready()}_readyClients(){this._template&&(this.root=this._attachDom(this.root)),super._readyClients()}_attachDom(e){if(this.attachShadow)return e?(this.shadowRoot||this.attachShadow({mode:"open"}),this.shadowRoot.appendChild(e),this.shadowRoot):null;throw new Error("ShadowDOM not available. PolymerElement can create dom as children instead of in ShadowDOM by setting `this.root = this;` before `ready`.")}updateStyles(e){window.ShadyCSS&&window.ShadyCSS.styleSubtree(this,e)}resolveUrl(e,t){return!t&&this.importPath&&(t=resolveUrl(this.importPath)),resolveUrl(e,t)}static _parseTemplateContent(e,t,i){return t.dynamicFns=t.dynamicFns||this._properties,super._parseTemplateContent(e,t,i)}}});function register(e){}class Debouncer{constructor(){this._asyncModule=null,this._callback=null,this._timer=null}setConfig(e,t){this._asyncModule=e,this._callback=t,this._timer=this._asyncModule.run(()=>{this._timer=null,this._callback()})}cancel(){this.isActive()&&(this._asyncModule.cancel(this._timer),this._timer=null)}flush(){this.isActive()&&(this.cancel(),this._callback())}isActive(){return null!=this._timer}static debounce(e,t,i){return e instanceof Debouncer?e.cancel():e=new Debouncer,e.setConfig(t,i),e}}let HAS_NATIVE_TA="string"==typeof document.head.style.touchAction,GESTURE_KEY="__polymerGestures",HANDLED_OBJ="__polymerGesturesHandled",TOUCH_ACTION="__polymerGesturesTouchAction",TAP_DISTANCE=25,TRACK_DISTANCE=5,TRACK_LENGTH=2,MOUSE_TIMEOUT=2500,MOUSE_EVENTS=["mousedown","mousemove","mouseup","click"],MOUSE_WHICH_TO_BUTTONS=[0,1,4,2],MOUSE_HAS_BUTTONS=function(){try{return 1===new MouseEvent("test",{buttons:1}).buttons}catch(e){return!1}}();function isMouseEvent(e){return MOUSE_EVENTS.indexOf(e)>-1}let SUPPORTS_PASSIVE=!1;function PASSIVE_TOUCH(e){if(!isMouseEvent(e)&&"touchend"!==e)return HAS_NATIVE_TA&&SUPPORTS_PASSIVE&&passiveTouchGestures?{passive:!0}:void 0}!function(){try{let e=Object.defineProperty({},"passive",{get(){SUPPORTS_PASSIVE=!0}});window.addEventListener("test",null,e),window.removeEventListener("test",null,e)}catch(e){}}();let IS_TOUCH_ONLY=navigator.userAgent.match(/iP(?:[oa]d|hone)|Android/);const clickedLabels=[],labellable={button:!0,input:!0,keygen:!0,meter:!0,output:!0,textarea:!0,progress:!0,select:!0},canBeDisabled={button:!0,command:!0,fieldset:!0,input:!0,keygen:!0,optgroup:!0,option:!0,select:!0,textarea:!0};function canBeLabelled(e){return labellable[e.localName]||!1}function matchingLabels(e){let t=Array.prototype.slice.call(e.labels||[]);if(!t.length){t=[];let i=e.getRootNode();if(e.id){let s=i.querySelectorAll(`label[for = ${e.id}]`);for(let e=0;e<s.length;e++)t.push(s[e])}}return t}let mouseCanceller=function(e){let t=e.sourceCapabilities;if((!t||t.firesTouchEvents)&&(e[HANDLED_OBJ]={skip:!0},"click"===e.type)){let t=!1,i=e.composedPath&&e.composedPath();if(i)for(let e=0;e<i.length;e++){if(i[e].nodeType===Node.ELEMENT_NODE)if("label"===i[e].localName)clickedLabels.push(i[e]);else if(canBeLabelled(i[e])){let s=matchingLabels(i[e]);for(let e=0;e<s.length;e++)t=t||clickedLabels.indexOf(s[e])>-1}if(i[e]===POINTERSTATE.mouse.target)return}if(t)return;e.preventDefault(),e.stopPropagation()}};function setupTeardownMouseCanceller(e){let t=IS_TOUCH_ONLY?["click"]:MOUSE_EVENTS;for(let i,s=0;s<t.length;s++)i=t[s],e?(clickedLabels.length=0,document.addEventListener(i,mouseCanceller,!0)):document.removeEventListener(i,mouseCanceller,!0)}function ignoreMouse(e){POINTERSTATE.mouse.mouseIgnoreJob||setupTeardownMouseCanceller(!0);POINTERSTATE.mouse.target=e.composedPath()[0],POINTERSTATE.mouse.mouseIgnoreJob=Debouncer.debounce(POINTERSTATE.mouse.mouseIgnoreJob,timeOut.after(MOUSE_TIMEOUT),function(){setupTeardownMouseCanceller(),POINTERSTATE.mouse.target=null,POINTERSTATE.mouse.mouseIgnoreJob=null})}function hasLeftMouseButton(e){let t=e.type;if(!isMouseEvent(t))return!1;if("mousemove"===t){let t=void 0===e.buttons?1:e.buttons;return e instanceof window.MouseEvent&&!MOUSE_HAS_BUTTONS&&(t=MOUSE_WHICH_TO_BUTTONS[e.which]||0),Boolean(1&t)}return 0===(void 0===e.button?0:e.button)}function isSyntheticClick(e){if("click"===e.type){if(0===e.detail)return!0;let t=_findOriginalTarget(e);if(!t.nodeType||t.nodeType!==Node.ELEMENT_NODE)return!0;let i=t.getBoundingClientRect(),s=e.pageX,n=e.pageY;return!(s>=i.left&&s<=i.right&&n>=i.top&&n<=i.bottom)}return!1}let POINTERSTATE={mouse:{target:null,mouseIgnoreJob:null},touch:{x:0,y:0,id:-1,scrollDecided:!1}};function firstTouchAction(e){let t="auto",i=e.composedPath&&e.composedPath();if(i)for(let e,s=0;s<i.length;s++)if((e=i[s])[TOUCH_ACTION]){t=e[TOUCH_ACTION];break}return t}function trackDocument(e,t,i){e.movefn=t,e.upfn=i,document.addEventListener("mousemove",t),document.addEventListener("mouseup",i)}function untrackDocument(e){document.removeEventListener("mousemove",e.movefn),document.removeEventListener("mouseup",e.upfn),e.movefn=null,e.upfn=null}document.addEventListener("touchend",ignoreMouse,!!SUPPORTS_PASSIVE&&{passive:!0});const gestures={},recognizers=[];function deepTargetFind(e,t){let i=document.elementFromPoint(e,t),s=i;for(;s&&s.shadowRoot&&!window.ShadyDOM;){if(s===(s=s.shadowRoot.elementFromPoint(e,t)))break;s&&(i=s)}return i}function _findOriginalTarget(e){if(e.composedPath){const t=e.composedPath();return t.length>0?t[0]:e.target}return e.target}function _handleNative(e){let t,i=e.type,s=e.currentTarget[GESTURE_KEY];if(!s)return;let n=s[i];if(n){if(!e[HANDLED_OBJ]&&(e[HANDLED_OBJ]={},"touch"===i.slice(0,5))){let t=(e=e).changedTouches[0];if("touchstart"===i&&1===e.touches.length&&(POINTERSTATE.touch.id=t.identifier),POINTERSTATE.touch.id!==t.identifier)return;HAS_NATIVE_TA||"touchstart"!==i&&"touchmove"!==i||_handleTouchAction(e)}if(!(t=e[HANDLED_OBJ]).skip){for(let i,s=0;s<recognizers.length;s++)n[(i=recognizers[s]).name]&&!t[i.name]&&i.flow&&i.flow.start.indexOf(e.type)>-1&&i.reset&&i.reset();for(let s,r=0;r<recognizers.length;r++)n[(s=recognizers[r]).name]&&!t[s.name]&&(t[s.name]=!0,s[i](e))}}}function _handleTouchAction(e){let t=e.changedTouches[0],i=e.type;if("touchstart"===i)POINTERSTATE.touch.x=t.clientX,POINTERSTATE.touch.y=t.clientY,POINTERSTATE.touch.scrollDecided=!1;else if("touchmove"===i){if(POINTERSTATE.touch.scrollDecided)return;POINTERSTATE.touch.scrollDecided=!0;let i=firstTouchAction(e),s=!1,n=Math.abs(POINTERSTATE.touch.x-t.clientX),r=Math.abs(POINTERSTATE.touch.y-t.clientY);e.cancelable&&("none"===i?s=!0:"pan-x"===i?s=r>n:"pan-y"===i&&(s=n>r)),s?e.preventDefault():prevent("track")}}function addListener(e,t,i){return!!gestures[t]&&(_add(e,t,i),!0)}function removeListener(e,t,i){return!!gestures[t]&&(_remove(e,t,i),!0)}function _add(e,t,i){let s=gestures[t],n=s.deps,r=s.name,o=e[GESTURE_KEY];o||(e[GESTURE_KEY]=o={});for(let t,i,s=0;s<n.length;s++)t=n[s],IS_TOUCH_ONLY&&isMouseEvent(t)&&"click"!==t||((i=o[t])||(o[t]=i={_count:0}),0===i._count&&e.addEventListener(t,_handleNative,PASSIVE_TOUCH(t)),i[r]=(i[r]||0)+1,i._count=(i._count||0)+1);e.addEventListener(t,i),s.touchAction&&setTouchAction(e,s.touchAction)}function _remove(e,t,i){let s=gestures[t],n=s.deps,r=s.name,o=e[GESTURE_KEY];if(o)for(let t,i,s=0;s<n.length;s++)(i=o[t=n[s]])&&i[r]&&(i[r]=(i[r]||1)-1,i._count=(i._count||1)-1,0===i._count&&e.removeEventListener(t,_handleNative,PASSIVE_TOUCH(t)));e.removeEventListener(t,i)}function register$1(e){recognizers.push(e);for(let t=0;t<e.emits.length;t++)gestures[e.emits[t]]=e}function _findRecognizerByEvent(e){for(let t,i=0;i<recognizers.length;i++){t=recognizers[i];for(let i,s=0;s<t.emits.length;s++)if((i=t.emits[s])===e)return t}return null}function setTouchAction(e,t){HAS_NATIVE_TA&&e instanceof HTMLElement&&microTask.run(()=>{e.style.touchAction=t}),e[TOUCH_ACTION]=t}function _fire(e,t,i){let s=new Event(t,{bubbles:!0,cancelable:!0,composed:!0});if(s.detail=i,e.dispatchEvent(s),s.defaultPrevented){let e=i.preventer||i.sourceEvent;e&&e.preventDefault&&e.preventDefault()}}function prevent(e){let t=_findRecognizerByEvent(e);t.info&&(t.info.prevent=!0)}function downupFire(e,t,i,s){t&&_fire(t,e,{x:i.clientX,y:i.clientY,sourceEvent:i,preventer:s,prevent:function(e){return prevent(e)}})}function trackHasMovedEnough(e,t,i){if(e.prevent)return!1;if(e.started)return!0;let s=Math.abs(e.x-t),n=Math.abs(e.y-i);return s>=TRACK_DISTANCE||n>=TRACK_DISTANCE}function trackFire(e,t,i){if(!t)return;let s,n=e.moves[e.moves.length-2],r=e.moves[e.moves.length-1],o=r.x-e.x,a=r.y-e.y,l=0;n&&(s=r.x-n.x,l=r.y-n.y),_fire(t,"track",{state:e.state,x:i.clientX,y:i.clientY,dx:o,dy:a,ddx:s,ddy:l,sourceEvent:i,hover:function(){return deepTargetFind(i.clientX,i.clientY)}})}function trackForward(e,t,i){let s=Math.abs(t.clientX-e.x),n=Math.abs(t.clientY-e.y),r=_findOriginalTarget(i||t);!r||canBeDisabled[r.localName]&&r.hasAttribute("disabled")||(isNaN(s)||isNaN(n)||s<=TAP_DISTANCE&&n<=TAP_DISTANCE||isSyntheticClick(t))&&(e.prevent||_fire(r,"tap",{x:t.clientX,y:t.clientY,sourceEvent:t,preventer:i}))}register$1({name:"downup",deps:["mousedown","touchstart","touchend"],flow:{start:["mousedown","touchstart"],end:["mouseup","touchend"]},emits:["down","up"],info:{movefn:null,upfn:null},reset:function(){untrackDocument(this.info)},mousedown:function(e){if(!hasLeftMouseButton(e))return;let t=_findOriginalTarget(e),i=this;trackDocument(this.info,function(e){hasLeftMouseButton(e)||(downupFire("up",t,e),untrackDocument(i.info))},function(e){hasLeftMouseButton(e)&&downupFire("up",t,e),untrackDocument(i.info)}),downupFire("down",t,e)},touchstart:function(e){downupFire("down",_findOriginalTarget(e),e.changedTouches[0],e)},touchend:function(e){downupFire("up",_findOriginalTarget(e),e.changedTouches[0],e)}}),register$1({name:"track",touchAction:"none",deps:["mousedown","touchstart","touchmove","touchend"],flow:{start:["mousedown","touchstart"],end:["mouseup","touchend"]},emits:["track"],info:{x:0,y:0,state:"start",started:!1,moves:[],addMove:function(e){this.moves.length>TRACK_LENGTH&&this.moves.shift(),this.moves.push(e)},movefn:null,upfn:null,prevent:!1},reset:function(){this.info.state="start",this.info.started=!1,this.info.moves=[],this.info.x=0,this.info.y=0,this.info.prevent=!1,untrackDocument(this.info)},mousedown:function(e){if(!hasLeftMouseButton(e))return;let t=_findOriginalTarget(e),i=this,s=function(e){let s=e.clientX,n=e.clientY;trackHasMovedEnough(i.info,s,n)&&(i.info.state=i.info.started?"mouseup"===e.type?"end":"track":"start","start"===i.info.state&&prevent("tap"),i.info.addMove({x:s,y:n}),hasLeftMouseButton(e)||(i.info.state="end",untrackDocument(i.info)),t&&trackFire(i.info,t,e),i.info.started=!0)};trackDocument(this.info,s,function(e){i.info.started&&s(e),untrackDocument(i.info)}),this.info.x=e.clientX,this.info.y=e.clientY},touchstart:function(e){let t=e.changedTouches[0];this.info.x=t.clientX,this.info.y=t.clientY},touchmove:function(e){let t=_findOriginalTarget(e),i=e.changedTouches[0],s=i.clientX,n=i.clientY;trackHasMovedEnough(this.info,s,n)&&("start"===this.info.state&&prevent("tap"),this.info.addMove({x:s,y:n}),trackFire(this.info,t,i),this.info.state="track",this.info.started=!0)},touchend:function(e){let t=_findOriginalTarget(e),i=e.changedTouches[0];this.info.started&&(this.info.state="end",this.info.addMove({x:i.clientX,y:i.clientY}),trackFire(this.info,t,i))}}),register$1({name:"tap",deps:["mousedown","click","touchstart","touchend"],flow:{start:["mousedown","touchstart"],end:["click","touchend"]},emits:["tap"],info:{x:NaN,y:NaN,prevent:!1},reset:function(){this.info.x=NaN,this.info.y=NaN,this.info.prevent=!1},mousedown:function(e){hasLeftMouseButton(e)&&(this.info.x=e.clientX,this.info.y=e.clientY)},click:function(e){hasLeftMouseButton(e)&&trackForward(this.info,e)},touchstart:function(e){const t=e.changedTouches[0];this.info.x=t.clientX,this.info.y=t.clientY},touchend:function(e){trackForward(this.info,e.changedTouches[0],e)}});const GestureEventListeners=dedupingMixin(e=>{return class extends e{_addEventListenerToNode(e,t,i){addListener(e,t,i)||super._addEventListenerToNode(e,t,i)}_removeEventListenerFromNode(e,t,i){removeListener(e,t,i)||super._removeEventListenerFromNode(e,t,i)}}}),HOST_DIR=/:host\(:dir\((ltr|rtl)\)\)/g,HOST_DIR_REPLACMENT=':host([dir="$1"])',EL_DIR=/([\s\w-#\.\[\]\*]*):dir\((ltr|rtl)\)/g,EL_DIR_REPLACMENT=':host([dir="$2"]) $1',DIR_INSTANCES=[];let observer=null,DOCUMENT_DIR="";function getRTL(){DOCUMENT_DIR=document.documentElement.getAttribute("dir")}function setRTL(e){if(!e.__autoDirOptOut){e.setAttribute("dir",DOCUMENT_DIR)}}function updateDirection(){getRTL(),DOCUMENT_DIR=document.documentElement.getAttribute("dir");for(let e=0;e<DIR_INSTANCES.length;e++)setRTL(DIR_INSTANCES[e])}function takeRecords(){observer&&observer.takeRecords().length&&updateDirection()}const DirMixin=dedupingMixin(e=>{observer||(getRTL(),(observer=new MutationObserver(updateDirection)).observe(document.documentElement,{attributes:!0,attributeFilter:["dir"]}));const t=PropertyAccessors(e);class i extends t{static _processStyleText(e,t){return e=super._processStyleText(e,t),e=this._replaceDirInCssText(e)}static _replaceDirInCssText(e){let t=e;return e!==(t=(t=t.replace(HOST_DIR,HOST_DIR_REPLACMENT)).replace(EL_DIR,EL_DIR_REPLACMENT))&&(this.__activateDir=!0),t}constructor(){super(),this.__autoDirOptOut=!1}ready(){super.ready(),this.__autoDirOptOut=this.hasAttribute("dir")}connectedCallback(){t.prototype.connectedCallback&&super.connectedCallback(),this.constructor.__activateDir&&(takeRecords(),DIR_INSTANCES.push(this),setRTL(this))}disconnectedCallback(){if(t.prototype.disconnectedCallback&&super.disconnectedCallback(),this.constructor.__activateDir){const e=DIR_INSTANCES.indexOf(this);e>-1&&DIR_INSTANCES.splice(e,1)}}}return i.__activateDir=!1,i});function resolve(){document.body.removeAttribute("unresolved")}function newSplice(e,t,i){return{index:e,removed:t,addedCount:i}}"interactive"===document.readyState||"complete"===document.readyState?resolve():window.addEventListener("DOMContentLoaded",resolve);const EDIT_LEAVE=0,EDIT_UPDATE=1,EDIT_ADD=2,EDIT_DELETE=3;function calcEditDistances(e,t,i,s,n,r){let o=r-n+1,a=i-t+1,l=new Array(o);for(let e=0;e<o;e++)l[e]=new Array(a),l[e][0]=e;for(let e=0;e<a;e++)l[0][e]=e;for(let i=1;i<o;i++)for(let r=1;r<a;r++)if(equals(e[t+r-1],s[n+i-1]))l[i][r]=l[i-1][r-1];else{let e=l[i-1][r]+1,t=l[i][r-1]+1;l[i][r]=e<t?e:t}return l}function spliceOperationsFromEditDistances(e){let t=e.length-1,i=e[0].length-1,s=e[t][i],n=[];for(;t>0||i>0;){if(0==t){n.push(EDIT_ADD),i--;continue}if(0==i){n.push(EDIT_DELETE),t--;continue}let r,o=e[t-1][i-1],a=e[t-1][i],l=e[t][i-1];(r=a<l?a<o?a:o:l<o?l:o)==o?(o==s?n.push(EDIT_LEAVE):(n.push(EDIT_UPDATE),s=o),t--,i--):r==a?(n.push(EDIT_DELETE),t--,s=a):(n.push(EDIT_ADD),i--,s=l)}return n.reverse(),n}function calcSplices(e,t,i,s,n,r){let o,a=0,l=0,c=Math.min(i-t,r-n);if(0==t&&0==n&&(a=sharedPrefix(e,s,c)),i==e.length&&r==s.length&&(l=sharedSuffix(e,s,c-a)),n+=a,r-=l,(i-=l)-(t+=a)==0&&r-n==0)return[];if(t==i){for(o=newSplice(t,[],0);n<r;)o.removed.push(s[n++]);return[o]}if(n==r)return[newSplice(t,[],i-t)];let d=spliceOperationsFromEditDistances(calcEditDistances(e,t,i,s,n,r));o=void 0;let h=[],p=t,u=n;for(let e=0;e<d.length;e++)switch(d[e]){case EDIT_LEAVE:o&&(h.push(o),o=void 0),p++,u++;break;case EDIT_UPDATE:o||(o=newSplice(p,[],0)),o.addedCount++,p++,o.removed.push(s[u]),u++;break;case EDIT_ADD:o||(o=newSplice(p,[],0)),o.addedCount++,p++;break;case EDIT_DELETE:o||(o=newSplice(p,[],0)),o.removed.push(s[u]),u++}return o&&h.push(o),h}function sharedPrefix(e,t,i){for(let s=0;s<i;s++)if(!equals(e[s],t[s]))return s;return i}function sharedSuffix(e,t,i){let s=e.length,n=t.length,r=0;for(;r<i&&equals(e[--s],t[--n]);)r++;return r}function calculateSplices(e,t){return calcSplices(e,0,e.length,t,0,t.length)}function equals(e,t){return e===t}function isSlot(e){return"slot"===e.localName}class FlattenedNodesObserver{static getFlattenedNodes(e){return isSlot(e)?(e=e).assignedNodes({flatten:!0}):Array.from(e.childNodes).map(e=>isSlot(e)?(e=e).assignedNodes({flatten:!0}):[e]).reduce((e,t)=>e.concat(t),[])}constructor(e,t){this._shadyChildrenObserver=null,this._nativeChildrenObserver=null,this._connected=!1,this._target=e,this.callback=t,this._effectiveNodes=[],this._observer=null,this._scheduled=!1,this._boundSchedule=(()=>{this._schedule()}),this.connect(),this._schedule()}connect(){isSlot(this._target)?this._listenSlots([this._target]):this._target.children&&(this._listenSlots(this._target.children),window.ShadyDOM?this._shadyChildrenObserver=ShadyDOM.observeChildren(this._target,e=>{this._processMutations(e)}):(this._nativeChildrenObserver=new MutationObserver(e=>{this._processMutations(e)}),this._nativeChildrenObserver.observe(this._target,{childList:!0}))),this._connected=!0}disconnect(){isSlot(this._target)?this._unlistenSlots([this._target]):this._target.children&&(this._unlistenSlots(this._target.children),window.ShadyDOM&&this._shadyChildrenObserver?(ShadyDOM.unobserveChildren(this._shadyChildrenObserver),this._shadyChildrenObserver=null):this._nativeChildrenObserver&&(this._nativeChildrenObserver.disconnect(),this._nativeChildrenObserver=null)),this._connected=!1}_schedule(){this._scheduled||(this._scheduled=!0,microTask.run(()=>this.flush()))}_processMutations(e){this._processSlotMutations(e),this.flush()}_processSlotMutations(e){if(e)for(let t=0;t<e.length;t++){let i=e[t];i.addedNodes&&this._listenSlots(i.addedNodes),i.removedNodes&&this._unlistenSlots(i.removedNodes)}}flush(){if(!this._connected)return!1;window.ShadyDOM&&ShadyDOM.flush(),this._nativeChildrenObserver?this._processSlotMutations(this._nativeChildrenObserver.takeRecords()):this._shadyChildrenObserver&&this._processSlotMutations(this._shadyChildrenObserver.takeRecords()),this._scheduled=!1;let e={target:this._target,addedNodes:[],removedNodes:[]},t=this.constructor.getFlattenedNodes(this._target),i=calculateSplices(t,this._effectiveNodes);for(let t,s=0;s<i.length&&(t=i[s]);s++)for(let i,s=0;s<t.removed.length&&(i=t.removed[s]);s++)e.removedNodes.push(i);for(let s,n=0;n<i.length&&(s=i[n]);n++)for(let i=s.index;i<s.index+s.addedCount;i++)e.addedNodes.push(t[i]);this._effectiveNodes=t;let s=!1;return(e.addedNodes.length||e.removedNodes.length)&&(s=!0,this.callback.call(this._target,e)),s}_listenSlots(e){for(let t=0;t<e.length;t++){let i=e[t];isSlot(i)&&i.addEventListener("slotchange",this._boundSchedule)}}_unlistenSlots(e){for(let t=0;t<e.length;t++){let i=e[t];isSlot(i)&&i.removeEventListener("slotchange",this._boundSchedule)}}}let debouncerQueue=[];const enqueueDebouncer=function(e){debouncerQueue.push(e)};function flushDebouncers(){const e=Boolean(debouncerQueue.length);for(;debouncerQueue.length;)try{debouncerQueue.shift().flush()}catch(e){setTimeout(()=>{throw e})}return e}const flush$1=function(){let e,t;do{e=window.ShadyDOM&&ShadyDOM.flush(),window.ShadyCSS&&window.ShadyCSS.ScopingShim&&window.ShadyCSS.ScopingShim.flush(),t=flushDebouncers()}while(e||t)},p=Element.prototype,normalizedMatchesSelector=p.matches||p.matchesSelector||p.mozMatchesSelector||p.msMatchesSelector||p.oMatchesSelector||p.webkitMatchesSelector,matchesSelector=function(e,t){return normalizedMatchesSelector.call(e,t)};class DomApi{constructor(e){this.node=e}observeNodes(e){return new FlattenedNodesObserver(this.node,e)}unobserveNodes(e){e.disconnect()}notifyObserver(){}deepContains(e){if(this.node.contains(e))return!0;let t=e,i=e.ownerDocument;for(;t&&t!==i&&t!==this.node;)t=t.parentNode||t.host;return t===this.node}getOwnerRoot(){return this.node.getRootNode()}getDistributedNodes(){return"slot"===this.node.localName?this.node.assignedNodes({flatten:!0}):[]}getDestinationInsertionPoints(){let e=[],t=this.node.assignedSlot;for(;t;)e.push(t),t=t.assignedSlot;return e}importNode(e,t){return(this.node instanceof Document?this.node:this.node.ownerDocument).importNode(e,t)}getEffectiveChildNodes(){return FlattenedNodesObserver.getFlattenedNodes(this.node)}queryDistributedElements(e){let t=this.getEffectiveChildNodes(),i=[];for(let s,n=0,r=t.length;n<r&&(s=t[n]);n++)s.nodeType===Node.ELEMENT_NODE&&matchesSelector(s,e)&&i.push(s);return i}get activeElement(){let e=this.node;return void 0!==e._activeElement?e._activeElement:e.activeElement}}function forwardMethods(e,t){for(let i=0;i<t.length;i++){let s=t[i];e[s]=function(){return this.node[s].apply(this.node,arguments)}}}function forwardReadOnlyProperties(e,t){for(let i=0;i<t.length;i++){let s=t[i];Object.defineProperty(e,s,{get:function(){return this.node[s]},configurable:!0})}}function forwardProperties(e,t){for(let i=0;i<t.length;i++){let s=t[i];Object.defineProperty(e,s,{get:function(){return this.node[s]},set:function(e){this.node[s]=e},configurable:!0})}}class EventApi{constructor(e){this.event=e}get rootTarget(){return this.event.composedPath()[0]}get localTarget(){return this.event.target}get path(){return this.event.composedPath()}}DomApi.prototype.cloneNode,DomApi.prototype.appendChild,DomApi.prototype.insertBefore,DomApi.prototype.removeChild,DomApi.prototype.replaceChild,DomApi.prototype.setAttribute,DomApi.prototype.removeAttribute,DomApi.prototype.querySelector,DomApi.prototype.querySelectorAll,DomApi.prototype.parentNode,DomApi.prototype.firstChild,DomApi.prototype.lastChild,DomApi.prototype.nextSibling,DomApi.prototype.previousSibling,DomApi.prototype.firstElementChild,DomApi.prototype.lastElementChild,DomApi.prototype.nextElementSibling,DomApi.prototype.previousElementSibling,DomApi.prototype.childNodes,DomApi.prototype.children,DomApi.prototype.classList,DomApi.prototype.textContent,DomApi.prototype.innerHTML,forwardMethods(DomApi.prototype,["cloneNode","appendChild","insertBefore","removeChild","replaceChild","setAttribute","removeAttribute","querySelector","querySelectorAll"]),forwardReadOnlyProperties(DomApi.prototype,["parentNode","firstChild","lastChild","nextSibling","previousSibling","firstElementChild","lastElementChild","nextElementSibling","previousElementSibling","childNodes","children","classList"]),forwardProperties(DomApi.prototype,["textContent","innerHTML"]);const dom=function(e){if(!(e=e||document).__domApi){let t;t=e instanceof Event?new EventApi(e):new DomApi(e),e.__domApi=t}return e.__domApi};let styleInterface=window.ShadyCSS;const LegacyElementMixin=dedupingMixin(e=>{const t=DirMixin(GestureEventListeners(ElementMixin(e))),i={x:"pan-x",y:"pan-y",none:"none",all:"auto"};class s extends t{constructor(){super(),this.isAttached,this.__boundListeners,this._debouncers,this._applyListeners()}static get importMeta(){return this.prototype.importMeta}created(){}connectedCallback(){super.connectedCallback(),this.isAttached=!0,this.attached()}attached(){}disconnectedCallback(){super.disconnectedCallback(),this.isAttached=!1,this.detached()}detached(){}attributeChangedCallback(e,t,i,s){t!==i&&(super.attributeChangedCallback(e,t,i,s),this.attributeChanged(e,t,i))}attributeChanged(e,t,i){}_initializeProperties(){let e=Object.getPrototypeOf(this);e.hasOwnProperty("__hasRegisterFinished")||(e.__hasRegisterFinished=!0,this._registered()),super._initializeProperties(),this.root=this,this.created()}_registered(){}ready(){this._ensureAttributes(),super.ready()}_ensureAttributes(){}_applyListeners(){}serialize(e){return this._serializeValue(e)}deserialize(e,t){return this._deserializeValue(e,t)}reflectPropertyToAttribute(e,t,i){this._propertyToAttribute(e,t,i)}serializeValueToAttribute(e,t,i){this._valueToNodeAttribute(i||this,e,t)}extend(e,t){if(!e||!t)return e||t;let i=Object.getOwnPropertyNames(t);for(let s,n=0;n<i.length&&(s=i[n]);n++){let i=Object.getOwnPropertyDescriptor(t,s);i&&Object.defineProperty(e,s,i)}return e}mixin(e,t){for(let i in t)e[i]=t[i];return e}chainObject(e,t){return e&&t&&e!==t&&(e.__proto__=t),e}instanceTemplate(e){let t=this.constructor._contentForTemplate(e);return document.importNode(t,!0)}fire(e,t,i){i=i||{},t=null==t?{}:t;let s=new Event(e,{bubbles:void 0===i.bubbles||i.bubbles,cancelable:Boolean(i.cancelable),composed:void 0===i.composed||i.composed});return s.detail=t,(i.node||this).dispatchEvent(s),s}listen(e,t,i){e=e||this;let s=this.__boundListeners||(this.__boundListeners=new WeakMap),n=s.get(e);n||(n={},s.set(e,n));let r=t+i;n[r]||(n[r]=this._addMethodEventListenerToNode(e,t,i,this))}unlisten(e,t,i){e=e||this;let s=this.__boundListeners&&this.__boundListeners.get(e),n=t+i,r=s&&s[n];r&&(this._removeEventListenerFromNode(e,t,r),s[n]=null)}setScrollDirection(e,t){setTouchAction(t||this,i[e]||"auto")}$$(e){return this.root.querySelector(e)}get domHost(){let e=this.getRootNode();return e instanceof DocumentFragment?e.host:e}distributeContent(){window.ShadyDOM&&this.shadowRoot&&ShadyDOM.flush()}getEffectiveChildNodes(){return dom(this).getEffectiveChildNodes()}queryDistributedElements(e){return dom(this).queryDistributedElements(e)}getEffectiveChildren(){return this.getEffectiveChildNodes().filter(function(e){return e.nodeType===Node.ELEMENT_NODE})}getEffectiveTextContent(){let e=this.getEffectiveChildNodes(),t=[];for(let i,s=0;i=e[s];s++)i.nodeType!==Node.COMMENT_NODE&&t.push(i.textContent);return t.join("")}queryEffectiveChildren(e){let t=this.queryDistributedElements(e);return t&&t[0]}queryAllEffectiveChildren(e){return this.queryDistributedElements(e)}getContentChildNodes(e){let t=this.root.querySelector(e||"slot");return t?dom(t).getDistributedNodes():[]}getContentChildren(e){return this.getContentChildNodes(e).filter(function(e){return e.nodeType===Node.ELEMENT_NODE})}isLightDescendant(e){return this!==e&&this.contains(e)&&this.getRootNode()===e.getRootNode()}isLocalDescendant(e){return this.root===e.getRootNode()}scopeSubtree(e,t){}getComputedStyleValue(e){return styleInterface.getComputedStyleValue(this,e)}debounce(e,t,i){return this._debouncers=this._debouncers||{},this._debouncers[e]=Debouncer.debounce(this._debouncers[e],i>0?timeOut.after(i):microTask,t.bind(this))}isDebouncerActive(e){this._debouncers=this._debouncers||{};let t=this._debouncers[e];return!(!t||!t.isActive())}flushDebouncer(e){this._debouncers=this._debouncers||{};let t=this._debouncers[e];t&&t.flush()}cancelDebouncer(e){this._debouncers=this._debouncers||{};let t=this._debouncers[e];t&&t.cancel()}async(e,t){return t>0?timeOut.run(e.bind(this),t):~microTask.run(e.bind(this))}cancelAsync(e){e<0?microTask.cancel(~e):timeOut.cancel(e)}create(e,t){let i=document.createElement(e);if(t)if(i.setProperties)i.setProperties(t);else for(let e in t)i[e]=t[e];return i}elementMatches(e,t){return matchesSelector(t||this,e)}toggleAttribute(e,t){let i=this;return 3===arguments.length&&(i=arguments[2]),1==arguments.length&&(t=!i.hasAttribute(e)),t?(i.setAttribute(e,""),!0):(i.removeAttribute(e),!1)}toggleClass(e,t,i){i=i||this,1==arguments.length&&(t=!i.classList.contains(e)),t?i.classList.add(e):i.classList.remove(e)}transform(e,t){(t=t||this).style.webkitTransform=e,t.style.transform=e}translate3d(e,t,i,s){s=s||this,this.transform("translate3d("+e+","+t+","+i+")",s)}arrayDelete(e,t){let i;if(Array.isArray(e)){if((i=e.indexOf(t))>=0)return e.splice(i,1)}else{if((i=get(this,e).indexOf(t))>=0)return this.splice(e,i,1)}return null}_logger(e,t){switch(Array.isArray(t)&&1===t.length&&Array.isArray(t[0])&&(t=t[0]),e){case"log":case"warn":case"error":console[e](...t)}}_log(...e){this._logger("log",e)}_warn(...e){this._logger("warn",e)}_error(...e){this._logger("error",e)}_logf(e,...t){return["[%s::%s]",this.is,e,...t]}}return s.prototype.is="",s});let metaProps={attached:!0,detached:!0,ready:!0,created:!0,beforeRegister:!0,registered:!0,attributeChanged:!0,behaviors:!0};function mixinBehaviors(e,t){if(!e)return t=t;t=LegacyElementMixin(t),Array.isArray(e)||(e=[e]);let i=t.prototype.behaviors;return t=_mixinBehaviors(e=flattenBehaviors(e,null,i),t),i&&(e=i.concat(e)),t.prototype.behaviors=e,t}function _mixinBehaviors(e,t){for(let i=0;i<e.length;i++){let s=e[i];s&&(t=Array.isArray(s)?_mixinBehaviors(s,t):GenerateClassFromInfo(s,t))}return t}function flattenBehaviors(e,t,i){t=t||[];for(let s=e.length-1;s>=0;s--){let n=e[s];n?Array.isArray(n)?flattenBehaviors(n,t):t.indexOf(n)<0&&(!i||i.indexOf(n)<0)&&t.unshift(n):console.warn("behavior is null, check for missing or 404 import")}return t}function GenerateClassFromInfo(e,t){class i extends t{static get properties(){return e.properties}static get observers(){return e.observers}created(){super.created(),e.created&&e.created.call(this)}_registered(){super._registered(),e.beforeRegister&&e.beforeRegister.call(Object.getPrototypeOf(this)),e.registered&&e.registered.call(Object.getPrototypeOf(this))}_applyListeners(){if(super._applyListeners(),e.listeners)for(let t in e.listeners)this._addMethodEventListenerToNode(this,t,e.listeners[t])}_ensureAttributes(){if(e.hostAttributes)for(let t in e.hostAttributes)this._ensureAttribute(t,e.hostAttributes[t]);super._ensureAttributes()}ready(){super.ready(),e.ready&&e.ready.call(this)}attached(){super.attached(),e.attached&&e.attached.call(this)}detached(){super.detached(),e.detached&&e.detached.call(this)}attributeChanged(t,i,s){super.attributeChanged(t,i,s),e.attributeChanged&&e.attributeChanged.call(this,t,i,s)}}i.generatedFrom=e;for(let t in e)if(!(t in metaProps)){let s=Object.getOwnPropertyDescriptor(e,t);s&&Object.defineProperty(i.prototype,t,s)}return i}const Class=function(e,t){e||console.warn("Polymer's Class function requires `info` argument");const i=e.behaviors?mixinBehaviors(e.behaviors,HTMLElement):LegacyElementMixin(HTMLElement),s=GenerateClassFromInfo(e,t?t(i):i);return s.is=e.is,s},Polymer=function(e){let t;return t="function"==typeof e?e:Polymer.Class(e),customElements.define(t.is,t),t};function mutablePropertyChange(e,t,i,s,n){let r;n&&(r="object"==typeof i&&null!==i)&&(s=e.__dataTemp[t]);let o=s!==i&&(s==s||i==i);return r&&o&&(e.__dataTemp[t]=i),o}Polymer.Class=Class;const MutableData=dedupingMixin(e=>{return class extends e{_shouldPropertyChange(e,t,i){return mutablePropertyChange(this,e,t,i,!0)}}}),OptionalMutableData=dedupingMixin(e=>{return class extends e{static get properties(){return{mutableData:Boolean}}_shouldPropertyChange(e,t,i){return mutablePropertyChange(this,e,t,i,this.mutableData)}}});MutableData._mutablePropertyChange=mutablePropertyChange;let newInstance=null;function HTMLTemplateElementExtension(){return newInstance}HTMLTemplateElementExtension.prototype=Object.create(HTMLTemplateElement.prototype,{constructor:{value:HTMLTemplateElementExtension,writable:!0}});const DataTemplate=PropertyEffects(HTMLTemplateElementExtension),MutableDataTemplate=MutableData(DataTemplate);function upgradeTemplate(e,t){newInstance=e,Object.setPrototypeOf(e,t.prototype),new t,newInstance=null}const base=PropertyEffects(class{});class TemplateInstanceBase extends base{constructor(e){super(),this._configureProperties(e),this.root=this._stampTemplate(this.__dataHost);let t=this.children=[];for(let e=this.root.firstChild;e;e=e.nextSibling)t.push(e),e.__templatizeInstance=this;this.__templatizeOwner&&this.__templatizeOwner.__hideTemplateChildren__&&this._showHideChildren(!0);let i=this.__templatizeOptions;(e&&i.instanceProps||!i.instanceProps)&&this._enableProperties()}_configureProperties(e){if(this.__templatizeOptions.forwardHostProp)for(let e in this.__hostProps)this._setPendingProperty(e,this.__dataHost["_host_"+e]);for(let t in e)this._setPendingProperty(t,e[t])}forwardHostProp(e,t){this._setPendingPropertyOrPath(e,t,!1,!0)&&this.__dataHost._enqueueClient(this)}_addEventListenerToNode(e,t,i){if(this._methodHost&&this.__templatizeOptions.parentModel)this._methodHost._addEventListenerToNode(e,t,e=>{e.model=this,i(e)});else{let s=this.__dataHost.__dataHost;s&&s._addEventListenerToNode(e,t,i)}}_showHideChildren(e){let t=this.children;for(let i=0;i<t.length;i++){let s=t[i];if(Boolean(e)!=Boolean(s.__hideTemplateChildren__))if(s.nodeType===Node.TEXT_NODE)e?(s.__polymerTextContent__=s.textContent,s.textContent=""):s.textContent=s.__polymerTextContent__;else if("slot"===s.localName)if(e)s.__polymerReplaced__=document.createComment("hidden-slot"),s.parentNode.replaceChild(s.__polymerReplaced__,s);else{const e=s.__polymerReplaced__;e&&e.parentNode.replaceChild(s,e)}else s.style&&(e?(s.__polymerDisplay__=s.style.display,s.style.display="none"):s.style.display=s.__polymerDisplay__);s.__hideTemplateChildren__=e,s._showHideChildren&&s._showHideChildren(e)}}_setUnmanagedPropertyToNode(e,t,i){e.__hideTemplateChildren__&&e.nodeType==Node.TEXT_NODE&&"textContent"==t?e.__polymerTextContent__=i:super._setUnmanagedPropertyToNode(e,t,i)}get parentModel(){let e=this.__parentModel;if(!e){let t;e=this;do{e=e.__dataHost.__dataHost}while((t=e.__templatizeOptions)&&!t.parentModel);this.__parentModel=e}return e}dispatchEvent(e){return!0}}TemplateInstanceBase.prototype.__dataHost,TemplateInstanceBase.prototype.__templatizeOptions,TemplateInstanceBase.prototype._methodHost,TemplateInstanceBase.prototype.__templatizeOwner,TemplateInstanceBase.prototype.__hostProps;const MutableTemplateInstanceBase=MutableData(TemplateInstanceBase);function findMethodHost(e){let t=e.__dataHost;return t&&t._methodHost||t}function createTemplatizerClass(e,t,i){let s=i.mutableData?MutableTemplateInstanceBase:TemplateInstanceBase,n=class extends s{};return n.prototype.__templatizeOptions=i,n.prototype._bindTemplate(e),addNotifyEffects(n,e,t,i),n}function addPropagateEffects(e,t,i){let s=i.forwardHostProp;if(s){let n=t.templatizeTemplateClass;if(!n){let e=i.mutableData?MutableDataTemplate:DataTemplate;n=t.templatizeTemplateClass=class extends e{};let r=t.hostProps;for(let e in r)n.prototype._addPropertyEffect("_host_"+e,n.prototype.PROPERTY_EFFECT_TYPES.PROPAGATE,{fn:createForwardHostPropEffect(e,s)}),n.prototype._createNotifyingProperty("_host_"+e)}upgradeTemplate(e,n),e.__dataProto&&Object.assign(e.__data,e.__dataProto),e.__dataTemp={},e.__dataPending=null,e.__dataOld=null,e._enableProperties()}}function createForwardHostPropEffect(e,t){return function(e,i,s){t.call(e.__templatizeOwner,i.substring("_host_".length),s[i])}}function addNotifyEffects(e,t,i,s){let n=i.hostProps||{};for(let t in s.instanceProps){delete n[t];let i=s.notifyInstanceProp;i&&e.prototype._addPropertyEffect(t,e.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyInstancePropEffect(t,i)})}if(s.forwardHostProp&&t.__dataHost)for(let t in n)e.prototype._addPropertyEffect(t,e.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyHostPropEffect()})}function createNotifyInstancePropEffect(e,t){return function(e,i,s){t.call(e.__templatizeOwner,e,i,s[i])}}function createNotifyHostPropEffect(){return function(e,t,i){e.__dataHost._setPendingPropertyOrPath("_host_"+t,i[t],!0,!0)}}function templatize(e,t,i){if(strictTemplatePolicy&&!findMethodHost(e))throw new Error("strictTemplatePolicy: template owner not trusted");if(i=i||{},e.__templatizeOwner)throw new Error("A <template> can only be templatized once");e.__templatizeOwner=t;let s=(t?t.constructor:TemplateInstanceBase)._parseTemplate(e),n=s.templatizeInstanceClass;n||(n=createTemplatizerClass(e,s,i),s.templatizeInstanceClass=n),addPropagateEffects(e,s,i);let r=class extends n{};return r.prototype._methodHost=findMethodHost(e),r.prototype.__dataHost=e,r.prototype.__templatizeOwner=t,r.prototype.__hostProps=s.hostProps,r=r}function modelForElement(e,t){let i;for(;t;)if(i=t.__templatizeInstance){if(i.__dataHost==e)return i;t=i.__dataHost}else t=t.parentNode;return null}const domBindBase=GestureEventListeners(OptionalMutableData(PropertyEffects(HTMLElement)));class DomBind extends domBindBase{static get observedAttributes(){return["mutable-data"]}constructor(){if(super(),strictTemplatePolicy)throw new Error("strictTemplatePolicy: dom-bind not allowed");this.root=null,this.$=null,this.__children=null}attributeChangedCallback(){this.mutableData=!0}connectedCallback(){this.style.display="none",this.render()}disconnectedCallback(){this.__removeChildren()}__insertChildren(){this.parentNode.insertBefore(this.root,this)}__removeChildren(){if(this.__children)for(let e=0;e<this.__children.length;e++)this.root.appendChild(this.__children[e])}render(){let e;if(!this.__children){if(!(e=e||this.querySelector("template"))){let t=new MutationObserver(()=>{if(!(e=this.querySelector("template")))throw new Error("dom-bind requires a <template> child");t.disconnect(),this.render()});return void t.observe(this,{childList:!0})}this.root=this._stampTemplate(e),this.$=this.root.$,this.__children=[];for(let e=this.root.firstChild;e;e=e.nextSibling)this.__children[this.__children.length]=e;this._enableProperties()}this.__insertChildren(),this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0}))}}customElements.define("dom-bind",DomBind);class LiteralString{constructor(e){this.value=e.toString()}toString(){return this.value}}function literalValue(e){if(e instanceof LiteralString)return e.value;throw new Error(`non-literal value passed to Polymer's htmlLiteral function: ${e}`)}function htmlValue(e){if(e instanceof HTMLTemplateElement)return e.innerHTML;if(e instanceof LiteralString)return literalValue(e);throw new Error(`non-template value passed to Polymer's html function: ${e}`)}const html$1=function(e,...t){const i=document.createElement("template");return i.innerHTML=t.reduce((t,i,s)=>t+htmlValue(i)+e[s+1],e[0]),i},PolymerElement=ElementMixin(HTMLElement),domRepeatBase=OptionalMutableData(PolymerElement);class DomRepeat extends domRepeatBase{static get is(){return"dom-repeat"}static get template(){return null}static get properties(){return{items:{type:Array},as:{type:String,value:"item"},indexAs:{type:String,value:"index"},itemsIndexAs:{type:String,value:"itemsIndex"},sort:{type:Function,observer:"__sortChanged"},filter:{type:Function,observer:"__filterChanged"},observe:{type:String,observer:"__observeChanged"},delay:Number,renderedItemCount:{type:Number,notify:!0,readOnly:!0},initialCount:{type:Number,observer:"__initializeChunking"},targetFramerate:{type:Number,value:20},_targetFrameTime:{type:Number,computed:"__computeFrameTime(targetFramerate)"}}}static get observers(){return["__itemsChanged(items.*)"]}constructor(){super(),this.__instances=[],this.__limit=1/0,this.__pool=[],this.__renderDebouncer=null,this.__itemsIdxToInstIdx={},this.__chunkCount=null,this.__lastChunkTime=null,this.__sortFn=null,this.__filterFn=null,this.__observePaths=null,this.__ctor=null,this.__isDetached=!0,this.template=null}disconnectedCallback(){super.disconnectedCallback(),this.__isDetached=!0;for(let e=0;e<this.__instances.length;e++)this.__detachInstance(e)}connectedCallback(){if(super.connectedCallback(),this.style.display="none",this.__isDetached){this.__isDetached=!1;let e=this.parentNode;for(let t=0;t<this.__instances.length;t++)this.__attachInstance(t,e)}}__ensureTemplatized(){if(!this.__ctor){let e=this.template=this.querySelector("template");if(!e){let e=new MutationObserver(()=>{if(!this.querySelector("template"))throw new Error("dom-repeat requires a <template> child");e.disconnect(),this.__render()});return e.observe(this,{childList:!0}),!1}let t={};t[this.as]=!0,t[this.indexAs]=!0,t[this.itemsIndexAs]=!0,this.__ctor=templatize(e,this,{mutableData:this.mutableData,parentModel:!0,instanceProps:t,forwardHostProp:function(e,t){let i=this.__instances;for(let s,n=0;n<i.length&&(s=i[n]);n++)s.forwardHostProp(e,t)},notifyInstanceProp:function(e,t,i){if(matches(this.as,t)){let s=e[this.itemsIndexAs];t==this.as&&(this.items[s]=i);let n=translate(this.as,"items."+s,t);this.notifyPath(n,i)}}})}return!0}__getMethodHost(){return this.__dataHost._methodHost||this.__dataHost}__functionFromPropertyValue(e){if("string"==typeof e){let t=e,i=this.__getMethodHost();return function(){return i[t].apply(i,arguments)}}return e}__sortChanged(e){this.__sortFn=this.__functionFromPropertyValue(e),this.items&&this.__debounceRender(this.__render)}__filterChanged(e){this.__filterFn=this.__functionFromPropertyValue(e),this.items&&this.__debounceRender(this.__render)}__computeFrameTime(e){return Math.ceil(1e3/e)}__initializeChunking(){this.initialCount&&(this.__limit=this.initialCount,this.__chunkCount=this.initialCount,this.__lastChunkTime=performance.now())}__tryRenderChunk(){this.items&&this.__limit<this.items.length&&this.__debounceRender(this.__requestRenderChunk)}__requestRenderChunk(){requestAnimationFrame(()=>this.__renderChunk())}__renderChunk(){let e=performance.now(),t=this._targetFrameTime/(e-this.__lastChunkTime);this.__chunkCount=Math.round(this.__chunkCount*t)||1,this.__limit+=this.__chunkCount,this.__lastChunkTime=e,this.__debounceRender(this.__render)}__observeChanged(){this.__observePaths=this.observe&&this.observe.replace(".*",".").split(" ")}__itemsChanged(e){this.items&&!Array.isArray(this.items)&&console.warn("dom-repeat expected array for `items`, found",this.items),this.__handleItemPath(e.path,e.value)||(this.__initializeChunking(),this.__debounceRender(this.__render))}__handleObservedPaths(e){if(this.__sortFn||this.__filterFn)if(e){if(this.__observePaths){let t=this.__observePaths;for(let i=0;i<t.length;i++)0===e.indexOf(t[i])&&this.__debounceRender(this.__render,this.delay)}}else this.__debounceRender(this.__render,this.delay)}__debounceRender(e,t=0){this.__renderDebouncer=Debouncer.debounce(this.__renderDebouncer,t>0?timeOut.after(t):microTask,e.bind(this)),enqueueDebouncer(this.__renderDebouncer)}render(){this.__debounceRender(this.__render),flush$1()}__render(){this.__ensureTemplatized()&&(this.__applyFullRefresh(),this.__pool.length=0,this._setRenderedItemCount(this.__instances.length),this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0})),this.__tryRenderChunk())}__applyFullRefresh(){let e=this.items||[],t=new Array(e.length);for(let i=0;i<e.length;i++)t[i]=i;this.__filterFn&&(t=t.filter((t,i,s)=>this.__filterFn(e[t],i,s))),this.__sortFn&&t.sort((t,i)=>this.__sortFn(e[t],e[i]));const i=this.__itemsIdxToInstIdx={};let s=0;const n=Math.min(t.length,this.__limit);for(;s<n;s++){let n=this.__instances[s],r=t[s],o=e[r];i[r]=s,n?(n._setPendingProperty(this.as,o),n._setPendingProperty(this.indexAs,s),n._setPendingProperty(this.itemsIndexAs,r),n._flushProperties()):this.__insertInstance(o,s,r)}for(let e=this.__instances.length-1;e>=s;e--)this.__detachAndRemoveInstance(e)}__detachInstance(e){let t=this.__instances[e];for(let e=0;e<t.children.length;e++){let i=t.children[e];t.root.appendChild(i)}return t}__attachInstance(e,t){let i=this.__instances[e];t.insertBefore(i.root,this)}__detachAndRemoveInstance(e){let t=this.__detachInstance(e);t&&this.__pool.push(t),this.__instances.splice(e,1)}__stampInstance(e,t,i){let s={};return s[this.as]=e,s[this.indexAs]=t,s[this.itemsIndexAs]=i,new this.__ctor(s)}__insertInstance(e,t,i){let s=this.__pool.pop();s?(s._setPendingProperty(this.as,e),s._setPendingProperty(this.indexAs,t),s._setPendingProperty(this.itemsIndexAs,i),s._flushProperties()):s=this.__stampInstance(e,t,i);let n=this.__instances[t+1],r=n?n.children[0]:this;return this.parentNode.insertBefore(s.root,r),this.__instances[t]=s,s}_showHideChildren(e){for(let t=0;t<this.__instances.length;t++)this.__instances[t]._showHideChildren(e)}__handleItemPath(e,t){let i=e.slice(6),s=i.indexOf("."),n=s<0?i:i.substring(0,s);if(n==parseInt(n,10)){let e=s<0?"":i.substring(s+1);this.__handleObservedPaths(e);let r=this.__itemsIdxToInstIdx[n],o=this.__instances[r];if(o){let i=this.as+(e?"."+e:"");o._setPendingPropertyOrPath(i,t,!1,!0),o._flushProperties()}return!0}}itemForElement(e){let t=this.modelForElement(e);return t&&t[this.as]}indexForElement(e){let t=this.modelForElement(e);return t&&t[this.indexAs]}modelForElement(e){return modelForElement(this.template,e)}}customElements.define(DomRepeat.is,DomRepeat);class DomIf extends PolymerElement{static get is(){return"dom-if"}static get template(){return null}static get properties(){return{if:{type:Boolean,observer:"__debounceRender"},restamp:{type:Boolean,observer:"__debounceRender"}}}constructor(){super(),this.__renderDebouncer=null,this.__invalidProps=null,this.__instance=null,this._lastIf=!1,this.__ctor=null,this.__hideTemplateChildren__=!1}__debounceRender(){this.__renderDebouncer=Debouncer.debounce(this.__renderDebouncer,microTask,()=>this.__render()),enqueueDebouncer(this.__renderDebouncer)}disconnectedCallback(){super.disconnectedCallback(),this.parentNode&&(this.parentNode.nodeType!=Node.DOCUMENT_FRAGMENT_NODE||this.parentNode.host)||this.__teardownInstance()}connectedCallback(){super.connectedCallback(),this.style.display="none",this.if&&this.__debounceRender()}render(){flush$1()}__render(){if(this.if){if(!this.__ensureInstance())return;this._showHideChildren()}else this.restamp&&this.__teardownInstance();!this.restamp&&this.__instance&&this._showHideChildren(),this.if!=this._lastIf&&(this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0})),this._lastIf=this.if)}__ensureInstance(){let e=this.parentNode;if(e){if(!this.__ctor){let e=this.querySelector("template");if(!e){let e=new MutationObserver(()=>{if(!this.querySelector("template"))throw new Error("dom-if requires a <template> child");e.disconnect(),this.__render()});return e.observe(this,{childList:!0}),!1}this.__ctor=templatize(e,this,{mutableData:!0,forwardHostProp:function(e,t){this.__instance&&(this.if?this.__instance.forwardHostProp(e,t):(this.__invalidProps=this.__invalidProps||Object.create(null),this.__invalidProps[root(e)]=!0))}})}if(this.__instance){this.__syncHostProperties();let t=this.__instance.children;if(t&&t.length){if(this.previousSibling!==t[t.length-1])for(let i,s=0;s<t.length&&(i=t[s]);s++)e.insertBefore(i,this)}}else this.__instance=new this.__ctor,e.insertBefore(this.__instance.root,this)}return!0}__syncHostProperties(){let e=this.__invalidProps;if(e){for(let t in e)this.__instance._setPendingProperty(t,this.__dataHost[t]);this.__invalidProps=null,this.__instance._flushProperties()}}__teardownInstance(){if(this.__instance){let e=this.__instance.children;if(e&&e.length){let t=e[0].parentNode;if(t)for(let i,s=0;s<e.length&&(i=e[s]);s++)t.removeChild(i)}this.__instance=null,this.__invalidProps=null}}_showHideChildren(){let e=this.__hideTemplateChildren__||!this.if;this.__instance&&this.__instance._showHideChildren(e)}}customElements.define(DomIf.is,DomIf);let ArraySelectorMixin=dedupingMixin(e=>{let t=ElementMixin(e);return class extends t{static get properties(){return{items:{type:Array},multi:{type:Boolean,value:!1},selected:{type:Object,notify:!0},selectedItem:{type:Object,notify:!0},toggle:{type:Boolean,value:!1}}}static get observers(){return["__updateSelection(multi, items.*)"]}constructor(){super(),this.__lastItems=null,this.__lastMulti=null,this.__selectedMap=null}__updateSelection(e,t){let i=t.path;if("items"==i){let i=t.base||[],s=this.__lastItems;if(e!==this.__lastMulti&&this.clearSelection(),s){let e=calculateSplices(i,s);this.__applySplices(e)}this.__lastItems=i,this.__lastMulti=e}else if("items.splices"==t.path)this.__applySplices(t.value.indexSplices);else{let e=i.slice("items.".length),t=parseInt(e,10);e.indexOf(".")<0&&e==t&&this.__deselectChangedIdx(t)}}__applySplices(e){let t=this.__selectedMap;for(let i=0;i<e.length;i++){let s=e[i];t.forEach((e,i)=>{e<s.index||(e>=s.index+s.removed.length?t.set(i,e+s.addedCount-s.removed.length):t.set(i,-1))});for(let e=0;e<s.addedCount;e++){let i=s.index+e;t.has(this.items[i])&&t.set(this.items[i],i)}}this.__updateLinks();let i=0;t.forEach((e,s)=>{e<0?(this.multi?this.splice("selected",i,1):this.selected=this.selectedItem=null,t.delete(s)):i++})}__updateLinks(){if(this.__dataLinkedPaths={},this.multi){let e=0;this.__selectedMap.forEach(t=>{t>=0&&this.linkPaths("items."+t,"selected."+e++)})}else this.__selectedMap.forEach(e=>{this.linkPaths("selected","items."+e),this.linkPaths("selectedItem","items."+e)})}clearSelection(){this.__dataLinkedPaths={},this.__selectedMap=new Map,this.selected=this.multi?[]:null,this.selectedItem=null}isSelected(e){return this.__selectedMap.has(e)}isIndexSelected(e){return this.isSelected(this.items[e])}__deselectChangedIdx(e){let t=this.__selectedIndexForItemIndex(e);if(t>=0){let e=0;this.__selectedMap.forEach((i,s)=>{t==e++&&this.deselect(s)})}}__selectedIndexForItemIndex(e){let t=this.__dataLinkedPaths["items."+e];if(t)return parseInt(t.slice("selected.".length),10)}deselect(e){let t=this.__selectedMap.get(e);if(t>=0){let i;this.__selectedMap.delete(e),this.multi&&(i=this.__selectedIndexForItemIndex(t)),this.__updateLinks(),this.multi?this.splice("selected",i,1):this.selected=this.selectedItem=null}}deselectIndex(e){this.deselect(this.items[e])}select(e){this.selectIndex(this.items.indexOf(e))}selectIndex(e){let t=this.items[e];this.isSelected(t)?this.toggle&&this.deselectIndex(e):(this.multi||this.__selectedMap.clear(),this.__selectedMap.set(t,e),this.__updateLinks(),this.multi?this.push("selected",t):this.selected=this.selectedItem=t)}}}),baseArraySelector=ArraySelectorMixin(PolymerElement);class ArraySelector extends baseArraySelector{static get is(){return"array-selector"}}customElements.define(ArraySelector.is,ArraySelector);const customStyleInterface=new CustomStyleInterface;window.ShadyCSS||(window.ShadyCSS={prepareTemplate(e,t,i){},prepareTemplateDom(e,t){},prepareTemplateStyles(e,t,i){},styleSubtree(e,t){customStyleInterface.processStyles(),updateNativeProperties(e,t)},styleElement(e){customStyleInterface.processStyles()},styleDocument(e){customStyleInterface.processStyles(),updateNativeProperties(document.body,e)},getComputedStyleValue:(e,t)=>getComputedStyleValue(e,t),flushCustomStyles(){},nativeCss:nativeCssVariables,nativeShadow:nativeShadow,cssBuild:cssBuild,disableRuntime:disableRuntime}),window.ShadyCSS.CustomStyleInterface=customStyleInterface;const attr="include",CustomStyleInterface$1=window.ShadyCSS.CustomStyleInterface;class CustomStyle extends HTMLElement{constructor(){super(),this._style=null,CustomStyleInterface$1.addCustomStyle(this)}getStyle(){if(this._style)return this._style;const e=this.querySelector("style");if(!e)return null;this._style=e;const t=e.getAttribute(attr);return t&&(e.removeAttribute(attr),e.textContent=cssFromModules(t)+e.textContent),this.ownerDocument!==window.document&&window.document.head.appendChild(this),this._style}}let mutablePropertyChange$1;window.customElements.define("custom-style",CustomStyle),mutablePropertyChange$1=MutableData._mutablePropertyChange;const Base=LegacyElementMixin(HTMLElement).prototype,template=html$1`
+<custom-style>
+  <style is="custom-style">
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</custom-style>
+<custom-style>
+  <style is="custom-style">
+    html {
 
-  customElements.define(
-    'button-card-button',
-    class extends ButtonBase {
-      static get styles() {
-        return css`
-          ${ButtonBase.styles}
-          .mdc-button {
-            height: auto;
-            padding: 0;
-            color: inherit !important;
-          }
-        `
-      }
-    },
-  );
+      --layout: {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+      };
 
-  class ButtonCard extends LitElement {
-    static get properties() {
-      return {
-        hass: Object,
-        config: Object,
+      --layout-inline: {
+        display: -ms-inline-flexbox;
+        display: -webkit-inline-flex;
+        display: inline-flex;
+      };
+
+      --layout-horizontal: {
+        @apply --layout;
+
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+      };
+
+      --layout-horizontal-reverse: {
+        @apply --layout;
+
+        -ms-flex-direction: row-reverse;
+        -webkit-flex-direction: row-reverse;
+        flex-direction: row-reverse;
+      };
+
+      --layout-vertical: {
+        @apply --layout;
+
+        -ms-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+      };
+
+      --layout-vertical-reverse: {
+        @apply --layout;
+
+        -ms-flex-direction: column-reverse;
+        -webkit-flex-direction: column-reverse;
+        flex-direction: column-reverse;
+      };
+
+      --layout-wrap: {
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+      };
+
+      --layout-wrap-reverse: {
+        -ms-flex-wrap: wrap-reverse;
+        -webkit-flex-wrap: wrap-reverse;
+        flex-wrap: wrap-reverse;
+      };
+
+      --layout-flex-auto: {
+        -ms-flex: 1 1 auto;
+        -webkit-flex: 1 1 auto;
+        flex: 1 1 auto;
+      };
+
+      --layout-flex-none: {
+        -ms-flex: none;
+        -webkit-flex: none;
+        flex: none;
+      };
+
+      --layout-flex: {
+        -ms-flex: 1 1 0.000000001px;
+        -webkit-flex: 1;
+        flex: 1;
+        -webkit-flex-basis: 0.000000001px;
+        flex-basis: 0.000000001px;
+      };
+
+      --layout-flex-2: {
+        -ms-flex: 2;
+        -webkit-flex: 2;
+        flex: 2;
+      };
+
+      --layout-flex-3: {
+        -ms-flex: 3;
+        -webkit-flex: 3;
+        flex: 3;
+      };
+
+      --layout-flex-4: {
+        -ms-flex: 4;
+        -webkit-flex: 4;
+        flex: 4;
+      };
+
+      --layout-flex-5: {
+        -ms-flex: 5;
+        -webkit-flex: 5;
+        flex: 5;
+      };
+
+      --layout-flex-6: {
+        -ms-flex: 6;
+        -webkit-flex: 6;
+        flex: 6;
+      };
+
+      --layout-flex-7: {
+        -ms-flex: 7;
+        -webkit-flex: 7;
+        flex: 7;
+      };
+
+      --layout-flex-8: {
+        -ms-flex: 8;
+        -webkit-flex: 8;
+        flex: 8;
+      };
+
+      --layout-flex-9: {
+        -ms-flex: 9;
+        -webkit-flex: 9;
+        flex: 9;
+      };
+
+      --layout-flex-10: {
+        -ms-flex: 10;
+        -webkit-flex: 10;
+        flex: 10;
+      };
+
+      --layout-flex-11: {
+        -ms-flex: 11;
+        -webkit-flex: 11;
+        flex: 11;
+      };
+
+      --layout-flex-12: {
+        -ms-flex: 12;
+        -webkit-flex: 12;
+        flex: 12;
+      };
+
+      /* alignment in cross axis */
+
+      --layout-start: {
+        -ms-flex-align: start;
+        -webkit-align-items: flex-start;
+        align-items: flex-start;
+      };
+
+      --layout-center: {
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      };
+
+      --layout-end: {
+        -ms-flex-align: end;
+        -webkit-align-items: flex-end;
+        align-items: flex-end;
+      };
+
+      --layout-baseline: {
+        -ms-flex-align: baseline;
+        -webkit-align-items: baseline;
+        align-items: baseline;
+      };
+
+      /* alignment in main axis */
+
+      --layout-start-justified: {
+        -ms-flex-pack: start;
+        -webkit-justify-content: flex-start;
+        justify-content: flex-start;
+      };
+
+      --layout-center-justified: {
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+      };
+
+      --layout-end-justified: {
+        -ms-flex-pack: end;
+        -webkit-justify-content: flex-end;
+        justify-content: flex-end;
+      };
+
+      --layout-around-justified: {
+        -ms-flex-pack: distribute;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+      };
+
+      --layout-justified: {
+        -ms-flex-pack: justify;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+      };
+
+      --layout-center-center: {
+        @apply --layout-center;
+        @apply --layout-center-justified;
+      };
+
+      /* self alignment */
+
+      --layout-self-start: {
+        -ms-align-self: flex-start;
+        -webkit-align-self: flex-start;
+        align-self: flex-start;
+      };
+
+      --layout-self-center: {
+        -ms-align-self: center;
+        -webkit-align-self: center;
+        align-self: center;
+      };
+
+      --layout-self-end: {
+        -ms-align-self: flex-end;
+        -webkit-align-self: flex-end;
+        align-self: flex-end;
+      };
+
+      --layout-self-stretch: {
+        -ms-align-self: stretch;
+        -webkit-align-self: stretch;
+        align-self: stretch;
+      };
+
+      --layout-self-baseline: {
+        -ms-align-self: baseline;
+        -webkit-align-self: baseline;
+        align-self: baseline;
+      };
+
+      /* multi-line alignment in main axis */
+
+      --layout-start-aligned: {
+        -ms-flex-line-pack: start;  /* IE10 */
+        -ms-align-content: flex-start;
+        -webkit-align-content: flex-start;
+        align-content: flex-start;
+      };
+
+      --layout-end-aligned: {
+        -ms-flex-line-pack: end;  /* IE10 */
+        -ms-align-content: flex-end;
+        -webkit-align-content: flex-end;
+        align-content: flex-end;
+      };
+
+      --layout-center-aligned: {
+        -ms-flex-line-pack: center;  /* IE10 */
+        -ms-align-content: center;
+        -webkit-align-content: center;
+        align-content: center;
+      };
+
+      --layout-between-aligned: {
+        -ms-flex-line-pack: justify;  /* IE10 */
+        -ms-align-content: space-between;
+        -webkit-align-content: space-between;
+        align-content: space-between;
+      };
+
+      --layout-around-aligned: {
+        -ms-flex-line-pack: distribute;  /* IE10 */
+        -ms-align-content: space-around;
+        -webkit-align-content: space-around;
+        align-content: space-around;
+      };
+
+      /*******************************
+                Other Layout
+      *******************************/
+
+      --layout-block: {
+        display: block;
+      };
+
+      --layout-invisible: {
+        visibility: hidden !important;
+      };
+
+      --layout-relative: {
+        position: relative;
+      };
+
+      --layout-fit: {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      };
+
+      --layout-scroll: {
+        -webkit-overflow-scrolling: touch;
+        overflow: auto;
+      };
+
+      --layout-fullbleed: {
+        margin: 0;
+        height: 100vh;
+      };
+
+      /* fixed position */
+
+      --layout-fixed-top: {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      };
+
+      --layout-fixed-right: {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      };
+
+      --layout-fixed-bottom: {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      };
+
+      --layout-fixed-left: {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+      };
+
+    }
+  </style>
+</custom-style>`;template.setAttribute("style","display: none;"),document.head.appendChild(template.content);var style=document.createElement("style");style.textContent="[hidden] { display: none !important; }",document.head.appendChild(style);const template$1=html$1`
+<custom-style>
+  <style is="custom-style">
+    html {
+
+      --shadow-transition: {
+        transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      };
+
+      --shadow-none: {
+        box-shadow: none;
+      };
+
+      /* from http://codepen.io/shyndman/pen/c5394ddf2e8b2a5c9185904b57421cdb */
+
+      --shadow-elevation-2dp: {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      };
+
+      --shadow-elevation-3dp: {
+        box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 8px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 3px -2px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-4dp: {
+        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                    0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-6dp: {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 18px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 5px -1px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-8dp: {
+        box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                    0 3px 14px 2px rgba(0, 0, 0, 0.12),
+                    0 5px 5px -3px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-12dp: {
+        box-shadow: 0 12px 16px 1px rgba(0, 0, 0, 0.14),
+                    0 4px 22px 3px rgba(0, 0, 0, 0.12),
+                    0 6px 7px -4px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-16dp: {
+        box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+                    0  6px 30px 5px rgba(0, 0, 0, 0.12),
+                    0  8px 10px -5px rgba(0, 0, 0, 0.4);
+      };
+
+      --shadow-elevation-24dp: {
+        box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
+                    0 9px 46px 8px rgba(0, 0, 0, 0.12),
+                    0 11px 15px -7px rgba(0, 0, 0, 0.4);
       };
     }
+  </style>
+</custom-style>`;template$1.setAttribute("style","display: none;"),document.head.appendChild(template$1.content);const template$2=html$1`
+<dom-module id="paper-material-styles">
+  <template>
+    <style>
+      html {
+        --paper-material: {
+          display: block;
+          position: relative;
+        };
+        --paper-material-elevation-1: {
+          @apply --shadow-elevation-2dp;
+        };
+        --paper-material-elevation-2: {
+          @apply --shadow-elevation-4dp;
+        };
+        --paper-material-elevation-3: {
+          @apply --shadow-elevation-6dp;
+        };
+        --paper-material-elevation-4: {
+          @apply --shadow-elevation-8dp;
+        };
+        --paper-material-elevation-5: {
+          @apply --shadow-elevation-16dp;
+        };
+      }
+      .paper-material {
+        @apply --paper-material;
+      }
+      .paper-material[elevation="1"] {
+        @apply --paper-material-elevation-1;
+      }
+      .paper-material[elevation="2"] {
+        @apply --paper-material-elevation-2;
+      }
+      .paper-material[elevation="3"] {
+        @apply --paper-material-elevation-3;
+      }
+      .paper-material[elevation="4"] {
+        @apply --paper-material-elevation-4;
+      }
+      .paper-material[elevation="5"] {
+        @apply --paper-material-elevation-5;
+      }
 
-    static get styles() {
-      return css`
+      /* Duplicate the styles because of https://github.com/webcomponents/shadycss/issues/193 */
+      :host {
+        --paper-material: {
+          display: block;
+          position: relative;
+        };
+        --paper-material-elevation-1: {
+          @apply --shadow-elevation-2dp;
+        };
+        --paper-material-elevation-2: {
+          @apply --shadow-elevation-4dp;
+        };
+        --paper-material-elevation-3: {
+          @apply --shadow-elevation-6dp;
+        };
+        --paper-material-elevation-4: {
+          @apply --shadow-elevation-8dp;
+        };
+        --paper-material-elevation-5: {
+          @apply --shadow-elevation-16dp;
+        };
+      }
+      :host(.paper-material) {
+        @apply --paper-material;
+      }
+      :host(.paper-material[elevation="1"]) {
+        @apply --paper-material-elevation-1;
+      }
+      :host(.paper-material[elevation="2"]) {
+        @apply --paper-material-elevation-2;
+      }
+      :host(.paper-material[elevation="3"]) {
+        @apply --paper-material-elevation-3;
+      }
+      :host(.paper-material[elevation="4"]) {
+        @apply --paper-material-elevation-4;
+      }
+      :host(.paper-material[elevation="5"]) {
+        @apply --paper-material-elevation-5;
+      }
+    </style>
+  </template>
+</dom-module>`;template$2.setAttribute("style","display: none;"),document.head.appendChild(template$2.content);const IronControlState={properties:{focused:{type:Boolean,value:!1,notify:!0,readOnly:!0,reflectToAttribute:!0},disabled:{type:Boolean,value:!1,notify:!0,observer:"_disabledChanged",reflectToAttribute:!0},_oldTabIndex:{type:String},_boundFocusBlurHandler:{type:Function,value:function(){return this._focusBlurHandler.bind(this)}}},observers:["_changedControlState(focused, disabled)"],ready:function(){this.addEventListener("focus",this._boundFocusBlurHandler,!0),this.addEventListener("blur",this._boundFocusBlurHandler,!0)},_focusBlurHandler:function(e){this._setFocused("focus"===e.type)},_disabledChanged:function(e,t){this.setAttribute("aria-disabled",e?"true":"false"),this.style.pointerEvents=e?"none":"",e?(this._oldTabIndex=this.getAttribute("tabindex"),this._setFocused(!1),this.tabIndex=-1,this.blur()):void 0!==this._oldTabIndex&&(null===this._oldTabIndex?this.removeAttribute("tabindex"):this.setAttribute("tabindex",this._oldTabIndex))},_changedControlState:function(){this._controlStateChanged&&this._controlStateChanged()}};var KEY_IDENTIFIER={"U+0008":"backspace","U+0009":"tab","U+001B":"esc","U+0020":"space","U+007F":"del"},KEY_CODE={8:"backspace",9:"tab",13:"enter",27:"esc",33:"pageup",34:"pagedown",35:"end",36:"home",32:"space",37:"left",38:"up",39:"right",40:"down",46:"del",106:"*"},MODIFIER_KEYS={shift:"shiftKey",ctrl:"ctrlKey",alt:"altKey",meta:"metaKey"},KEY_CHAR=/[a-z0-9*]/,IDENT_CHAR=/U\+/,ARROW_KEY=/^arrow/,SPACE_KEY=/^space(bar)?/,ESC_KEY=/^escape$/;function transformKey(e,t){var i="";if(e){var s=e.toLowerCase();" "===s||SPACE_KEY.test(s)?i="space":ESC_KEY.test(s)?i="esc":1==s.length?t&&!KEY_CHAR.test(s)||(i=s):i=ARROW_KEY.test(s)?s.replace("arrow",""):"multiply"==s?"*":s}return i}function transformKeyIdentifier(e){var t="";return e&&(e in KEY_IDENTIFIER?t=KEY_IDENTIFIER[e]:IDENT_CHAR.test(e)?(e=parseInt(e.replace("U+","0x"),16),t=String.fromCharCode(e).toLowerCase()):t=e.toLowerCase()),t}function transformKeyCode(e){var t="";return Number(e)&&(t=e>=65&&e<=90?String.fromCharCode(32+e):e>=112&&e<=123?"f"+(e-112+1):e>=48&&e<=57?String(e-48):e>=96&&e<=105?String(e-96):KEY_CODE[e]),t}function normalizedKeyForEvent(e,t){return e.key?transformKey(e.key,t):e.detail&&e.detail.key?transformKey(e.detail.key,t):transformKeyIdentifier(e.keyIdentifier)||transformKeyCode(e.keyCode)||""}function keyComboMatchesEvent(e,t){return normalizedKeyForEvent(t,e.hasModifiers)===e.key&&(!e.hasModifiers||!!t.shiftKey==!!e.shiftKey&&!!t.ctrlKey==!!e.ctrlKey&&!!t.altKey==!!e.altKey&&!!t.metaKey==!!e.metaKey)}function parseKeyComboString(e){return 1===e.length?{combo:e,key:e,event:"keydown"}:e.split("+").reduce(function(e,t){var i=t.split(":"),s=i[0],n=i[1];return s in MODIFIER_KEYS?(e[MODIFIER_KEYS[s]]=!0,e.hasModifiers=!0):(e.key=s,e.event=n||"keydown"),e},{combo:e.split(":").shift()})}function parseEventString(e){return e.trim().split(" ").map(function(e){return parseKeyComboString(e)})}const IronA11yKeysBehavior={properties:{keyEventTarget:{type:Object,value:function(){return this}},stopKeyboardEventPropagation:{type:Boolean,value:!1},_boundKeyHandlers:{type:Array,value:function(){return[]}},_imperativeKeyBindings:{type:Object,value:function(){return{}}}},observers:["_resetKeyEventListeners(keyEventTarget, _boundKeyHandlers)"],keyBindings:{},registered:function(){this._prepKeyBindings()},attached:function(){this._listenKeyEventListeners()},detached:function(){this._unlistenKeyEventListeners()},addOwnKeyBinding:function(e,t){this._imperativeKeyBindings[e]=t,this._prepKeyBindings(),this._resetKeyEventListeners()},removeOwnKeyBindings:function(){this._imperativeKeyBindings={},this._prepKeyBindings(),this._resetKeyEventListeners()},keyboardEventMatchesKeys:function(e,t){for(var i=parseEventString(t),s=0;s<i.length;++s)if(keyComboMatchesEvent(i[s],e))return!0;return!1},_collectKeyBindings:function(){var e=this.behaviors.map(function(e){return e.keyBindings});return-1===e.indexOf(this.keyBindings)&&e.push(this.keyBindings),e},_prepKeyBindings:function(){for(var e in this._keyBindings={},this._collectKeyBindings().forEach(function(e){for(var t in e)this._addKeyBinding(t,e[t])},this),this._imperativeKeyBindings)this._addKeyBinding(e,this._imperativeKeyBindings[e]);for(var t in this._keyBindings)this._keyBindings[t].sort(function(e,t){var i=e[0].hasModifiers;return i===t[0].hasModifiers?0:i?-1:1})},_addKeyBinding:function(e,t){parseEventString(e).forEach(function(e){this._keyBindings[e.event]=this._keyBindings[e.event]||[],this._keyBindings[e.event].push([e,t])},this)},_resetKeyEventListeners:function(){this._unlistenKeyEventListeners(),this.isAttached&&this._listenKeyEventListeners()},_listenKeyEventListeners:function(){this.keyEventTarget&&Object.keys(this._keyBindings).forEach(function(e){var t=this._keyBindings[e],i=this._onKeyBindingEvent.bind(this,t);this._boundKeyHandlers.push([this.keyEventTarget,e,i]),this.keyEventTarget.addEventListener(e,i)},this)},_unlistenKeyEventListeners:function(){for(var e,t,i,s;this._boundKeyHandlers.length;)t=(e=this._boundKeyHandlers.pop())[0],i=e[1],s=e[2],t.removeEventListener(i,s)},_onKeyBindingEvent:function(e,t){if(this.stopKeyboardEventPropagation&&t.stopPropagation(),!t.defaultPrevented)for(var i=0;i<e.length;i++){var s=e[i][0],n=e[i][1];if(keyComboMatchesEvent(s,t)&&(this._triggerKeyHandler(s,n,t),t.defaultPrevented))return}},_triggerKeyHandler:function(e,t,i){var s=Object.create(e);s.keyboardEvent=i;var n=new CustomEvent(e.event,{detail:s,cancelable:!0});this[t].call(this,n),n.defaultPrevented&&i.preventDefault()}},IronButtonStateImpl={properties:{pressed:{type:Boolean,readOnly:!0,value:!1,reflectToAttribute:!0,observer:"_pressedChanged"},toggles:{type:Boolean,value:!1,reflectToAttribute:!0},active:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},pointerDown:{type:Boolean,readOnly:!0,value:!1},receivedFocusFromKeyboard:{type:Boolean,readOnly:!0},ariaActiveAttribute:{type:String,value:"aria-pressed",observer:"_ariaActiveAttributeChanged"}},listeners:{down:"_downHandler",up:"_upHandler",tap:"_tapHandler"},observers:["_focusChanged(focused)","_activeChanged(active, ariaActiveAttribute)"],keyBindings:{"enter:keydown":"_asyncClick","space:keydown":"_spaceKeyDownHandler","space:keyup":"_spaceKeyUpHandler"},_mouseEventRe:/^mouse/,_tapHandler:function(){this.toggles?this._userActivate(!this.active):this.active=!1},_focusChanged:function(e){this._detectKeyboardFocus(e),e||this._setPressed(!1)},_detectKeyboardFocus:function(e){this._setReceivedFocusFromKeyboard(!this.pointerDown&&e)},_userActivate:function(e){this.active!==e&&(this.active=e,this.fire("change"))},_downHandler:function(e){this._setPointerDown(!0),this._setPressed(!0),this._setReceivedFocusFromKeyboard(!1)},_upHandler:function(){this._setPointerDown(!1),this._setPressed(!1)},_spaceKeyDownHandler:function(e){var t=e.detail.keyboardEvent,i=dom(t).localTarget;this.isLightDescendant(i)||(t.preventDefault(),t.stopImmediatePropagation(),this._setPressed(!0))},_spaceKeyUpHandler:function(e){var t=e.detail.keyboardEvent,i=dom(t).localTarget;this.isLightDescendant(i)||(this.pressed&&this._asyncClick(),this._setPressed(!1))},_asyncClick:function(){this.async(function(){this.click()},1)},_pressedChanged:function(e){this._changedButtonState()},_ariaActiveAttributeChanged:function(e,t){t&&t!=e&&this.hasAttribute(t)&&this.removeAttribute(t)},_activeChanged:function(e,t){this.toggles?this.setAttribute(this.ariaActiveAttribute,e?"true":"false"):this.removeAttribute(this.ariaActiveAttribute),this._changedButtonState()},_controlStateChanged:function(){this.disabled?this._setPressed(!1):this._changedButtonState()},_changedButtonState:function(){this._buttonStateChanged&&this._buttonStateChanged()}},IronButtonState=[IronA11yKeysBehavior,IronButtonStateImpl];var Utility={distance:function(e,t,i,s){var n=e-i,r=t-s;return Math.sqrt(n*n+r*r)},now:window.performance&&window.performance.now?window.performance.now.bind(window.performance):Date.now};function ElementMetrics(e){this.element=e,this.width=this.boundingRect.width,this.height=this.boundingRect.height,this.size=Math.max(this.width,this.height)}function Ripple(e){this.element=e,this.color=window.getComputedStyle(e).color,this.wave=document.createElement("div"),this.waveContainer=document.createElement("div"),this.wave.style.backgroundColor=this.color,this.wave.classList.add("wave"),this.waveContainer.classList.add("wave-container"),dom(this.waveContainer).appendChild(this.wave),this.resetInteractionState()}ElementMetrics.prototype={get boundingRect(){return this.element.getBoundingClientRect()},furthestCornerDistanceFrom:function(e,t){var i=Utility.distance(e,t,0,0),s=Utility.distance(e,t,this.width,0),n=Utility.distance(e,t,0,this.height),r=Utility.distance(e,t,this.width,this.height);return Math.max(i,s,n,r)}},Ripple.MAX_RADIUS=300,Ripple.prototype={get recenters(){return this.element.recenters},get center(){return this.element.center},get mouseDownElapsed(){var e;return this.mouseDownStart?(e=Utility.now()-this.mouseDownStart,this.mouseUpStart&&(e-=this.mouseUpElapsed),e):0},get mouseUpElapsed(){return this.mouseUpStart?Utility.now()-this.mouseUpStart:0},get mouseDownElapsedSeconds(){return this.mouseDownElapsed/1e3},get mouseUpElapsedSeconds(){return this.mouseUpElapsed/1e3},get mouseInteractionSeconds(){return this.mouseDownElapsedSeconds+this.mouseUpElapsedSeconds},get initialOpacity(){return this.element.initialOpacity},get opacityDecayVelocity(){return this.element.opacityDecayVelocity},get radius(){var e=this.containerMetrics.width*this.containerMetrics.width,t=this.containerMetrics.height*this.containerMetrics.height,i=1.1*Math.min(Math.sqrt(e+t),Ripple.MAX_RADIUS)+5,s=1.1-i/Ripple.MAX_RADIUS*.2,n=this.mouseInteractionSeconds/s,r=i*(1-Math.pow(80,-n));return Math.abs(r)},get opacity(){return this.mouseUpStart?Math.max(0,this.initialOpacity-this.mouseUpElapsedSeconds*this.opacityDecayVelocity):this.initialOpacity},get outerOpacity(){var e=.3*this.mouseUpElapsedSeconds,t=this.opacity;return Math.max(0,Math.min(e,t))},get isOpacityFullyDecayed(){return this.opacity<.01&&this.radius>=Math.min(this.maxRadius,Ripple.MAX_RADIUS)},get isRestingAtMaxRadius(){return this.opacity>=this.initialOpacity&&this.radius>=Math.min(this.maxRadius,Ripple.MAX_RADIUS)},get isAnimationComplete(){return this.mouseUpStart?this.isOpacityFullyDecayed:this.isRestingAtMaxRadius},get translationFraction(){return Math.min(1,this.radius/this.containerMetrics.size*2/Math.sqrt(2))},get xNow(){return this.xEnd?this.xStart+this.translationFraction*(this.xEnd-this.xStart):this.xStart},get yNow(){return this.yEnd?this.yStart+this.translationFraction*(this.yEnd-this.yStart):this.yStart},get isMouseDown(){return this.mouseDownStart&&!this.mouseUpStart},resetInteractionState:function(){this.maxRadius=0,this.mouseDownStart=0,this.mouseUpStart=0,this.xStart=0,this.yStart=0,this.xEnd=0,this.yEnd=0,this.slideDistance=0,this.containerMetrics=new ElementMetrics(this.element)},draw:function(){var e,t,i;this.wave.style.opacity=this.opacity,e=this.radius/(this.containerMetrics.size/2),t=this.xNow-this.containerMetrics.width/2,i=this.yNow-this.containerMetrics.height/2,this.waveContainer.style.webkitTransform="translate("+t+"px, "+i+"px)",this.waveContainer.style.transform="translate3d("+t+"px, "+i+"px, 0)",this.wave.style.webkitTransform="scale("+e+","+e+")",this.wave.style.transform="scale3d("+e+","+e+",1)"},downAction:function(e){var t=this.containerMetrics.width/2,i=this.containerMetrics.height/2;this.resetInteractionState(),this.mouseDownStart=Utility.now(),this.center?(this.xStart=t,this.yStart=i,this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)):(this.xStart=e?e.detail.x-this.containerMetrics.boundingRect.left:this.containerMetrics.width/2,this.yStart=e?e.detail.y-this.containerMetrics.boundingRect.top:this.containerMetrics.height/2),this.recenters&&(this.xEnd=t,this.yEnd=i,this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)),this.maxRadius=this.containerMetrics.furthestCornerDistanceFrom(this.xStart,this.yStart),this.waveContainer.style.top=(this.containerMetrics.height-this.containerMetrics.size)/2+"px",this.waveContainer.style.left=(this.containerMetrics.width-this.containerMetrics.size)/2+"px",this.waveContainer.style.width=this.containerMetrics.size+"px",this.waveContainer.style.height=this.containerMetrics.size+"px"},upAction:function(e){this.isMouseDown&&(this.mouseUpStart=Utility.now())},remove:function(){dom(this.waveContainer.parentNode).removeChild(this.waveContainer)}},Polymer({_template:html$1`
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        border-radius: inherit;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        /* See PolymerElements/paper-behaviors/issues/34. On non-Chrome browsers,
+         * creating a node (with a position:absolute) in the middle of an event
+         * handler "interrupts" that event handler (which happens when the
+         * ripple is created on demand) */
+        pointer-events: none;
+      }
+
+      :host([animating]) {
+        /* This resolves a rendering issue in Chrome (as of 40) where the
+           ripple is not properly clipped by its parent (which may have
+           rounded corners). See: http://jsbin.com/temexa/4
+
+           Note: We only apply this style conditionally. Otherwise, the browser
+           will create a new compositing layer for every ripple element on the
+           page, and that would be bad. */
+        -webkit-transform: translate(0, 0);
+        transform: translate3d(0, 0, 0);
+      }
+
+      #background,
+      #waves,
+      .wave-container,
+      .wave {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #background,
+      .wave {
+        opacity: 0;
+      }
+
+      #waves,
+      .wave {
+        overflow: hidden;
+      }
+
+      .wave-container,
+      .wave {
+        border-radius: 50%;
+      }
+
+      :host(.circle) #background,
+      :host(.circle) #waves {
+        border-radius: 50%;
+      }
+
+      :host(.circle) .wave-container {
+        overflow: hidden;
+      }
+    </style>
+
+    <div id="background"></div>
+    <div id="waves"></div>
+`,is:"paper-ripple",behaviors:[IronA11yKeysBehavior],properties:{initialOpacity:{type:Number,value:.25},opacityDecayVelocity:{type:Number,value:.8},recenters:{type:Boolean,value:!1},center:{type:Boolean,value:!1},ripples:{type:Array,value:function(){return[]}},animating:{type:Boolean,readOnly:!0,reflectToAttribute:!0,value:!1},holdDown:{type:Boolean,value:!1,observer:"_holdDownChanged"},noink:{type:Boolean,value:!1},_animating:{type:Boolean},_boundAnimate:{type:Function,value:function(){return this.animate.bind(this)}}},get target(){return this.keyEventTarget},keyBindings:{"enter:keydown":"_onEnterKeydown","space:keydown":"_onSpaceKeydown","space:keyup":"_onSpaceKeyup"},attached:function(){11==this.parentNode.nodeType?this.keyEventTarget=dom(this).getOwnerRoot().host:this.keyEventTarget=this.parentNode;var e=this.keyEventTarget;this.listen(e,"up","uiUpAction"),this.listen(e,"down","uiDownAction")},detached:function(){this.unlisten(this.keyEventTarget,"up","uiUpAction"),this.unlisten(this.keyEventTarget,"down","uiDownAction"),this.keyEventTarget=null},get shouldKeepAnimating(){for(var e=0;e<this.ripples.length;++e)if(!this.ripples[e].isAnimationComplete)return!0;return!1},simulatedRipple:function(){this.downAction(null),this.async(function(){this.upAction()},1)},uiDownAction:function(e){this.noink||this.downAction(e)},downAction:function(e){this.holdDown&&this.ripples.length>0||(this.addRipple().downAction(e),this._animating||(this._animating=!0,this.animate()))},uiUpAction:function(e){this.noink||this.upAction(e)},upAction:function(e){this.holdDown||(this.ripples.forEach(function(t){t.upAction(e)}),this._animating=!0,this.animate())},onAnimationComplete:function(){this._animating=!1,this.$.background.style.backgroundColor=null,this.fire("transitionend")},addRipple:function(){var e=new Ripple(this);return dom(this.$.waves).appendChild(e.waveContainer),this.$.background.style.backgroundColor=e.color,this.ripples.push(e),this._setAnimating(!0),e},removeRipple:function(e){var t=this.ripples.indexOf(e);t<0||(this.ripples.splice(t,1),e.remove(),this.ripples.length||this._setAnimating(!1))},animate:function(){if(this._animating){var e,t;for(e=0;e<this.ripples.length;++e)(t=this.ripples[e]).draw(),this.$.background.style.opacity=t.outerOpacity,t.isOpacityFullyDecayed&&!t.isRestingAtMaxRadius&&this.removeRipple(t);this.shouldKeepAnimating||0!==this.ripples.length?window.requestAnimationFrame(this._boundAnimate):this.onAnimationComplete()}},animateRipple:function(){return this.animate()},_onEnterKeydown:function(){this.uiDownAction(),this.async(this.uiUpAction,1)},_onSpaceKeydown:function(){this.uiDownAction()},_onSpaceKeyup:function(){this.uiUpAction()},_holdDownChanged:function(e,t){void 0!==t&&(e?this.downAction():this.upAction())}});const PaperRippleBehavior={properties:{noink:{type:Boolean,observer:"_noinkChanged"},_rippleContainer:{type:Object}},_buttonStateChanged:function(){this.focused&&this.ensureRipple()},_downHandler:function(e){IronButtonStateImpl._downHandler.call(this,e),this.pressed&&this.ensureRipple(e)},ensureRipple:function(e){if(!this.hasRipple()){this._ripple=this._createRipple(),this._ripple.noink=this.noink;var t=this._rippleContainer||this.root;if(t&&dom(t).appendChild(this._ripple),e){var i=dom(this._rippleContainer||this),s=dom(e).rootTarget;i.deepContains(s)&&this._ripple.uiDownAction(e)}}},getRipple:function(){return this.ensureRipple(),this._ripple},hasRipple:function(){return Boolean(this._ripple)},_createRipple:function(){return document.createElement("paper-ripple")},_noinkChanged:function(e){this.hasRipple()&&(this._ripple.noink=e)}},PaperButtonBehaviorImpl={properties:{elevation:{type:Number,reflectToAttribute:!0,readOnly:!0}},observers:["_calculateElevation(focused, disabled, active, pressed, receivedFocusFromKeyboard)","_computeKeyboardClass(receivedFocusFromKeyboard)"],hostAttributes:{role:"button",tabindex:"0",animated:!0},_calculateElevation:function(){var e=1;this.disabled?e=0:this.active||this.pressed?e=4:this.receivedFocusFromKeyboard&&(e=3),this._setElevation(e)},_computeKeyboardClass:function(e){this.toggleClass("keyboard-focus",e)},_spaceKeyDownHandler:function(e){IronButtonStateImpl._spaceKeyDownHandler.call(this,e),this.hasRipple()&&this.getRipple().ripples.length<1&&this._ripple.uiDownAction()},_spaceKeyUpHandler:function(e){IronButtonStateImpl._spaceKeyUpHandler.call(this,e),this.hasRipple()&&this._ripple.uiUpAction()}},PaperButtonBehavior=[IronButtonState,IronControlState,PaperRippleBehavior,PaperButtonBehaviorImpl],template$3=html$1`
+  <style include="paper-material-styles">
+    /* Need to specify the same specificity as the styles imported from paper-material. */
+    :host {
+      @apply --layout-inline;
+      @apply --layout-center-center;
+      position: relative;
+      box-sizing: border-box;
+      min-width: 5.14em;
+      margin: 0 0.29em;
+      background: transparent;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      -webkit-tap-highlight-color: transparent;
+      font: inherit;
+      text-transform: uppercase;
+      outline-width: 0;
+      border-radius: 3px;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      z-index: 0;
+      padding: 0.7em 0.57em;
+
+      @apply --paper-font-common-base;
+      @apply --paper-button;
+    }
+
+    :host([elevation="1"]) {
+      @apply --paper-material-elevation-1;
+    }
+
+    :host([elevation="2"]) {
+      @apply --paper-material-elevation-2;
+    }
+
+    :host([elevation="3"]) {
+      @apply --paper-material-elevation-3;
+    }
+
+    :host([elevation="4"]) {
+      @apply --paper-material-elevation-4;
+    }
+
+    :host([elevation="5"]) {
+      @apply --paper-material-elevation-5;
+    }
+
+    :host([hidden]) {
+      display: none !important;
+    }
+
+    :host([raised].keyboard-focus) {
+      font-weight: bold;
+      @apply --paper-button-raised-keyboard-focus;
+    }
+
+    :host(:not([raised]).keyboard-focus) {
+      font-weight: bold;
+      @apply --paper-button-flat-keyboard-focus;
+    }
+
+    :host([disabled]) {
+      background: none;
+      color: #a8a8a8;
+      cursor: auto;
+      pointer-events: none;
+
+      @apply --paper-button-disabled;
+    }
+
+    :host([disabled][raised]) {
+      background: #eaeaea;
+    }
+
+
+    :host([animated]) {
+      @apply --shadow-transition;
+    }
+
+    paper-ripple {
+      color: var(--paper-button-ink-color);
+    }
+  </style>
+
+  <slot></slot>`;template$3.setAttribute("strip-whitespace",""),Polymer({_template:template$3,is:"paper-button",behaviors:[PaperButtonBehavior],properties:{raised:{type:Boolean,reflectToAttribute:!0,value:!1,observer:"_calculateElevation"}},_calculateElevation:function(){this.raised?PaperButtonBehaviorImpl._calculateElevation.apply(this):this._setElevation(0)}});let ButtonCard=class extends LitElement{render(){if(!this._config||!this.hass)return html``;const e=this.hass.states[this._config.entity];switch(this._config.color_type){case"blank-card":return this.blankCardColoredHtml(e);case"label-card":return this.labelCardColoredHtml(e);case"card":return this.cardColoredHtml(e);case"icon":default:return this.iconColoredHtml(e)}}getFontColorBasedOnBackgroundColor(e){const t=e.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i),i=t||this.hexToRgb(e.substring(1));let s="";if(i){s=(.299*i[1]+.587*i[2]+.114*i[3])/255>.5?"rgb(62, 62, 62)":"rgb(234, 234, 234)"}return s}hexToRgb(e){var t=parseInt(e,16);return[,t>>16&255,t>>8&255,255&t]}buildCssColorAttribute(e){let t=this._config.color;if(e){let i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);i?(t=i.color?i.color:this._config.color_off,"auto"===i.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:i.default_color)):("auto"===this._config.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:this._config.default_color),t="on"===e.state?t:this._config.color_off)}return t}buildIcon(e){let t=this._config.icon;if("attribute"==this._config.icon){if(e){return e.attributes.icon}return t}let i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);if(i&&i.icon){return i.icon}return t}blankCardColoredHtml(e){return html`
+      <ha-card
+        style="color: xxxxxxxxxxxx; background-color: xxxxxxxx;"
+        @click="${this._toggle(e)}"
+      >
+      </ha-card>
+    `}labelCardColoredHtml(e){const t=this.buildCssColorAttribute(e),i=this.getFontColorBasedOnBackgroundColor(t);return html`
+      <style>
         ha-icon {
           display: flex;
           margin: auto;
         }
-        button-card-button {
+        paper-button {
           display: flex;
           margin: auto;
           text-align: center;
         }
-        button-card-button div {
-          padding: 4%;
-          text-transform: none;
-          font-size: 1.2rem;
-        }
-      `;
-    }
-
-    render() {
-      const state = this.__hass.states[this.config.entity];
-      switch (this.config.color_type) {
-        case 'blank-card':
-          return this.blankCardColoredHtml(state, this.config);
-        case 'label-card':
-          return this.labelCardColoredHtml(state, this.config);
-        case 'card':
-          return this.cardColoredHtml(state, this.config);
-        case 'icon':
-        default:
-          return this.iconColoredHtml(state, this.config);
-      }
-    }
-
-
-    getFontColorBasedOnBackgroundColor(backgroundColor) {
-      const parsedRgbColor= backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-      const parsedBackgroundColor = parsedRgbColor ? parsedRgbColor : this.hexToRgb(backgroundColor.substring(1));
-      let fontColor = ''; // don't override by default
-      if (parsedBackgroundColor) {
-        // Counting the perceptive luminance - human eye favors green color...
-        const luminance = (0.299 * parsedBackgroundColor[1] + 0.587 * parsedBackgroundColor[2] + 0.114 * parsedBackgroundColor[3]) / 255;
-        if (luminance > 0.5) {
-          fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
-        } else {
-          fontColor = 'rgb(234, 234, 234)';// dark colors - white font
-        }
-      }
-      return fontColor;
-    }
-
-    hexToRgb(hex) {
-      var bigint = parseInt(hex, 16);
-      var r = (bigint >> 16) & 255;
-      var g = (bigint >> 8) & 255;
-      var b = bigint & 255;
-
-      return [,r,g,b];
-    }
-
-
-    buildCssColorAttribute(state, config) {
-      let color = config.color;
-      if (state) {
-        let configState = config.state ? config.state.find(configState => { return configState.value === state.state; }) : false;
-        if(configState){
-          color = configState.color ? configState.color : config.color_off;
-          if (configState.color === 'auto') {
-            color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : configState.default_color;
-          }
-        }else{
-          if (config.color === 'auto') {
-            color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
-          }
-          color = state.state === 'on' ? color : config.color_off;
-        }
-      }
-      return color;
-    }
-
-    buildIcon(state, config) {
-      let iconOff = config.icon;
-      if (config.icon == 'attribute') {
-        if (state) {
-          const icon = state.attributes.icon;
-          return icon;
-        }
-        return iconOff;
-      }
-      let configState = config.state ? config.state.find(configState => { return configState.value === state.state; }) : false;
-      if (configState && configState.icon) {
-        const icon = configState.icon;
-        return icon;
-      }
-      return iconOff;
-    }
-
-    blankCardColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
-      const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      return html`
-      <ha-card style="color: ${fontColor}; background-color: ${color}; ${config.card_style}" on-tap="${ev => this._toggle(state, config)}">
+      </style>
+      <ha-card style="color: ${i};">
+        <paper-button
+          noink
+          style="background-color: ${t}; ${this._config.card_style}"
+        >
+          <div>
+            ${this._config.icon?html`
+                  <ha-icon
+                    style="width: ${this._config.size};
+                           height: ${this._config.size}"
+                    .icon="${this._config.icon}"
+                  ></ha-icon>
+                `:""}
+            ${this._config.name?html`
+                  <span>${this._config.name}</span>
+                `:""}
+          </div>
+        </paper-button>
       </ha-card>
-      `;
-    }
-
-    labelCardColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
-      const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      return html`
-      <ha-card style="color: ${fontColor};">
-        <button-card-button noink style="background-color: ${color}">
-        <div style="${config.card_style}">
-          ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
-          ${config.name ? html`<span>${config.name}</span>` : ''}
-         </div>
-        </button-card-button>
-      </ha-card>
-      `;
-    }
-
-    cardColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
-      const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      return html`
-      <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
-        <button-card-button style="background-color: ${color}; ${config.card_style}">
-        <div style="${config.card_style}">
-          ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
-          ${config.name ? html`<span>${config.name}</span>` : ''}
-          ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
-         </div>
-        </button-card-button>
-      </ha-card>
-      `;
-    }
-
-    iconColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
-      const icon = this.buildIcon(state, config);
-      return html`
-      <ha-card @tap="${ev => this._toggle(state, config)}">
-        <button-card-button style="${config.card_style}">
-        <div style="${config.card_style}">
-          ${config.icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<div>${config.name}</div>` : ''}
-          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
-        </div>
-        </button-card-button>
-      </ha-card>
-      `;
-    }
-
-    setConfig(config) {
-      // if (!config.entity) {
-      //   throw new Error('You need to define entity');
-      // }
-      this.config = {...config};
-      this.config.color = config.color ? config.color : 'var(--primary-text-color)';
-      this.config.size = config.size ? config.size : '40%';
-      let cardStyle = '';
-      if (config.style) {
-        config.style.forEach((cssObject) => {
-          const attribute = Object.keys(cssObject)[0];
-          const value = cssObject[attribute];
-          cardStyle += `${attribute}: ${value};\n`;
-        });
-      }
-      this.config.color_type = config.color_type ? config.color_type : 'icon';
-      this.config.color_off = config.color_off ? config.color_off : 'var(--disabled-text-color)';
-      this.config.default_color = config.default_color ? config.default_color : 'var(--primary-text-color)';
-      this.config.card_style = cardStyle;
-      this.config.name = config.name ? config.name : '';
-    }
-
-    // The height of your card. Home Assistant uses this to automatically
-    // distribute all cards over the available columns.
-    getCardSize() {
-      return 3;
-    }
-
-    _toggle(state, config) {
-      switch (config.action) {
-        case 'toggle':
-          this.hass.callService('homeassistant', 'toggle', {
-            entity_id: state.entity_id,
-          });
-          break;
-        case 'more_info': {
-          const node = this.shadowRoot;
-          const options = {};
-          const detail = { entityId: state.entity_id };
-          const event = new Event('hass-more-info', {
-            bubbles: options.bubbles === undefined ? true : options.bubbles,
-            cancelable: Boolean(options.cancelable),
-            composed: options.composed === undefined ? true : options.composed,
-          });
-          event.detail = detail;
-          node.dispatchEvent(event);
-          return event;
+    `}cardColoredHtml(e){const t=this.buildCssColorAttribute(e),i=this.getFontColorBasedOnBackgroundColor(t);return html`
+      <style>
+        ha-icon {
+          display: flex;
+          margin: auto;
         }
-        case 'service':
-          this.hass.callService(config.service.domain, config.service.action, config.service.data);
-          break;
-        default:
-          this.hass.callService('homeassistant', 'toggle', {
-            entity_id: state.entity_id,
-          });
-          break;
-      }
-    }
-  }
-
-  customElements.define('button-card', ButtonCard);
-})(window.LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main")), customElements.get('mwc-button') || customElements.get('paper-button'));
+        paper-button {
+          display: flex;
+          margin: auto;
+          text-align: center;
+        }
+      </style>
+      <ha-card style="color: ${i};" @click="${this._toggle(e)}">
+        <paper-button
+          style="background-color: ${t}; ${this._config.card_style}"
+        >
+          <div>
+            ${this._config.icon?html`
+                  <ha-icon
+                    style="width: ${this._config.size}; height: ${this._config.size};"
+                    .icon="${this._config.icon}"
+                  ></ha-icon>
+                `:""}
+            ${this._config.name?html`
+                  <span>${this._config.name}</span>
+                `:""}
+            ${this._config.show_state?html`
+                  <span
+                    >${e.state}
+                    ${e.attributes.unit_of_measurement?e.attributes.unit_of_measurement:""}</span
+                  >
+                `:""}
+          </div>
+        </paper-button>
+      </ha-card>
+    `}iconColoredHtml(e){const t=this.buildCssColorAttribute(e),i=this.buildIcon(e);return html`
+      <style>
+        ha-icon {
+          display: flex;
+          margin: auto;
+        }
+        paper-button {
+          display: flex;
+          margin: auto;
+          text-align: center;
+        }
+      </style>
+      <ha-card @click="${this._toggle(e)}">
+        <paper-button style="${this._config.card_style}">
+          <div>
+            ${this._config.icon?html`
+                  <ha-icon
+                    style="color: ${t}; width: ${this._config.size}; height: ${this._config.size};"
+                    .icon="${i}"
+                  ></ha-icon>
+                `:""}
+            ${this._config.name?html`
+                  <div>${this._config.name}</div>
+                `:""}
+            ${this._config.show_state?html`
+                  <div>
+                    ${e.state}
+                    ${e.attributes.unit_of_measurement?e.attributes.unit_of_measurement:""}
+                  </div>
+                `:""}
+          </div>
+        </paper-button>
+      </ha-card>
+    `}setConfig(e){this._config=Object.assign({},e),this._config.color=e.color?e.color:"var(--primary-text-color)",this._config.size=e.size?e.size:"40%";let t="";e.style&&e.style.forEach(e=>{const i=Object.keys(e)[0],s=e[i];t+=`${i}: ${s};\n`}),this._config.color_type=e.color_type?e.color_type:"icon",this._config.color_off=e.color_off?e.color_off:"var(--disabled-text-color)",this._config.default_color=e.default_color?e.default_color:"var(--primary-text-color)",this._config.card_style=t,this._config.name=e.name?e.name:""}getCardSize(){return 3}_toggle(e){switch(this._config.action){case"toggle":this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id});break;case"more_info":{const t=this.shadowRoot,i={},s={entityId:e.entity_id},n=new Event("hass-more-info",{bubbles:!0,cancelable:Boolean(i.cancelable),composed:!0});return n.detail=s,t.dispatchEvent(n),n}case"service":if(!this._config.service)return;this.hass.callService(this._config.service.domain,this._config.service.action,this._config.service.data);break;default:this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id})}}};__decorate([property()],ButtonCard.prototype,"hass",void 0),__decorate([property()],ButtonCard.prototype,"_config",void 0),ButtonCard=__decorate([customElement("button-card")],ButtonCard);

@@ -1,27 +1,40 @@
 {
   "name": "button-card",
-  "version": "0.0.3",
-  "description": "Button card for lovelace",
-  "main": "button-card.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kuuji/button-card.git"
-  },
+  "version": "0.0.4",
+  "description": "Custom button card for Lovelace",
   "keywords": [
-    "lovelace"
+    "home-assistant",
+    "homeassistant",
+    "hass",
+    "automation",
+    "lovelace",
+    "custom-cards",
+    "button"
   ],
+  "repository": "git@github.com:custom-cards/button-card.git",
   "author": "kuuji",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/kuuji/button-card/issues"
+  "dependencies": {
+    "@polymer/paper-button": "^3.0.1",
+    "lit-element": "^2.0.1"
   },
-  "homepage": "https://github.com/kuuji/button-card#readme",
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.16.0",
+    "rollup": "^0.66.6",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-terser": "^3.0.0",
+    "rollup-plugin-typescript": "^1.0.0",
+    "tslib": "^1.9.3",
+    "typescript": "^3.3.3333"
+  },
+  "scripts": {
+    "start": "rollup -c --watch",
+    "build": "npm run lint && npm run rollup",
+    "lint": "eslint src/*.ts",
+    "rollup": "rollup -c"
   }
 }
