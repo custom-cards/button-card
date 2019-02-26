@@ -269,13 +269,13 @@ Input select card with select next service and custom color and icon for states.
 
   - [ciotlosm](https://github.com/ciotlosm) for the readme template and the awesome examples
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg
+[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg?style=for-the-badge
 [commits]: https://github.com/custom-cards/button-card/commits/master
 [discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/478094546522079232.svg
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
+[discord-shield]: https://img.shields.io/discord/478094546522079232.svg?style=for-the-badge
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/t/lovelace-button-card/65981
-[license-shield]: https://img.shields.io/github/license/custom-cards/button-card.svg
+[license-shield]: https://img.shields.io/github/license/custom-cards/button-card.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2019.svg
-[releases-shield]: https://img.shields.io/github/release/custom-cards/button-card.svg
+[releases-shield]: https://img.shields.io/github/release/custom-cards/button-card.svg?style=for-the-badge
 [releases]: https://github.com/custom-cards/button-card/releases
