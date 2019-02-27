@@ -656,11 +656,8 @@ function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.
     }
   </style>
 
-  <slot></slot>`;template$3.setAttribute("strip-whitespace",""),Polymer({_template:template$3,is:"paper-button",behaviors:[PaperButtonBehavior],properties:{raised:{type:Boolean,reflectToAttribute:!0,value:!1,observer:"_calculateElevation"}},_calculateElevation:function(){this.raised?PaperButtonBehaviorImpl._calculateElevation.apply(this):this._setElevation(0)}});let ButtonCard=class extends LitElement{render(){if(!this._config||!this.hass)return html``;const e=this.hass.states[this._config.entity];switch(this._config.color_type){case"blank-card":return this.blankCardColoredHtml(e);case"label-card":return this.labelCardColoredHtml(e);case"card":return this.cardColoredHtml(e);case"icon":default:return this.iconColoredHtml(e)}}getFontColorBasedOnBackgroundColor(e){const t=e.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i),i=t||this.hexToRgb(e.substring(1));let s="";if(i){s=(.299*i[1]+.587*i[2]+.114*i[3])/255>.5?"rgb(62, 62, 62)":"rgb(234, 234, 234)"}return s}hexToRgb(e){var t=parseInt(e,16);return[,t>>16&255,t>>8&255,255&t]}buildCssColorAttribute(e){let t=this._config.color;if(e){let i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);i?(t=i.color?i.color:this._config.color_off,"auto"===i.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:i.default_color)):("auto"===this._config.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:this._config.default_color),t="on"===e.state?t:this._config.color_off)}return t}buildIcon(e){let t=this._config.icon;if("attribute"==this._config.icon){if(e){return e.attributes.icon}return t}let i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);if(i&&i.icon){return i.icon}return t}blankCardColoredHtml(e){return html`
-      <ha-card
-        style="color: xxxxxxxxxxxx; background-color: xxxxxxxx;"
-        @click="${this._toggle(e)}"
-      >
+  <slot></slot>`;template$3.setAttribute("strip-whitespace",""),Polymer({_template:template$3,is:"paper-button",behaviors:[PaperButtonBehavior],properties:{raised:{type:Boolean,reflectToAttribute:!0,value:!1,observer:"_calculateElevation"}},_calculateElevation:function(){this.raised?PaperButtonBehaviorImpl._calculateElevation.apply(this):this._setElevation(0)}});let ButtonCard=class extends LitElement{render(){if(!this._config||!this.hass)return html``;const e=this.hass.states[this._config.entity];switch(this._config.color_type){case"blank-card":return this.blankCardColoredHtml(e);case"label-card":return this.labelCardColoredHtml(e);case"card":return this.cardColoredHtml(e);case"icon":default:return this.iconColoredHtml(e)}}getFontColorBasedOnBackgroundColor(e){const t=e.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i)||this.hexToRgb(e.substring(1));let i="";if(t){i=(.299*t[1]+.587*t[2]+.114*t[3])/255>.5?"rgb(62, 62, 62)":"rgb(234, 234, 234)"}return i}hexToRgb(e){const t=parseInt(e,16);return[,t>>16&255,t>>8&255,255&t]}buildCssColorAttribute(e){let{color:t}=this._config;if(e){const i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);i?(t=i.color?i.color:this._config.color_off,"auto"===i.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:i.default_color)):("auto"===this._config.color&&(t=e.attributes.rgb_color?`rgb(${e.attributes.rgb_color.join(",")})`:this._config.default_color),t="on"===e.state?t:this._config.color_off)}return t}buildIcon(e){const t=this._config.icon;if("attribute"===this._config.icon)return e?e.attributes.icon:t;const i=!!this._config.state&&this._config.state.find(t=>t.value===e.state);return i&&i.icon?i.icon:t}blankCardColoredHtml(e){return html`
+      <ha-card style='color: xxxxxxxxxxxx; background-color: xxxxxxxx;' @click='${this._toggle(e)}'>
       </ha-card>
     `}labelCardColoredHtml(e){const t=this.buildCssColorAttribute(e),i=this.getFontColorBasedOnBackgroundColor(t);return html`
       <style>
@@ -674,17 +671,17 @@ function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.
           text-align: center;
         }
       </style>
-      <ha-card style="color: ${i};">
+      <ha-card style='color: ${i};'>
         <paper-button
           noink
-          style="background-color: ${t}; ${this._config.card_style}"
+          style='background-color: ${t}; ${this._config.card_style}'
         >
           <div>
             ${this._config.icon?html`
                   <ha-icon
-                    style="width: ${this._config.size};
-                           height: ${this._config.size}"
-                    .icon="${this._config.icon}"
+                    style='width: ${this._config.size};
+                           height: ${this._config.size}'
+                    .icon='${this._config.icon}'
                   ></ha-icon>
                 `:""}
             ${this._config.name?html`
@@ -705,15 +702,15 @@ function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.
           text-align: center;
         }
       </style>
-      <ha-card style="color: ${i};" @click="${this._toggle(e)}">
+      <ha-card style='color: ${i};' @click='${this._toggle(e)}'>
         <paper-button
-          style="background-color: ${t}; ${this._config.card_style}"
+          style='background-color: ${t}; ${this._config.card_style}'
         >
           <div>
             ${this._config.icon?html`
                   <ha-icon
-                    style="width: ${this._config.size}; height: ${this._config.size};"
-                    .icon="${this._config.icon}"
+                    style='width: ${this._config.size}; height: ${this._config.size};'
+                    .icon='${this._config.icon}'
                   ></ha-icon>
                 `:""}
             ${this._config.name?html`
@@ -740,13 +737,13 @@ function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.
           text-align: center;
         }
       </style>
-      <ha-card @click="${this._toggle(e)}">
-        <paper-button style="${this._config.card_style}">
+      <ha-card @click='${this._toggle(e)}'>
+        <paper-button style='${this._config.card_style}'>
           <div>
             ${this._config.icon?html`
                   <ha-icon
-                    style="color: ${t}; width: ${this._config.size}; height: ${this._config.size};"
-                    .icon="${i}"
+                    style='color: ${t}; width: ${this._config.size}; height: ${this._config.size};'
+                    .icon='${i}'
                   ></ha-icon>
                 `:""}
             ${this._config.name?html`
@@ -761,4 +758,4 @@ function __decorate(e,t,i,s){var n,r=arguments.length,o=r<3?t:null===s?s=Object.
           </div>
         </paper-button>
       </ha-card>
-    `}setConfig(e){this._config=Object.assign({},e),this._config.color=e.color?e.color:"var(--primary-text-color)",this._config.size=e.size?e.size:"40%";let t="";e.style&&e.style.forEach(e=>{const i=Object.keys(e)[0],s=e[i];t+=`${i}: ${s};\n`}),this._config.color_type=e.color_type?e.color_type:"icon",this._config.color_off=e.color_off?e.color_off:"var(--disabled-text-color)",this._config.default_color=e.default_color?e.default_color:"var(--primary-text-color)",this._config.card_style=t,this._config.name=e.name?e.name:""}getCardSize(){return 3}_toggle(e){switch(this._config.action){case"toggle":this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id});break;case"more_info":{const t=this.shadowRoot,i={},s={entityId:e.entity_id},n=new Event("hass-more-info",{bubbles:!0,cancelable:Boolean(i.cancelable),composed:!0});return n.detail=s,t.dispatchEvent(n),n}case"service":if(!this._config.service)return;this.hass.callService(this._config.service.domain,this._config.service.action,this._config.service.data);break;default:this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id})}}};__decorate([property()],ButtonCard.prototype,"hass",void 0),__decorate([property()],ButtonCard.prototype,"_config",void 0),ButtonCard=__decorate([customElement("button-card")],ButtonCard);
+    `}setConfig(e){this._config=Object.assign({},e),this._config.color=e.color?e.color:"var(--primary-text-color)",this._config.size=e.size?e.size:"40%";let t="";e.style&&e.style.forEach(e=>()=>{const i=Object.keys(e)[0],s=e[i];t+=`${i}: ${s};\n`}),this._config.color_type=e.color_type?e.color_type:"icon",this._config.color_off=e.color_off?e.color_off:"var(--disabled-text-color)",this._config.default_color=e.default_color?e.default_color:"var(--primary-text-color)",this._config.card_style=t,this._config.name=e.name?e.name:""}getCardSize(){return 3}_toggle(e){switch(this._config.action){case"toggle":this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id});break;case"more_info":{const t=this.shadowRoot,i={},s={entityId:e.entity_id},n=new Event("hass-more-info",{bubbles:!0,cancelable:Boolean(i.cancelable),composed:!0});return n.detail=s,t.dispatchEvent(n),n}case"service":if(!this._config.service)return;this.hass.callService(this._config.service.domain,this._config.service.action,this._config.service.data);break;default:this.hass.callService("homeassistant","toggle",{entity_id:e.entity_id})}}};__decorate([property()],ButtonCard.prototype,"hass",void 0),__decorate([property()],ButtonCard.prototype,"_config",void 0),ButtonCard=__decorate([customElement("button-card")],ButtonCard);
