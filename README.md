@@ -272,10 +272,10 @@ Input select card with select next service and custom color and icon for states.
 [commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg?style=for-the-badge
 [commits]: https://github.com/custom-cards/button-card/commits/master
 [discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/478094546522079232.svg?style=for-the-badge
+[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/t/lovelace-button-card/65981
 [license-shield]: https://img.shields.io/github/license/custom-cards/button-card.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2019.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2019.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/custom-cards/button-card.svg?style=for-the-badge
 [releases]: https://github.com/custom-cards/button-card/releases
