@@ -35,21 +35,21 @@ Lovelace Button card for your entities.
 
 ## Options
 
-| Name | Type | Default | Supported options  | Description
-| ---- | ---- | ------- | --------- | -----------
-| type | string | **Required** | `custom:button-card` | Type of the card
-| entity | string | **Required** | `switch.ac` | entity_id
-| icon | string | optional | `mdi:air-conditioner` \| `attribute` | Icon to display in place of the state. Will be overriden by the icon defined defined in a state (if present). If you use keywork `attribute` it will fetch the icon configured on the entity (overrides all icons defined). 
-| color_type | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).
-| color | string | `var(--primary-text-color)` | `auto` \| `rgb(28, 128, 199)` |  Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.
-| color_off | string | `var(--disabled-text-color)` | `rgb(28, 128, 199)` |  Color of the icon/card when state is `off`.
-| size | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel
-| action | string | `toggle` | `toggle` \| `more_info` \| `service` | Define the type of action
-| service | Object | optional | See [example section](#Examples) | Service to call and service data when action is set to `service`
-| name | string | optional | `Air conditioner` | Define an optional text to show below the icon
-| show_state | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set
-| style | object | optional | `- text-transform: none` | Define a list of css attribute and their value to apply to the card
-| state | list | optional | See [state example section](#Configuration-with-states) | State to use for the color of the button. Multiple states can be defined
+| Name       | Type    | Default                      | Supported options                                       | Description                                                                                                                                                                                                                                                                                                                          |
+| ---------- | ------- | ---------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| type       | string  | **Required**                 | `custom:button-card`                                    | Type of the card                                                                                                                                                                                                                                                                                                                     |
+| entity     | string  | **Required**                 | `switch.ac`                                             | entity_id                                                                                                                                                                                                                                                                                                                            |
+| icon       | string  | optional                     | `mdi:air-conditioner` \| `attribute`                    | Icon to display in place of the state. Will be overriden by the icon defined defined in a state (if present). If you use keywork `attribute` it will fetch the icon configured on the entity (overrides all icons defined).                                                                                                          |
+| color_type | string  | `icon`                       | `icon` \| `card` \| `blank-card` \| `label-card`        | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
+| color      | string  | `var(--primary-text-color)`  | `auto` \| `rgb(28, 128, 199)`                           | Color of the icon/card when state is `on`. `auto` sets the color based on the color of a light.                                                                                                                                                                                                                                      |
+| color_off  | string  | `var(--disabled-text-color)` | `rgb(28, 128, 199)`                                     | Color of the icon/card when state is `off`.                                                                                                                                                                                                                                                                                          |
+| size       | string  | `40%`                        | `20px`                                                  | Size of the icon. Can be percentage or pixel                                                                                                                                                                                                                                                                                         |
+| action     | string  | `toggle`                     | `toggle` \| `more_info` \| `service`                    | Define the type of action                                                                                                                                                                                                                                                                                                            |
+| service    | Object  | optional                     | See [example section](#Examples)                        | Service to call and service data when action is set to `service`                                                                                                                                                                                                                                                                     |
+| name       | string  | optional                     | `Air conditioner`                                       | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                       |
+| show_state | boolean | `false`                      | `true` \| `false`                                       | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                             |
+| style      | object  | optional                     | `- text-transform: none`                                | Define a list of css attribute and their value to apply to the card                                                                                                                                                                                                                                                                  |
+| state      | list    | optional                     | See [state example section](#Configuration-with-states) | State to use for the color of the button. Multiple states can be defined                                                                                                                                                                                                                                                             |
 
 ## Installaion
 
@@ -195,9 +195,9 @@ Horizontal stack with :
 Vertical Stack with :
   - 1x label card
   - Horizontal Stack with :
-     - 1x Scene 1 Button 
+     - 1x Scene 1 Button
      - 1x Scene 2 Button
-     - 1x Scene 3 Button 
+     - 1x Scene 3 Button
      - 1x Scene 4 Button
      - 1x Scene Off Button
 
@@ -246,7 +246,7 @@ Input select card with select next service and custom color and icon for states.
 
 ![cube](examples/cube.png)
 
-
+#### Default behavior
 ```yaml
               - type: "custom:button-card"
                 entity: input_select.cube_mode
@@ -263,6 +263,34 @@ Input select card with select next service and custom color and icon for states.
                     color: rgb(189, 255, 5)
 ```
 
+#### With Operator on state
+The definition order matters, the first item to match will be the one selected.
+```yaml
+              - type: "custom:button-card"
+                entity: sensor.temperature
+                show_state: true
+                state:
+                  - value: 15
+                    operator: '<='
+                    color: blue
+                  - value: 25
+                    operator: '>='
+                    color: red
+                  - operator: 'default' # used if nothing matches
+                    color: yellow
+```
+
+Available operators:
+| Operator  | `value` example | Description                                      |
+| :-------: | --------------- | ------------------------------------------------ |
+|    `<`    | `5`             | State is inferior to `value`                     |
+|   `<=`    | `4`             | State is inferior or equal to `value`            |
+|   `==`    | `42`            | State is equal (`===` javascript) to `value`     |
+|   `>=`    | `32`            | State is superior or equal to `value`            |
+|    `>`    | `12`            | State is superior to `value`                     |
+|   `!=`    | `normal`        | State is not equal (`!==` javascript) to `value` |
+|  `regex`  | `'^norm.*$'`    | `value` regex applied to State doesn't match     |
+| `default` | N/A             | If nothing matches, this is used                 |
 
 
 ## Credits
