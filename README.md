@@ -273,14 +273,18 @@ The definition order matters, the first item to match will be the one selected.
                   - value: 15
                     operator: '<='
                     color: blue
+                    icon: mdi:thermometer-minus
                   - value: 25
                     operator: '>='
                     color: red
+                    icon: mdi:thermometer-plus
                   - operator: 'default' # used if nothing matches
                     color: yellow
+                    icon: mdi: thermometer
 ```
 
 Available operators:
+
 | Operator  | `value` example | Description                                      |
 | :-------: | --------------- | ------------------------------------------------ |
 |    `<`    | `5`             | State is inferior to `value`                     |
@@ -289,7 +293,7 @@ Available operators:
 |   `>=`    | `32`            | State is superior or equal to `value`            |
 |    `>`    | `12`            | State is superior to `value`                     |
 |   `!=`    | `normal`        | State is not equal (`!==` javascript) to `value` |
-|  `regex`  | `'^norm.*$'`    | `value` regex applied to State doesn't match     |
+|  `regex`  | `'^norm.*$'`    | `value` regex applied to State does match        |
 | `default` | N/A             | If nothing matches, this is used                 |
 
 
