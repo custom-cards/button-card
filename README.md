@@ -273,11 +273,14 @@ The definition order matters, the first item to match will be the one selected.
                   - value: 15
                     operator: '<='
                     color: blue
+                    icon: mdi:thermometer-minus
                   - value: 25
                     operator: '>='
                     color: red
+                    icon: mdi:thermometer-plus
                   - operator: 'default' # used if nothing matches
                     color: yellow
+                    icon: mdi: thermometer
 ```
 
 Available operators:
