@@ -189,7 +189,7 @@
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="background-color: ${color}; ${config.card_style}">
         <div style="${config.card_style}">
-          ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+          ${config.icon || icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<span>${config.name}</span>` : ''}
           ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
          </div>
@@ -205,7 +205,7 @@
       <ha-card @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="${config.card_style}">
         <div style="${config.card_style}">
-          ${config.icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+          ${config.icon || icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<div>${config.name}</div>` : ''}
           ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
         </div>
