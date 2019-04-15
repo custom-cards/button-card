@@ -111,7 +111,7 @@
                 def = elt;
             }
           } else {
-            return (elt.value === state.state)
+            return (elt.value == state.state)
           }
         })
         if (!retval)
@@ -157,6 +157,29 @@
       return iconOff;
     }
 
+    buildStyle(state, config) {
+      let cardStyle = '';
+      let styleArray = undefined;
+      if (state) {
+        let configState = this.testConfigState(state, config);
+        if (configState && configState.style)
+          styleArray = configState.style;
+        else if (config.style)
+          styleArray = config.style;
+      } else {
+        if (config.style)
+          styleArray = config.style;
+      }
+      if (styleArray) {
+        styleArray.forEach((cssObject) => {
+          const attribute = Object.keys(cssObject)[0];
+          const value = cssObject[attribute];
+          cardStyle += `${attribute}: ${value};\n`;
+        });
+      }
+      return cardStyle;
+    }
+
     blankCardColoredHtml(state, config) {
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
@@ -169,10 +192,11 @@
     labelCardColoredHtml(state, config) {
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+      const style = this.buildStyle(state, config);
       return html`
       <ha-card style="color: ${fontColor};">
         <button-card-button noink style="background-color: ${color}">
-        <div style="${config.card_style}">
+        <div style="${style}">
           ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
           ${config.name ? html`<span>${config.name}</span>` : ''}
          </div>
@@ -185,10 +209,11 @@
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       const icon = this.buildIcon(state, config);
+      const style = this.buildStyle(state, config);
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="background-color: ${color}; ${config.card_style}">
-        <div style="${config.card_style}">
+        <div style="${style}">
           ${config.icon || icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<span>${config.name}</span>` : ''}
           ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
@@ -201,10 +226,11 @@
     iconColoredHtml(state, config) {
       const color = this.buildCssColorAttribute(state, config);
       const icon = this.buildIcon(state, config);
+      const style = this.buildStyle(state, config);
       return html`
       <ha-card @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="${config.card_style}">
-        <div style="${config.card_style}">
+        <div style="${style}">
           ${config.icon || icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<div>${config.name}</div>` : ''}
           ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
@@ -221,18 +247,9 @@
       this.config = { ...config };
       this.config.color = config.color ? config.color : 'var(--primary-text-color)';
       this.config.size = config.size ? config.size : '40%';
-      let cardStyle = '';
-      if (config.style) {
-        config.style.forEach((cssObject) => {
-          const attribute = Object.keys(cssObject)[0];
-          const value = cssObject[attribute];
-          cardStyle += `${attribute}: ${value};\n`;
-        });
-      }
       this.config.color_type = config.color_type ? config.color_type : 'icon';
       this.config.color_off = config.color_off ? config.color_off : 'var(--disabled-text-color)';
       this.config.default_color = config.default_color ? config.default_color : 'var(--primary-text-color)';
-      this.config.card_style = cardStyle;
       this.config.name = config.name ? config.name : '';
     }
 
