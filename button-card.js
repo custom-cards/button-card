@@ -46,7 +46,6 @@
           text-transform: none;
           font-size: 1.2rem;
         }
-
       `;
     }
 
@@ -129,44 +128,44 @@
 
     buildCssColorAttribute(state, config, configState) {
       let colorValue = null;
+      let color = null;
       if (configState && configState.color) {
         colorValue = configState.color;
       } else {
-        if (config.color != 'auto' && state && state.state == 'off')
+        if (config.color != 'auto' && state && state.state == 'off') {
           colorValue = config.color_off;
-        else
+        } else {
           colorValue = config.color;
+        }
       }
       if (colorValue == 'auto') {
         if (state) {
-          const color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
-          return color;
+          color = state.attributes.rgb_color ?
+            `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
         } else {
-          return config.default_color;
+          color = config.default_color;
         }
       } else {
         if (!colorValue) {
           if (state) {
             if (state.state == 'off') {
-              const color = config.color_off;
-              return color;
+              color = config.color_off;
             } else {
-              const color = config.default_color;
-              return color;
+              color = config.default_color;
             }
           } else {
-            const color = config.default_color;
-            return color;
+            color = config.default_color;
           }
         } else {
-          const color = colorValue;
-          return color;
+          color = colorValue;
         }
       }
+      return color;
     }
 
     buildIcon(state, config, configState) {
       let iconValue = null;
+      let icon = null;
       if (configState && configState.icon) {
         iconValue = configState.icon;
       } else {
@@ -174,25 +173,25 @@
       }
       if (iconValue == 'attribute') {
         if (state) {
-          const icon = state.attributes.icon;
-          return icon;
+          icon = state.attributes.icon;
         } else {
-          return undefined;
+          icon = undefined;
         }
       } else {
-        const icon = iconValue;
-        return icon;
+        icon = iconValue;
       }
+      return icon;
     }
 
     buildStyle(state, config, configState) {
       let cardStyle = '';
       let styleArray = undefined;
       if (state) {
-        if (configState && configState.style)
+        if (configState && configState.style) {
           styleArray = configState.style;
-        else if (config.style)
+        } else if (config.style) {
           styleArray = config.style;
+        }
       } else {
         if (config.style)
           styleArray = config.style;
@@ -208,18 +207,23 @@
     }
 
     isClickable(state, config) {
-      if (!config.tap_action && state) {
+      let clickable = true;
+      if (config.tap_action == 'toggle' && state) {
         switch (state.entity_id.split('.', 2)[0]) {
           case 'sensor':
           case 'binary_sensor':
-            return false
+            clickable = false
           default:
-            return true
+            clickable = true
         }
       } else {
-        if (config.tap_action && config.tap_action.action == 'none') return false
-        else return true
+        if (config.tap_action && config.tap_action.action == 'none') {
+          clickable = false
+        } else {
+          clickable = true
+        }
       }
+      return clickable;
     }
 
 
@@ -238,12 +242,12 @@
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
       return html`
-      <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
+      <ha-card style="color: ${fontColor};" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}">
-        <div class="main" style="${style}">
-          ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<div>${config.name}</div>` : ''}
-         </div>
+          <div class="main" style="${style}">
+            ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+            ${config.name ? html`<div>${config.name}</div>` : ''}
+          </div>
         </button-card-button>
       </ha-card>
       `;
@@ -255,13 +259,13 @@
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
       return html`
-      <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
+      <ha-card style="color: ${fontColor};" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}; ${config.card_style}">
-        <div class="main" style="${style}">
-          ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<div>${config.name}</div>` : ''}
-          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
-         </div>
+          <div class="main" style="${style}">
+            ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+            ${config.name ? html`<div>${config.name}</div>` : ''}
+            ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+          </div>
         </button-card-button>
       </ha-card>
       `;
@@ -272,7 +276,7 @@
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
       return html`
-      <ha-card @tap="${ev => this._toggle(state, config)}">
+      <ha-card @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="${config.card_style}">
           <div class="main" style="${style}">
             ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
@@ -281,20 +285,19 @@
           </div>
         </button-card-button>
       </ha-card>
-        `;
+      `;
     }
 
     setConfig(config) {
-      // if (!config.entity) {
-      //   throw new Error('You need to define entity');
-      // }
-      this.config = { ...config };
-      this.config.color = config.color;
-      this.config.size = config.size ? config.size : '40%';
-      this.config.color_type = config.color_type ? config.color_type : 'icon';
-      this.config.color_off = 'var(--disabled-text-color)';
-      this.config.default_color = 'var(--primary-text-color)';
-      this.config.name = config.name ? config.name : '';
+      this.config = {
+        tap_action: { action: "toggle" },
+        size: '40%',
+        color_type: 'icon',
+        color_off: 'var(--disabled-text-color)',
+        default_color: 'var(--primary-text-color)',
+        name: '',
+        ...config
+      };
     }
 
     // The height of your card. Home Assistant uses this to automatically
@@ -303,58 +306,41 @@
       return 3;
     }
 
-    _toggle(state, config) {
-      if (!config.tap_action)
-        config.tap_action = 'toggle'
+    _handleTap(state, config) {
       if (config.tap_action) {
+        let event;
         switch (config.tap_action.action) {
           case 'none':
             break;
           case 'more-info':
-          case 'more_info': {
-            const node = this.shadowRoot;
-            const options = {};
-            const detail = { entityId: state.entity_id };
-            const event = new Event('hass-more-info', {
-              bubbles: options.bubbles === undefined ? true : options.bubbles,
-              cancelable: Boolean(options.cancelable),
-              composed: options.composed === undefined ? true : options.composed,
-            });
-            event.detail = detail;
-            node.dispatchEvent(event);
-            return event;
-          }
-          case 'location': {
-            if (!config.tap_action.navigation_path) break;
-            var root = document.querySelector("home-assistant");
-            history.pushState(null, "", config.tap_action.navigation_path);
-            const detail = {}
-            const event = new Event('location-changed', {
+          case 'more_info':
+            event = new Event('hass-more-info', {
               bubbles: true,
               cancelable: false,
               composed: true,
             });
-            event.detail = detail;
-            root = root && root.shadowRoot;
-            root = root && root.querySelector("home-assistant-main");
-            root = root && root.shadowRoot;
-            root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
-            root = root && root.shadowRoot || root;
-            root = root && root.querySelector("ha-panel-lovelace");
-            root = root && root.shadowRoot;
-            root = root && root.querySelector("hui-root");
-            root = root && root.shadowRoot;
-            root = root && root.querySelector("ha-app-layout #view");
-            root = root && root.firstElementChild;
-            if (root) root.dispatchEvent(event);
+            event.detail = { entityId: state.entity_id };
+            this.shadowRoot.dispatchEvent(event);
             break;
-          }
+          case 'location':
+            if (!config.tap_action.navigation_path) break;
+            history.pushState(null, "", config.tap_action.navigation_path);
+            event = new Event('location-changed', {
+              bubbles: true,
+              cancelable: false,
+              composed: true,
+            });
+            event.detail = {};
+            this.shadowRoot.dispatchEvent(event);
+            break;
           case 'service':
-          case 'call-service': {
+          case 'call-service':
+            if (!config.tap_action.service) {
+              return
+            }
             const [domain, service] = config.tap_action.service.split('.', 2);
             this.hass.callService(domain, service, config.tap_action.service_data);
             break;
-          }
           case 'toggle':
           default:
             this.hass.callService('homeassistant', 'toggle', {
