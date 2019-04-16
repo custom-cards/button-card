@@ -127,7 +127,10 @@
       if (configState && configState.color) {
         colorValue = configState.color;
       } else {
-        colorValue = config.color;
+        if (config.color != 'auto' && state && state.state == 'off')
+          colorValue = config.color_off;
+        else
+          colorValue = config.color;
       }
       if (colorValue == 'auto') {
         if (state) {

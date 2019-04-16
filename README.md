@@ -114,10 +114,7 @@ resources:
 
 ## Examples
 
-
-More examples in [here](./examples)
-
-Show a button for the air conditioner (blue when on):
+Show a button for the air conditioner (blue when on, `var(--disabled-text-color)` when off):
 
 ![ac](examples/ac.png)
 
@@ -127,6 +124,18 @@ Show a button for the air conditioner (blue when on):
   icon: mdi:air-conditioner
   color: rgb(28, 128, 199)
 ```
+
+Redefine the color when the state if off to red:
+```yaml
+- type: "custom:button-card"
+  entity: switch.ac
+  icon: mdi:air-conditioner
+  color: rgb(28, 128, 199)
+  state:
+    - value: 'off'
+      color: rgb(255, 0, 0)
+```
+
 ---------
 
 Show an ON/OFF button for the home_lights group:
@@ -169,7 +178,6 @@ Light card with card color type, name, and automatic color:
   icon: mdi:home
   color: auto
   color_type: card
-  default_color: rgb(255, 233, 155)
   tap_action:
     action: more-info
   name: Home
