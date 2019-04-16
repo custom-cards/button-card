@@ -287,44 +287,55 @@ Input select card with select next service and custom color and icon for states.
 #### Default behavior
 If you don't specify any operator, `==` will be used to match the current state against the `value`
 ```yaml
-              - type: "custom:button-card"
-                entity: input_select.cube_mode
-                icon: mdi:cube
-                tap_action:
-                  action: toggle
-                show_state: true
-                state:
-                  - value: 'sleeping'
-                    color: var(--disabled-text-color)
-                    icon: mdi:cube-outline
-                  - value: 'media'
-                    color: rgb(5, 147, 255)
-                  - value: 'light'
-                    color: rgb(189, 255, 5)
+- type: "custom:button-card"
+  entity: input_select.cube_mode
+  icon: mdi:cube
+  tap_action:
+    action: toggle
+  show_state: true
+  state:
+    - value: 'sleeping'
+      color: var(--disabled-text-color)
+      icon: mdi:cube-outline
+    - value: 'media'
+      color: rgb(5, 147, 255)
+    - value: 'light'
+      color: rgb(189, 255, 5)
 ```
 
 #### With Operator on state
 The definition order matters, the first item to match will be the one selected.
 ```yaml
-              - type: "custom:button-card"
-                entity: sensor.temperature
-                show_state: true
-                state:
-                  - value: 15
-                    operator: '<='
-                    color: blue
-                    icon: mdi:thermometer-minus
-                  - value: 25
-                    operator: '>='
-                    color: red
-                    icon: mdi:thermometer-plus
-                  - operator: 'default' # used if nothing matches
-                    color: yellow
-                    icon: mdi: thermometer
-                    style:
-                      - opacity: 0.5
+- type: "custom:button-card"
+  entity: sensor.temperature
+  show_state: true
+  state:
+    - value: 15
+      operator: '<='
+      color: blue
+      icon: mdi:thermometer-minus
+    - value: 25
+      operator: '>='
+      color: red
+      icon: mdi:thermometer-plus
+    - operator: 'default' # used if nothing matches
+      color: yellow
+      icon: mdi: thermometer
+      style:
+        - opacity: 0.5
 ```
 
+#### `on_tap` Location
+You can swith panel with the `location` action:
+```yaml
+- type: "custom:button-card"
+  color_type: label-card
+  icon: mdi:home
+  name: Go To Home
+  on_tap:
+    action: location
+    navigation_path: /lovelace/0
+```
 
 ## Credits
 

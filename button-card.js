@@ -217,7 +217,7 @@
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
       return html`
-      <ha-card style="color: ${fontColor};">
+      <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}>
         <button-card-button noink style="background-color: ${color}">
         <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
