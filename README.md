@@ -325,14 +325,14 @@ The definition order matters, the first item to match will be the one selected.
         - opacity: 0.5
 ```
 
-#### `on_tap` Location
+#### `tap_action` Location
 You can swith panel with the `location` action:
 ```yaml
 - type: "custom:button-card"
   color_type: label-card
   icon: mdi:home
   name: Go To Home
-  on_tap:
+  tap_action:
     action: location
     navigation_path: /lovelace/0
 ```
