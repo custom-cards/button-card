@@ -47,16 +47,17 @@
 
     render() {
       const state = this.__hass.states[this.config.entity];
+      const configState = testConfigState(state, this.config)
       switch (this.config.color_type) {
         case 'blank-card':
-          return this.blankCardColoredHtml(state, this.config);
+          return this.blankCardColoredHtml(state, this.config, configState);
         case 'label-card':
-          return this.labelCardColoredHtml(state, this.config);
+          return this.labelCardColoredHtml(state, this.config, configState);
         case 'card':
-          return this.cardColoredHtml(state, this.config);
+          return this.cardColoredHtml(state, this.config, configState);
         case 'icon':
         default:
-          return this.iconColoredHtml(state, this.config);
+          return this.iconColoredHtml(state, this.config, configState);
       }
     }
 
@@ -121,47 +122,65 @@
       return retval;
     }
 
-    buildCssColorAttribute(state, config) {
-      let color = config.color;
-      if (state) {
-        let configState = this.testConfigState(state, config);
-        if (configState) {
-          color = configState.color ? configState.color : config.color_off;
-          if (configState.color === 'auto') {
-            color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : configState.default_color;
+    buildCssColorAttribute(state, config, configState) {
+      let colorValue = null;
+      if (configState && configState.color) {
+        colorValue = configState.color;
+      } else {
+        colorValue = config.color;
+      }
+      if (colorValue == 'auto') {
+        if (state) {
+          const color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
+          return color;
+        } else {
+          return config.default_color;
+        }
+      } else {
+        if (!colorValue) {
+          if (state) {
+            if (state.state == 'off') {
+              const color = config.color_off;
+              return color;
+            } else {
+              const color = config.default_color;
+              return color;
+            }
+          } else {
+            const color = config.default_color;
+            return color;
           }
         } else {
-          if (config.color === 'auto') {
-            color = state.attributes.rgb_color ? `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
-          }
-          color = state.state === 'on' ? color : config.color_off;
+          const color = colorValue;
+          return color;
         }
       }
-      return color;
     }
 
-    buildIcon(state, config) {
-      let iconOff = config.icon;
-      if (config.icon == 'attribute') {
+    buildIcon(state, config, configState) {
+      let iconValue = null;
+      if (configState && configState.icon) {
+        iconValue = configState.icon;
+      } else {
+        iconValue = config.icon;
+      }
+      if (iconValue == 'attribute') {
         if (state) {
           const icon = state.attributes.icon;
           return icon;
+        } else {
+          return undefined;
         }
-        return iconOff;
-      }
-      let configState = this.testConfigState(state, config);
-      if (configState && configState.icon) {
-        const icon = configState.icon;
+      } else {
+        const icon = iconValue;
         return icon;
       }
-      return iconOff;
     }
 
-    buildStyle(state, config) {
+    buildStyle(state, config, configState) {
       let cardStyle = '';
       let styleArray = undefined;
       if (state) {
-        let configState = this.testConfigState(state, config);
         if (configState && configState.style)
           styleArray = configState.style;
         else if (config.style)
@@ -180,7 +199,7 @@
       return cardStyle;
     }
 
-    blankCardColoredHtml(state, config) {
+    blankCardColoredHtml(state, config, configState) {
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       return html`
@@ -189,15 +208,16 @@
       `;
     }
 
-    labelCardColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
+    labelCardColoredHtml(state, config, configState) {
+      const color = this.buildCssColorAttribute(state, config, configState);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      const style = this.buildStyle(state, config);
+      const icon = this.buildIcon(state, config, configState);
+      const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card style="color: ${fontColor};">
         <button-card-button noink style="background-color: ${color}">
         <div style="${style}">
-          ${config.icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${config.icon}"></ha-icon>` : ''}
+          ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<span>${config.name}</span>` : ''}
          </div>
         </button-card-button>
@@ -205,16 +225,16 @@
       `;
     }
 
-    cardColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
+    cardColoredHtml(state, config, configState) {
+      const color = this.buildCssColorAttribute(state, config, configState);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      const icon = this.buildIcon(state, config);
-      const style = this.buildStyle(state, config);
+      const icon = this.buildIcon(state, config, configState);
+      const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="background-color: ${color}; ${config.card_style}">
         <div style="${style}">
-          ${config.icon || icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+          ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<span>${config.name}</span>` : ''}
           ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
          </div>
@@ -223,15 +243,15 @@
       `;
     }
 
-    iconColoredHtml(state, config) {
-      const color = this.buildCssColorAttribute(state, config);
-      const icon = this.buildIcon(state, config);
-      const style = this.buildStyle(state, config);
+    iconColoredHtml(state, config, configState) {
+      const color = this.buildCssColorAttribute(state, config, configState);
+      const icon = this.buildIcon(state, config, configState);
+      const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="${config.card_style}">
         <div style="${style}">
-          ${config.icon || icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+          ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<div>${config.name}</div>` : ''}
           ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
         </div>
@@ -245,11 +265,11 @@
       //   throw new Error('You need to define entity');
       // }
       this.config = { ...config };
-      this.config.color = config.color ? config.color : 'var(--primary-text-color)';
+      this.config.color = config.color;
       this.config.size = config.size ? config.size : '40%';
       this.config.color_type = config.color_type ? config.color_type : 'icon';
-      this.config.color_off = config.color_off ? config.color_off : 'var(--disabled-text-color)';
-      this.config.default_color = config.default_color ? config.default_color : 'var(--primary-text-color)';
+      this.config.color_off = 'var(--disabled-text-color)';
+      this.config.default_color = 'var(--primary-text-color)';
       this.config.name = config.name ? config.name : '';
     }
 
@@ -260,33 +280,39 @@
     }
 
     _toggle(state, config) {
-      switch (config.action) {
-        case 'toggle':
-          this.hass.callService('homeassistant', 'toggle', {
-            entity_id: state.entity_id,
-          });
-          break;
-        case 'more_info': {
-          const node = this.shadowRoot;
-          const options = {};
-          const detail = { entityId: state.entity_id };
-          const event = new Event('hass-more-info', {
-            bubbles: options.bubbles === undefined ? true : options.bubbles,
-            cancelable: Boolean(options.cancelable),
-            composed: options.composed === undefined ? true : options.composed,
-          });
-          event.detail = detail;
-          node.dispatchEvent(event);
-          return event;
+      if (!config.tap_action)
+        config.tap_action = 'toggle'
+      if (config.tap_action) {
+        switch (config.tap_action.action) {
+          case 'none':
+            break;
+          case 'more-info':
+          case 'more_info': {
+            const node = this.shadowRoot;
+            const options = {};
+            const detail = { entityId: state.entity_id };
+            const event = new Event('hass-more-info', {
+              bubbles: options.bubbles === undefined ? true : options.bubbles,
+              cancelable: Boolean(options.cancelable),
+              composed: options.composed === undefined ? true : options.composed,
+            });
+            event.detail = detail;
+            node.dispatchEvent(event);
+            return event;
+          }
+          case 'service':
+          case 'call-service': {
+            const [domain, service] = config.tap_action.service.split('.', 2);
+            this.hass.callService(domain, service, config.tap_action.service_data);
+            break;
+          }
+          case 'toggle':
+          default:
+            this.hass.callService('homeassistant', 'toggle', {
+              entity_id: state.entity_id,
+            });
+            break;
         }
-        case 'service':
-          this.hass.callService(config.service.domain, config.service.action, config.service.data);
-          break;
-        default:
-          this.hass.callService('homeassistant', 'toggle', {
-            entity_id: state.entity_id,
-          });
-          break;
       }
     }
   }
