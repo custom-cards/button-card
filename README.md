@@ -326,7 +326,7 @@ The definition order matters, the first item to match will be the one selected.
 ```
 
 #### `tap_action` Location
-You can swith panel with the `location` action:
+For example, you can swith panel with the `location` action:
 ```yaml
 - type: "custom:button-card"
   color_type: label-card
