@@ -322,7 +322,7 @@
             event.detail = { entityId: state.entity_id };
             this.shadowRoot.dispatchEvent(event);
             break;
-          case 'location':
+          case 'navigate':
             if (!config.tap_action.navigation_path) break;
             history.pushState(null, "", config.tap_action.navigation_path);
             event = new Event('location-changed', {
