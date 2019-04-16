@@ -151,7 +151,7 @@ Light entity with custom icon and "more info" pop-in:
   icon: mdi:sofa
   color: auto
   tap_action:
-    action: more_info
+    action: more-info
 ```
 
 
@@ -170,7 +170,7 @@ Light card with card color type, name, and automatic color:
   color_type: card
   default_color: rgb(255, 233, 155)
   tap_action:
-    action: more_info
+    action: more-info
   name: Home
   style:
     - font-size: 12px
