@@ -37,11 +37,16 @@
           margin: auto;
           text-align: center;
         }
+        button-card-button.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
         button-card-button div.main {
           padding: 4%;
           text-transform: none;
           font-size: 1.2rem;
         }
+
       `;
     }
 
@@ -202,11 +207,27 @@
       return cardStyle;
     }
 
+    isClickable(state, config) {
+      if (!config.tap_action && state) {
+        switch (state.entity_id.split('.', 2)[0]) {
+          case 'sensor':
+          case 'binary_sensor':
+            return false
+          default:
+            return true
+        }
+      } else {
+        if (config.tap_action && config.tap_action.action == 'none') return false
+        else return true
+      }
+    }
+
+
     blankCardColoredHtml(state, config, configState) {
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       return html`
-      <ha-card style="color: ${fontColor}; background-color: ${color}; ${config.card_style}" on-tap="${ev => this._toggle(state, config)}">
+      <ha-card class="disabled" style="color: ${fontColor}; background-color: ${color}; ${config.card_style}">
       </ha-card>
       `;
     }
@@ -218,7 +239,7 @@
       const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
-        <button-card-button style="background-color: ${color}">
+        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}">
         <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<div>${config.name}</div>` : ''}
@@ -235,7 +256,7 @@
       const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
-        <button-card-button style="background-color: ${color}; ${config.card_style}">
+        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}; ${config.card_style}">
         <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
           ${config.name ? html`<div>${config.name}</div>` : ''}
@@ -252,15 +273,15 @@
       const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card @tap="${ev => this._toggle(state, config)}">
-        <button-card-button style="${config.card_style}">
-        <div class="main" style="${style}">
-          ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<div>${config.name}</div>` : ''}
-          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
-        </div>
+        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="${config.card_style}">
+          <div class="main" style="${style}">
+            ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
+            ${config.name ? html`<div>${config.name}</div>` : ''}
+            ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+          </div>
         </button-card-button>
       </ha-card>
-      `;
+        `;
     }
 
     setConfig(config) {
