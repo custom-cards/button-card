@@ -300,6 +300,31 @@
             node.dispatchEvent(event);
             return event;
           }
+          case 'location': {
+            if (!config.tap_action.navigation_path) break;
+            var root = document.querySelector("home-assistant");
+            history.pushState(null, "", config.tap_action.navigation_path);
+            const detail = {}
+            const event = new Event('location-changed', {
+              bubbles: true,
+              cancelable: false,
+              composed: true,
+            });
+            event.detail = detail;
+            root = root && root.shadowRoot;
+            root = root && root.querySelector("home-assistant-main");
+            root = root && root.shadowRoot;
+            root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
+            root = root && root.shadowRoot || root;
+            root = root && root.querySelector("ha-panel-lovelace");
+            root = root && root.shadowRoot;
+            root = root && root.querySelector("hui-root");
+            root = root && root.shadowRoot;
+            root = root && root.querySelector("ha-app-layout #view");
+            root = root && root.firstElementChild;
+            if (root) root.dispatchEvent(event);
+            break;
+          }
           case 'service':
           case 'call-service': {
             const [domain, service] = config.tap_action.service.split('.', 2);

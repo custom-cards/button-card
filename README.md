@@ -50,11 +50,12 @@ Lovelace Button card for your entities.
 
 ### Action
 
-| Name           | Type   | Default  | Supported options                             | Description                                                                                              |
-| -------------- | ------ | -------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `action`       | string | `toggle` | `more-info`, `toggle`, `call-service`, `none` | Action to perform                                                                                        |
-| `service`      | string | none     | Any service                                   | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
-| `service_data` | object | none     | Any service data                              | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` |
+| Name              | Type   | Default  | Supported options                             | Description                                                                                              |
+| ----------------- | ------ | -------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `action`          | string | `toggle` | `more-info`, `toggle`, `call-service`, `none` | Action to perform                                                                                        |
+| `navigation_path` | string | none     | Eg: `/lovelace/0/`                            | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate                                |
+| `service`         | string | none     | Any service                                   | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
+| `service_data`    | object | none     | Any service data                              | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` |
 
 
 ### State
