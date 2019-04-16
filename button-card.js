@@ -233,7 +233,7 @@
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       return html`
-      <ha-card class="disabled" style="color: ${fontColor}; background-color: ${color}; ${config.card_style}">
+      <ha-card class="disabled" style="color: ${fontColor}; background-color: ${color};">
       </ha-card>
       `;
     }
@@ -262,7 +262,7 @@
       const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._handleTap(state, config)}">
-        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}; ${config.card_style}">
+        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color};">
           <div class="main" style="${style}">
             ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
             ${config.name ? html`<div>${config.name}</div>` : ''}
@@ -279,7 +279,7 @@
       const style = this.buildStyle(state, config, configState);
       return html`
       <ha-card @tap="${ev => this._handleTap(state, config)}">
-        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="${config.card_style}">
+        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}">
           <div class="main" style="${style}">
             ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
             ${config.name ? html`<div>${config.name}</div>` : ''}
