@@ -47,7 +47,7 @@
 
     render() {
       const state = this.__hass.states[this.config.entity];
-      const configState = testConfigState(state, this.config)
+      const configState = this.testConfigState(state, this.config)
       switch (this.config.color_type) {
         case 'blank-card':
           return this.blankCardColoredHtml(state, this.config, configState);
@@ -252,8 +252,8 @@
         <button-card-button style="${config.card_style}">
         <div style="${style}">
           ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<div>${config.name}</div>` : ''}
-          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+          ${config.name ? html`<span>${config.name}</span>` : ''}
+          ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
         </div>
         </button-card-button>
       </ha-card>
