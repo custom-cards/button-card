@@ -213,8 +213,10 @@
           case 'sensor':
           case 'binary_sensor':
             clickable = false
+            break;
           default:
             clickable = true
+            break;
         }
       } else {
         if (config.tap_action.action == 'none') {
