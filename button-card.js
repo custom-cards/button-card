@@ -208,7 +208,7 @@
 
     isClickable(state, config) {
       let clickable = true;
-      if (config.tap_action == 'toggle' && state) {
+      if (config.tap_action.action == 'toggle' && state) {
         switch (state.entity_id.split('.', 2)[0]) {
           case 'sensor':
           case 'binary_sensor':
@@ -217,7 +217,7 @@
             clickable = true
         }
       } else {
-        if (config.tap_action && config.tap_action.action == 'none') {
+        if (config.tap_action.action == 'none') {
           clickable = false
         } else {
           clickable = true
@@ -336,7 +336,7 @@
           case 'service':
           case 'call-service':
             if (!config.tap_action.service) {
-              return
+              return;
             }
             const [domain, service] = config.tap_action.service.split('.', 2);
             this.hass.callService(domain, service, config.tap_action.service_data);
