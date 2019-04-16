@@ -37,7 +37,7 @@
           margin: auto;
           text-align: center;
         }
-        button-card-button div {
+        button-card-button div.main {
           padding: 4%;
           text-transform: none;
           font-size: 1.2rem;
@@ -216,9 +216,9 @@
       return html`
       <ha-card style="color: ${fontColor};">
         <button-card-button noink style="background-color: ${color}">
-        <div style="${style}">
+        <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<span>${config.name}</span>` : ''}
+          ${config.name ? html`<div>${config.name}</div>` : ''}
          </div>
         </button-card-button>
       </ha-card>
@@ -233,10 +233,10 @@
       return html`
       <ha-card style="color: ${fontColor};" @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="background-color: ${color}; ${config.card_style}">
-        <div style="${style}">
+        <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<span>${config.name}</span>` : ''}
-          ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
+          ${config.name ? html`<div>${config.name}</div>` : ''}
+          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
          </div>
         </button-card-button>
       </ha-card>
@@ -250,10 +250,10 @@
       return html`
       <ha-card @tap="${ev => this._toggle(state, config)}">
         <button-card-button style="${config.card_style}">
-        <div style="${style}">
+        <div class="main" style="${style}">
           ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: ${config.size};" icon="${icon}"></ha-icon>` : ''}
-          ${config.name ? html`<span>${config.name}</span>` : ''}
-          ${config.show_state ? html`<span>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</span>` : ''}
+          ${config.name ? html`<div>${config.name}</div>` : ''}
+          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
         </div>
         </button-card-button>
       </ha-card>
@@ -323,7 +323,6 @@
             root = root && root.querySelector("ha-app-layout #view");
             root = root && root.firstElementChild;
             if (root) root.dispatchEvent(event);
-            break;
           }
           case 'service':
           case 'call-service': {
