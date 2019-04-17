@@ -176,8 +176,14 @@ export default function domainIcon(domain, state) {
 
 
     getFontColorBasedOnBackgroundColor(backgroundColor) {
-      const parsedRgbColor = backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-      const parsedBackgroundColor = parsedRgbColor ? parsedRgbColor : this.hexToRgb(backgroundColor.substring(1));
+      let parsedBackgroundColor = null;
+      if (backgroundColor.substring(0, 3) == "var") {
+        let rgb = getComputedStyle(this.parentNode).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
+        parsedBackgroundColor = this.hexToRgb(rgb.substring(1));
+      } else {
+        const parsedRgbColor = backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+        parsedBackgroundColor = parsedRgbColor ? parsedRgbColor : this.hexToRgb(backgroundColor.substring(1));
+      }
       let fontColor = ''; // don't override by default
       if (parsedBackgroundColor) {
         // Counting the perceptive luminance - human eye favors green color...
@@ -249,18 +255,37 @@ export default function domainIcon(domain, state) {
       }
       if (colorValue == 'auto') {
         if (state) {
-          color = state.attributes.rgb_color ?
-            `rgb(${state.attributes.rgb_color.join(',')})` : config.default_color;
+          if (state.attributes.rgb_color) {
+            color = `rgb(${state.attributes.rgb_color.join(',')})`
+          } else {
+            switch (state.state) {
+              case 'on':
+                color = config.color_on;
+                break;
+              case 'off':
+                color = config.color_off;
+                break;
+              default:
+                color = config.default_color;
+                break;
+            }
+          }
         } else {
           color = config.default_color;
         }
       } else {
         if (!colorValue) {
           if (state) {
-            if (state.state == 'off') {
-              color = config.color_off;
-            } else {
-              color = config.default_color;
+            switch (state.state) {
+              case 'on':
+                color = config.color_on;
+                break;
+              case 'off':
+                color = config.color_off;
+                break;
+              default:
+                color = config.default_color;
+                break;
             }
           } else {
             color = config.default_color;
@@ -406,13 +431,14 @@ export default function domainIcon(domain, state) {
         tap_action: { action: "toggle" },
         size: '40%',
         color_type: 'icon',
-        color_off: 'var(--disabled-text-color)',
         default_color: 'var(--primary-text-color)',
         name: '',
         icon: 'attribute',
         show_icon: true,
         ...config
       };
+      this.config.color_off = 'var(--paper-item-icon-color)';
+      this.config.color_on = 'var(--paper-item-icon-active-color)';
     }
 
     // The height of your card. Home Assistant uses this to automatically
