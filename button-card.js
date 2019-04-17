@@ -1,3 +1,107 @@
+/**
+ * Return the icon to be used for a domain.
+ *
+ * Optionally pass in a state to influence the domain icon.
+ */
+export const DEFAULT_DOMAIN_ICON = "hass:bookmark";
+
+const fixedIcons = {
+  alert: "hass:alert",
+  automation: "hass:playlist-play",
+  calendar: "hass:calendar",
+  camera: "hass:video",
+  climate: "hass:thermostat",
+  configurator: "hass:settings",
+  conversation: "hass:text-to-speech",
+  device_tracker: "hass:account",
+  fan: "hass:fan",
+  group: "hass:google-circles-communities",
+  history_graph: "hass:chart-line",
+  homeassistant: "hass:home-assistant",
+  homekit: "hass:home-automation",
+  image_processing: "hass:image-filter-frames",
+  input_boolean: "hass:drawing",
+  input_datetime: "hass:calendar-clock",
+  input_number: "hass:ray-vertex",
+  input_select: "hass:format-list-bulleted",
+  input_text: "hass:textbox",
+  light: "hass:lightbulb",
+  mailbox: "hass:mailbox",
+  notify: "hass:comment-alert",
+  person: "hass:account",
+  plant: "hass:flower",
+  proximity: "hass:apple-safari",
+  remote: "hass:remote",
+  scene: "hass:google-pages",
+  script: "hass:file-document",
+  sensor: "hass:eye",
+  simple_alarm: "hass:bell",
+  sun: "hass:white-balance-sunny",
+  switch: "hass:flash",
+  timer: "hass:timer",
+  updater: "hass:cloud-upload",
+  vacuum: "hass:robot-vacuum",
+  water_heater: "hass:thermometer",
+  weblink: "hass:open-in-new",
+};
+
+export default function domainIcon(domain, state) {
+  if (domain in fixedIcons) {
+    return fixedIcons[domain];
+  }
+
+  switch (domain) {
+    case "alarm_control_panel":
+      switch (state) {
+        case "armed_home":
+          return "hass:bell-plus";
+        case "armed_night":
+          return "hass:bell-sleep";
+        case "disarmed":
+          return "hass:bell-outline";
+        case "triggered":
+          return "hass:bell-ring";
+        default:
+          return "hass:bell";
+      }
+
+    case "binary_sensor":
+      return state && state === "off"
+        ? "hass:radiobox-blank"
+        : "hass:checkbox-marked-circle";
+
+    case "cover":
+      return state === "closed" ? "hass:window-closed" : "hass:window-open";
+
+    case "lock":
+      return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
+
+    case "media_player":
+      return state && state !== "off" && state !== "idle"
+        ? "hass:cast-connected"
+        : "hass:cast";
+
+    case "zwave":
+      switch (state) {
+        case "dead":
+          return "hass:emoticon-dead";
+        case "sleeping":
+          return "hass:sleep";
+        case "initializing":
+          return "hass:timer-sand";
+        default:
+          return "hass:z-wave";
+      }
+
+    default:
+      // tslint:disable-next-line
+      console.warn(
+        "Unable to find icon for domain " + domain + " (" + state + ")"
+      );
+      return DEFAULT_DOMAIN_ICON;
+  }
+}
+
 ((LitElement, ButtonBase) => {
   var html = LitElement.prototype.html;
   var css = LitElement.prototype.css;
@@ -178,7 +282,9 @@
       }
       if (iconValue == 'attribute') {
         if (state) {
-          icon = state.attributes.icon;
+          icon = state.attributes.icon ?
+            state.attributes.icon :
+            domainIcon(state.entity_id.split('.', 2)[0], state.state);
         } else {
           icon = undefined;
         }
@@ -252,7 +358,7 @@
       <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}">
           <div class="main" style="${style}">
-            ${icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
+            ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
             ${config.name ? html`<div>${config.name}</div>` : ''}
           </div>
         </button-card-button>
@@ -269,7 +375,7 @@
       <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color};">
           <div class="main" style="${style}">
-            ${icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
+            ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
             ${config.name ? html`<div>${config.name}</div>` : ''}
             ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
           </div>
@@ -286,7 +392,7 @@
       <ha-card style="position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}">
           <div class="main" style="${style}">
-            ${icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
+            ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}"></ha-icon>` : ''}
             ${config.name ? html`<div>${config.name}</div>` : ''}
             ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
           </div>
@@ -303,6 +409,8 @@
         color_off: 'var(--disabled-text-color)',
         default_color: 'var(--primary-text-color)',
         name: '',
+        icon: 'attribute',
+        show_icon: true,
         ...config
       };
     }
