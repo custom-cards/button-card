@@ -49,6 +49,7 @@
           align-items: center;
           text-align: center;
           letter-spacing: normal;
+          width: 100%;
         }
       `;
     }
