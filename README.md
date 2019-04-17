@@ -15,24 +15,26 @@ Lovelace Button card for your entities.
 
 ## Features
 
-  - works with any toggleable entity
-  - 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
-  - state display (optional)
-  - custom color (optional), or based on light rgb value
-  - custom state definition with customizable color, icon and style (optional)
-  - custom size (optional)
-  - custom icon (optional)
-  - custom css style (optional)
-  - 2 color types
-    - `icon` : apply color settings to the icon only
-    - `card` : apply color settings to the card only
-  - automatic font color if color_type is set to `card`
-  - support unit of measurement
-  - blank card and label card (for organization)
-  - [blink](#blink) animation support
-  - support for [custom_updater](https://github.com/custom-components/custom_updater)
+- confirmation popup for sensitive items
+- works with any toggleable entity
+- 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
+- state display (optional)
+- custom color (optional), or based on light rgb value
+- custom state definition with customizable color, icon and style (optional)
+- custom size (optional)
+- custom icon (optional)
+- custom css style (optional)
+- 2 color types
+  - `icon` : apply color settings to the icon only
+  - `card` : apply color settings to the card only
+- automatic font color if color_type is set to `card`
+- support unit of measurement
+- blank card and label card (for organization)
+- [blink](#blink) animation support
+- support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Configuration
+
 ### Main Options
 
 | Name         | Type        | Default      | Supported options                                | Description                                                                                                                                                                                                                                                                                                                                   |
@@ -49,6 +51,7 @@ Lovelace Button card for your entities.
 | `show_icon`  | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
 | `style`      | object list | optional     | `- text-transform: none`                         | Define a list of css attribute and their value to apply to the card                                                                                                                                                                                                                                                                           |
 | `state`      | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
+| `confirmation` | boolean | `false` | `true` \| `false` | Show a confirmation popup on tap |
 
 ### Action
 
@@ -58,7 +61,6 @@ Lovelace Button card for your entities.
 | `navigation_path` | string | none     | Eg: `/lovelace/0/`                                        | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate                                |
 | `service`         | string | none     | Any service                                               | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
 | `service_data`    | object | none     | Any service data                                          | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` |
-
 
 ### State
 
@@ -83,8 +85,8 @@ Lovelace Button card for your entities.
 |  `regex`  | `'^norm.*$'`    | `value` regex applied to current state does match                                                        |
 | `default` | N/A             | If nothing matches, this is used                                                                         |
 
-
 ## Installation
+
 ### Manual Installation
 
 1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/button-card.js)
@@ -128,17 +130,18 @@ Show a button for the air conditioner (blue when on, `var(--disabled-text-color)
 ```
 
 Redefine the color when the state if off to red:
+
 ```yaml
 - type: "custom:button-card"
   entity: switch.ac
   icon: mdi:air-conditioner
   color: rgb(28, 128, 199)
   state:
-    - value: 'off'
+    - value: "off"
       color: rgb(255, 0, 0)
 ```
 
----------
+---
 
 Show an ON/OFF button for the home_lights group:
 
@@ -150,8 +153,7 @@ Show an ON/OFF button for the home_lights group:
   show_state: true
 ```
 
-
-----------------
+---
 
 Light entity with custom icon and "more info" pop-in:
 
@@ -166,9 +168,7 @@ Light entity with custom icon and "more info" pop-in:
     action: more-info
 ```
 
-
--------------
-
+---
 
 Light card with card color type, name, and automatic color:
 
@@ -188,16 +188,16 @@ Light card with card color type, name, and automatic color:
     - font-weight: bold
 ```
 
-------------
+---
 
 Horizontal stack with :
-  - 2x blank cards
-  - 1x volume up button with service call
-  - 1x volume down button with service call
-  - 2x blank cards
+
+- 2x blank cards
+- 1x volume up button with service call
+- 1x volume down button with service call
+- 2x blank cards
 
 ![volume](examples/volume.png)
-
 
 ```yaml
 - type: horizontal-stack
@@ -230,19 +230,19 @@ Horizontal stack with :
       color_type: blank-card
 ```
 
-------------
+---
 
 Vertical Stack with :
-  - 1x label card
-  - Horizontal Stack with :
-     - 1x Scene 1 Button
-     - 1x Scene 2 Button
-     - 1x Scene 3 Button
-     - 1x Scene 4 Button
-     - 1x Scene Off Button
+
+- 1x label card
+- Horizontal Stack with :
+  - 1x Scene 1 Button
+  - 1x Scene 2 Button
+  - 1x Scene 3 Button
+  - 1x Scene 4 Button
+  - 1x Scene Off Button
 
 ![scenes](examples/scenes.png)
-
 
 ```yaml
 - type: vertical-stack
@@ -278,16 +278,18 @@ Vertical Stack with :
           color_type: card
           color: rgb(66, 134, 244)
           icon: mdi:eye-off-outline
-
 ```
 
 ### Configuration with states
+
 Input select card with select next service and custom color and icon for states. In the example below the icon `mdi:cube-outline` will be used when value is `sleeping` and `mdi:cube` in other cases.
 
 ![cube](examples/cube.png)
 
 #### Default behavior
+
 If you don't specify any operator, `==` will be used to match the current state against the `value`
+
 ```yaml
 - type: "custom:button-card"
   entity: input_select.cube_mode
@@ -296,17 +298,19 @@ If you don't specify any operator, `==` will be used to match the current state 
     action: toggle
   show_state: true
   state:
-    - value: 'sleeping'
+    - value: "sleeping"
       color: var(--disabled-text-color)
       icon: mdi:cube-outline
-    - value: 'media'
+    - value: "media"
       color: rgb(5, 147, 255)
-    - value: 'light'
+    - value: "light"
       color: rgb(189, 255, 5)
 ```
 
 #### With Operator on state
+
 The definition order matters, the first item to match will be the one selected.
+
 ```yaml
 - type: "custom:button-card"
   entity: sensor.temperature
@@ -328,7 +332,9 @@ The definition order matters, the first item to match will be the one selected.
 ```
 
 #### `tap_action` Location
+
 For example, you can swith panel with the `location` action:
+
 ```yaml
 - type: "custom:button-card"
   color_type: label-card
@@ -340,15 +346,17 @@ For example, you can swith panel with the `location` action:
 ```
 
 #### blink
+
 You can make the whole button blink:
 ![blink-animation](examples/blink-animation.gif)
+
 ```yaml
 - type: "custom:button-card"
   color_type: card
   entity: binary_sensor.intruder
   name: Intruder Alert
   state:
-    - value: 'on'
+    - value: "on"
       color: red
       icon: mdi:alert
       style:
@@ -360,7 +368,7 @@ You can make the whole button blink:
 
 ## Credits
 
-  - [ciotlosm](https://github.com/ciotlosm) for the readme template and the awesome examples
+- [ciotlosm](https://github.com/ciotlosm) for the readme template and the awesome examples
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg?style=for-the-badge
 [commits]: https://github.com/custom-cards/button-card/commits/master

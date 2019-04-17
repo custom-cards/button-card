@@ -444,6 +444,22 @@ export default function domainIcon(domain, state) {
     }
 
     _handleTap(state, config) {
+      let confirmed = false;
+      if (config.confirmation) {
+        confirmed = confirm("Press a button!");
+        if (confirmed == true) {
+          console.log("You pressed OK!");
+        } else {
+          console.log("You pressed Cancel!");
+        }
+      } else {
+        confirmed = true;
+      }
+
+      if (!confirmed) {
+        return;
+      }
+
       if (config.tap_action) {
         let event;
         switch (config.tap_action.action) {
