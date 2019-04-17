@@ -177,7 +177,7 @@ export default function domainIcon(domain, state) {
 
     getFontColorBasedOnBackgroundColor(backgroundColor) {
       let parsedBackgroundColor = null;
-      if (backgroundColor.substring(0, 3) == "var") {
+      if (backgroundColor.substring(0, 3) === "var") {
         let rgb = getComputedStyle(this.parentNode).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
         parsedBackgroundColor = this.hexToRgb(rgb.substring(1));
       } else {
@@ -241,6 +241,17 @@ export default function domainIcon(domain, state) {
       return retval;
     }
 
+    getDefaultColorForState(state) {
+      switch (state.state) {
+        case 'on':
+          return this.config.color_on;
+        case 'off':
+          return this.config.color_off;
+        default:
+          return this.config.default_color;
+      }
+    }
+
     buildCssColorAttribute(state, config, configState) {
       let colorValue = null;
       let color = null;
@@ -258,17 +269,7 @@ export default function domainIcon(domain, state) {
           if (state.attributes.rgb_color) {
             color = `rgb(${state.attributes.rgb_color.join(',')})`
           } else {
-            switch (state.state) {
-              case 'on':
-                color = config.color_on;
-                break;
-              case 'off':
-                color = config.color_off;
-                break;
-              default:
-                color = config.default_color;
-                break;
-            }
+            color = this.getDefaultColorForState(state)
           }
         } else {
           color = config.default_color;
@@ -276,17 +277,7 @@ export default function domainIcon(domain, state) {
       } else {
         if (!colorValue) {
           if (state) {
-            switch (state.state) {
-              case 'on':
-                color = config.color_on;
-                break;
-              case 'off':
-                color = config.color_off;
-                break;
-              default:
-                color = config.default_color;
-                break;
-            }
+            color = this.getDefaultColorForState(state)
           } else {
             color = config.default_color;
           }
