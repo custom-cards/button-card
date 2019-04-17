@@ -447,11 +447,6 @@ export default function domainIcon(domain, state) {
       let confirmed = false;
       if (config.confirmation) {
         confirmed = confirm("Press a button!");
-        if (confirmed == true) {
-          console.log("You pressed OK!");
-        } else {
-          console.log("You pressed Cancel!");
-        }
       } else {
         confirmed = true;
       }
