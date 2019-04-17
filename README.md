@@ -29,6 +29,7 @@ Lovelace Button card for your entities.
   - automatic font color if color_type is set to `card`
   - support unit of measurement
   - blank card and label card (for organization)
+  - [blink](#blink) animation support
   - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Configuration
@@ -336,6 +337,25 @@ For example, you can swith panel with the `location` action:
   tap_action:
     action: location
     navigation_path: /lovelace/0
+```
+
+#### blink
+You can make the whole button blink:
+![blink-animation](examples/blink-animation.gif)
+```yaml
+- type: "custom:button-card"
+  color_type: card
+  entity: binary_sensor.intruder
+  name: Intruder Alert
+  state:
+    - value: 'on'
+      color: red
+      icon: mdi:alert
+      style:
+        - animation: blink 2s ease infinite
+    - operator: default
+      color: green
+      icon: mdi:shield-check
 ```
 
 ## Credits

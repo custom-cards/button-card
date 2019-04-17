@@ -155,6 +155,11 @@ export default function domainIcon(domain, state) {
           letter-spacing: normal;
           width: 100%;
         }
+        @keyframes blink{
+          0%{opacity:0;}
+          50%{opacity:1;}
+          100%{opacity:0;}
+        }
       `;
     }
 
