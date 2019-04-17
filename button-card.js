@@ -344,22 +344,22 @@ export default function domainIcon(domain, state) {
 
     isClickable(state, config) {
       let clickable = true;
-      if (config.tap_action.action == 'toggle' && state) {
-        switch (state.entity_id.split('.', 2)[0]) {
-          case 'sensor':
-          case 'binary_sensor':
-            clickable = false
-            break;
-          default:
-            clickable = true
-            break;
+      if (config.tap_action.action == 'toggle') {
+        if (state) {
+          switch (state.entity_id.split('.', 2)[0]) {
+            case 'sensor':
+            case 'binary_sensor':
+              clickable = false
+              break;
+            default:
+              clickable = true
+              break;
+          }
+        } else {
+          clickable = false
         }
       } else {
-        if (config.tap_action.action == 'none') {
-          clickable = false
-        } else {
-          clickable = true
-        }
+        clickable = !(config.tap_action.action == 'none')
       }
       return clickable;
     }
