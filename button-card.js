@@ -450,7 +450,6 @@ export default function domainIcon(domain, state) {
           case 'none':
             break;
           case 'more-info':
-          case 'more_info':
             event = new Event('hass-more-info', {
               bubbles: true,
               cancelable: false,
