@@ -444,14 +444,8 @@ export default function domainIcon(domain, state) {
     }
 
     _handleTap(state, config) {
-      let confirmed = false;
-      if (config.confirmation) {
-        confirmed = confirm("Confirm tap");
-      } else {
-        confirmed = true;
-      }
-
-      if (!confirmed) {
+      if (config.confirmation &&
+        !confirm("Confirm tap")) {
         return;
       }
 
