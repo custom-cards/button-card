@@ -444,6 +444,11 @@ export default function domainIcon(domain, state) {
     }
 
     _handleTap(state, config) {
+      if (config.confirmation &&
+        !confirm("Confirm tap")) {
+        return;
+      }
+
       if (config.tap_action) {
         let event;
         switch (config.tap_action.action) {
