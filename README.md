@@ -150,6 +150,7 @@ Show an ON/OFF button for the home_lights group:
 ```yaml
 - type: "custom:button-card"
   entity: group.home_lights
+  show_icon: false
   show_state: true
 ```
 
