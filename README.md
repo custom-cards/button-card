@@ -15,7 +15,7 @@ Lovelace Button card for your entities.
 
 ## Features
 
-- confirmation popup for sensitive items
+- confirmation popup for sensitive items (optional)
 - works with any toggleable entity
 - 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
 - state display (optional)
