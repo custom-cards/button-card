@@ -295,7 +295,10 @@ If you don't specify any operator, `==` will be used to match the current state 
   entity: input_select.cube_mode
   icon: mdi:cube
   tap_action:
-    action: toggle
+    action: service
+    service: input_select.select_next
+    service_data:
+      entity_id: input_select.cube_mode
   show_state: true
   state:
     - value: "sleeping"
@@ -333,7 +336,7 @@ The definition order matters, the first item to match will be the one selected.
 
 #### `tap_action` Location
 
-For example, you can swith panel with the `location` action:
+For example, you can switch panel with the `location` action:
 
 ```yaml
 - type: "custom:button-card"
