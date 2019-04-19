@@ -102,25 +102,9 @@ export default function domainIcon(domain, state) {
   }
 }
 
-((LitElement, ButtonBase) => {
+((LitElement) => {
   var html = LitElement.prototype.html;
   var css = LitElement.prototype.css;
-
-  customElements.define(
-    'button-card-button',
-    class extends ButtonBase {
-      static get styles() {
-        return css`
-          ${ButtonBase.styles}
-          .mdc-button {
-            height: auto;
-            padding: 0;
-            color: inherit !important;
-          }
-        `
-      }
-    },
-  );
 
   class ButtonCard extends LitElement {
     static get properties() {
@@ -132,24 +116,18 @@ export default function domainIcon(domain, state) {
 
     static get styles() {
       return css`
+        ha-card {
+          cursor: pointer;
+        }
+        ha-card.disabled {
+          pointer-events: none;
+          cursor: default;
+        }
         ha-icon {
-          display: flex;
+          display: inline-block;
           margin: auto;
         }
-        button-card-button {
-          display: flex;
-          margin: auto;
-          text-align: center;
-          border-bottom-left-radius: 2px;
-          border-bottom-right-radius: 2px;
-          border-top-left-radius: 2px;
-          border-top-right-radius: 2px;
-        }
-        button-card-button.disabled {
-            pointer-events: none;
-            cursor: default;
-        }
-        button-card-button div.main {
+        div.button-card-main {
           padding: 4% 0px;
           text-transform: none;
           font-weight: 400;
@@ -158,6 +136,12 @@ export default function domainIcon(domain, state) {
           text-align: center;
           letter-spacing: normal;
           width: 100%;
+        }
+        div.button-card-background-color {
+          border-bottom-left-radius: 2px;
+          border-bottom-right-radius: 2px;
+          border-top-left-radius: 2px;
+          border-top-right-radius: 2px;
         }
         @keyframes blink{
           0%{opacity:0;}
@@ -428,13 +412,14 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
-        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}">
-          <div class="main" style="${style}">
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
+        <div class="button-card-background-color" style="background-color: ${color};">
+          <div class="button-card-main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
             ${config.show_name && name ? html`<div>${name}</div>` : ''}
           </div>
-        </button-card-button>
+        </div>
+        <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }
@@ -446,14 +431,15 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
-        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color};">
-          <div class="main" style="${style}">
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
+        <div class="button-card-background-color" style="background-color: ${color};">
+          <div class="button-card-main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
             ${config.show_name && name ? html`<div>${name}</div>` : ''}
             ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
           </div>
-        </button-card-button>
+        </div>
+        <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }
@@ -464,14 +450,13 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card style="position: relative;" @tap="${ev => this._handleTap(state, config)}">
-        <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}">
-          <div class="main" style="${style}">
-            ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.show_name && name ? html`<div>${name}</div>` : ''}
-            ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
-          </div>
-        </button-card-button>
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="position: relative;" @tap="${ev => this._handleTap(state, config)}">
+        <div class="button-card-main" style="${style}">
+          ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${config.show_name && name ? html`<div>${name}</div>` : ''}
+          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+        </div>
+        <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }
@@ -551,4 +536,4 @@ export default function domainIcon(domain, state) {
   }
 
   customElements.define('button-card', ButtonCard);
-})(window.LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main")), customElements.get('mwc-button') || customElements.get('paper-button'));
+})(window.LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main")));
