@@ -396,7 +396,6 @@ export default function domainIcon(domain, state) {
     }
 
     rotate(configState) {
-      console.log(configState);
       return configState && configState.spin ? 'rotating' : '';
     }
 
