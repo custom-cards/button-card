@@ -335,9 +335,9 @@ The definition order matters, the first item to match will be the one selected.
         - opacity: 0.5
 ```
 
-#### `tap_action` Location
+#### `tap_action` Navigate
 
-For example, you can switch panel with the `location` action:
+Buttons can link to different views using the `navigate` action:
 
 ```yaml
 - type: "custom:button-card"
@@ -345,9 +345,11 @@ For example, you can switch panel with the `location` action:
   icon: mdi:home
   name: Go To Home
   tap_action:
-    action: location
+    action: navigate
     navigation_path: /lovelace/0
 ```
+
+The `navigation_path` also accepts any Home Assistant internal URL such as /dev-info or /hassio/dashboard for example.
 
 #### blink
 
