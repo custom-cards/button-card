@@ -15,7 +15,6 @@ Lovelace Button card for your entities.
 
 ## Features
 
-- confirmation popup for sensitive items (optional)
 - works with any toggleable entity
 - 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
 - state display (optional)
@@ -31,6 +30,8 @@ Lovelace Button card for your entities.
 - support unit of measurement
 - blank card and label card (for organization)
 - [blink](#blink) animation support
+- rotating animation support
+- confirmation popup for sensitive items (optional)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Configuration
@@ -71,6 +72,7 @@ Lovelace Button card for your entities.
 | `icon`     | string        | optional                                    | `mdi:battery`, `attribute`                                                                                                                                                 | The icon to display for this state. If `attribute` is used, the icon of the entity will be used |
 | `color`    | string        | `var(--primary-text-color)`                 | Any color, eg: `rgb(28, 128, 199)` or `blue`                                                                                                                               | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`)         |
 | `style`    | string        | optional                                    | Any CSS style. If nothing is specified, the main style is used unless undefined. If you want to override the default style of the main part of the config, use `style: []` | Define a list of css attribute and their value to apply to the card                             |
+| `spin` | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
 
 ### Available operators
 
