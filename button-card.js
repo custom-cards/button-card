@@ -140,6 +140,10 @@ export default function domainIcon(domain, state) {
           display: flex;
           margin: auto;
           text-align: center;
+          border-bottom-left-radius: 2px;
+          border-bottom-right-radius: 2px;
+          border-top-left-radius: 2px;
+          border-top-right-radius: 2px;
         }
         button-card-button.disabled {
             pointer-events: none;
