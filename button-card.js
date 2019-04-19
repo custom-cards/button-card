@@ -329,23 +329,17 @@ export default function domainIcon(domain, state) {
     }
 
     buildIcon(state, config, configState) {
-      let iconValue = null;
       let icon = null;
       if (configState && configState.icon) {
-        iconValue = configState.icon;
+        icon = configState.icon;
+      } else if (config.icon) {
+        icon = config.icon;
       } else {
-        iconValue = config.icon;
-      }
-      if (iconValue == 'attribute') {
         if (state) {
           icon = state.attributes.icon ?
             state.attributes.icon :
             domainIcon(state.entity_id.split('.', 2)[0], state.state);
-        } else {
-          icon = undefined;
         }
-      } else {
-        icon = iconValue;
       }
       return icon;
     }
@@ -467,7 +461,6 @@ export default function domainIcon(domain, state) {
         color_type: 'icon',
         default_color: 'var(--primary-text-color)',
         name: '',
-        icon: 'attribute',
         show_icon: true,
         ...config
       };
