@@ -482,6 +482,9 @@ export default function domainIcon(domain, state) {
             const [domain, service] = config.tap_action.service.split('.', 2);
             this.hass.callService(domain, service, config.tap_action.service_data);
             break;
+          case 'url':
+            config.tap_action.url && window.open(config.tap_action.url);
+            break;
           case 'toggle':
           default:
             this.hass.callService('homeassistant', 'toggle', {
