@@ -15,7 +15,6 @@ Lovelace Button card for your entities.
 
 ## Features
 
-- confirmation popup for sensitive items (optional)
 - works with any toggleable entity
 - 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
 - state display (optional)
@@ -31,6 +30,8 @@ Lovelace Button card for your entities.
 - support unit of measurement
 - blank card and label card (for organization)
 - [blink](#blink) animation support
+- rotating animation support
+- confirmation popup for sensitive items (optional)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Configuration
