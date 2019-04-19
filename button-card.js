@@ -371,6 +371,21 @@ export default function domainIcon(domain, state) {
       return cardStyle;
     }
 
+    buildName(state, configState) {
+      let name = null;
+      if (configState && configState.name) {
+        name = configState.name;
+      } else if (this.config.name) {
+        name = this.config.name;
+      } else {
+        if (state) {
+          name = state.attributes && state.attributes.friendly_name ?
+            state.attributes.friendly_name : state.entity_id.split('.', 2)[1];
+        }
+      }
+      return name;
+    }
+
     isClickable(state, config) {
       let clickable = true;
       if (config.tap_action.action == 'toggle') {
@@ -411,12 +426,13 @@ export default function domainIcon(domain, state) {
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
+      const name = this.buildName(state, configState);
       return html`
       <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color}">
           <div class="main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.name ? html`<div>${config.name}</div>` : ''}
+            ${config.show_name && name ? html`<div>${name}</div>` : ''}
           </div>
         </button-card-button>
       </ha-card>
@@ -428,12 +444,13 @@ export default function domainIcon(domain, state) {
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
+      const name = this.buildName(state, configState);
       return html`
       <ha-card style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}" style="background-color: ${color};">
           <div class="main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.name ? html`<div>${config.name}</div>` : ''}
+            ${config.show_name && name ? html`<div>${name}</div>` : ''}
             ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
           </div>
         </button-card-button>
@@ -445,12 +462,13 @@ export default function domainIcon(domain, state) {
       const color = this.buildCssColorAttribute(state, config, configState);
       const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
+      const name = this.buildName(state, configState);
       return html`
       <ha-card style="position: relative;" @tap="${ev => this._handleTap(state, config)}">
         <button-card-button class="${this.isClickable(state, config) ? '' : "disabled"}">
           <div class="main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.name ? html`<div>${config.name}</div>` : ''}
+            ${config.show_name && name ? html`<div>${name}</div>` : ''}
             ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
           </div>
         </button-card-button>
@@ -464,7 +482,8 @@ export default function domainIcon(domain, state) {
         size: '40%',
         color_type: 'icon',
         default_color: 'var(--primary-text-color)',
-        name: '',
+        show_name: true,
+        show_state: false,
         show_icon: true,
         ...config
       };

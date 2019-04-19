@@ -16,7 +16,7 @@ Lovelace Button card for your entities.
 ## Features
 
 - works with any toggleable entity
-- 3 actions on tap `none`, `toggle`, `more-info` and `call-service`
+- 5 actions on tap `none`, `toggle`, `more-info`, `navigate` and `call-service`
 - state display (optional)
 - custom color (optional), or based on light rgb value
 - custom state definition with customizable color, icon and style (optional)
@@ -70,6 +70,7 @@ Lovelace Button card for your entities.
 | ---------- | ------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `operator` | string        | `==`                                        | See [Available Operators](#Available-operators)                                                                                                                            | The operator used to compare the current state against the `value`                            |
 | `value`    | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string                                                                                          | The value which will be compared against the current state of the entity                      |
+| `name`     | string        | optional                                    | Any string, `'Alert'`, `'My little switch is on'`, ...                                                                                                                     | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name |
 | `icon`     | string        | optional                                    | `mdi:battery`                                                                                                                                                              | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false` |
 | `color`    | string        | `var(--primary-text-color)`                 | Any color, eg: `rgb(28, 128, 199)` or `blue`                                                                                                                               | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`)       |
 | `style`    | string        | optional                                    | Any CSS style. If nothing is specified, the main style is used unless undefined. If you want to override the default style of the main part of the config, use `style: []` | Define a list of css attribute and their value to apply to the card                           |
@@ -357,6 +358,7 @@ The `navigation_path` also accepts any Home Assistant internal URL such as /dev-
 #### blink
 
 You can make the whole button blink:
+
 ![blink-animation](examples/blink-animation.gif)
 
 ```yaml
