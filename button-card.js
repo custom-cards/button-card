@@ -186,6 +186,18 @@ export default function domainIcon(domain, state) {
       `;
     }
 
+    longpress(element) {
+      customElements.whenDefined("long-press").then(() => {
+        const longpress = document.body.querySelector("long-press");
+        longpress.bind(element);
+      });
+      return element;
+    }
+
+    firstUpdated() {
+      this.longpress(this.shadowRoot.querySelector('ha-card'));
+    }
+
     render() {
       const state = this.__hass.states[this.config.entity];
       const configState = this.testConfigState(state, this.config)
@@ -387,7 +399,7 @@ export default function domainIcon(domain, state) {
           clickable = false
         }
       } else {
-        clickable = !(config.tap_action.action == 'none')
+        clickable = (config.tap_action.action != 'none' || config.hold_action && config.hold_action.action != 'none')
       }
       return clickable;
     }
@@ -412,7 +424,7 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
         <div class="button-card-background-color" style="background-color: ${color};">
           <div class="button-card-main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
@@ -431,7 +443,7 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @tap="${ev => this._handleTap(state, config)}">
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="color: ${fontColor}; position: relative;" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
         <div class="button-card-background-color" style="background-color: ${color};">
           <div class="button-card-main" style="${style}">
             ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
@@ -450,7 +462,7 @@ export default function domainIcon(domain, state) {
       const style = this.buildStyle(state, config, configState);
       const name = this.buildName(state, configState);
       return html`
-      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="position: relative;" @tap="${ev => this._handleTap(state, config)}">
+      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" style="position: relative;" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
         <div class="button-card-main" style="${style}">
           ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
           ${config.show_name && name ? html`<div>${name}</div>` : ''}
@@ -482,15 +494,16 @@ export default function domainIcon(domain, state) {
       return 3;
     }
 
-    _handleTap(state, config) {
+    _handleTap(state, config, hold) {
       if (config.confirmation &&
         !confirm("Confirm tap")) {
         return;
       }
 
-      if (config.tap_action) {
+      let action = hold ? config.hold_action : config.tap_action;
+      if (action) {
         let event;
-        switch (config.tap_action.action) {
+        switch (action.action) {
           case 'none':
             break;
           case 'more-info':
@@ -503,8 +516,8 @@ export default function domainIcon(domain, state) {
             this.shadowRoot.dispatchEvent(event);
             break;
           case 'navigate':
-            if (!config.tap_action.navigation_path) break;
-            history.pushState(null, "", config.tap_action.navigation_path);
+            if (!action.navigation_path) break;
+            history.pushState(null, "", action.navigation_path);
             event = new Event('location-changed', {
               bubbles: true,
               cancelable: false,
@@ -515,14 +528,14 @@ export default function domainIcon(domain, state) {
             break;
           case 'service':
           case 'call-service':
-            if (!config.tap_action.service) {
+            if (!action.service) {
               return;
             }
-            const [domain, service] = config.tap_action.service.split('.', 2);
-            this.hass.callService(domain, service, config.tap_action.service_data);
+            const [domain, service] = action.service.split('.', 2);
+            this.hass.callService(domain, service, action.service_data);
             break;
           case 'url':
-            config.tap_action.url && window.open(config.tap_action.url);
+            action.url && window.open(action.url);
             break;
           case 'toggle':
           default:
