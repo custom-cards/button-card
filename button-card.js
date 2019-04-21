@@ -399,6 +399,9 @@ export default function domainIcon(domain, state) {
     }
 
     buildName(state, configState) {
+      if (this.config.show_name === false) {
+        return null;
+      }
       let name = null;
       if (configState && configState.name) {
         name = configState.name;
@@ -413,38 +416,48 @@ export default function domainIcon(domain, state) {
       return name;
     }
 
-    buildState(state) {
-      if (!state) {
-        return null
-      }
-      let unitsString = '';
-      if (this.config.show_units) {
-        if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
-          unitsString = state.attributes.unit_of_measurement;
+    buildStateString(state) {
+      let stateString = null;
+      if (this.config.show_state && state && state.state) {
+        const units = this.buildUnits(state);
+        if (units) {
+          stateString = state.state + " " + units;
         } else {
-          unitsString = this.config.units ? this.config.units : '';
+          stateString = state.state
         }
       }
-      return (state.state + " " + unitsString).trim();
+      return stateString;
+    }
+
+    buildUnits(state) {
+      let units = null;
+      if (state) {
+        if (this.config.show_units) {
+          if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
+            units = state.attributes.unit_of_measurement;
+          } else {
+            units = this.config.units ? this.config.units : null;
+          }
+        }
+      }
+      return units;
     }
 
     buildNameStateConcat(name, stateString) {
       if (!name && !stateString) {
         return null;
       }
+      let nameStateString = null
       if (stateString !== null) {
-        if (this.config.show_name && this.config.show_state) {
-          return name + ": " + stateString;
-        } else if (this.config.show_name && !this.config.show_state) {
-          return name;
-        } else if (this.config.show_state && !this.config.show_name) {
-          return stateString;
+        if (name) {
+          nameStateString = name + ": " + stateString;
         } else {
-          return null;
+          nameStateString = stateString;
         }
       } else {
-        return this.config.show_name ? name : null;
+        nameStateString = name;
       }
+      return nameStateString;
     }
 
     isClickable(state, config) {
@@ -476,8 +489,8 @@ export default function domainIcon(domain, state) {
     buttonContent(state, configState, color) {
       const icon = this.buildIcon(state, this.config, configState);
       const name = this.buildName(state, configState);
-      const stateString = this.buildState(state);
-      const nameStateConcat = this.buildNameStateConcat(name, stateString);
+      const stateString = this.buildStateString(state);
+      const nameStateString = this.buildNameStateConcat(name, stateString);
 
       switch (this.config.layout) {
         case 'icon_name_state':
@@ -488,7 +501,7 @@ export default function domainIcon(domain, state) {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${nameStateConcat ? html`<div class="divTableCell">${nameStateConcat}</div>` : ''}
+                ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
               </div>
             </div>
           </div>
@@ -501,11 +514,11 @@ export default function domainIcon(domain, state) {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${this.config.show_name && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${name ? html`<div class="divTableCell">${name}</div>` : ''}
               </div>
             </div>
           </div>
-          ${this.config.show_state && stateString != null ? html`<div>${stateString}</div>` : ''}
+          ${stateString != null ? html`<div>${stateString}</div>` : ''}
           `;
         case 'icon_state':
           return html`
@@ -515,23 +528,23 @@ export default function domainIcon(domain, state) {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${this.config.show_state && stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
-          ${this.config.show_name && name ? html`<div>${name}</div>` : ''}
+          ${name ? html`<div>${name}</div>` : ''}
           `;
         case 'name_state':
           return html`
           ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${nameStateConcat ? html`<div>${nameStateConcat}</div>` : ''}
+          ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
         case 'none':
         default:
           return html`
           ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${this.config.show_name && name ? html`<div>${name}</div>` : ''}
-          ${this.config.show_state && stateString ? html`<div>${stateString}</div>` : ''}
+          ${name ? html`<div>${name}</div>` : ''}
+          ${stateString ? html`<div>${stateString}</div>` : ''}
           `;
       }
     }
