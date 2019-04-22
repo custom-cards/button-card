@@ -34,6 +34,12 @@ Lovelace Button card for your entities.
 - confirmation popup for sensitive items (optional)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
+## :warning: Long Press Support :warning:
+
+**For now**, for long press to work, you'll need to have a standard home-assistant card which supports long-press in the view (eg: [entity-button](https://www.home-assistant.io/lovelace/entity-button/))
+
+If you don't have a standard home-assistant card with long-press enabled in your view, only simple clicks will be supported and you'll see a warning in the javascript console of your browser.
+
 ## Configuration
 
 ### Main Options
@@ -47,7 +53,7 @@ Lovelace Button card for your entities.
 | `color`        | string      | optional     | `auto` \| `rgb(28, 128, 199)`                    | Color of the icon/card. `auto` sets the color based on the color of a light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-active-color)`, for `on` it will be `var(--paper-item-icon-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
 | `size`         | string      | `40%`        | `20px`                                           | Size of the icon. Can be percentage or pixel                                                                                                                                                                                                                                                                                                  |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
-| `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
+| `hold_action` | object | optional | See [Action](#Action) | [Read this first](#warning-long-press-support-warning) Define the type of action on hold, if undefined, nothing happens. |
 | `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
@@ -57,6 +63,8 @@ Lovelace Button card for your entities.
 | `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
 
 ### Action
+
+:warning: For `on_hold`, [read this first](#warning-long-press-support-warning)
 
 | Name              | Type   | Default  | Supported options                                                | Description                                                                                              |
 | ----------------- | ------ | -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
