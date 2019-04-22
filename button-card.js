@@ -534,12 +534,42 @@ export default function domainIcon(domain, state) {
           </div>
           ${name ? html`<div>${name}</div>` : ''}
           `;
+        case 'icon_state_name2nd':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          `;
+        case 'icon_name_state2nd':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          `;
         case 'name_state':
           return html`
           ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
           ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
-        case 'none':
+        case 'vertical':
         default:
           return html`
           ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
