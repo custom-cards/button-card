@@ -189,10 +189,19 @@ export default function domainIcon(domain, state) {
     longpress(element) {
       customElements.whenDefined("long-press").then(() => {
         const longpress = document.body.querySelector("long-press");
-        longpress.bind(element);
+        if (longpress) {
+          longpress.bind(element);
+        } else {
+          console.warn("Longpress support not found, only simple clicks are supported. Either add an entity-button in the view, or wait for us to make the card work without. Thanks :)")
+          element.addEventListener("click", this._fallbackClick);
+        }
       });
       return element;
     }
+
+    _fallbackClick() {
+      this.dispatchEvent(new Event("ha-click"));
+    };
 
     firstUpdated() {
       this.longpress(this.shadowRoot.querySelector('ha-card'));
