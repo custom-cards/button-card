@@ -496,7 +496,7 @@ export default function domainIcon(domain, state) {
 
     _handleTap(state, config, hold) {
       if (config.confirmation &&
-        !confirm("Confirm tap")) {
+        !confirm(config.confirmation)) {
         return;
       }
 
