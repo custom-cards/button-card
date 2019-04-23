@@ -23,6 +23,8 @@ Lovelace Button card for your entities.
 - custom size (optional)
 - custom icon (optional)
 - custom css style (optional)
+- multiple [layout](#Layout) support
+- units can be redefined or hidden
 - 2 color types
   - `icon` : apply color settings to the icon only
   - `card` : apply color settings to the card only
@@ -58,9 +60,12 @@ If you don't have a standard home-assistant card with long-press enabled in your
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
 | `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
+| `show_units` | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
+| `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `style`        | object list | optional     | `- text-transform: none`                         | Define a list of css attribute and their value to apply to the card                                                                                                                                                                                                                                                                           |
 | `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
 | `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
+| `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 
 ### Action
 
@@ -98,6 +103,23 @@ If you don't have a standard home-assistant card with long-press enabled in your
 |   `!=`    | `'normal'`      | Current state is not equal (`!=` javascript) to `value`                                                  |
 |  `regex`  | `'^norm.*$'`    | `value` regex applied to current state does match                                                        |
 | `default` | N/A             | If nothing matches, this is used                                                                         |
+
+### Layout
+
+This option enables you to modify the layout of the card.
+
+It is fully compatible with every `show_*` option. Make sure you set `show_state: true` if you want to show the state
+
+Multiple values are possible, see the image below for examples:
+* `vertical` (default value if nothing is provided): Everything is centered vertically on top of each other
+* `icon_name_state`: Everything is aligned horizontally, name and state are concatenated
+* `name_state`: Icon sits on top of name and state concatenated on one line
+* `icon_name`: Icon and name are horizontally aligned, state is centered below
+* `icon_state`: Icon and state are horizontally aligned, name is centered below
+* `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state
+* `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name
+
+![layout_image](examples/layout.png)
 
 ## Installation
 

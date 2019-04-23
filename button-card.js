@@ -138,6 +138,28 @@ export default function domainIcon(domain, state) {
           letter-spacing: normal;
           width: 100%;
         }
+        div.divTable{
+          display: table;
+          overflow: auto;
+          table-layout: fixed;
+          width: 100%;
+        }
+        div.divTableBody {
+          display: table-row-group;
+        }
+        div.divTableRow {
+          display: table-row;
+        }
+        .divTableCell {
+          display: table-cell;
+          vertical-align: middle;
+        }
+        div {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          min-width: 100%;
+        }
         div.button-card-background-color {
           border-bottom-left-radius: 2px;
           border-bottom-right-radius: 2px;
@@ -215,7 +237,6 @@ export default function domainIcon(domain, state) {
         case 'blank-card':
           return this.blankCardColoredHtml(state, this.config, configState);
         case 'label-card':
-          return this.labelCardColoredHtml(state, this.config, configState);
         case 'card':
           return this.cardColoredHtml(state, this.config, configState);
         case 'icon':
@@ -378,6 +399,9 @@ export default function domainIcon(domain, state) {
     }
 
     buildName(state, configState) {
+      if (this.config.show_name === false) {
+        return null;
+      }
       let name = null;
       if (configState && configState.name) {
         name = configState.name;
@@ -390,6 +414,50 @@ export default function domainIcon(domain, state) {
         }
       }
       return name;
+    }
+
+    buildStateString(state) {
+      let stateString = null;
+      if (this.config.show_state && state && state.state) {
+        const units = this.buildUnits(state);
+        if (units) {
+          stateString = state.state + " " + units;
+        } else {
+          stateString = state.state
+        }
+      }
+      return stateString;
+    }
+
+    buildUnits(state) {
+      let units = null;
+      if (state) {
+        if (this.config.show_units) {
+          if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
+            units = state.attributes.unit_of_measurement;
+          } else {
+            units = this.config.units ? this.config.units : null;
+          }
+        }
+      }
+      return units;
+    }
+
+    buildNameStateConcat(name, stateString) {
+      if (!name && !stateString) {
+        return null;
+      }
+      let nameStateString = null
+      if (stateString !== null) {
+        if (name) {
+          nameStateString = name + ": " + stateString;
+        } else {
+          nameStateString = stateString;
+        }
+      } else {
+        nameStateString = name;
+      }
+      return nameStateString;
     }
 
     isClickable(state, config) {
@@ -418,6 +486,99 @@ export default function domainIcon(domain, state) {
       return configState && configState.spin ? 'rotating' : '';
     }
 
+    buttonContent(state, configState, color) {
+      const icon = this.buildIcon(state, this.config, configState);
+      const name = this.buildName(state, configState);
+      const stateString = this.buildStateString(state);
+      const nameStateString = this.buildNameStateConcat(name, stateString);
+
+      switch (this.config.layout) {
+        case 'icon_name_state':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          `;
+        case 'icon_name':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${name ? html`<div class="divTableCell">${name}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          ${stateString != null ? html`<div>${stateString}</div>` : ''}
+          `;
+        case 'icon_state':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          ${name ? html`<div>${name}</div>` : ''}
+          `;
+        case 'icon_state_name2nd':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          `;
+        case 'icon_name_state2nd':
+          return html`
+          <div class="divTable">
+            <div class="divTableBody">
+              <div class="divTableRow">
+                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                </div>
+                ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
+              </div>
+            </div>
+          </div>
+          `;
+        case 'name_state':
+          return html`
+          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
+          `;
+        case 'vertical':
+        default:
+          return html`
+          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color ? color : "inherit"}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${name ? html`<div>${name}</div>` : ''}
+          ${stateString ? html`<div>${stateString}</div>` : ''}
+          `;
+      }
+    }
+
     blankCardColoredHtml(state, config, configState) {
       const color = this.buildCssColorAttribute(state, config);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
@@ -428,38 +589,15 @@ export default function domainIcon(domain, state) {
       `;
     }
 
-    labelCardColoredHtml(state, config, configState) {
-      const color = this.buildCssColorAttribute(state, config, configState);
-      const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      const icon = this.buildIcon(state, config, configState);
-      const style = this.buildStyle(state, config, configState);
-      const name = this.buildName(state, configState);
-      return html`
-      <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
-        <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};">
-          <div class="button-card-main" style="${style}">
-            ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.show_name && name ? html`<div>${name}</div>` : ''}
-          </div>
-        </div>
-        <mwc-ripple></mwc-ripple>
-      </ha-card>
-      `;
-    }
-
     cardColoredHtml(state, config, configState) {
       const color = this.buildCssColorAttribute(state, config, configState);
       const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-      const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
-      const name = this.buildName(state, configState);
       return html`
       <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
         <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};">
           <div class="button-card-main" style="${style}">
-            ${config.show_icon && icon ? html`<ha-icon style="width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-            ${config.show_name && name ? html`<div>${name}</div>` : ''}
-            ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+            ${this.buttonContent(state, configState, null)}
           </div>
         </div>
         <mwc-ripple></mwc-ripple>
@@ -469,15 +607,11 @@ export default function domainIcon(domain, state) {
 
     iconColoredHtml(state, config, configState) {
       const color = this.buildCssColorAttribute(state, config, configState);
-      const icon = this.buildIcon(state, config, configState);
       const style = this.buildStyle(state, config, configState);
-      const name = this.buildName(state, configState);
       return html`
       <ha-card class="${this.isClickable(state, config) ? '' : "disabled"}" @ha-click="${ev => this._handleTap(state, config, false)}" @ha-hold="${ev => this._handleTap(state, config, true)}">
         <div class="button-card-main" style="${style}">
-          ${config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${config.show_name && name ? html`<div>${name}</div>` : ''}
-          ${config.show_state ? html`<div>${state.state} ${state.attributes.unit_of_measurement ? state.attributes.unit_of_measurement : ''}</div>` : ''}
+          ${this.buttonContent(state, configState, color)}
         </div>
         <mwc-ripple></mwc-ripple>
       </ha-card>
@@ -493,6 +627,7 @@ export default function domainIcon(domain, state) {
         show_name: true,
         show_state: false,
         show_icon: true,
+        show_units: true,
         ...config
       };
       this.config.color_off = 'var(--paper-item-icon-color)';
