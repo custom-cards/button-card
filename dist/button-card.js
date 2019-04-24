@@ -3712,7 +3712,8 @@ let ButtonCard = class ButtonCard extends LitElement {
     getFontColorBasedOnBackgroundColor(backgroundColor) {
         let localColor = backgroundColor;
         if (backgroundColor.substring(0, 3) === "var") {
-            localColor = window.getComputedStyle(document.documentElement).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
+            localColor = window.getComputedStyle(document.documentElement)
+                .getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
         }
         const colorObj = new TinyColor(localColor);
         let fontColor = ''; // don't override by default
