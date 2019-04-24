@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kuuji/button-card.git"
+    "url": "git+https://github.com/custom-cards/button-card.git"
   },
   "keywords": [
     "lovelace"
@@ -16,12 +16,26 @@
   "author": "kuuji",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kuuji/button-card/issues"
+    "url": "https://github.com/custom-cards/button-card/issues"
   },
-  "homepage": "https://github.com/kuuji/button-card#readme",
+  "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.17.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.4.3",
+    "css-color-names": "^1.0.1",
+    "home-assistant-js-websocket": "^3.4.0",
+    "lit-element": "^2.1.0",
+    "npm": "^6.9.0",
+    "prettier": "^1.17.0",
+    "rollup": "^1.10.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-typescript2": "^0.20.1",
+    "typescript": "^3.4.4"
   }
 }
