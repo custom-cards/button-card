@@ -6,6 +6,7 @@ import {
   TemplateResult,
   css,
   CSSResult,
+  PropertyValues
 } from "lit-element";
 import {
   HassEntity
@@ -21,6 +22,7 @@ import * as helpers from "./helpers"
 import { handleClick } from "./handle-click";
 import { longPress } from "./long-press";
 import { TinyColor } from '@ctrl/tinycolor';
+import { hasConfigOrEntityChanged } from "./has-changed";
 
 @customElement("button-card")
 class ButtonCard extends LitElement {
@@ -141,6 +143,9 @@ class ButtonCard extends LitElement {
     }
   }
 
+  protected shouldUpdate(changedProps: PropertyValues): boolean {
+    return hasConfigOrEntityChanged(this, changedProps);
+  }
 
   private getFontColorBasedOnBackgroundColor(backgroundColor: string): string {
     let localColor = backgroundColor;

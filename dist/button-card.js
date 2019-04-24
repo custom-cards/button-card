@@ -3491,6 +3491,22 @@ var TinyColor = function () {
     return TinyColor;
 }();
 
+// Check if config or Entity changed
+function hasConfigOrEntityChanged(element, changedProps) {
+    if (changedProps.has("config")) {
+        return true;
+    }
+    if (element.config.entity) {
+        const oldHass = changedProps.get("hass");
+        if (oldHass) {
+            return oldHass.states[element.config.entity] !== element.hass.states[element.config.entity];
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 let ButtonCard = class ButtonCard extends LitElement {
     static get styles() {
         return css`
@@ -3602,6 +3618,9 @@ let ButtonCard = class ButtonCard extends LitElement {
             default:
                 return this.iconColoredHtml(state, configState);
         }
+    }
+    shouldUpdate(changedProps) {
+        return hasConfigOrEntityChanged(this, changedProps);
     }
     getFontColorBasedOnBackgroundColor(backgroundColor) {
         let localColor = backgroundColor;
