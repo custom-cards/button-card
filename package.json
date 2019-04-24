@@ -7,6 +7,7 @@
     "build": "npm run rollup && npm run babel",
     "rollup": "rollup -c",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
+    "lint": "eslint src/*.ts",
     "watch": "rollup -c --watch"
   },
   "repository": {
@@ -24,6 +25,10 @@
   "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
     "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-decorators": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
     "babel-cli": "^6.26.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
