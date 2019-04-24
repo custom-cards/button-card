@@ -124,22 +124,21 @@ class ButtonCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
-    let state: HassEntity | null = null;
-    if (this.config!.entity) {
-      state = this.hass!.states[this.config!.entity];
+    if (!this.config || !this.hass) {
+      return html``;
     }
+    const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
     const configState = this.testConfigState(state)
-    if (this.config)
-      switch (this.config.color_type) {
-        case 'blank-card':
-          return this.blankCardColoredHtml(state);
-        case 'label-card':
-        case 'card':
-          return this.cardColoredHtml(state, configState);
-        case 'icon':
-        default:
-          return this.iconColoredHtml(state, configState);
-      }
+    switch (this.config.color_type) {
+      case 'blank-card':
+        return this.blankCardColoredHtml(state);
+      case 'label-card':
+      case 'card':
+        return this.cardColoredHtml(state, configState);
+      case 'icon':
+      default:
+        return this.iconColoredHtml(state, configState);
+    }
   }
 
 
@@ -159,24 +158,23 @@ class ButtonCard extends LitElement {
     return fontColor;
   }
 
-  private testConfigState(state: HassEntity | null): undefined | StateConfig {
-    if (!state || !this.config || !this.config.state) {
+  private testConfigState(state: HassEntity | undefined): StateConfig | undefined {
+    if (!state || !this.config!.state) {
       return undefined;
     }
-    var retval: StateConfig | undefined = undefined;
-    var def: StateConfig | null = null;
-
-    retval = this.config.state.find(function (elt) {
+    let retval: StateConfig | undefined = undefined;
+    let def: StateConfig | undefined = undefined;
+    retval = this.config!.state.find(function (elt) {
       if (elt.operator) {
         switch (elt.operator) {
           case '==':
-            return (state.state == elt.value)
+            return (state!.state == elt.value)
           case '<=':
-            return (state.state <= elt.value)
+            return (state!.state <= elt.value)
           case '<':
-            return (state.state < elt.value)
+            return (state!.state < elt.value)
           case '>=':
-            return (state.state >= elt.value)
+            return (state!.state >= elt.value)
           case '>':
             return (state.state > elt.value)
           case '!=':
@@ -200,27 +198,23 @@ class ButtonCard extends LitElement {
     return retval;
   }
 
-  private getDefaultColorForState(state: HassEntity) {
-    if (this.config) {
-      switch (state.state) {
-        case 'on':
-          return this.config.color_on;
-        case 'off':
-          return this.config.color_off;
-        default:
-          return this.config.default_color;
-      }
+  private getDefaultColorForState(state: HassEntity): string {
+    switch (state.state) {
+      case 'on':
+        return this.config!.color_on;
+      case 'off':
+        return this.config!.color_off;
+      default:
+        return this.config!.default_color;
     }
-    return '';
   }
 
-  private buildCssColorAttribute(state: HassEntity | null, configState: StateConfig | undefined) {
+  private buildCssColorAttribute(state: HassEntity | undefined, configState: StateConfig | undefined): string {
     let colorValue: string = '';
     let color: undefined | string = undefined;
     if (configState && configState.color) {
       colorValue = configState.color;
     } else {
-
       if (this.config!.color != 'auto' && state && state.state == 'off') {
         colorValue = this.config!.color_off;
       } else {
@@ -253,23 +247,21 @@ class ButtonCard extends LitElement {
     return color;
   }
 
-  private buildIcon(state: HassEntity | null, configState: StateConfig | undefined) {
+  private buildIcon(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
     let icon: undefined | string = undefined;
     if (configState && configState.icon) {
       icon = configState.icon;
     } else if (this.config!.icon) {
       icon = this.config!.icon;
-    } else {
-      if (state && state.attributes) {
-        icon = state.attributes.icon ?
-          state.attributes.icon :
-          domainIcon(helpers.computeDomain(state.entity_id), state.state);
-      }
+    } else if (state && state.attributes) {
+      icon = state.attributes.icon ?
+        state.attributes.icon :
+        domainIcon(helpers.computeDomain(state.entity_id), state.state);
     }
     return icon;
   }
 
-  private buildStyle(state: HassEntity | null, configState: StateConfig | undefined) {
+  private buildStyle(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
     let cardStyle = '';
     let styleArray: CssStyleConfig | undefined = undefined;
     if (state) {
@@ -292,11 +284,11 @@ class ButtonCard extends LitElement {
     return cardStyle;
   }
 
-  private buildName(state: HassEntity | null, configState: StateConfig | undefined) {
+  private buildName(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
     if (this.config!.show_name === false) {
-      return null;
+      return undefined;
     }
-    let name: string | null = null;
+    let name: string | undefined = undefined;
     if (configState && configState.name) {
       name = configState.name;
     } else if (this.config!.name) {
@@ -310,8 +302,8 @@ class ButtonCard extends LitElement {
     return name;
   }
 
-  private buildStateString(state: HassEntity | null) {
-    let stateString: string | null = null;
+  private buildStateString(state: HassEntity | undefined): string | undefined {
+    let stateString: string | undefined = undefined;
     if (this.config!.show_state && state && state.state) {
       const units = this.buildUnits(state);
       if (units) {
@@ -323,26 +315,26 @@ class ButtonCard extends LitElement {
     return stateString;
   }
 
-  private buildUnits(state: HassEntity | null) {
-    let units: string | null = null;
+  private buildUnits(state: HassEntity | undefined): string | undefined {
+    let units: string | undefined = undefined;
     if (state) {
       if (this.config!.show_units) {
         if (state.attributes && state.attributes.unit_of_measurement && !this.config!.units) {
           units = state.attributes.unit_of_measurement;
         } else {
-          units = this.config!.units ? this.config!.units : null;
+          units = this.config!.units ? this.config!.units : undefined;
         }
       }
     }
     return units;
   }
 
-  private buildNameStateConcat(name: string | null, stateString: string | null) {
+  private buildNameStateConcat(name: string | undefined, stateString: string | undefined): string | undefined {
     if (!name && !stateString) {
-      return null;
+      return undefined;
     }
-    let nameStateString: string | null = null;
-    if (stateString !== null) {
+    let nameStateString: string | undefined = undefined;
+    if (stateString) {
       if (name) {
         nameStateString = name + ": " + stateString;
       } else {
@@ -354,7 +346,7 @@ class ButtonCard extends LitElement {
     return nameStateString;
   }
 
-  private isClickable(state: HassEntity | null): boolean {
+  private isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
     if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
       || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
@@ -387,7 +379,7 @@ class ButtonCard extends LitElement {
     return configState && configState.spin ? 'rotating' : '';
   }
 
-  private buttonContent(state: HassEntity | null, configState: StateConfig | undefined, color: string): TemplateResult {
+  private buttonContent(state: HassEntity | undefined, configState: StateConfig | undefined, color: string): TemplateResult {
     const icon = this.buildIcon(state, configState);
     const name = this.buildName(state, configState);
     const stateString = this.buildStateString(state);
@@ -419,7 +411,7 @@ class ButtonCard extends LitElement {
               </div>
             </div>
           </div>
-          ${stateString != null ? html`<div>${stateString}</div>` : ''}
+          ${stateString !== undefined ? html`<div>${stateString}</div>` : ''}
           `;
       case 'icon_state':
         return html`
@@ -429,7 +421,7 @@ class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
                   ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString !== undefined ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
@@ -443,7 +435,7 @@ class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
                   ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -458,7 +450,7 @@ class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
                   ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -480,7 +472,7 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private blankCardColoredHtml(state: HassEntity | null): TemplateResult {
+  private blankCardColoredHtml(state: HassEntity | undefined): TemplateResult {
     const color = this.buildCssColorAttribute(state, undefined);
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     return html`
@@ -490,7 +482,7 @@ class ButtonCard extends LitElement {
       `;
   }
 
-  private cardColoredHtml(state: HassEntity | null, configState: StateConfig | undefined): TemplateResult {
+  private cardColoredHtml(state: HassEntity | undefined, configState: StateConfig | undefined): TemplateResult {
     const color = this.buildCssColorAttribute(state, configState);
     const fontColor = this.getFontColorBasedOnBackgroundColor(color);
     const style = this.buildStyle(state, configState);
@@ -506,7 +498,7 @@ class ButtonCard extends LitElement {
       `;
   }
 
-  private iconColoredHtml(state: HassEntity | null, configState: StateConfig | undefined): TemplateResult {
+  private iconColoredHtml(state: HassEntity | undefined, configState: StateConfig | undefined): TemplateResult {
     const color = this.buildCssColorAttribute(state, configState);
     const style = this.buildStyle(state, configState);
     return html`
@@ -563,7 +555,4 @@ class ButtonCard extends LitElement {
     const config = ev.target.config;
     handleClick(this, this.hass!, config, true);
   }
-
-
-
 }

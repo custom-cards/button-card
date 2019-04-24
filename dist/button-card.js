@@ -3587,12 +3587,12 @@ let ButtonCard = class ButtonCard extends LitElement {
       `;
     }
     render() {
-        let state = null;
-        if (this.config.entity) {
-            state = this.hass.states[this.config.entity];
+        if (!this.config || !this.hass) {
+            return html``;
         }
+        const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
         const configState = this.testConfigState(state);
-        if (this.config) switch (this.config.color_type) {
+        switch (this.config.color_type) {
             case 'blank-card':
                 return this.blankCardColoredHtml(state);
             case 'label-card':
@@ -3618,11 +3618,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         return fontColor;
     }
     testConfigState(state) {
-        if (!state || !this.config || !this.config.state) {
+        if (!state || !this.config.state) {
             return undefined;
         }
-        var retval = undefined;
-        var def = null;
+        let retval = undefined;
+        let def = undefined;
         retval = this.config.state.find(function (elt) {
             if (elt.operator) {
                 switch (elt.operator) {
@@ -3657,17 +3657,14 @@ let ButtonCard = class ButtonCard extends LitElement {
         return retval;
     }
     getDefaultColorForState(state) {
-        if (this.config) {
-            switch (state.state) {
-                case 'on':
-                    return this.config.color_on;
-                case 'off':
-                    return this.config.color_off;
-                default:
-                    return this.config.default_color;
-            }
+        switch (state.state) {
+            case 'on':
+                return this.config.color_on;
+            case 'off':
+                return this.config.color_off;
+            default:
+                return this.config.default_color;
         }
-        return '';
     }
     buildCssColorAttribute(state, configState) {
         let colorValue = '';
@@ -3712,10 +3709,8 @@ let ButtonCard = class ButtonCard extends LitElement {
             icon = configState.icon;
         } else if (this.config.icon) {
             icon = this.config.icon;
-        } else {
-            if (state && state.attributes) {
-                icon = state.attributes.icon ? state.attributes.icon : domainIcon(computeDomain(state.entity_id), state.state);
-            }
+        } else if (state && state.attributes) {
+            icon = state.attributes.icon ? state.attributes.icon : domainIcon(computeDomain(state.entity_id), state.state);
         }
         return icon;
     }
@@ -3742,9 +3737,9 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     buildName(state, configState) {
         if (this.config.show_name === false) {
-            return null;
+            return undefined;
         }
-        let name = null;
+        let name = undefined;
         if (configState && configState.name) {
             name = configState.name;
         } else if (this.config.name) {
@@ -3757,7 +3752,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         return name;
     }
     buildStateString(state) {
-        let stateString = null;
+        let stateString = undefined;
         if (this.config.show_state && state && state.state) {
             const units = this.buildUnits(state);
             if (units) {
@@ -3769,13 +3764,13 @@ let ButtonCard = class ButtonCard extends LitElement {
         return stateString;
     }
     buildUnits(state) {
-        let units = null;
+        let units = undefined;
         if (state) {
             if (this.config.show_units) {
                 if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
                     units = state.attributes.unit_of_measurement;
                 } else {
-                    units = this.config.units ? this.config.units : null;
+                    units = this.config.units ? this.config.units : undefined;
                 }
             }
         }
@@ -3783,10 +3778,10 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     buildNameStateConcat(name, stateString) {
         if (!name && !stateString) {
-            return null;
+            return undefined;
         }
-        let nameStateString = null;
-        if (stateString !== null) {
+        let nameStateString = undefined;
+        if (stateString) {
             if (name) {
                 nameStateString = name + ": " + stateString;
             } else {
@@ -3857,7 +3852,7 @@ let ButtonCard = class ButtonCard extends LitElement {
               </div>
             </div>
           </div>
-          ${stateString != null ? html`<div>${stateString}</div>` : ''}
+          ${stateString !== undefined ? html`<div>${stateString}</div>` : ''}
           `;
             case 'icon_state':
                 return html`
@@ -3867,7 +3862,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString !== undefined ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
@@ -3881,7 +3876,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -3896,7 +3891,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
                   ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
