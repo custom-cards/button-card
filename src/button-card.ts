@@ -398,11 +398,13 @@ class ButtonCard extends LitElement {
 
   private isClickable(state: HassEntity | null): boolean {
     let clickable = true;
-    if (this.config!.tap_action!.action == 'toggle') {
+    if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
+      || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
       if (state) {
         switch (helpers.computeDomain(state.entity_id)) {
           case 'sensor':
           case 'binary_sensor':
+          case 'device_tracker':
             clickable = false
             break;
           default:
@@ -414,7 +416,7 @@ class ButtonCard extends LitElement {
       }
     } else {
       if (this.config!.tap_action!.action != 'none'
-        || this.config!.hold_action && this.config!.hold_action.action != 'none') {
+        || this.config!.hold_action!.action != 'none') {
         clickable = true;
       } else {
         clickable = false;
