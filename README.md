@@ -133,7 +133,7 @@ Multiple values are possible, see the image below for examples:
 title: Home
 resources:
   - url: /local/button-card.js
-    type: module
+    type: js
 ```
 
 4. Write configuration for the card in your `ui-lovelace.yaml`
@@ -146,7 +146,7 @@ resources:
 ```yaml
 resources:
   - url: /customcards/github/custom-cards/button-card.js?track=true
-    type: module
+    type: js
 ```
 
 3. Run the service `custom_updater.check_all` or click the "CHECK" button if you use the [`tracker-card`](https://github.com/custom-cards/tracker-card).
