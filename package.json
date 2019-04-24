@@ -18,6 +18,10 @@
     "lovelace"
   ],
   "author": "kuuji",
+  "contributors": [
+    "Ian Richardson (https://github.com/iantrich)",
+    "Jérôme Wiedemann (https://github.com/RomRider)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/custom-cards/button-card/issues"
