@@ -2,7 +2,7 @@
   "name": "button-card",
   "version": "1.0.0",
   "description": "Button card for lovelace",
-  "main": "src/button-card.ts",
+  "main": "dist/button-card.js",
   "scripts": {
     "build": "npm run rollup && npm run babel",
     "rollup": "rollup -c",
