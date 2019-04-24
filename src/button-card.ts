@@ -14,14 +14,13 @@ import domainIcon from "./domain_icons"
 import {
   ButtonCardConfig,
   HomeAssistant,
-  Color,
   StateConfig,
   CssStyleConfig
 } from "./types"
-import * as cssColors from "css-color-names"
 import * as helpers from "./helpers"
 import { handleClick } from "./handle-click";
 import { longPress } from "./long-press";
+import { TinyColor } from '@ctrl/tinycolor';
 
 @customElement("button-card")
 class ButtonCard extends LitElement {
@@ -144,58 +143,20 @@ class ButtonCard extends LitElement {
   }
 
 
-  private getFontColorBasedOnBackgroundColor(backgroundColor: string | undefined) {
-    if (!backgroundColor) return '';
-    let parsedBackgroundColor: Color = {
-      r: null,
-      g: null,
-      b: null
-    };
+  private getFontColorBasedOnBackgroundColor(backgroundColor: string): string {
+    let localColor = backgroundColor;
     if (backgroundColor.substring(0, 3) === "var") {
-      let rgb = window.getComputedStyle(document.documentElement).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
-      parsedBackgroundColor = this.hexToRgb(rgb.substring(1));
-    } else {
-      const parsedRgbColor = backgroundColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
-      if (parsedRgbColor) {
-        parsedBackgroundColor.r = Number(parsedRgbColor[1]);
-        parsedBackgroundColor.g = Number(parsedRgbColor[2]);
-        parsedBackgroundColor.b = Number(parsedRgbColor[3]);
-      } else {
-        if (cssColors[backgroundColor]) {
-          parsedBackgroundColor = this.hexToRgb(cssColors[backgroundColor].substring(1));
-        } else {
-          parsedBackgroundColor = this.hexToRgb(backgroundColor.substring(1));
-        }
-      }
+      localColor = window.getComputedStyle(document.documentElement)
+        .getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
     }
+    const colorObj = new TinyColor(localColor);
     let fontColor = ''; // don't override by default
-    if (parsedBackgroundColor.r !== null
-      && parsedBackgroundColor.g !== null
-      && parsedBackgroundColor.b !== null) {
-      // Counting the perceptive luminance - human eye favors green color...
-      const luminance = (0.299 * parsedBackgroundColor.r + 0.587 * parsedBackgroundColor.g + 0.114 * parsedBackgroundColor.b) / 255;
-      if (luminance > 0.5) {
-        fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
-      } else {
-        fontColor = 'rgb(234, 234, 234)';// dark colors - white font
-      }
+    if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
+      fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
+    } else {
+      fontColor = 'rgb(234, 234, 234)';// dark colors - white font
     }
     return fontColor;
-  }
-
-  private hexToRgb(hex: string): Color {
-    let color: Color = {
-      r: null,
-      g: null,
-      b: null
-    }
-    var bigint = parseInt(hex, 16);
-    if (bigint !== null) {
-      color.r = (bigint >> 16) & 255;
-      color.g = (bigint >> 8) & 255;
-      color.b = bigint & 255;
-    }
-    return color;
   }
 
   private testConfigState(state: HassEntity | null): undefined | StateConfig {

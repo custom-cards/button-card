@@ -85,11 +85,6 @@ export type ActionConfig =
   | MoreInfoActionConfig
   | NoActionConfig;
 
-export interface Color {
-  r: null | number;
-  g: null | number;
-  b: null | number;
-}
 
 declare global {
   // for fire event
