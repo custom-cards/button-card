@@ -36,12 +36,6 @@ Lovelace Button card for your entities.
 - confirmation popup for sensitive items (optional)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
-## :warning: Long Press Support :warning:
-
-**For now**, for long press to work, you'll need to have a standard home-assistant card which supports long-press in the view (eg: [entity-button](https://www.home-assistant.io/lovelace/entity-button/))
-
-If you don't have a standard home-assistant card with long-press enabled in your view, only simple clicks will be supported and you'll see a warning in the javascript console of your browser.
-
 ## Configuration
 
 ### Main Options
@@ -49,13 +43,13 @@ If you don't have a standard home-assistant card with long-press enabled in your
 | Name           | Type        | Default      | Supported options                                | Description                                                                                                                                                                                                                                                                                                                                   |
 | -------------- | ----------- | ------------ | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`         | string      | **Required** | `custom:button-card`                             | Type of the card                                                                                                                                                                                                                                                                                                                              |
-| `entity`       | string      | **Required** | `switch.ac`                                      | entity_id                                                                                                                                                                                                                                                                                                                                     |
+| `entity`       | string      | optional | `switch.ac`                                      | entity_id                                                                                                                                                                                                                                                                                                                                     |
 | `icon`         | string      | optional     | `mdi:air-conditioner`                            | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`                                                                                                                                                                                                     |
 | `color_type`   | string      | `icon`       | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).          |
 | `color`        | string      | optional     | `auto` \| `rgb(28, 128, 199)`                    | Color of the icon/card. `auto` sets the color based on the color of a light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-active-color)`, for `on` it will be `var(--paper-item-icon-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
 | `size`         | string      | `40%`        | `20px`                                           | Size of the icon. Can be percentage or pixel                                                                                                                                                                                                                                                                                                  |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
-| `hold_action` | object | optional | See [Action](#Action) | [Read this first](#warning-long-press-support-warning) Define the type of action on hold, if undefined, nothing happens. |
+| `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
@@ -68,8 +62,6 @@ If you don't have a standard home-assistant card with long-press enabled in your
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 
 ### Action
-
-:warning: For `on_hold`, [read this first](#warning-long-press-support-warning)
 
 | Name              | Type   | Default  | Supported options                                                | Description                                                                                              |
 | ----------------- | ------ | -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
