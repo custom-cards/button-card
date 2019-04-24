@@ -14,9 +14,10 @@ and limitations under the License.
 ***************************************************************************** */
 
 function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
@@ -55,12 +56,12 @@ const directives = new WeakMap();
  * ```
  */
 // tslint:disable-next-line:no-any
-const directive = (f) => ((...args) => {
+const directive = f => (...args) => {
     const d = f(...args);
     directives.set(d, true);
     return d;
-});
-const isDirective = (o) => {
+};
+const isDirective = o => {
     return typeof o === 'function' && directives.has(o);
 };
 
@@ -80,9 +81,7 @@ const isDirective = (o) => {
 /**
  * True if the custom elements polyfill is in use.
  */
-const isCEPolyfill = window.customElements !== undefined &&
-    window.customElements.polyfillWrapFlushCallback !==
-        undefined;
+const isCEPolyfill = window.customElements !== undefined && window.customElements.polyfillWrapFlushCallback !== undefined;
 /**
  * Removes nodes, starting from `startNode` (inclusive) to `endNode`
  * (exclusive), from `container`.
@@ -157,7 +156,7 @@ class Template {
         let index = -1;
         let partIndex = 0;
         const nodesToRemove = [];
-        const _prepareTemplate = (template) => {
+        const _prepareTemplate = template => {
             const content = template.content;
             // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
             // null
@@ -170,104 +169,97 @@ class Template {
                 index++;
                 const node = walker.currentNode;
                 if (node.nodeType === 1 /* Node.ELEMENT_NODE */) {
-                    if (node.hasAttributes()) {
-                        const attributes = node.attributes;
-                        // Per
-                        // https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
-                        // attributes are not guaranteed to be returned in document order.
-                        // In particular, Edge/IE can return them out of order, so we cannot
-                        // assume a correspondance between part index and attribute index.
-                        let count = 0;
-                        for (let i = 0; i < attributes.length; i++) {
-                            if (attributes[i].value.indexOf(marker) >= 0) {
-                                count++;
+                        if (node.hasAttributes()) {
+                            const attributes = node.attributes;
+                            // Per
+                            // https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
+                            // attributes are not guaranteed to be returned in document order.
+                            // In particular, Edge/IE can return them out of order, so we cannot
+                            // assume a correspondance between part index and attribute index.
+                            let count = 0;
+                            for (let i = 0; i < attributes.length; i++) {
+                                if (attributes[i].value.indexOf(marker) >= 0) {
+                                    count++;
+                                }
+                            }
+                            while (count-- > 0) {
+                                // Get the template literal section leading up to the first
+                                // expression in this attribute
+                                const stringForPart = result.strings[partIndex];
+                                // Find the attribute name
+                                const name = lastAttributeNameRegex.exec(stringForPart)[2];
+                                // Find the corresponding attribute
+                                // All bound attributes have had a suffix added in
+                                // TemplateResult#getHTML to opt out of special attribute
+                                // handling. To look up the attribute value we also need to add
+                                // the suffix.
+                                const attributeLookupName = name.toLowerCase() + boundAttributeSuffix;
+                                const attributeValue = node.getAttribute(attributeLookupName);
+                                const strings = attributeValue.split(markerRegex);
+                                this.parts.push({ type: 'attribute', index, name, strings });
+                                node.removeAttribute(attributeLookupName);
+                                partIndex += strings.length - 1;
                             }
                         }
-                        while (count-- > 0) {
-                            // Get the template literal section leading up to the first
-                            // expression in this attribute
-                            const stringForPart = result.strings[partIndex];
-                            // Find the attribute name
-                            const name = lastAttributeNameRegex.exec(stringForPart)[2];
-                            // Find the corresponding attribute
-                            // All bound attributes have had a suffix added in
-                            // TemplateResult#getHTML to opt out of special attribute
-                            // handling. To look up the attribute value we also need to add
-                            // the suffix.
-                            const attributeLookupName = name.toLowerCase() + boundAttributeSuffix;
-                            const attributeValue = node.getAttribute(attributeLookupName);
-                            const strings = attributeValue.split(markerRegex);
-                            this.parts.push({ type: 'attribute', index, name, strings });
-                            node.removeAttribute(attributeLookupName);
-                            partIndex += strings.length - 1;
+                        if (node.tagName === 'TEMPLATE') {
+                            _prepareTemplate(node);
+                        }
+                    } else if (node.nodeType === 3 /* Node.TEXT_NODE */) {
+                        const data = node.data;
+                        if (data.indexOf(marker) >= 0) {
+                            const parent = node.parentNode;
+                            const strings = data.split(markerRegex);
+                            const lastIndex = strings.length - 1;
+                            // Generate a new text node for each literal section
+                            // These nodes are also used as the markers for node parts
+                            for (let i = 0; i < lastIndex; i++) {
+                                parent.insertBefore(strings[i] === '' ? createMarker() : document.createTextNode(strings[i]), node);
+                                this.parts.push({ type: 'node', index: ++index });
+                            }
+                            // If there's no text, we must insert a comment to mark our place.
+                            // Else, we can trust it will stick around after cloning.
+                            if (strings[lastIndex] === '') {
+                                parent.insertBefore(createMarker(), node);
+                                nodesToRemove.push(node);
+                            } else {
+                                node.data = strings[lastIndex];
+                            }
+                            // We have a part for each match found
+                            partIndex += lastIndex;
+                        }
+                    } else if (node.nodeType === 8 /* Node.COMMENT_NODE */) {
+                        if (node.data === marker) {
+                            const parent = node.parentNode;
+                            // Add a new marker node to be the startNode of the Part if any of
+                            // the following are true:
+                            //  * We don't have a previousSibling
+                            //  * The previousSibling is already the start of a previous part
+                            if (node.previousSibling === null || index === lastPartIndex) {
+                                index++;
+                                parent.insertBefore(createMarker(), node);
+                            }
+                            lastPartIndex = index;
+                            this.parts.push({ type: 'node', index });
+                            // If we don't have a nextSibling, keep this node so we have an end.
+                            // Else, we can remove it to save future costs.
+                            if (node.nextSibling === null) {
+                                node.data = '';
+                            } else {
+                                nodesToRemove.push(node);
+                                index--;
+                            }
+                            partIndex++;
+                        } else {
+                            let i = -1;
+                            while ((i = node.data.indexOf(marker, i + 1)) !== -1) {
+                                // Comment node has a binding marker inside, make an inactive part
+                                // The binding won't work, but subsequent bindings will
+                                // TODO (justinfagnani): consider whether it's even worth it to
+                                // make bindings in comments work
+                                this.parts.push({ type: 'node', index: -1 });
+                            }
                         }
                     }
-                    if (node.tagName === 'TEMPLATE') {
-                        _prepareTemplate(node);
-                    }
-                }
-                else if (node.nodeType === 3 /* Node.TEXT_NODE */) {
-                    const data = node.data;
-                    if (data.indexOf(marker) >= 0) {
-                        const parent = node.parentNode;
-                        const strings = data.split(markerRegex);
-                        const lastIndex = strings.length - 1;
-                        // Generate a new text node for each literal section
-                        // These nodes are also used as the markers for node parts
-                        for (let i = 0; i < lastIndex; i++) {
-                            parent.insertBefore((strings[i] === '') ? createMarker() :
-                                document.createTextNode(strings[i]), node);
-                            this.parts.push({ type: 'node', index: ++index });
-                        }
-                        // If there's no text, we must insert a comment to mark our place.
-                        // Else, we can trust it will stick around after cloning.
-                        if (strings[lastIndex] === '') {
-                            parent.insertBefore(createMarker(), node);
-                            nodesToRemove.push(node);
-                        }
-                        else {
-                            node.data = strings[lastIndex];
-                        }
-                        // We have a part for each match found
-                        partIndex += lastIndex;
-                    }
-                }
-                else if (node.nodeType === 8 /* Node.COMMENT_NODE */) {
-                    if (node.data === marker) {
-                        const parent = node.parentNode;
-                        // Add a new marker node to be the startNode of the Part if any of
-                        // the following are true:
-                        //  * We don't have a previousSibling
-                        //  * The previousSibling is already the start of a previous part
-                        if (node.previousSibling === null || index === lastPartIndex) {
-                            index++;
-                            parent.insertBefore(createMarker(), node);
-                        }
-                        lastPartIndex = index;
-                        this.parts.push({ type: 'node', index });
-                        // If we don't have a nextSibling, keep this node so we have an end.
-                        // Else, we can remove it to save future costs.
-                        if (node.nextSibling === null) {
-                            node.data = '';
-                        }
-                        else {
-                            nodesToRemove.push(node);
-                            index--;
-                        }
-                        partIndex++;
-                    }
-                    else {
-                        let i = -1;
-                        while ((i = node.data.indexOf(marker, i + 1)) !==
-                            -1) {
-                            // Comment node has a binding marker inside, make an inactive part
-                            // The binding won't work, but subsequent bindings will
-                            // TODO (justinfagnani): consider whether it's even worth it to
-                            // make bindings in comments work
-                            this.parts.push({ type: 'node', index: -1 });
-                        }
-                    }
-                }
             }
         };
         _prepareTemplate(element);
@@ -277,7 +269,7 @@ class Template {
         }
     }
 }
-const isTemplatePartActive = (part) => part.index !== -1;
+const isTemplatePartActive = part => part.index !== -1;
 // Allows `document.createComment('')` to be renamed for a
 // small manual size-savings.
 const createMarker = () => document.createComment('');
@@ -352,13 +344,11 @@ class TemplateInstance {
         // leaves the fragment inert so custom elements won't upgrade and
         // potentially modify their contents by creating a polyfilled ShadowRoot
         // while we traverse the tree.
-        const fragment = isCEPolyfill ?
-            this.template.element.content.cloneNode(true) :
-            document.importNode(this.template.element.content, true);
+        const fragment = isCEPolyfill ? this.template.element.content.cloneNode(true) : document.importNode(this.template.element.content, true);
         const parts = this.template.parts;
         let partIndex = 0;
         let nodeIndex = 0;
-        const _prepareInstance = (fragment) => {
+        const _prepareInstance = fragment => {
             // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
             // null
             const walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */, null, false);
@@ -375,19 +365,16 @@ class TemplateInstance {
                 if (!isTemplatePartActive(part)) {
                     this._parts.push(undefined);
                     partIndex++;
-                }
-                else if (nodeIndex === part.index) {
+                } else if (nodeIndex === part.index) {
                     if (part.type === 'node') {
                         const part = this.processor.handleTextExpression(this.options);
                         part.insertAfterNode(node.previousSibling);
                         this._parts.push(part);
-                    }
-                    else {
+                    } else {
                         this._parts.push(...this.processor.handleAttributeExpressions(node, part.name, part.strings, this.options));
                     }
                     partIndex++;
-                }
-                else {
+                } else {
                     nodeIndex++;
                     if (node.nodeName === 'TEMPLATE') {
                         _prepareInstance(node.content);
@@ -451,10 +438,8 @@ class TemplateResult {
                 // We're starting a new bound attribute.
                 // Add the safe attribute suffix, and use unquoted-attribute-safe
                 // marker.
-                html += s.substr(0, match.index) + match[1] + match[2] +
-                    boundAttributeSuffix + match[3] + marker;
-            }
-            else {
+                html += s.substr(0, match.index) + match[1] + match[2] + boundAttributeSuffix + match[3] + marker;
+            } else {
                 // We're either in a bound node, or trailing bound attribute.
                 // Either way, nodeMarker is safe to use.
                 html += s + nodeMarker;
@@ -482,9 +467,8 @@ class TemplateResult {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-const isPrimitive = (value) => {
-    return (value === null ||
-        !(typeof value === 'object' || typeof value === 'function'));
+const isPrimitive = value => {
+    return value === null || !(typeof value === 'object' || typeof value === 'function');
 };
 /**
  * Sets attribute values for AttributeParts, so that the value is only set once
@@ -516,15 +500,13 @@ class AttributeCommitter {
             const part = this.parts[i];
             if (part !== undefined) {
                 const v = part.value;
-                if (v != null &&
-                    (Array.isArray(v) ||
-                        // tslint:disable-next-line:no-any
-                        typeof v !== 'string' && v[Symbol.iterator])) {
+                if (v != null && (Array.isArray(v) ||
+                // tslint:disable-next-line:no-any
+                typeof v !== 'string' && v[Symbol.iterator])) {
                     for (const t of v) {
                         text += typeof t === 'string' ? t : String(t);
                     }
-                }
-                else {
+                } else {
                     text += typeof v === 'string' ? v : String(v);
                 }
             }
@@ -629,23 +611,18 @@ class NodePart {
             if (value !== this.value) {
                 this._commitText(value);
             }
-        }
-        else if (value instanceof TemplateResult) {
+        } else if (value instanceof TemplateResult) {
             this._commitTemplateResult(value);
-        }
-        else if (value instanceof Node) {
+        } else if (value instanceof Node) {
             this._commitNode(value);
-        }
-        else if (Array.isArray(value) ||
-            // tslint:disable-next-line:no-any
-            value[Symbol.iterator]) {
+        } else if (Array.isArray(value) ||
+        // tslint:disable-next-line:no-any
+        value[Symbol.iterator]) {
             this._commitIterable(value);
-        }
-        else if (value === nothing) {
+        } else if (value === nothing) {
             this.value = nothing;
             this.clear();
-        }
-        else {
+        } else {
             // Fallback, will render the string representation
             this._commitText(value);
         }
@@ -664,25 +641,21 @@ class NodePart {
     _commitText(value) {
         const node = this.startNode.nextSibling;
         value = value == null ? '' : value;
-        if (node === this.endNode.previousSibling &&
-            node.nodeType === 3 /* Node.TEXT_NODE */) {
-            // If we only have a single text node between the markers, we can just
-            // set its value, rather than replacing it.
-            // TODO(justinfagnani): Can we just check if this.value is primitive?
-            node.data = value;
-        }
-        else {
+        if (node === this.endNode.previousSibling && node.nodeType === 3 /* Node.TEXT_NODE */) {
+                // If we only have a single text node between the markers, we can just
+                // set its value, rather than replacing it.
+                // TODO(justinfagnani): Can we just check if this.value is primitive?
+                node.data = value;
+            } else {
             this._commitNode(document.createTextNode(typeof value === 'string' ? value : String(value)));
         }
         this.value = value;
     }
     _commitTemplateResult(value) {
         const template = this.options.templateFactory(value);
-        if (this.value instanceof TemplateInstance &&
-            this.value.template === template) {
+        if (this.value instanceof TemplateInstance && this.value.template === template) {
             this.value.update(value.values);
-        }
-        else {
+        } else {
             // Make sure we propagate the template processor from the TemplateResult
             // so that we use its syntax extension, etc. The template factory comes
             // from the render function options so that it can control template
@@ -722,8 +695,7 @@ class NodePart {
                 itemParts.push(itemPart);
                 if (partIndex === 0) {
                     itemPart.appendIntoPart(this);
-                }
-                else {
+                } else {
                     itemPart.insertAfterPart(itemParts[partIndex - 1]);
                 }
             }
@@ -775,8 +747,7 @@ class BooleanAttributePart {
         if (this.value !== value) {
             if (value) {
                 this.element.setAttribute(this.name, '');
-            }
-            else {
+            } else {
                 this.element.removeAttribute(this.name);
             }
         }
@@ -796,8 +767,7 @@ class BooleanAttributePart {
 class PropertyCommitter extends AttributeCommitter {
     constructor(element, name, strings) {
         super(element, name, strings);
-        this.single =
-            (strings.length === 2 && strings[0] === '' && strings[1] === '');
+        this.single = strings.length === 2 && strings[0] === '' && strings[1] === '';
     }
     _createPart() {
         return new PropertyPart(this);
@@ -816,8 +786,7 @@ class PropertyCommitter extends AttributeCommitter {
         }
     }
 }
-class PropertyPart extends AttributePart {
-}
+class PropertyPart extends AttributePart {}
 // Detect event listener options support. If the `capture` property is read
 // from the options object, then options are supported. If not, then the thrid
 // argument to add/removeEventListener is interpreted as the boolean capture
@@ -834,9 +803,7 @@ try {
     window.addEventListener('test', options, options);
     // tslint:disable-next-line:no-any
     window.removeEventListener('test', options, options);
-}
-catch (_e) {
-}
+} catch (_e) {}
 class EventPart {
     constructor(element, eventName, eventContext) {
         this.value = undefined;
@@ -844,7 +811,7 @@ class EventPart {
         this.element = element;
         this.eventName = eventName;
         this.eventContext = eventContext;
-        this._boundHandleEvent = (e) => this.handleEvent(e);
+        this._boundHandleEvent = e => this.handleEvent(e);
     }
     setValue(value) {
         this._pendingValue = value;
@@ -860,11 +827,7 @@ class EventPart {
         }
         const newListener = this._pendingValue;
         const oldListener = this.value;
-        const shouldRemoveListener = newListener == null ||
-            oldListener != null &&
-                (newListener.capture !== oldListener.capture ||
-                    newListener.once !== oldListener.once ||
-                    newListener.passive !== oldListener.passive);
+        const shouldRemoveListener = newListener == null || oldListener != null && (newListener.capture !== oldListener.capture || newListener.once !== oldListener.once || newListener.passive !== oldListener.passive);
         const shouldAddListener = newListener != null && (oldListener == null || shouldRemoveListener);
         if (shouldRemoveListener) {
             this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options);
@@ -879,8 +842,7 @@ class EventPart {
     handleEvent(event) {
         if (typeof this.value === 'function') {
             this.value.call(this.eventContext || this.element, event);
-        }
-        else {
+        } else {
             this.value.handleEvent(event);
         }
     }
@@ -888,10 +850,7 @@ class EventPart {
 // We copy options because of the inconsistent behavior of browsers when reading
 // the third argument of add/removeEventListener. IE11 doesn't support options
 // at all. Chrome 41 only reads `capture` if the argument is an object.
-const getOptions = (o) => o &&
-    (eventOptionsSupported ?
-        { capture: o.capture, passive: o.passive, once: o.once } :
-        o.capture);
+const getOptions = o => o && (eventOptionsSupported ? { capture: o.capture, passive: o.passive, once: o.once } : o.capture);
 
 /**
  * @license
@@ -1121,10 +1080,10 @@ function removeNodesFromTemplate(template, nodesToRemove) {
             part = parts[partIndex];
         }
     }
-    nodesToRemoveInTemplate.forEach((n) => n.parentNode.removeChild(n));
+    nodesToRemoveInTemplate.forEach(n => n.parentNode.removeChild(n));
 }
-const countNodes = (node) => {
-    let count = (node.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */) ? 0 : 1;
+const countNodes = node => {
+    let count = node.nodeType === 11 /* Node.DOCUMENT_FRAGMENT_NODE */ ? 0 : 1;
     const walker = document.createTreeWalker(node, walkerNodeFilter, null, false);
     while (walker.nextNode()) {
         count++;
@@ -1196,18 +1155,15 @@ const getTemplateCacheKey = (type, scopeName) => `${type}--${scopeName}`;
 let compatibleShadyCSSVersion = true;
 if (typeof window.ShadyCSS === 'undefined') {
     compatibleShadyCSSVersion = false;
-}
-else if (typeof window.ShadyCSS.prepareTemplateDom === 'undefined') {
-    console.warn(`Incompatible ShadyCSS version detected.` +
-        `Please update to at least @webcomponents/webcomponentsjs@2.0.2 and` +
-        `@webcomponents/shadycss@1.3.1.`);
+} else if (typeof window.ShadyCSS.prepareTemplateDom === 'undefined') {
+    console.warn(`Incompatible ShadyCSS version detected.` + `Please update to at least @webcomponents/webcomponentsjs@2.0.2 and` + `@webcomponents/shadycss@1.3.1.`);
     compatibleShadyCSSVersion = false;
 }
 /**
  * Template factory which scopes template DOM using ShadyCSS.
  * @param scopeName {string}
  */
-const shadyTemplateFactory = (scopeName) => (result) => {
+const shadyTemplateFactory = scopeName => result => {
     const cacheKey = getTemplateCacheKey(result.type, scopeName);
     let templateCache = templateCaches.get(cacheKey);
     if (templateCache === undefined) {
@@ -1238,15 +1194,15 @@ const TEMPLATE_TYPES = ['html', 'svg'];
 /**
  * Removes all style elements from Templates for the given scopeName.
  */
-const removeStylesFromLitTemplates = (scopeName) => {
-    TEMPLATE_TYPES.forEach((type) => {
+const removeStylesFromLitTemplates = scopeName => {
+    TEMPLATE_TYPES.forEach(type => {
         const templates = templateCaches.get(getTemplateCacheKey(type, scopeName));
         if (templates !== undefined) {
-            templates.keyString.forEach((template) => {
+            templates.keyString.forEach(template => {
                 const { element: { content } } = template;
                 // IE 11 doesn't support the iterable param Set constructor
                 const styles = new Set();
-                Array.from(content.querySelectorAll('style')).forEach((s) => {
+                Array.from(content.querySelectorAll('style')).forEach(s => {
                     styles.add(s);
                 });
                 removeNodesFromTemplate(template, styles);
@@ -1306,8 +1262,7 @@ const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
         // the style ShadyCSS produced.
         const style = template.element.content.querySelector('style');
         renderedDOM.insertBefore(style.cloneNode(true), renderedDOM.firstChild);
-    }
-    else {
+    } else {
         // When not in native Shadow DOM, at this point ShadyCSS will have
         // removed the style from the lit template and parts will be broken as a
         // result. To fix this, we put back the style node ShadyCSS removed
@@ -1379,8 +1334,7 @@ const prepareTemplateStyles = (renderedDOM, template, scopeName) => {
 const render$1 = (result, container, options) => {
     const scopeName = options.scopeName;
     const hasRendered = parts.has(container);
-    const needsScoping = container instanceof ShadowRoot &&
-        compatibleShadyCSSVersion && result instanceof TemplateResult;
+    const needsScoping = container instanceof ShadowRoot && compatibleShadyCSSVersion && result instanceof TemplateResult;
     // Handle first render to a scope specially...
     const firstScopeRender = needsScoping && !shadyRenderSet.has(scopeName);
     // On first scope render, render into a fragment; this cannot be a single
@@ -1436,8 +1390,7 @@ const render$1 = (result, container, options) => {
  * alias this function, so we have to use a small shim that has the same
  * behavior when not compiling.
  */
-window.JSCompiler_renameProperty =
-    (prop, _obj) => prop;
+window.JSCompiler_renameProperty = (prop, _obj) => prop;
 const defaultConverter = {
     toAttribute(value, type) {
         switch (type) {
@@ -1588,8 +1541,7 @@ class UpdatingElement extends HTMLElement {
      * @nocollapse
      */
     static finalize() {
-        if (this.hasOwnProperty(JSCompiler_renameProperty('finalized', this)) &&
-            this.finalized) {
+        if (this.hasOwnProperty(JSCompiler_renameProperty('finalized', this)) && this.finalized) {
             return;
         }
         // finalize any superclasses
@@ -1608,12 +1560,7 @@ class UpdatingElement extends HTMLElement {
         if (this.hasOwnProperty(JSCompiler_renameProperty('properties', this))) {
             const props = this.properties;
             // support symbols in properties (IE11 does not support this)
-            const propKeys = [
-                ...Object.getOwnPropertyNames(props),
-                ...(typeof Object.getOwnPropertySymbols === 'function') ?
-                    Object.getOwnPropertySymbols(props) :
-                    []
-            ];
+            const propKeys = [...Object.getOwnPropertyNames(props), ...(typeof Object.getOwnPropertySymbols === 'function' ? Object.getOwnPropertySymbols(props) : [])];
             // This for/of is ok because propKeys is an array
             for (const p of propKeys) {
                 // note, use of `any` is due to TypeSript lack of support for symbol in
@@ -1629,11 +1576,7 @@ class UpdatingElement extends HTMLElement {
      */
     static _attributeNameForProperty(name, options) {
         const attribute = options.attribute;
-        return attribute === false ?
-            undefined :
-            (typeof attribute === 'string' ?
-                attribute :
-                (typeof name === 'string' ? name.toLowerCase() : undefined));
+        return attribute === false ? undefined : typeof attribute === 'string' ? attribute : typeof name === 'string' ? name.toLowerCase() : undefined;
     }
     /**
      * Returns true if a property should request an update.
@@ -1653,7 +1596,7 @@ class UpdatingElement extends HTMLElement {
     static _propertyValueFromAttribute(value, options) {
         const type = options.type;
         const converter = options.converter || defaultConverter;
-        const fromAttribute = (typeof converter === 'function' ? converter : converter.fromAttribute);
+        const fromAttribute = typeof converter === 'function' ? converter : converter.fromAttribute;
         return fromAttribute ? fromAttribute(value, type) : value;
     }
     /**
@@ -1670,8 +1613,7 @@ class UpdatingElement extends HTMLElement {
         }
         const type = options.type;
         const converter = options.converter;
-        const toAttribute = converter && converter.toAttribute ||
-            defaultConverter.toAttribute;
+        const toAttribute = converter && converter.toAttribute || defaultConverter.toAttribute;
         return toAttribute(value, type);
     }
     /**
@@ -1698,8 +1640,7 @@ class UpdatingElement extends HTMLElement {
     _saveInstanceProperties() {
         // Use forEach so this works even if for/of loops are compiled to for loops
         // expecting arrays
-        this.constructor
-            ._classProperties.forEach((_v, p) => {
+        this.constructor._classProperties.forEach((_v, p) => {
             if (this.hasOwnProperty(p)) {
                 const value = this[p];
                 delete this[p];
@@ -1736,8 +1677,7 @@ class UpdatingElement extends HTMLElement {
      * reserving the possibility of making non-breaking feature additions
      * when disconnecting at some point in the future.
      */
-    disconnectedCallback() {
-    }
+    disconnectedCallback() {}
     /**
      * Synchronizes property values when attributes change.
      */
@@ -1766,8 +1706,7 @@ class UpdatingElement extends HTMLElement {
             this._updateState = this._updateState | STATE_IS_REFLECTING_TO_ATTRIBUTE;
             if (attrValue == null) {
                 this.removeAttribute(attr);
-            }
-            else {
+            } else {
                 this.setAttribute(attr, attrValue);
             }
             // mark state not reflecting
@@ -1787,8 +1726,8 @@ class UpdatingElement extends HTMLElement {
             // mark state reflecting
             this._updateState = this._updateState | STATE_IS_REFLECTING_TO_PROPERTY;
             this[propName] =
-                // tslint:disable-next-line:no-any
-                ctor._propertyValueFromAttribute(value, options);
+            // tslint:disable-next-line:no-any
+            ctor._propertyValueFromAttribute(value, options);
             // mark state not reflecting
             this._updateState = this._updateState & ~STATE_IS_REFLECTING_TO_PROPERTY;
         }
@@ -1812,15 +1751,13 @@ class UpdatingElement extends HTMLElement {
                 // Note, it's important that every change has a chance to add the
                 // property to `_reflectingProperties`. This ensures setting
                 // attribute + property reflects correctly.
-                if (options.reflect === true &&
-                    !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
+                if (options.reflect === true && !(this._updateState & STATE_IS_REFLECTING_TO_PROPERTY)) {
                     if (this._reflectingProperties === undefined) {
                         this._reflectingProperties = new Map();
                     }
                     this._reflectingProperties.set(name, options);
                 }
-            }
-            else {
+            } else {
                 // Abort the request if the property should not be considered changed.
                 shouldRequestUpdate = false;
             }
@@ -1863,14 +1800,13 @@ class UpdatingElement extends HTMLElement {
             // Ensure any previous update has resolved before updating.
             // This `await` also ensures that property changes are batched.
             await previousUpdatePromise;
-        }
-        catch (e) {
-            // Ignore any previous errors. We only care that the previous cycle is
-            // done. Any error should have been handled in the previous update.
-        }
+        } catch (e) {}
+        // Ignore any previous errors. We only care that the previous cycle is
+        // done. Any error should have been handled in the previous update.
+
         // Make sure the element has connected before updating.
         if (!this._hasConnected) {
-            await new Promise((res) => this._hasConnectedResolver = res);
+            await new Promise(res => this._hasConnectedResolver = res);
         }
         try {
             const result = this.performUpdate();
@@ -1880,20 +1816,19 @@ class UpdatingElement extends HTMLElement {
             if (result != null) {
                 await result;
             }
-        }
-        catch (e) {
+        } catch (e) {
             reject(e);
         }
         resolve(!this._hasRequestedUpdate);
     }
     get _hasConnected() {
-        return (this._updateState & STATE_HAS_CONNECTED);
+        return this._updateState & STATE_HAS_CONNECTED;
     }
     get _hasRequestedUpdate() {
-        return (this._updateState & STATE_UPDATE_REQUESTED);
+        return this._updateState & STATE_UPDATE_REQUESTED;
     }
     get hasUpdated() {
-        return (this._updateState & STATE_HAS_UPDATED);
+        return this._updateState & STATE_HAS_UPDATED;
     }
     /**
      * Performs an element update. Note, if an exception is thrown during the
@@ -1923,14 +1858,12 @@ class UpdatingElement extends HTMLElement {
             if (shouldUpdate) {
                 this.update(changedProperties);
             }
-        }
-        catch (e) {
+        } catch (e) {
             // Prevent `firstUpdated` and `updated` from running when there's an
             // update exception.
             shouldUpdate = false;
             throw e;
-        }
-        finally {
+        } finally {
             // Ensure element can accept additional updates after an exception.
             this._markUpdated();
         }
@@ -1981,8 +1914,7 @@ class UpdatingElement extends HTMLElement {
      * * @param _changedProperties Map of changed properties with old values
      */
     update(_changedProperties) {
-        if (this._reflectingProperties !== undefined &&
-            this._reflectingProperties.size > 0) {
+        if (this._reflectingProperties !== undefined && this._reflectingProperties.size > 0) {
             // Use forEach so this works even if for/of loops are compiled to for
             // loops expecting arrays
             this._reflectingProperties.forEach((v, k) => this._propertyToAttribute(k, this[k], v));
@@ -1998,8 +1930,7 @@ class UpdatingElement extends HTMLElement {
      *
      * * @param _changedProperties Map of changed properties with old values
      */
-    updated(_changedProperties) {
-    }
+    updated(_changedProperties) {}
     /**
      * Invoked when the element is first updated. Implement to perform one time
      * work on the element after update.
@@ -2009,8 +1940,7 @@ class UpdatingElement extends HTMLElement {
      *
      * * @param _changedProperties Map of changed properties with old values
      */
-    firstUpdated(_changedProperties) {
-    }
+    firstUpdated(_changedProperties) {}
 }
 /**
  * Marks class as having finished creating properties.
@@ -2056,20 +1986,16 @@ const standardCustomElement = (tagName, descriptor) => {
  *
  * @param tagName the name of the custom element to define
  */
-const customElement = (tagName) => (classOrDescriptor) => (typeof classOrDescriptor === 'function') ?
-    legacyCustomElement(tagName, classOrDescriptor) :
-    standardCustomElement(tagName, classOrDescriptor);
+const customElement = tagName => classOrDescriptor => typeof classOrDescriptor === 'function' ? legacyCustomElement(tagName, classOrDescriptor) : standardCustomElement(tagName, classOrDescriptor);
 const standardProperty = (options, element) => {
     // When decorating an accessor, pass it through and add property metadata.
     // Note, the `hasOwnProperty` check in `createProperty` ensures we don't
     // stomp over the user's accessor.
-    if (element.kind === 'method' && element.descriptor &&
-        !('value' in element.descriptor)) {
+    if (element.kind === 'method' && element.descriptor && !('value' in element.descriptor)) {
         return Object.assign({}, element, { finisher(clazz) {
                 clazz.createProperty(element.key, options);
             } });
-    }
-    else {
+    } else {
         // createProperty() takes care of defining the property, but we still
         // must return some kind of descriptor, so return a descriptor for an
         // unused prototype field. The finisher calls createProperty().
@@ -2100,8 +2026,7 @@ const standardProperty = (options, element) => {
     }
 };
 const legacyProperty = (options, proto, name) => {
-    proto.constructor
-        .createProperty(name, options);
+    proto.constructor.createProperty(name, options);
 };
 /**
  * A property decorator which creates a LitElement property which reflects a
@@ -2112,9 +2037,7 @@ const legacyProperty = (options, proto, name) => {
  */
 function property(options) {
     // tslint:disable-next-line:no-any decorator
-    return (protoOrDescriptor, name) => (name !== undefined) ?
-        legacyProperty(options, protoOrDescriptor, name) :
-        standardProperty(options, protoOrDescriptor);
+    return (protoOrDescriptor, name) => name !== undefined ? legacyProperty(options, protoOrDescriptor, name) : standardProperty(options, protoOrDescriptor);
 }
 
 /**
@@ -2127,8 +2050,7 @@ found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
 part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
 */
-const supportsAdoptingStyleSheets = ('adoptedStyleSheets' in Document.prototype) &&
-    ('replace' in CSSStyleSheet.prototype);
+const supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype && 'replace' in CSSStyleSheet.prototype;
 const constructionToken = Symbol();
 class CSSResult {
     constructor(cssText, safeToken) {
@@ -2146,8 +2068,7 @@ class CSSResult {
             if (supportsAdoptingStyleSheets) {
                 this._styleSheet = new CSSStyleSheet();
                 this._styleSheet.replaceSync(this.cssText);
-            }
-            else {
+            } else {
                 this._styleSheet = null;
             }
         }
@@ -2157,11 +2078,10 @@ class CSSResult {
         return this.cssText;
     }
 }
-const textFromCSSResult = (value) => {
+const textFromCSSResult = value => {
     if (value instanceof CSSResult) {
         return value.cssText;
-    }
-    else {
+    } else {
         throw new Error(`Value passed to 'css' function must be a 'css' function result: ${value}. Use 'unsafeCSS' to pass non-literal values, but
             take care to ensure page security.`);
     }
@@ -2193,8 +2113,7 @@ const css = (strings, ...values) => {
 // IMPORTANT: do not change the property name or the assignment expression.
 // This line will be used in regexes to search for LitElement usage.
 // TODO(justinfagnani): inject version number at build time
-(window['litElementVersions'] || (window['litElementVersions'] = []))
-    .push('2.0.1');
+(window['litElementVersions'] || (window['litElementVersions'] = [])).push('2.0.1');
 /**
  * Minimal implementation of Array.prototype.flat
  * @param arr the array to flatten
@@ -2205,25 +2124,21 @@ function arrayFlat(styles, result = []) {
         const value = styles[i];
         if (Array.isArray(value)) {
             arrayFlat(value, result);
-        }
-        else {
+        } else {
             result.push(value);
         }
     }
     return result;
 }
 /** Deeply flattens styles array. Uses native flat if available. */
-const flattenStyles = (styles) => styles.flat ? styles.flat(Infinity) : arrayFlat(styles);
+const flattenStyles = styles => styles.flat ? styles.flat(Infinity) : arrayFlat(styles);
 class LitElement extends UpdatingElement {
     /** @nocollapse */
     static finalize() {
         super.finalize();
         // Prepare styling that is stamped at first render time. Styling
         // is built from user provided `styles` or is inherited from the superclass.
-        this._styles =
-            this.hasOwnProperty(JSCompiler_renameProperty('styles', this)) ?
-                this._getUniqueStyles() :
-                this._styles || [];
+        this._styles = this.hasOwnProperty(JSCompiler_renameProperty('styles', this)) ? this._getUniqueStyles() : this._styles || [];
     }
     /** @nocollapse */
     static _getUniqueStyles() {
@@ -2248,9 +2163,8 @@ class LitElement extends UpdatingElement {
                 return set;
             }, new Set());
             // Array.from does not work on Set in IE
-            styleSet.forEach((v) => styles.unshift(v));
-        }
-        else if (userStyles) {
+            styleSet.forEach(v => styles.unshift(v));
+        } else if (userStyles) {
             styles.push(userStyles);
         }
         return styles;
@@ -2262,8 +2176,7 @@ class LitElement extends UpdatingElement {
      */
     initialize() {
         super.initialize();
-        this.renderRoot =
-            this.createRenderRoot();
+        this.renderRoot = this.createRenderRoot();
         // Note, if renderRoot is not a shadowRoot, styles would/could apply to the
         // element's getRootNode(). While this could be done, we're choosing not to
         // support this now since it would require different logic around de-duping.
@@ -2301,13 +2214,10 @@ class LitElement extends UpdatingElement {
         // (3) shadowRoot.adoptedStyleSheets polyfilled: append styles after
         // rendering
         if (window.ShadyCSS !== undefined && !window.ShadyCSS.nativeShadow) {
-            window.ShadyCSS.ScopingShim.prepareAdoptedCssText(styles.map((s) => s.cssText), this.localName);
-        }
-        else if (supportsAdoptingStyleSheets) {
-            this.renderRoot.adoptedStyleSheets =
-                styles.map((s) => s.styleSheet);
-        }
-        else {
+            window.ShadyCSS.ScopingShim.prepareAdoptedCssText(styles.map(s => s.cssText), this.localName);
+        } else if (supportsAdoptingStyleSheets) {
+            this.renderRoot.adoptedStyleSheets = styles.map(s => s.styleSheet);
+        } else {
             // This must be done after rendering so the actual style insertion is done
             // in `update`.
             this._needsShimAdoptedStyleSheets = true;
@@ -2331,15 +2241,14 @@ class LitElement extends UpdatingElement {
         super.update(changedProperties);
         const templateResult = this.render();
         if (templateResult instanceof TemplateResult) {
-            this.constructor
-                .render(templateResult, this.renderRoot, { scopeName: this.localName, eventContext: this });
+            this.constructor.render(templateResult, this.renderRoot, { scopeName: this.localName, eventContext: this });
         }
         // When native Shadow DOM is used but adoptedStyles are not supported,
         // insert styling after rendering to ensure adoptedStyles have highest
         // priority.
         if (this._needsShimAdoptedStyleSheets) {
             this._needsShimAdoptedStyleSheets = false;
-            this.constructor._styles.forEach((s) => {
+            this.constructor._styles.forEach(s => {
                 const style = document.createElement('style');
                 style.textContent = s.cssText;
                 this.renderRoot.appendChild(style);
@@ -2351,8 +2260,7 @@ class LitElement extends UpdatingElement {
      * a lit-html TemplateResult. Setting properties inside this method will *not*
      * trigger the element to update.
      */
-    render() {
-    }
+    render() {}
 }
 /**
  * Ensure this class is marked as `finalized` as an optimization ensuring
@@ -2420,7 +2328,7 @@ const fixedIcons = {
     updater: "hass:cloud-upload",
     vacuum: "hass:robot-vacuum",
     water_heater: "hass:thermometer",
-    weblink: "hass:open-in-new",
+    weblink: "hass:open-in-new"
 };
 function domainIcon(domain, state) {
     if (domain in fixedIcons) {
@@ -2441,17 +2349,13 @@ function domainIcon(domain, state) {
                     return "hass:bell";
             }
         case "binary_sensor":
-            return state && state === "off"
-                ? "hass:radiobox-blank"
-                : "hass:checkbox-marked-circle";
+            return state && state === "off" ? "hass:radiobox-blank" : "hass:checkbox-marked-circle";
         case "cover":
             return state === "closed" ? "hass:window-closed" : "hass:window-open";
         case "lock":
             return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
         case "media_player":
-            return state && state !== "off" && state !== "idle"
-                ? "hass:cast-connected"
-                : "hass:cast";
+            return state && state !== "off" && state !== "idle" ? "hass:cast-connected" : "hass:cast";
         case "zwave":
             switch (state) {
                 case "dead":
@@ -2528,7 +2432,7 @@ const fireEvent = (node, type, detail, options) => {
     const event = new Event(type, {
         bubbles: options.bubbles === undefined ? true : options.bubbles,
         cancelable: Boolean(options.cancelable),
-        composed: options.composed === undefined ? true : options.composed,
+        composed: options.composed === undefined ? true : options.composed
     });
     event.detail = detail;
     node.dispatchEvent(event);
@@ -2538,8 +2442,7 @@ const fireEvent = (node, type, detail, options) => {
 const navigate = (_node, path, replace = false) => {
     if (replace) {
         history.replaceState(null, "", path);
-    }
-    else {
+    } else {
         history.pushState(null, "", path);
     }
     fireEvent(window, "location-changed", {
@@ -2573,20 +2476,19 @@ const handleClick = (node, hass, config, hold) => {
     let actionConfig;
     if (hold && config.hold_action) {
         actionConfig = config.hold_action;
-    }
-    else if (!hold && config.tap_action) {
+    } else if (!hold && config.tap_action) {
         actionConfig = config.tap_action;
     }
     if (!actionConfig) {
         actionConfig = {
-            action: "toggle",
+            action: "toggle"
         };
     }
     switch (actionConfig.action) {
         case "more-info":
             if (config.entity || config.camera_image) {
                 fireEvent(node, "hass-more-info", {
-                    entityId: config.entity ? config.entity : config.camera_image,
+                    entityId: config.entity ? config.entity : config.camera_image
                 });
             }
             break;
@@ -2603,22 +2505,21 @@ const handleClick = (node, hass, config, hold) => {
                 toggleEntity(hass, config.entity);
             }
             break;
-        case "call-service": {
-            if (!actionConfig.service) {
-                return;
+        case "call-service":
+            {
+                if (!actionConfig.service) {
+                    return;
+                }
+                const [domain, service] = actionConfig.service.split(".", 2);
+                hass.callService(domain, service, actionConfig.service_data);
             }
-            const [domain, service] = actionConfig.service.split(".", 2);
-            hass.callService(domain, service, actionConfig.service_data);
-        }
     }
 };
 
 // See https://github.com/home-assistant/home-assistant-polymer/pull/2457
 // on how to undo mwc -> paper migration
 // import "@material/mwc-ripple";
-const isTouch = "ontouchstart" in window ||
-    navigator.maxTouchPoints > 0 ||
-    navigator.msMaxTouchPoints > 0;
+const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 class LongPress extends HTMLElement {
     constructor() {
         super();
@@ -2636,21 +2537,13 @@ class LongPress extends HTMLElement {
             width: isTouch ? "100px" : "50px",
             height: isTouch ? "100px" : "50px",
             transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
+            pointerEvents: "none"
         });
         this.appendChild(this.ripple);
         this.ripple.style.color = "#03a9f4"; // paper-ripple
         this.ripple.style.color = "var(--primary-color)"; // paper-ripple
         // this.ripple.primary = true;
-        [
-            "touchcancel",
-            "mouseout",
-            "mouseup",
-            "touchmove",
-            "mousewheel",
-            "wheel",
-            "scroll",
-        ].forEach((ev) => {
+        ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(ev => {
             document.addEventListener(ev, () => {
                 clearTimeout(this.timer);
                 this.stopAnimation();
@@ -2663,7 +2556,7 @@ class LongPress extends HTMLElement {
             return;
         }
         element.longPress = true;
-        element.addEventListener("contextmenu", (ev) => {
+        element.addEventListener("contextmenu", ev => {
             const e = ev || window.event;
             if (e.preventDefault) {
                 e.preventDefault();
@@ -2675,7 +2568,7 @@ class LongPress extends HTMLElement {
             e.returnValue = false;
             return false;
         });
-        const clickStart = (ev) => {
+        const clickStart = ev => {
             if (this.cooldownStart) {
                 return;
             }
@@ -2685,8 +2578,7 @@ class LongPress extends HTMLElement {
             if (ev.touches) {
                 x = ev.touches[0].pageX;
                 y = ev.touches[0].pageY;
-            }
-            else {
+            } else {
                 x = ev.pageX;
                 y = ev.pageY;
             }
@@ -2695,12 +2587,10 @@ class LongPress extends HTMLElement {
                 this.held = true;
             }, this.holdTime);
             this.cooldownStart = true;
-            window.setTimeout(() => (this.cooldownStart = false), 100);
+            window.setTimeout(() => this.cooldownStart = false, 100);
         };
-        const clickEnd = (ev) => {
-            if (this.cooldownEnd ||
-                (["touchend", "touchcancel"].includes(ev.type) &&
-                    this.timer === undefined)) {
+        const clickEnd = ev => {
+            if (this.cooldownEnd || ["touchend", "touchcancel"].includes(ev.type) && this.timer === undefined) {
                 return;
             }
             clearTimeout(this.timer);
@@ -2708,12 +2598,11 @@ class LongPress extends HTMLElement {
             this.timer = undefined;
             if (this.held) {
                 element.dispatchEvent(new Event("ha-hold"));
-            }
-            else {
+            } else {
                 element.dispatchEvent(new Event("ha-click"));
             }
             this.cooldownEnd = true;
-            window.setTimeout(() => (this.cooldownEnd = false), 100);
+            window.setTimeout(() => this.cooldownEnd = false, 100);
         };
         element.addEventListener("touchstart", clickStart, { passive: true });
         element.addEventListener("touchend", clickEnd);
@@ -2725,7 +2614,7 @@ class LongPress extends HTMLElement {
         Object.assign(this.style, {
             left: `${x}px`,
             top: `${y}px`,
-            display: null,
+            display: null
         });
         this.ripple.holdDown = true; // paper-ripple
         this.ripple.simulatedRipple(); // paper-ripple
@@ -2750,14 +2639,14 @@ const getLongPress = () => {
     body.appendChild(longpress);
     return longpress;
 };
-const longPressBind = (element) => {
+const longPressBind = element => {
     const longpress = getLongPress();
     if (!longpress) {
         return;
     }
     longpress.bind(element);
 };
-const longPress = directive(() => (part) => {
+const longPress = directive(() => part => {
     longPressBind(part.committer.element);
 });
 
@@ -2774,10 +2663,9 @@ function bound01(n, max) {
         return 1;
     }
     if (max === 360) {
-        n = (n < 0 ? (n % max) + max : n % max) / parseFloat(String(max));
-    }
-    else {
-        n = (n % max) / parseFloat(String(max));
+        n = (n < 0 ? n % max + max : n % max) / parseFloat(String(max));
+    } else {
+        n = n % max / parseFloat(String(max));
     }
     return n;
 }
@@ -2811,7 +2699,7 @@ function rgbToRgb(r, g, b) {
     return {
         r: bound01(r, 255) * 255,
         g: bound01(g, 255) * 255,
-        b: bound01(b, 255) * 255,
+        b: bound01(b, 255) * 255
     };
 }
 function rgbToHsl(r, g, b) {
@@ -2826,19 +2714,18 @@ function rgbToHsl(r, g, b) {
     if (max === min) {
         s = 0;
         h = 0;
-    }
-    else {
+    } else {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
             case r:
-                h = ((g - b) / d) + (g < b ? 6 : 0);
+                h = (g - b) / d + (g < b ? 6 : 0);
                 break;
             case g:
-                h = ((b - r) / d) + 2;
+                h = (b - r) / d + 2;
                 break;
             case b:
-                h = ((r - g) / d) + 4;
+                h = (r - g) / d + 4;
                 break;
             default:
                 break;
@@ -2862,13 +2749,13 @@ function hslToRgb(h, s, l) {
             t -= 1;
         }
         if (t < 1 / 6) {
-            return p + ((q - p) * (6 * t));
+            return p + (q - p) * (6 * t);
         }
         if (t < 1 / 2) {
             return q;
         }
         if (t < 2 / 3) {
-            return p + ((q - p) * ((2 / 3) - t) * 6);
+            return p + (q - p) * (2 / 3 - t) * 6;
         }
         return p;
     }
@@ -2876,13 +2763,12 @@ function hslToRgb(h, s, l) {
         g = l;
         b = l;
         r = l;
-    }
-    else {
-        var q = l < 0.5 ? (l * (1 + s)) : (l + s - (l * s));
-        var p = (2 * l) - q;
-        r = hue2rgb(p, q, h + (1 / 3));
+    } else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1 / 3);
         g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - (1 / 3));
+        b = hue2rgb(p, q, h - 1 / 3);
     }
     return { r: r * 255, g: g * 255, b: b * 255 };
 }
@@ -2898,17 +2784,16 @@ function rgbToHsv(r, g, b) {
     var s = max === 0 ? 0 : d / max;
     if (max === min) {
         h = 0;
-    }
-    else {
+    } else {
         switch (max) {
             case r:
-                h = ((g - b) / d) + (g < b ? 6 : 0);
+                h = (g - b) / d + (g < b ? 6 : 0);
                 break;
             case g:
-                h = ((b - r) / d) + 2;
+                h = (b - r) / d + 2;
                 break;
             case b:
-                h = ((r - g) / d) + 4;
+                h = (r - g) / d + 4;
                 break;
             default:
                 break;
@@ -2924,8 +2809,8 @@ function hsvToRgb(h, s, v) {
     var i = Math.floor(h);
     var f = h - i;
     var p = v * (1 - s);
-    var q = v * (1 - (f * s));
-    var t = v * (1 - ((1 - f) * s));
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
     var mod = i % 6;
     var r = [v, q, p, p, t, v][mod];
     var g = [t, v, v, q, p, p][mod];
@@ -2933,31 +2818,15 @@ function hsvToRgb(h, s, v) {
     return { r: r * 255, g: g * 255, b: b * 255 };
 }
 function rgbToHex(r, g, b, allow3Char) {
-    var hex = [
-        pad2(Math.round(r).toString(16)),
-        pad2(Math.round(g).toString(16)),
-        pad2(Math.round(b).toString(16)),
-    ];
-    if (allow3Char &&
-        hex[0].charAt(0) === hex[0].charAt(1) &&
-        hex[1].charAt(0) === hex[1].charAt(1) &&
-        hex[2].charAt(0) === hex[2].charAt(1)) {
+    var hex = [pad2(Math.round(r).toString(16)), pad2(Math.round(g).toString(16)), pad2(Math.round(b).toString(16))];
+    if (allow3Char && hex[0].charAt(0) === hex[0].charAt(1) && hex[1].charAt(0) === hex[1].charAt(1) && hex[2].charAt(0) === hex[2].charAt(1)) {
         return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
     }
     return hex.join('');
 }
 function rgbaToHex(r, g, b, a, allow4Char) {
-    var hex = [
-        pad2(Math.round(r).toString(16)),
-        pad2(Math.round(g).toString(16)),
-        pad2(Math.round(b).toString(16)),
-        pad2(convertDecimalToHex(a)),
-    ];
-    if (allow4Char &&
-        hex[0].charAt(0) === hex[0].charAt(1) &&
-        hex[1].charAt(0) === hex[1].charAt(1) &&
-        hex[2].charAt(0) === hex[2].charAt(1) &&
-        hex[3].charAt(0) === hex[3].charAt(1)) {
+    var hex = [pad2(Math.round(r).toString(16)), pad2(Math.round(g).toString(16)), pad2(Math.round(b).toString(16)), pad2(convertDecimalToHex(a))];
+    if (allow4Char && hex[0].charAt(0) === hex[0].charAt(1) && hex[1].charAt(0) === hex[1].charAt(1) && hex[2].charAt(0) === hex[2].charAt(1) && hex[3].charAt(0) === hex[3].charAt(1)) {
         return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
     }
     return hex.join('');
@@ -3120,7 +2989,7 @@ var names = {
     white: '#ffffff',
     whitesmoke: '#f5f5f5',
     yellow: '#ffff00',
-    yellowgreen: '#9acd32',
+    yellowgreen: '#9acd32'
 };
 
 function inputToRGB(color) {
@@ -3139,15 +3008,13 @@ function inputToRGB(color) {
             rgb = rgbToRgb(color.r, color.g, color.b);
             ok = true;
             format = String(color.r).substr(-1) === '%' ? 'prgb' : 'rgb';
-        }
-        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+        } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
             s = convertToPercentage(color.s);
             v = convertToPercentage(color.v);
             rgb = hsvToRgb(color.h, s, v);
             ok = true;
             format = 'hsv';
-        }
-        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+        } else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
             s = convertToPercentage(color.s);
             l = convertToPercentage(color.l);
             rgb = hslToRgb(color.h, s, l);
@@ -3165,7 +3032,7 @@ function inputToRGB(color) {
         r: Math.min(255, Math.max(rgb.r, 0)),
         g: Math.min(255, Math.max(rgb.g, 0)),
         b: Math.min(255, Math.max(rgb.b, 0)),
-        a: a,
+        a: a
     };
 }
 var CSS_INTEGER = '[-\\+]?\\d+%?';
@@ -3184,7 +3051,7 @@ var matchers = {
     hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
     hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
     hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
-    hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+    hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
 };
 function stringInputToObject(color) {
     color = color.trim().toLowerCase();
@@ -3195,8 +3062,7 @@ function stringInputToObject(color) {
     if (names[color]) {
         color = names[color];
         named = true;
-    }
-    else if (color === 'transparent') {
+    } else if (color === 'transparent') {
         return { r: 0, g: 0, b: 0, a: 0, format: 'name' };
     }
     var match = matchers.rgb.exec(color);
@@ -3230,7 +3096,7 @@ function stringInputToObject(color) {
             g: parseIntFromHex(match[2]),
             b: parseIntFromHex(match[3]),
             a: convertHexToDecimal(match[4]),
-            format: named ? 'name' : 'hex8',
+            format: named ? 'name' : 'hex8'
         };
     }
     match = matchers.hex6.exec(color);
@@ -3239,7 +3105,7 @@ function stringInputToObject(color) {
             r: parseIntFromHex(match[1]),
             g: parseIntFromHex(match[2]),
             b: parseIntFromHex(match[3]),
-            format: named ? 'name' : 'hex',
+            format: named ? 'name' : 'hex'
         };
     }
     match = matchers.hex4.exec(color);
@@ -3249,7 +3115,7 @@ function stringInputToObject(color) {
             g: parseIntFromHex(match[2] + match[2]),
             b: parseIntFromHex(match[3] + match[3]),
             a: convertHexToDecimal(match[4] + match[4]),
-            format: named ? 'name' : 'hex8',
+            format: named ? 'name' : 'hex8'
         };
     }
     match = matchers.hex3.exec(color);
@@ -3258,7 +3124,7 @@ function stringInputToObject(color) {
             r: parseIntFromHex(match[1] + match[1]),
             g: parseIntFromHex(match[2] + match[2]),
             b: parseIntFromHex(match[3] + match[3]),
-            format: named ? 'name' : 'hex',
+            format: named ? 'name' : 'hex'
         };
     }
     return false;
@@ -3267,10 +3133,14 @@ function isValidCSSUnit(color) {
     return Boolean(matchers.CSS_UNIT.exec(String(color)));
 }
 
-var TinyColor = (function () {
+var TinyColor = function () {
     function TinyColor(color, opts) {
-        if (color === void 0) { color = ''; }
-        if (opts === void 0) { opts = {}; }
+        if (color === void 0) {
+            color = '';
+        }
+        if (opts === void 0) {
+            opts = {};
+        }
         if (color instanceof TinyColor) {
             return color;
         }
@@ -3303,7 +3173,7 @@ var TinyColor = (function () {
     };
     TinyColor.prototype.getBrightness = function () {
         var rgb = this.toRgb();
-        return ((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000;
+        return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
     };
     TinyColor.prototype.getLuminance = function () {
         var rgb = this.toRgb();
@@ -3315,23 +3185,20 @@ var TinyColor = (function () {
         var BsRGB = rgb.b / 255;
         if (RsRGB <= 0.03928) {
             R = RsRGB / 12.92;
-        }
-        else {
+        } else {
             R = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
         }
         if (GsRGB <= 0.03928) {
             G = GsRGB / 12.92;
-        }
-        else {
+        } else {
             G = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
         }
         if (BsRGB <= 0.03928) {
             B = BsRGB / 12.92;
-        }
-        else {
+        } else {
             B = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
         }
-        return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
     };
     TinyColor.prototype.getAlpha = function () {
         return this.a;
@@ -3364,19 +3231,27 @@ var TinyColor = (function () {
         return this.a === 1 ? "hsl(" + h + ", " + s + "%, " + l + "%)" : "hsla(" + h + ", " + s + "%, " + l + "%, " + this.roundA + ")";
     };
     TinyColor.prototype.toHex = function (allow3Char) {
-        if (allow3Char === void 0) { allow3Char = false; }
+        if (allow3Char === void 0) {
+            allow3Char = false;
+        }
         return rgbToHex(this.r, this.g, this.b, allow3Char);
     };
     TinyColor.prototype.toHexString = function (allow3Char) {
-        if (allow3Char === void 0) { allow3Char = false; }
+        if (allow3Char === void 0) {
+            allow3Char = false;
+        }
         return '#' + this.toHex(allow3Char);
     };
     TinyColor.prototype.toHex8 = function (allow4Char) {
-        if (allow4Char === void 0) { allow4Char = false; }
+        if (allow4Char === void 0) {
+            allow4Char = false;
+        }
         return rgbaToHex(this.r, this.g, this.b, this.a, allow4Char);
     };
     TinyColor.prototype.toHex8String = function (allow4Char) {
-        if (allow4Char === void 0) { allow4Char = false; }
+        if (allow4Char === void 0) {
+            allow4Char = false;
+        }
         return '#' + this.toHex8(allow4Char);
     };
     TinyColor.prototype.toRgb = function () {
@@ -3384,7 +3259,7 @@ var TinyColor = (function () {
             r: Math.round(this.r),
             g: Math.round(this.g),
             b: Math.round(this.b),
-            a: this.a,
+            a: this.a
         };
     };
     TinyColor.prototype.toRgbString = function () {
@@ -3394,19 +3269,21 @@ var TinyColor = (function () {
         return this.a === 1 ? "rgb(" + r + ", " + g + ", " + b + ")" : "rgba(" + r + ", " + g + ", " + b + ", " + this.roundA + ")";
     };
     TinyColor.prototype.toPercentageRgb = function () {
-        var fmt = function (x) { return Math.round(bound01(x, 255) * 100) + "%"; };
+        var fmt = function (x) {
+            return Math.round(bound01(x, 255) * 100) + "%";
+        };
         return {
             r: fmt(this.r),
             g: fmt(this.g),
             b: fmt(this.b),
-            a: this.a,
+            a: this.a
         };
     };
     TinyColor.prototype.toPercentageRgbString = function () {
-        var rnd = function (x) { return Math.round(bound01(x, 255) * 100); };
-        return this.a === 1 ?
-            "rgb(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%)" :
-            "rgba(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%, " + this.roundA + ")";
+        var rnd = function (x) {
+            return Math.round(bound01(x, 255) * 100);
+        };
+        return this.a === 1 ? "rgb(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%)" : "rgba(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%, " + this.roundA + ")";
     };
     TinyColor.prototype.toName = function () {
         if (this.a === 0) {
@@ -3469,14 +3346,18 @@ var TinyColor = (function () {
         return new TinyColor(this.toString());
     };
     TinyColor.prototype.lighten = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         var hsl = this.toHsl();
         hsl.l += amount / 100;
         hsl.l = clamp01(hsl.l);
         return new TinyColor(hsl);
     };
     TinyColor.prototype.brighten = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         var rgb = this.toRgb();
         rgb.r = Math.max(0, Math.min(255, rgb.r - Math.round(255 * -(amount / 100))));
         rgb.g = Math.max(0, Math.min(255, rgb.g - Math.round(255 * -(amount / 100))));
@@ -3484,29 +3365,39 @@ var TinyColor = (function () {
         return new TinyColor(rgb);
     };
     TinyColor.prototype.darken = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         var hsl = this.toHsl();
         hsl.l -= amount / 100;
         hsl.l = clamp01(hsl.l);
         return new TinyColor(hsl);
     };
     TinyColor.prototype.tint = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         return this.mix('white', amount);
     };
     TinyColor.prototype.shade = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         return this.mix('black', amount);
     };
     TinyColor.prototype.desaturate = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         var hsl = this.toHsl();
         hsl.s -= amount / 100;
         hsl.s = clamp01(hsl.s);
         return new TinyColor(hsl);
     };
     TinyColor.prototype.saturate = function (amount) {
-        if (amount === void 0) { amount = 10; }
+        if (amount === void 0) {
+            amount = 10;
+        }
         var hsl = this.toHsl();
         hsl.s += amount / 100;
         hsl.s = clamp01(hsl.s);
@@ -3522,25 +3413,31 @@ var TinyColor = (function () {
         return new TinyColor(hsl);
     };
     TinyColor.prototype.mix = function (color, amount) {
-        if (amount === void 0) { amount = 50; }
+        if (amount === void 0) {
+            amount = 50;
+        }
         var rgb1 = this.toRgb();
         var rgb2 = new TinyColor(color).toRgb();
         var p = amount / 100;
         var rgba = {
-            r: ((rgb2.r - rgb1.r) * p) + rgb1.r,
-            g: ((rgb2.g - rgb1.g) * p) + rgb1.g,
-            b: ((rgb2.b - rgb1.b) * p) + rgb1.b,
-            a: ((rgb2.a - rgb1.a) * p) + rgb1.a,
+            r: (rgb2.r - rgb1.r) * p + rgb1.r,
+            g: (rgb2.g - rgb1.g) * p + rgb1.g,
+            b: (rgb2.b - rgb1.b) * p + rgb1.b,
+            a: (rgb2.a - rgb1.a) * p + rgb1.a
         };
         return new TinyColor(rgba);
     };
     TinyColor.prototype.analogous = function (results, slices) {
-        if (results === void 0) { results = 6; }
-        if (slices === void 0) { slices = 30; }
+        if (results === void 0) {
+            results = 6;
+        }
+        if (slices === void 0) {
+            slices = 30;
+        }
         var hsl = this.toHsl();
         var part = 360 / slices;
         var ret = [this];
-        for (hsl.h = (hsl.h - ((part * results) >> 1) + 720) % 360; --results;) {
+        for (hsl.h = (hsl.h - (part * results >> 1) + 720) % 360; --results;) {
             hsl.h = (hsl.h + part) % 360;
             ret.push(new TinyColor(hsl));
         }
@@ -3552,7 +3449,9 @@ var TinyColor = (function () {
         return new TinyColor(hsl);
     };
     TinyColor.prototype.monochromatic = function (results) {
-        if (results === void 0) { results = 6; }
+        if (results === void 0) {
+            results = 6;
+        }
         var hsv = this.toHsv();
         var h = hsv.h;
         var s = hsv.s;
@@ -3568,11 +3467,7 @@ var TinyColor = (function () {
     TinyColor.prototype.splitcomplement = function () {
         var hsl = this.toHsl();
         var h = hsl.h;
-        return [
-            this,
-            new TinyColor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l }),
-            new TinyColor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l }),
-        ];
+        return [this, new TinyColor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l }), new TinyColor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l })];
     };
     TinyColor.prototype.triad = function () {
         return this.polyad(3);
@@ -3586,7 +3481,7 @@ var TinyColor = (function () {
         var result = [this];
         var increment = 360 / n;
         for (var i = 1; i < n; i++) {
-            result.push(new TinyColor({ h: (h + (i * increment)) % 360, s: hsl.s, l: hsl.l }));
+            result.push(new TinyColor({ h: (h + i * increment) % 360, s: hsl.s, l: hsl.l }));
         }
         return result;
     };
@@ -3594,11 +3489,11 @@ var TinyColor = (function () {
         return this.toRgbString() === new TinyColor(color).toRgbString();
     };
     return TinyColor;
-}());
+}();
 
 let ButtonCard = class ButtonCard extends LitElement {
     static get styles() {
-        return css `
+        return css`
         ha-card {
           cursor: pointer;
           overflow: hidden;
@@ -3697,30 +3592,27 @@ let ButtonCard = class ButtonCard extends LitElement {
             state = this.hass.states[this.config.entity];
         }
         const configState = this.testConfigState(state);
-        if (this.config)
-            switch (this.config.color_type) {
-                case 'blank-card':
-                    return this.blankCardColoredHtml(state);
-                case 'label-card':
-                case 'card':
-                    return this.cardColoredHtml(state, configState);
-                case 'icon':
-                default:
-                    return this.iconColoredHtml(state, configState);
-            }
+        if (this.config) switch (this.config.color_type) {
+            case 'blank-card':
+                return this.blankCardColoredHtml(state);
+            case 'label-card':
+            case 'card':
+                return this.cardColoredHtml(state, configState);
+            case 'icon':
+            default:
+                return this.iconColoredHtml(state, configState);
+        }
     }
     getFontColorBasedOnBackgroundColor(backgroundColor) {
         let localColor = backgroundColor;
         if (backgroundColor.substring(0, 3) === "var") {
-            localColor = window.getComputedStyle(document.documentElement)
-                .getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
+            localColor = window.getComputedStyle(document.documentElement).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
         }
         const colorObj = new TinyColor(localColor);
         let fontColor = ''; // don't override by default
         if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
             fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
-        }
-        else {
+        } else {
             fontColor = 'rgb(234, 234, 234)'; // dark colors - white font
         }
         return fontColor;
@@ -3735,17 +3627,17 @@ let ButtonCard = class ButtonCard extends LitElement {
             if (elt.operator) {
                 switch (elt.operator) {
                     case '==':
-                        return (state.state == elt.value);
+                        return state.state == elt.value;
                     case '<=':
-                        return (state.state <= elt.value);
+                        return state.state <= elt.value;
                     case '<':
-                        return (state.state < elt.value);
+                        return state.state < elt.value;
                     case '>=':
-                        return (state.state >= elt.value);
+                        return state.state >= elt.value;
                     case '>':
-                        return (state.state > elt.value);
+                        return state.state > elt.value;
                     case '!=':
-                        return (state.state != elt.value);
+                        return state.state != elt.value;
                     case 'regex':
                         let matches = state.state.match(elt.value) ? true : false;
                         return matches;
@@ -3755,9 +3647,8 @@ let ButtonCard = class ButtonCard extends LitElement {
                     default:
                         return false;
                 }
-            }
-            else {
-                return (elt.value == state.state);
+            } else {
+                return elt.value == state.state;
             }
         });
         if (!retval && def) {
@@ -3783,12 +3674,10 @@ let ButtonCard = class ButtonCard extends LitElement {
         let color = undefined;
         if (configState && configState.color) {
             colorValue = configState.color;
-        }
-        else {
+        } else {
             if (this.config.color != 'auto' && state && state.state == 'off') {
                 colorValue = this.config.color_off;
-            }
-            else {
+            } else {
                 if (this.config.color) {
                     colorValue = this.config.color;
                 }
@@ -3798,25 +3687,20 @@ let ButtonCard = class ButtonCard extends LitElement {
             if (state) {
                 if (state.attributes.rgb_color) {
                     color = `rgb(${state.attributes.rgb_color.join(',')})`;
-                }
-                else {
+                } else {
                     color = this.getDefaultColorForState(state);
                 }
-            }
-            else {
+            } else {
                 color = this.config.default_color;
             }
-        }
-        else {
+        } else {
             if (!colorValue) {
                 if (state) {
                     color = this.getDefaultColorForState(state);
-                }
-                else {
+                } else {
                     color = this.config.default_color;
                 }
-            }
-            else {
+            } else {
                 color = colorValue;
             }
         }
@@ -3829,15 +3713,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         let icon = undefined;
         if (configState && configState.icon) {
             icon = configState.icon;
-        }
-        else if (this.config.icon) {
+        } else if (this.config.icon) {
             icon = this.config.icon;
-        }
-        else {
+        } else {
             if (state && state.attributes) {
-                icon = state.attributes.icon ?
-                    state.attributes.icon :
-                    domainIcon(computeDomain(state.entity_id), state.state);
+                icon = state.attributes.icon ? state.attributes.icon : domainIcon(computeDomain(state.entity_id), state.state);
             }
         }
         return icon;
@@ -3848,17 +3728,14 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (state) {
             if (configState && configState.style) {
                 styleArray = configState.style;
-            }
-            else if (this.config.style) {
+            } else if (this.config.style) {
                 styleArray = this.config.style;
             }
-        }
-        else {
-            if (this.config.style)
-                styleArray = this.config.style;
+        } else {
+            if (this.config.style) styleArray = this.config.style;
         }
         if (styleArray) {
-            styleArray.forEach((cssObject) => {
+            styleArray.forEach(cssObject => {
                 const attribute = Object.keys(cssObject)[0];
                 const value = cssObject[attribute];
                 cardStyle += `${attribute}: ${value}; `;
@@ -3873,14 +3750,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         let name = null;
         if (configState && configState.name) {
             name = configState.name;
-        }
-        else if (this.config.name) {
+        } else if (this.config.name) {
             name = this.config.name;
-        }
-        else {
+        } else {
             if (state) {
-                name = state.attributes && state.attributes.friendly_name ?
-                    state.attributes.friendly_name : computeEntity(state.entity_id);
+                name = state.attributes && state.attributes.friendly_name ? state.attributes.friendly_name : computeEntity(state.entity_id);
             }
         }
         return name;
@@ -3891,8 +3765,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             const units = this.buildUnits(state);
             if (units) {
                 stateString = state.state + " " + units;
-            }
-            else {
+            } else {
                 stateString = state.state;
             }
         }
@@ -3904,8 +3777,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             if (this.config.show_units) {
                 if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
                     units = state.attributes.unit_of_measurement;
-                }
-                else {
+                } else {
                     units = this.config.units ? this.config.units : null;
                 }
             }
@@ -3920,20 +3792,17 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (stateString !== null) {
             if (name) {
                 nameStateString = name + ": " + stateString;
-            }
-            else {
+            } else {
                 nameStateString = stateString;
             }
-        }
-        else {
+        } else {
             nameStateString = name;
         }
         return nameStateString;
     }
     isClickable(state) {
         let clickable = true;
-        if (this.config.tap_action.action === 'toggle' && this.config.hold_action.action === 'none'
-            || this.config.hold_action.action === 'toggle' && this.config.tap_action.action === 'none') {
+        if (this.config.tap_action.action === 'toggle' && this.config.hold_action.action === 'none' || this.config.hold_action.action === 'toggle' && this.config.tap_action.action === 'none') {
             if (state) {
                 switch (computeDomain(state.entity_id)) {
                     case 'sensor':
@@ -3945,17 +3814,13 @@ let ButtonCard = class ButtonCard extends LitElement {
                         clickable = true;
                         break;
                 }
-            }
-            else {
+            } else {
                 clickable = false;
             }
-        }
-        else {
-            if (this.config.tap_action.action != 'none'
-                || this.config.hold_action.action != 'none') {
+        } else {
+            if (this.config.tap_action.action != 'none' || this.config.hold_action.action != 'none') {
                 clickable = true;
-            }
-            else {
+            } else {
                 clickable = false;
             }
         }
@@ -3966,7 +3831,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     buttonContent(state, configState, color) {
         if (!this.config) {
-            return html ``;
+            return html``;
         }
         const icon = this.buildIcon(state, configState);
         const name = this.buildName(state, configState);
@@ -3974,94 +3839,94 @@ let ButtonCard = class ButtonCard extends LitElement {
         const nameStateString = this.buildNameStateConcat(name, stateString);
         switch (this.config.layout) {
             case 'icon_name_state':
-                return html `
+                return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${nameStateString ? html `<div class="divTableCell">${nameStateString}</div>` : ''}
+                ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
               </div>
             </div>
           </div>
           `;
             case 'icon_name':
-                return html `
+                return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${name ? html `<div class="divTableCell">${name}</div>` : ''}
+                ${name ? html`<div class="divTableCell">${name}</div>` : ''}
               </div>
             </div>
           </div>
-          ${stateString != null ? html `<div>${stateString}</div>` : ''}
+          ${stateString != null ? html`<div>${stateString}</div>` : ''}
           `;
             case 'icon_state':
-                return html `
+                return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null ? html `<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
-          ${name ? html `<div>${name}</div>` : ''}
+          ${name ? html`<div>${name}</div>` : ''}
           `;
             case 'icon_state_name2nd':
-                return html `
+                return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html `<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
-                ${!stateString && name ? html `<div class="divTableCell">${name}</div>` : ''}
-                ${stateString && !name ? html `<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
           `;
             case 'icon_name_state2nd':
-                return html `
+                return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
-                ${stateString != null && name ? html `<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
-                ${!stateString && name ? html `<div class="divTableCell">${name}</div>` : ''}
-                ${stateString && !name ? html `<div class="divTableCell">${stateString}</div>` : ''}
+                ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
+                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
             </div>
           </div>
           `;
             case 'name_state':
-                return html `
-          ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${nameStateString ? html `<div>${nameStateString}</div>` : ''}
+                return html`
+          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
             case 'vertical':
             default:
-                return html `
-          ${this.config.show_icon && icon ? html `<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${name ? html `<div>${name}</div>` : ''}
-          ${stateString ? html `<div>${stateString}</div>` : ''}
+                return html`
+          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${name ? html`<div>${name}</div>` : ''}
+          ${stateString ? html`<div>${stateString}</div>` : ''}
           `;
         }
     }
     blankCardColoredHtml(state) {
         const color = this.buildCssColorAttribute(state, undefined);
         const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-        return html `
+        return html`
       <ha-card class="disabled">
         <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};"></div>
       </ha-card>
@@ -4071,7 +3936,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this.buildCssColorAttribute(state, configState);
         const fontColor = this.getFontColorBasedOnBackgroundColor(color);
         const style = this.buildStyle(state, configState);
-        return html `
+        return html`
       <ha-card class="${this.isClickable(state) ? '' : "disabled"}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};">
           <div class="button-card-main" style="${style}">
@@ -4085,7 +3950,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     iconColoredHtml(state, configState) {
         const color = this.buildCssColorAttribute(state, configState);
         const style = this.buildStyle(state, configState);
-        return html `
+        return html`
       <ha-card class="${this.isClickable(state) ? '' : "disabled"}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         <div class="button-card-main" style="${style}">
           ${this.buttonContent(state, configState, color)}
@@ -4109,28 +3974,20 @@ let ButtonCard = class ButtonCard extends LitElement {
         return 3;
     }
     _handleTap(ev) {
-        if (this.config.confirmation &&
-            !confirm(this.config.confirmation)) {
+        if (this.config.confirmation && !confirm(this.config.confirmation)) {
             return;
         }
         const config = ev.target.config;
         handleClick(this, this.hass, config, false);
     }
     _handleHold(ev) {
-        if (this.config.confirmation &&
-            !confirm(this.config.confirmation)) {
+        if (this.config.confirmation && !confirm(this.config.confirmation)) {
             return;
         }
         const config = ev.target.config;
         handleClick(this, this.hass, config, true);
     }
 };
-__decorate([
-    property()
-], ButtonCard.prototype, "hass", void 0);
-__decorate([
-    property()
-], ButtonCard.prototype, "config", void 0);
-ButtonCard = __decorate([
-    customElement("button-card")
-], ButtonCard);
+__decorate([property()], ButtonCard.prototype, "hass", void 0);
+__decorate([property()], ButtonCard.prototype, "config", void 0);
+ButtonCard = __decorate([customElement("button-card")], ButtonCard);

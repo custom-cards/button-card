@@ -1,10 +1,13 @@
 {
   "name": "button-card",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Button card for lovelace",
-  "main": "button-card.js",
+  "main": "src/button-card.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run rollup && npm run babel",
+    "rollup": "rollup -c",
+    "babel": "babel dist/button-card.js --out-file dist/button-card.js",
+    "watch": "rollup -c --watch"
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,7 @@
   "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
     "@babel/core": "^7.4.3",
+    "babel-cli": "^6.26.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
