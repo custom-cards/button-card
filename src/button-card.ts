@@ -254,14 +254,11 @@ class ButtonCard extends LitElement {
   }
 
   private buildIcon(state: HassEntity | null, configState: StateConfig | undefined) {
-    if (!this.config) {
-      return undefined;
-    }
     let icon: undefined | string = undefined;
     if (configState && configState.icon) {
       icon = configState.icon;
-    } else if (this.config.icon) {
-      icon = this.config.icon;
+    } else if (this.config!.icon) {
+      icon = this.config!.icon;
     } else {
       if (state && state.attributes) {
         icon = state.attributes.icon ?
@@ -391,22 +388,19 @@ class ButtonCard extends LitElement {
   }
 
   private buttonContent(state: HassEntity | null, configState: StateConfig | undefined, color: string): TemplateResult {
-    if (!this.config) {
-      return html``;
-    }
     const icon = this.buildIcon(state, configState);
     const name = this.buildName(state, configState);
     const stateString = this.buildStateString(state);
     const nameStateString = this.buildNameStateConcat(name, stateString);
 
-    switch (this.config.layout) {
+    switch (this.config!.layout) {
       case 'icon_name_state':
         return html`
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
+                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
                 ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
               </div>
@@ -418,8 +412,8 @@ class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
+                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
                 ${name ? html`<div class="divTableCell">${name}</div>` : ''}
               </div>
@@ -432,8 +426,8 @@ class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
+                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
                 ${stateString != null ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -446,8 +440,8 @@ class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
+                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
                 ${stateString != null && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -461,8 +455,8 @@ class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
+                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                 </div>
                 ${stateString != null && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -473,13 +467,13 @@ class ButtonCard extends LitElement {
           `;
       case 'name_state':
         return html`
-          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
           ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
       case 'vertical':
       default:
         return html`
-          ${this.config.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
           ${name ? html`<div>${name}</div>` : ''}
           ${stateString ? html`<div>${stateString}</div>` : ''}
           `;

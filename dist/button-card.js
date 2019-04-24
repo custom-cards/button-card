@@ -3707,9 +3707,6 @@ let ButtonCard = class ButtonCard extends LitElement {
         return color;
     }
     buildIcon(state, configState) {
-        if (!this.config) {
-            return undefined;
-        }
         let icon = undefined;
         if (configState && configState.icon) {
             icon = configState.icon;
@@ -3830,9 +3827,6 @@ let ButtonCard = class ButtonCard extends LitElement {
         return configState && configState.spin ? 'rotating' : '';
     }
     buttonContent(state, configState, color) {
-        if (!this.config) {
-            return html``;
-        }
         const icon = this.buildIcon(state, configState);
         const name = this.buildName(state, configState);
         const stateString = this.buildStateString(state);
