@@ -6,6 +6,7 @@ import {
   MessageBase,
   HassServices,
 } from "home-assistant-js-websocket";
+import { HapticType } from "./haptic";
 
 export interface ButtonCardConfig {
   type: string;
@@ -48,10 +49,12 @@ export interface CssStyleConfig {
 
 export interface ToggleActionConfig {
   action: "toggle";
+  haptic?: HapticType;
 }
 
 export interface CallServiceActionConfig {
   action: "call-service";
+  haptic?: HapticType;
   service: string;
   service_data?: {
     entity_id?: string | [string];
@@ -61,11 +64,13 @@ export interface CallServiceActionConfig {
 
 export interface NavigateActionConfig {
   action: "navigate";
+  haptic?: HapticType;
   navigation_path: string;
 }
 
 export interface MoreInfoActionConfig {
   action: "more-info";
+  haptic?: HapticType;
 }
 
 export interface NoActionConfig {
@@ -74,6 +79,7 @@ export interface NoActionConfig {
 
 export interface UrlActionConfig {
   action: "url";
+  haptic?: HapticType;
   url: string;
 }
 
