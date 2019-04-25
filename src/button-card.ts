@@ -253,6 +253,9 @@ class ButtonCard extends LitElement {
   }
 
   private buildIcon(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
+    if (!this.config!.show_icon) {
+      return undefined;
+    }
     let icon: undefined | string = undefined;
     if (configState && configState.icon) {
       icon = configState.icon;
@@ -264,6 +267,25 @@ class ButtonCard extends LitElement {
         domainIcon(helpers.computeDomain(state.entity_id), state.state);
     }
     return icon;
+  }
+
+  private buildEntityPicture(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
+    if (!this.config!.show_entity_picture ||
+      !state && !configState && !this.config!.entity_picture) {
+      return undefined;
+    }
+    let entityPicture: string | undefined = undefined;
+    if (configState && configState.entity_picture) {
+      entityPicture = configState.entity_picture;
+    } else {
+      if (this.config!.entity_picture) {
+        entityPicture = this.config!.entity_picture
+      } else {
+        entityPicture = state && state.attributes && state.attributes.entity_picture ?
+          state.attributes.entity_picture : undefined;
+      }
+    }
+    return entityPicture;
   }
 
   private buildStyle(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
@@ -287,6 +309,28 @@ class ButtonCard extends LitElement {
       });
     }
     return cardStyle;
+  }
+
+  private buildEntityPictureStyle(state: HassEntity | undefined, configState: StateConfig | undefined): string {
+    let entityPictureStyle = '';
+    let styleArray: CssStyleConfig | undefined = undefined;
+    if (state) {
+      if (configState && configState.entity_picture_style) {
+        styleArray = configState.entity_picture_style;
+      } else if (this.config!.entity_picture_style) {
+        styleArray = this.config!.entity_picture_style;
+      }
+    } else if (this.config!.entity_picture_style) {
+      styleArray = this.config!.entity_picture_style;
+    }
+    if (styleArray) {
+      styleArray.forEach((cssObject) => {
+        const attribute = Object.keys(cssObject)[0];
+        const value = cssObject[attribute];
+        entityPictureStyle += `${attribute}: ${value}; `;
+      });
+    }
+    return entityPictureStyle;
   }
 
   private buildName(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
@@ -389,6 +433,8 @@ class ButtonCard extends LitElement {
     const name = this.buildName(state, configState);
     const stateString = this.buildStateString(state);
     const nameStateString = this.buildNameStateConcat(name, stateString);
+    const entityPicture = this.buildEntityPicture(state, configState);
+    const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
 
     switch (this.config!.layout) {
       case 'icon_name_state':
@@ -397,7 +443,8 @@ class ButtonCard extends LitElement {
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
-                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
               </div>
@@ -410,7 +457,8 @@ class ButtonCard extends LitElement {
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
-                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${name ? html`<div class="divTableCell">${name}</div>` : ''}
               </div>
@@ -424,7 +472,8 @@ class ButtonCard extends LitElement {
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
-                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -438,7 +487,8 @@ class ButtonCard extends LitElement {
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
-                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -453,7 +503,8 @@ class ButtonCard extends LitElement {
             <div class="divTableBody">
               <div class="divTableRow">
                 <div class="divTableCell" style="width: ${this.config!.size}; height: auto;">
-                  ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config!.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -464,13 +515,15 @@ class ButtonCard extends LitElement {
           `;
       case 'name_state':
         return html`
-          ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: ${this.config!.size}; height: auto; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
           ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
       case 'vertical':
       default:
         return html`
-          ${this.config!.show_icon && icon ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: ${this.config!.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: ${this.config!.size}; height: auto; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
           ${name ? html`<div>${name}</div>` : ''}
           ${stateString ? html`<div>${stateString}</div>` : ''}
           `;
@@ -530,6 +583,7 @@ class ButtonCard extends LitElement {
       show_state: false,
       show_icon: true,
       show_units: true,
+      show_entity_picture: false,
       ...config
     };
     this.config!.default_color = 'var(--primary-text-color)';

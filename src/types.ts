@@ -22,11 +22,14 @@ export interface ButtonCardConfig {
   show_state?: boolean;
   show_icon?: boolean;
   show_units?: boolean;
+  show_entity_picture?: boolean;
+  entity_picture?: string;
   units?: string;
   style?: CssStyleConfig[];
   state?: StateConfig[];
   confirmation?: string;
   layout?: "vertical" | "icon_name_state" | "name_state" | "icon_name" | "icon_state" | "icon_name_state2nd" | "icon_state_name2nd";
+  entity_picture_style?: CssStyleConfig[];
 
   default_color: string;
   color_on: string;
@@ -40,6 +43,8 @@ export interface StateConfig {
   icon?: string;
   color?: string;
   style?: CssStyleConfig;
+  entity_picture_style?: CssStyleConfig[];
+  entity_picture?: string;
   spin?: boolean;
 }
 
