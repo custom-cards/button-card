@@ -8,6 +8,11 @@
       "dom",
       "dom.iterable"
     ],
+    "plugins": [
+      {
+        "name": "ts-lit-plugin"
+      }
+    ],
     "noEmit": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,

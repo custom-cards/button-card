@@ -50,6 +50,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^4.2.3",
     "rollup-plugin-typescript2": "^0.20.1",
+    "ts-lit-plugin": "^1.0.5",
     "typescript": "^3.4.4",
     "typescript-styled-plugin": "^0.14.0"
   },

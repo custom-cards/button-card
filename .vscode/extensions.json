@@ -2,6 +2,6 @@
   "recommendations": [
     "msjsdiag.debugger-for-chrome",
     "dbaeumer.vscode-eslint",
-    "bierner.lit-html"
+    "runem.lit-plugin",
   ]
 }
