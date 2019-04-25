@@ -1,27 +1,54 @@
 {
   "name": "button-card",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Button card for lovelace",
-  "main": "button-card.js",
+  "main": "dist/button-card.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run rollup && npm run babel",
+    "rollup": "rollup -c",
+    "babel": "babel dist/button-card.js --out-file dist/button-card.js",
+    "lint": "eslint src/*.ts",
+    "watch": "rollup -c --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kuuji/button-card.git"
+    "url": "git+https://github.com/custom-cards/button-card.git"
   },
   "keywords": [
     "lovelace"
   ],
   "author": "kuuji",
+  "contributors": [
+    "Ian Richardson (https://github.com/iantrich)",
+    "Jérôme Wiedemann (https://github.com/RomRider)"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kuuji/button-card/issues"
+    "url": "https://github.com/custom-cards/button-card/issues"
   },
-  "homepage": "https://github.com/kuuji/button-card#readme",
+  "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-decorators": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "babel-cli": "^6.26.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.17.2",
+    "npm": "^6.9.0",
+    "prettier": "^1.17.0",
+    "rollup": "^1.10.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-typescript2": "^0.20.1",
+    "typescript": "^3.4.4"
+  },
+  "dependencies": {
+    "@ctrl/tinycolor": "^2.4.0",
+    "home-assistant-js-websocket": "^3.4.0",
+    "lit-element": "^2.1.0"
   }
 }
