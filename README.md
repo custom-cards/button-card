@@ -34,6 +34,7 @@ Lovelace Button card for your entities.
 - [blink](#blink) animation support
 - rotating animation support
 - confirmation popup for sensitive items (optional)
+- haptic support for the [Beta IOS App](http://home-assistant.io/ios/beta)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
 ## Configuration
@@ -70,6 +71,7 @@ Lovelace Button card for your entities.
 | `url`             | string | none     | Eg: `https://www.google.fr`                                      | URL to open on click when action is `url`. The URL will open in a new tab                                |
 | `service`         | string | none     | Any service                                                      | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
 | `service_data`    | object | none     | Any service data                                                 | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` |
+| `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 
 ### State
 

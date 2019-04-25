@@ -2472,6 +2472,13 @@ const toggleEntity = (hass, entityId) => {
     return turnOnOffEntity(hass, entityId, turnOn);
 };
 
+/**
+ * Utility function that enables haptic feedback
+ */
+const forwardHaptic = (el, hapticType) => {
+    fireEvent(el, "haptic", hapticType);
+};
+
 const handleClick = (node, hass, config, hold) => {
     let actionConfig;
     if (hold && config.hold_action) {
@@ -2490,19 +2497,23 @@ const handleClick = (node, hass, config, hold) => {
                 fireEvent(node, "hass-more-info", {
                     entityId: config.entity ? config.entity : config.camera_image
                 });
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             }
             break;
         case "navigate":
             if (actionConfig.navigation_path) {
                 navigate(node, actionConfig.navigation_path);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             }
             break;
         case 'url':
             actionConfig.url && window.open(actionConfig.url);
+            if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             break;
         case "toggle":
             if (config.entity) {
                 toggleEntity(hass, config.entity);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             }
             break;
         case "call-service":
@@ -2512,6 +2523,7 @@ const handleClick = (node, hass, config, hold) => {
                 }
                 const [domain, service] = actionConfig.service.split(".", 2);
                 hass.callService(domain, service, actionConfig.service_data);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             }
     }
 };
