@@ -119,7 +119,7 @@ Multiple values are possible, see the image below for examples:
 
 ### Manual Installation
 
-1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/button-card.js)
+1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/dist/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
 
