@@ -12,7 +12,7 @@
     "rollup": "rollup -c",
     "commit_dist": "git add dist/button-card.js",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
-    "lint": "eslint src/*.ts",
+    "lint": "eslint src/button-card.ts",
     "watch": "rollup -c --watch"
   },
   "repository": {
@@ -50,7 +50,8 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^4.2.3",
     "rollup-plugin-typescript2": "^0.20.1",
-    "typescript": "^3.4.4"
+    "typescript": "^3.4.4",
+    "typescript-styled-plugin": "^0.14.0"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^2.4.0",

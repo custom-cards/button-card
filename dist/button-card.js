@@ -2277,391 +2277,6 @@ LitElement.finalized = true;
  */
 LitElement.render = render$1;
 
-/** Constants to be used in the frontend. */
-// Constants should be alphabetically sorted by name.
-// Arrays with values should be alphabetically sorted if order doesn't matter.
-// Each constant should have a description what it is supposed to be used for.
-/** Icon to use when no icon specified for domain. */
-const DEFAULT_DOMAIN_ICON = "hass:bookmark";
-/** States that we consider "off". */
-const STATES_OFF = ["closed", "locked", "off"];
-
-/**
- * Return the icon to be used for a domain.
- *
- * Optionally pass in a state to influence the domain icon.
- */
-const fixedIcons = {
-    alert: "hass:alert",
-    automation: "hass:playlist-play",
-    calendar: "hass:calendar",
-    camera: "hass:video",
-    climate: "hass:thermostat",
-    configurator: "hass:settings",
-    conversation: "hass:text-to-speech",
-    device_tracker: "hass:account",
-    fan: "hass:fan",
-    group: "hass:google-circles-communities",
-    history_graph: "hass:chart-line",
-    homeassistant: "hass:home-assistant",
-    homekit: "hass:home-automation",
-    image_processing: "hass:image-filter-frames",
-    input_boolean: "hass:drawing",
-    input_datetime: "hass:calendar-clock",
-    input_number: "hass:ray-vertex",
-    input_select: "hass:format-list-bulleted",
-    input_text: "hass:textbox",
-    light: "hass:lightbulb",
-    mailbox: "hass:mailbox",
-    notify: "hass:comment-alert",
-    person: "hass:account",
-    plant: "hass:flower",
-    proximity: "hass:apple-safari",
-    remote: "hass:remote",
-    scene: "hass:google-pages",
-    script: "hass:file-document",
-    sensor: "hass:eye",
-    simple_alarm: "hass:bell",
-    sun: "hass:white-balance-sunny",
-    switch: "hass:flash",
-    timer: "hass:timer",
-    updater: "hass:cloud-upload",
-    vacuum: "hass:robot-vacuum",
-    water_heater: "hass:thermometer",
-    weblink: "hass:open-in-new"
-};
-function domainIcon(domain, state) {
-    if (domain in fixedIcons) {
-        return fixedIcons[domain];
-    }
-    switch (domain) {
-        case "alarm_control_panel":
-            switch (state) {
-                case "armed_home":
-                    return "hass:bell-plus";
-                case "armed_night":
-                    return "hass:bell-sleep";
-                case "disarmed":
-                    return "hass:bell-outline";
-                case "triggered":
-                    return "hass:bell-ring";
-                default:
-                    return "hass:bell";
-            }
-        case "binary_sensor":
-            return state && state === "off" ? "hass:radiobox-blank" : "hass:checkbox-marked-circle";
-        case "cover":
-            return state === "closed" ? "hass:window-closed" : "hass:window-open";
-        case "lock":
-            return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
-        case "media_player":
-            return state && state !== "off" && state !== "idle" ? "hass:cast-connected" : "hass:cast";
-        case "zwave":
-            switch (state) {
-                case "dead":
-                    return "hass:emoticon-dead";
-                case "sleeping":
-                    return "hass:sleep";
-                case "initializing":
-                    return "hass:timer-sand";
-                default:
-                    return "hass:z-wave";
-            }
-        default:
-            // tslint:disable-next-line
-            console.warn("Unable to find icon for domain " + domain + " (" + state + ")");
-            return DEFAULT_DOMAIN_ICON;
-    }
-}
-
-function computeDomain(entityId) {
-    return entityId.substr(0, entityId.indexOf("."));
-}
-function computeEntity(entityId) {
-    return entityId.substr(entityId.indexOf(".") + 1);
-}
-
-// Polymer legacy event helpers used courtesy of the Polymer project.
-//
-// Copyright (c) 2017 The Polymer Authors. All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//    * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//    * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//    * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-/**
- * Dispatches a custom event with an optional detail value.
- *
- * @param {string} type Name of event type.
- * @param {*=} detail Detail value containing event-specific
- *   payload.
- * @param {{ bubbles: (boolean|undefined),
- *           cancelable: (boolean|undefined),
- *           composed: (boolean|undefined) }=}
- *  options Object specifying options.  These may include:
- *  `bubbles` (boolean, defaults to `true`),
- *  `cancelable` (boolean, defaults to false), and
- *  `node` on which to fire the event (HTMLElement, defaults to `this`).
- * @return {Event} The new event that was fired.
- */
-const fireEvent = (node, type, detail, options) => {
-    options = options || {};
-    // @ts-ignore
-    detail = detail === null || detail === undefined ? {} : detail;
-    const event = new Event(type, {
-        bubbles: options.bubbles === undefined ? true : options.bubbles,
-        cancelable: Boolean(options.cancelable),
-        composed: options.composed === undefined ? true : options.composed
-    });
-    event.detail = detail;
-    node.dispatchEvent(event);
-    return event;
-};
-
-const navigate = (_node, path, replace = false) => {
-    if (replace) {
-        history.replaceState(null, "", path);
-    } else {
-        history.pushState(null, "", path);
-    }
-    fireEvent(window, "location-changed", {
-        replace
-    });
-};
-
-const turnOnOffEntity = (hass, entityId, turnOn = true) => {
-    const stateDomain = computeDomain(entityId);
-    const serviceDomain = stateDomain === "group" ? "homeassistant" : stateDomain;
-    let service;
-    switch (stateDomain) {
-        case "lock":
-            service = turnOn ? "unlock" : "lock";
-            break;
-        case "cover":
-            service = turnOn ? "open_cover" : "close_cover";
-            break;
-        default:
-            service = turnOn ? "turn_on" : "turn_off";
-    }
-    return hass.callService(serviceDomain, service, { entity_id: entityId });
-};
-
-const toggleEntity = (hass, entityId) => {
-    const turnOn = STATES_OFF.includes(hass.states[entityId].state);
-    return turnOnOffEntity(hass, entityId, turnOn);
-};
-
-/**
- * Utility function that enables haptic feedback
- */
-const forwardHaptic = (el, hapticType) => {
-    fireEvent(el, "haptic", hapticType);
-};
-
-const handleClick = (node, hass, config, hold) => {
-    let actionConfig;
-    if (hold && config.hold_action) {
-        actionConfig = config.hold_action;
-    } else if (!hold && config.tap_action) {
-        actionConfig = config.tap_action;
-    }
-    if (!actionConfig) {
-        actionConfig = {
-            action: "toggle"
-        };
-    }
-    switch (actionConfig.action) {
-        case "more-info":
-            if (config.entity || config.camera_image) {
-                fireEvent(node, "hass-more-info", {
-                    entityId: config.entity ? config.entity : config.camera_image
-                });
-                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
-            }
-            break;
-        case "navigate":
-            if (actionConfig.navigation_path) {
-                navigate(node, actionConfig.navigation_path);
-                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
-            }
-            break;
-        case 'url':
-            actionConfig.url && window.open(actionConfig.url);
-            if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
-            break;
-        case "toggle":
-            if (config.entity) {
-                toggleEntity(hass, config.entity);
-                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
-            }
-            break;
-        case "call-service":
-            {
-                if (!actionConfig.service) {
-                    return;
-                }
-                const [domain, service] = actionConfig.service.split(".", 2);
-                hass.callService(domain, service, actionConfig.service_data);
-                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
-            }
-    }
-};
-
-// See https://github.com/home-assistant/home-assistant-polymer/pull/2457
-// on how to undo mwc -> paper migration
-// import "@material/mwc-ripple";
-const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-class LongPress extends HTMLElement {
-    constructor() {
-        super();
-        this.holdTime = 500;
-        this.ripple = document.createElement("paper-ripple");
-        this.timer = undefined;
-        this.held = false;
-        this.cooldownStart = false;
-        this.cooldownEnd = false;
-    }
-    connectedCallback() {
-        Object.assign(this.style, {
-            borderRadius: "50%",
-            position: "absolute",
-            width: isTouch ? "100px" : "50px",
-            height: isTouch ? "100px" : "50px",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none"
-        });
-        this.appendChild(this.ripple);
-        this.ripple.style.color = "#03a9f4"; // paper-ripple
-        this.ripple.style.color = "var(--primary-color)"; // paper-ripple
-        // this.ripple.primary = true;
-        ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(ev => {
-            document.addEventListener(ev, () => {
-                clearTimeout(this.timer);
-                this.stopAnimation();
-                this.timer = undefined;
-            }, { passive: true });
-        });
-    }
-    bind(element) {
-        if (element.longPress) {
-            return;
-        }
-        element.longPress = true;
-        element.addEventListener("contextmenu", ev => {
-            const e = ev || window.event;
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-            e.cancelBubble = true;
-            e.returnValue = false;
-            return false;
-        });
-        const clickStart = ev => {
-            if (this.cooldownStart) {
-                return;
-            }
-            this.held = false;
-            let x;
-            let y;
-            if (ev.touches) {
-                x = ev.touches[0].pageX;
-                y = ev.touches[0].pageY;
-            } else {
-                x = ev.pageX;
-                y = ev.pageY;
-            }
-            this.timer = window.setTimeout(() => {
-                this.startAnimation(x, y);
-                this.held = true;
-            }, this.holdTime);
-            this.cooldownStart = true;
-            window.setTimeout(() => this.cooldownStart = false, 100);
-        };
-        const clickEnd = ev => {
-            if (this.cooldownEnd || ["touchend", "touchcancel"].includes(ev.type) && this.timer === undefined) {
-                return;
-            }
-            clearTimeout(this.timer);
-            this.stopAnimation();
-            this.timer = undefined;
-            if (this.held) {
-                element.dispatchEvent(new Event("ha-hold"));
-            } else {
-                element.dispatchEvent(new Event("ha-click"));
-            }
-            this.cooldownEnd = true;
-            window.setTimeout(() => this.cooldownEnd = false, 100);
-        };
-        element.addEventListener("touchstart", clickStart, { passive: true });
-        element.addEventListener("touchend", clickEnd);
-        element.addEventListener("touchcancel", clickEnd);
-        element.addEventListener("mousedown", clickStart, { passive: true });
-        element.addEventListener("click", clickEnd);
-    }
-    startAnimation(x, y) {
-        Object.assign(this.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-            display: null
-        });
-        this.ripple.holdDown = true; // paper-ripple
-        this.ripple.simulatedRipple(); // paper-ripple
-        // this.ripple.disabled = false;
-        // this.ripple.active = true;
-        // this.ripple.unbounded = true;
-    }
-    stopAnimation() {
-        this.ripple.holdDown = false; // paper-ripple
-        // this.ripple.active = false;
-        // this.ripple.disabled = true;
-        this.style.display = "none";
-    }
-}
-customElements.define("long-press-button-card", LongPress);
-const getLongPress = () => {
-    const body = document.body;
-    if (body.querySelector("long-press")) {
-        return body.querySelector("long-press");
-    }
-    const longpress = document.createElement("long-press");
-    body.appendChild(longpress);
-    return longpress;
-};
-const longPressBind = element => {
-    const longpress = getLongPress();
-    if (!longpress) {
-        return;
-    }
-    longpress.bind(element);
-};
-const longPress = directive(() => part => {
-    longPressBind(part.committer.element);
-});
-
 function bound01(n, max) {
     if (isOnePointZero(n)) {
         n = '100%';
@@ -3503,6 +3118,391 @@ var TinyColor = function () {
     return TinyColor;
 }();
 
+/** Constants to be used in the frontend. */
+// Constants should be alphabetically sorted by name.
+// Arrays with values should be alphabetically sorted if order doesn't matter.
+// Each constant should have a description what it is supposed to be used for.
+/** Icon to use when no icon specified for domain. */
+const DEFAULT_DOMAIN_ICON = "hass:bookmark";
+/** States that we consider "off". */
+const STATES_OFF = ["closed", "locked", "off"];
+
+/**
+ * Return the icon to be used for a domain.
+ *
+ * Optionally pass in a state to influence the domain icon.
+ */
+const fixedIcons = {
+    alert: "hass:alert",
+    automation: "hass:playlist-play",
+    calendar: "hass:calendar",
+    camera: "hass:video",
+    climate: "hass:thermostat",
+    configurator: "hass:settings",
+    conversation: "hass:text-to-speech",
+    device_tracker: "hass:account",
+    fan: "hass:fan",
+    group: "hass:google-circles-communities",
+    history_graph: "hass:chart-line",
+    homeassistant: "hass:home-assistant",
+    homekit: "hass:home-automation",
+    image_processing: "hass:image-filter-frames",
+    input_boolean: "hass:drawing",
+    input_datetime: "hass:calendar-clock",
+    input_number: "hass:ray-vertex",
+    input_select: "hass:format-list-bulleted",
+    input_text: "hass:textbox",
+    light: "hass:lightbulb",
+    mailbox: "hass:mailbox",
+    notify: "hass:comment-alert",
+    person: "hass:account",
+    plant: "hass:flower",
+    proximity: "hass:apple-safari",
+    remote: "hass:remote",
+    scene: "hass:google-pages",
+    script: "hass:file-document",
+    sensor: "hass:eye",
+    simple_alarm: "hass:bell",
+    sun: "hass:white-balance-sunny",
+    switch: "hass:flash",
+    timer: "hass:timer",
+    updater: "hass:cloud-upload",
+    vacuum: "hass:robot-vacuum",
+    water_heater: "hass:thermometer",
+    weblink: "hass:open-in-new"
+};
+function domainIcon(domain, state) {
+    if (domain in fixedIcons) {
+        return fixedIcons[domain];
+    }
+    switch (domain) {
+        case "alarm_control_panel":
+            switch (state) {
+                case "armed_home":
+                    return "hass:bell-plus";
+                case "armed_night":
+                    return "hass:bell-sleep";
+                case "disarmed":
+                    return "hass:bell-outline";
+                case "triggered":
+                    return "hass:bell-ring";
+                default:
+                    return "hass:bell";
+            }
+        case "binary_sensor":
+            return state && state === "off" ? "hass:radiobox-blank" : "hass:checkbox-marked-circle";
+        case "cover":
+            return state === "closed" ? "hass:window-closed" : "hass:window-open";
+        case "lock":
+            return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
+        case "media_player":
+            return state && state !== "off" && state !== "idle" ? "hass:cast-connected" : "hass:cast";
+        case "zwave":
+            switch (state) {
+                case "dead":
+                    return "hass:emoticon-dead";
+                case "sleeping":
+                    return "hass:sleep";
+                case "initializing":
+                    return "hass:timer-sand";
+                default:
+                    return "hass:z-wave";
+            }
+        default:
+            // tslint:disable-next-line
+            console.warn("Unable to find icon for domain " + domain + " (" + state + ")");
+            return DEFAULT_DOMAIN_ICON;
+    }
+}
+
+function computeDomain(entityId) {
+    return entityId.substr(0, entityId.indexOf("."));
+}
+function computeEntity(entityId) {
+    return entityId.substr(entityId.indexOf(".") + 1);
+}
+
+// Polymer legacy event helpers used courtesy of the Polymer project.
+//
+// Copyright (c) 2017 The Polymer Authors. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/**
+ * Dispatches a custom event with an optional detail value.
+ *
+ * @param {string} type Name of event type.
+ * @param {*=} detail Detail value containing event-specific
+ *   payload.
+ * @param {{ bubbles: (boolean|undefined),
+ *           cancelable: (boolean|undefined),
+ *           composed: (boolean|undefined) }=}
+ *  options Object specifying options.  These may include:
+ *  `bubbles` (boolean, defaults to `true`),
+ *  `cancelable` (boolean, defaults to false), and
+ *  `node` on which to fire the event (HTMLElement, defaults to `this`).
+ * @return {Event} The new event that was fired.
+ */
+const fireEvent = (node, type, detail, options) => {
+    options = options || {};
+    // @ts-ignore
+    detail = detail === null || detail === undefined ? {} : detail;
+    const event = new Event(type, {
+        bubbles: options.bubbles === undefined ? true : options.bubbles,
+        cancelable: Boolean(options.cancelable),
+        composed: options.composed === undefined ? true : options.composed
+    });
+    event.detail = detail;
+    node.dispatchEvent(event);
+    return event;
+};
+
+const navigate = (_node, path, replace = false) => {
+    if (replace) {
+        history.replaceState(null, "", path);
+    } else {
+        history.pushState(null, "", path);
+    }
+    fireEvent(window, "location-changed", {
+        replace
+    });
+};
+
+const turnOnOffEntity = (hass, entityId, turnOn = true) => {
+    const stateDomain = computeDomain(entityId);
+    const serviceDomain = stateDomain === "group" ? "homeassistant" : stateDomain;
+    let service;
+    switch (stateDomain) {
+        case "lock":
+            service = turnOn ? "unlock" : "lock";
+            break;
+        case "cover":
+            service = turnOn ? "open_cover" : "close_cover";
+            break;
+        default:
+            service = turnOn ? "turn_on" : "turn_off";
+    }
+    return hass.callService(serviceDomain, service, { entity_id: entityId });
+};
+
+const toggleEntity = (hass, entityId) => {
+    const turnOn = STATES_OFF.includes(hass.states[entityId].state);
+    return turnOnOffEntity(hass, entityId, turnOn);
+};
+
+/**
+ * Utility function that enables haptic feedback
+ */
+const forwardHaptic = (el, hapticType) => {
+    fireEvent(el, "haptic", hapticType);
+};
+
+const handleClick = (node, hass, config, hold) => {
+    let actionConfig;
+    if (hold && config.hold_action) {
+        actionConfig = config.hold_action;
+    } else if (!hold && config.tap_action) {
+        actionConfig = config.tap_action;
+    }
+    if (!actionConfig) {
+        actionConfig = {
+            action: "toggle"
+        };
+    }
+    switch (actionConfig.action) {
+        case "more-info":
+            if (config.entity || config.camera_image) {
+                fireEvent(node, "hass-more-info", {
+                    entityId: config.entity ? config.entity : config.camera_image
+                });
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
+            }
+            break;
+        case "navigate":
+            if (actionConfig.navigation_path) {
+                navigate(node, actionConfig.navigation_path);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
+            }
+            break;
+        case 'url':
+            actionConfig.url && window.open(actionConfig.url);
+            if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
+            break;
+        case "toggle":
+            if (config.entity) {
+                toggleEntity(hass, config.entity);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
+            }
+            break;
+        case "call-service":
+            {
+                if (!actionConfig.service) {
+                    return;
+                }
+                const [domain, service] = actionConfig.service.split(".", 2);
+                hass.callService(domain, service, actionConfig.service_data);
+                if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
+            }
+    }
+};
+
+// See https://github.com/home-assistant/home-assistant-polymer/pull/2457
+// on how to undo mwc -> paper migration
+// import "@material/mwc-ripple";
+const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+class LongPress extends HTMLElement {
+    constructor() {
+        super();
+        this.holdTime = 500;
+        this.ripple = document.createElement("paper-ripple");
+        this.timer = undefined;
+        this.held = false;
+        this.cooldownStart = false;
+        this.cooldownEnd = false;
+    }
+    connectedCallback() {
+        Object.assign(this.style, {
+            borderRadius: "50%",
+            position: "absolute",
+            width: isTouch ? "100px" : "50px",
+            height: isTouch ? "100px" : "50px",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none"
+        });
+        this.appendChild(this.ripple);
+        this.ripple.style.color = "#03a9f4"; // paper-ripple
+        this.ripple.style.color = "var(--primary-color)"; // paper-ripple
+        // this.ripple.primary = true;
+        ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(ev => {
+            document.addEventListener(ev, () => {
+                clearTimeout(this.timer);
+                this.stopAnimation();
+                this.timer = undefined;
+            }, { passive: true });
+        });
+    }
+    bind(element) {
+        if (element.longPress) {
+            return;
+        }
+        element.longPress = true;
+        element.addEventListener("contextmenu", ev => {
+            const e = ev || window.event;
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            e.cancelBubble = true;
+            e.returnValue = false;
+            return false;
+        });
+        const clickStart = ev => {
+            if (this.cooldownStart) {
+                return;
+            }
+            this.held = false;
+            let x;
+            let y;
+            if (ev.touches) {
+                x = ev.touches[0].pageX;
+                y = ev.touches[0].pageY;
+            } else {
+                x = ev.pageX;
+                y = ev.pageY;
+            }
+            this.timer = window.setTimeout(() => {
+                this.startAnimation(x, y);
+                this.held = true;
+            }, this.holdTime);
+            this.cooldownStart = true;
+            window.setTimeout(() => this.cooldownStart = false, 100);
+        };
+        const clickEnd = ev => {
+            if (this.cooldownEnd || ["touchend", "touchcancel"].includes(ev.type) && this.timer === undefined) {
+                return;
+            }
+            clearTimeout(this.timer);
+            this.stopAnimation();
+            this.timer = undefined;
+            if (this.held) {
+                element.dispatchEvent(new Event("ha-hold"));
+            } else {
+                element.dispatchEvent(new Event("ha-click"));
+            }
+            this.cooldownEnd = true;
+            window.setTimeout(() => this.cooldownEnd = false, 100);
+        };
+        element.addEventListener("touchstart", clickStart, { passive: true });
+        element.addEventListener("touchend", clickEnd);
+        element.addEventListener("touchcancel", clickEnd);
+        element.addEventListener("mousedown", clickStart, { passive: true });
+        element.addEventListener("click", clickEnd);
+    }
+    startAnimation(x, y) {
+        Object.assign(this.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+            display: null
+        });
+        this.ripple.holdDown = true; // paper-ripple
+        this.ripple.simulatedRipple(); // paper-ripple
+        // this.ripple.disabled = false;
+        // this.ripple.active = true;
+        // this.ripple.unbounded = true;
+    }
+    stopAnimation() {
+        this.ripple.holdDown = false; // paper-ripple
+        // this.ripple.active = false;
+        // this.ripple.disabled = true;
+        this.style.display = "none";
+    }
+}
+customElements.define("long-press-button-card", LongPress);
+const getLongPress = () => {
+    const body = document.body;
+    if (body.querySelector("long-press")) {
+        return body.querySelector("long-press");
+    }
+    const longpress = document.createElement("long-press");
+    body.appendChild(longpress);
+    return longpress;
+};
+const longPressBind = element => {
+    const longpress = getLongPress();
+    if (!longpress) {
+        return;
+    }
+    longpress.bind(element);
+};
+const longPress = directive(() => part => {
+    longPressBind(part.committer.element);
+});
+
 // Check if config or Entity changed
 function hasConfigOrEntityChanged(element, changedProps) {
     if (changedProps.has("config")) {
@@ -3636,7 +3636,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     getFontColorBasedOnBackgroundColor(backgroundColor) {
         let localColor = backgroundColor;
-        if (backgroundColor.substring(0, 3) === "var") {
+        if (backgroundColor.substring(0, 3) === 'var') {
             localColor = window.getComputedStyle(document.documentElement).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
         }
         const colorObj = new TinyColor(localColor);
@@ -3652,12 +3652,12 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!state || !this.config.state) {
             return undefined;
         }
-        let retval = undefined;
-        let def = undefined;
-        retval = this.config.state.find(function (elt) {
+        let def;
+        const retval = this.config.state.find(elt => {
             if (elt.operator) {
                 switch (elt.operator) {
                     case '==':
+                        /* eslint eqeqeq: 0 */
                         return state.state == elt.value;
                     case '<=':
                         return state.state <= elt.value;
@@ -3670,8 +3670,11 @@ let ButtonCard = class ButtonCard extends LitElement {
                     case '!=':
                         return state.state != elt.value;
                     case 'regex':
-                        let matches = state.state.match(elt.value) ? true : false;
-                        return matches;
+                        {
+                            /* eslint no-unneeded-ternary: 0 */
+                            const matches = state.state.match(elt.value) ? true : false;
+                            return matches;
+                        }
                     case 'default':
                         def = elt;
                         return false;
@@ -3699,17 +3702,13 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     buildCssColorAttribute(state, configState) {
         let colorValue = '';
-        let color = undefined;
+        let color;
         if (configState && configState.color) {
             colorValue = configState.color;
-        } else {
-            if (this.config.color != 'auto' && state && state.state == 'off') {
-                colorValue = this.config.color_off;
-            } else {
-                if (this.config.color) {
-                    colorValue = this.config.color;
-                }
-            }
+        } else if (this.config.color !== 'auto' && state && state.state === 'off') {
+            colorValue = this.config.color_off;
+        } else if (this.config.color) {
+            colorValue = this.config.color;
         }
         if (colorValue == 'auto') {
             if (state) {
@@ -3721,16 +3720,12 @@ let ButtonCard = class ButtonCard extends LitElement {
             } else {
                 color = this.config.default_color;
             }
+        } else if (colorValue) {
+            color = colorValue;
+        } else if (state) {
+            color = this.getDefaultColorForState(state);
         } else {
-            if (!colorValue) {
-                if (state) {
-                    color = this.getDefaultColorForState(state);
-                } else {
-                    color = this.config.default_color;
-                }
-            } else {
-                color = colorValue;
-            }
+            color = this.config.default_color;
         }
         return color;
     }
@@ -3738,7 +3733,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!this.config.show_icon) {
             return undefined;
         }
-        let icon = undefined;
+        let icon;
         if (configState && configState.icon) {
             icon = configState.icon;
         } else if (this.config.icon) {
@@ -3752,29 +3747,27 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!this.config.show_entity_picture || !state && !configState && !this.config.entity_picture) {
             return undefined;
         }
-        let entityPicture = undefined;
+        let entityPicture;
         if (configState && configState.entity_picture) {
             entityPicture = configState.entity_picture;
+        } else if (this.config.entity_picture) {
+            entityPicture = this.config.entity_picture;
         } else {
-            if (this.config.entity_picture) {
-                entityPicture = this.config.entity_picture;
-            } else {
-                entityPicture = state && state.attributes && state.attributes.entity_picture ? state.attributes.entity_picture : undefined;
-            }
+            entityPicture = state && state.attributes && state.attributes.entity_picture ? state.attributes.entity_picture : undefined;
         }
         return entityPicture;
     }
     buildStyle(state, configState) {
         let cardStyle = '';
-        let styleArray = undefined;
+        let styleArray;
         if (state) {
             if (configState && configState.style) {
                 styleArray = configState.style;
             } else if (this.config.style) {
                 styleArray = this.config.style;
             }
-        } else {
-            if (this.config.style) styleArray = this.config.style;
+        } else if (this.config.style) {
+            styleArray = this.config.style;
         }
         if (styleArray) {
             styleArray.forEach(cssObject => {
@@ -3787,7 +3780,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     buildEntityPictureStyle(state, configState) {
         let entityPictureStyle = '';
-        let styleArray = undefined;
+        let styleArray;
         if (state) {
             if (configState && configState.entity_picture_style) {
                 styleArray = configState.entity_picture_style;
@@ -3810,24 +3803,22 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (this.config.show_name === false) {
             return undefined;
         }
-        let name = undefined;
+        let name;
         if (configState && configState.name) {
             name = configState.name;
         } else if (this.config.name) {
             name = this.config.name;
-        } else {
-            if (state) {
-                name = state.attributes && state.attributes.friendly_name ? state.attributes.friendly_name : computeEntity(state.entity_id);
-            }
+        } else if (state) {
+            name = state.attributes && state.attributes.friendly_name ? state.attributes.friendly_name : computeEntity(state.entity_id);
         }
         return name;
     }
     buildStateString(state) {
-        let stateString = undefined;
+        let stateString;
         if (this.config.show_state && state && state.state) {
             const units = this.buildUnits(state);
             if (units) {
-                stateString = state.state + " " + units;
+                stateString = `${state.state} ${units}`;
             } else {
                 stateString = state.state;
             }
@@ -3835,7 +3826,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         return stateString;
     }
     buildUnits(state) {
-        let units = undefined;
+        let units;
         if (state) {
             if (this.config.show_units) {
                 if (state.attributes && state.attributes.unit_of_measurement && !this.config.units) {
@@ -3851,10 +3842,10 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!name && !stateString) {
             return undefined;
         }
-        let nameStateString = undefined;
+        let nameStateString;
         if (stateString) {
             if (name) {
-                nameStateString = name + ": " + stateString;
+                nameStateString = `${name}: ${stateString}`;
             } else {
                 nameStateString = stateString;
             }
@@ -3880,12 +3871,10 @@ let ButtonCard = class ButtonCard extends LitElement {
             } else {
                 clickable = false;
             }
+        } else if (this.config.tap_action.action != 'none' || this.config.hold_action.action != 'none') {
+            clickable = true;
         } else {
-            if (this.config.tap_action.action != 'none' || this.config.hold_action.action != 'none') {
-                clickable = true;
-            } else {
-                clickable = false;
-            }
+            clickable = false;
         }
         return clickable;
     }
@@ -3953,7 +3942,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                   ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                   ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
-                ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br/>${name}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br />${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -3969,7 +3958,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                   ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
                   ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
                 </div>
-                ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br/>${stateString}</div>` : ''}
+                ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br />${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
                 ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -4006,10 +3995,10 @@ let ButtonCard = class ButtonCard extends LitElement {
         const fontColor = this.getFontColorBasedOnBackgroundColor(color);
         const style = this.buildStyle(state, configState);
         return html`
-      <ha-card class="${this.isClickable(state) ? '' : "disabled"}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="${this.isClickable(state) ? '' : 'disabled'}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};">
           <div class="button-card-main" style="${style}">
-            ${this.buttonContent(state, configState, "inherit")}
+            ${this.buttonContent(state, configState, 'inherit')}
           </div>
         </div>
         <mwc-ripple></mwc-ripple>
@@ -4020,7 +4009,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this.buildCssColorAttribute(state, configState);
         const style = this.buildStyle(state, configState);
         return html`
-      <ha-card class="${this.isClickable(state) ? '' : "disabled"}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="${this.isClickable(state) ? '' : 'disabled'}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         <div class="button-card-main" style="${style}">
           ${this.buttonContent(state, configState, color)}
         </div>
@@ -4030,9 +4019,9 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     setConfig(config) {
         if (!config) {
-            throw new Error("Invalid configuration");
+            throw new Error('Invalid configuration');
         }
-        this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
+        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
         this.config.color_off = 'var(--paper-item-icon-color)';
         this.config.color_on = 'var(--paper-item-icon-active-color)';
@@ -4043,14 +4032,16 @@ let ButtonCard = class ButtonCard extends LitElement {
         return 3;
     }
     _handleTap(ev) {
-        if (this.config.confirmation && !confirm(this.config.confirmation)) {
+        /* eslint no-alert: 0 */
+        if (this.config.confirmation && !window.confirm(this.config.confirmation)) {
             return;
         }
         const config = ev.target.config;
         handleClick(this, this.hass, config, false);
     }
     _handleHold(ev) {
-        if (this.config.confirmation && !confirm(this.config.confirmation)) {
+        /* eslint no-alert: 0 */
+        if (this.config.confirmation && !window.confirm(this.config.confirmation)) {
             return;
         }
         const config = ev.target.config;
@@ -4059,5 +4050,5 @@ let ButtonCard = class ButtonCard extends LitElement {
 };
 __decorate([property()], ButtonCard.prototype, "hass", void 0);
 __decorate([property()], ButtonCard.prototype, "config", void 0);
-ButtonCard = __decorate([customElement("button-card")], ButtonCard);
+ButtonCard = __decorate([customElement('button-card')], ButtonCard);
 //# sourceMappingURL=button-card.js.map
