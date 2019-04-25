@@ -15,6 +15,6 @@ export default {
     typescript(),
     json(),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     })],
 };

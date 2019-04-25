@@ -56,6 +56,7 @@
   "dependencies": {
     "@ctrl/tinycolor": "^2.4.0",
     "home-assistant-js-websocket": "^3.4.0",
-    "lit-element": "^2.1.0"
+    "lit-element": "^2.1.0",
+    "lit-html": "^1.0.0"
   }
 }

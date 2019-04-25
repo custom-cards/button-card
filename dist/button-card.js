@@ -2277,6 +2277,82 @@ LitElement.finalized = true;
  */
 LitElement.render = render$1;
 
+/**
+ * @license
+ * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * Stores the StyleInfo object applied to a given AttributePart.
+ * Used to unset existing values when a new StyleInfo object is applied.
+ */
+const styleMapCache = new WeakMap();
+/**
+ * Stores AttributeParts that have had static styles applied (e.g. `height: 0;`
+ * in style="height: 0; ${styleMap()}"). Static styles are applied only the
+ * first time the directive is run on a part.
+ */
+// Note, could be a WeakSet, but prefer not requiring this polyfill.
+const styleMapStatics = new WeakMap();
+/**
+ * A directive that applies CSS properties to an element.
+ *
+ * `styleMap` can only be used in the `style` attribute and must be the only
+ * expression in the attribute. It takes the property names in the `styleInfo`
+ * object and adds the property values as CSS propertes. Property names with
+ * dashes (`-`) are assumed to be valid CSS property names and set on the
+ * element's style object using `setProperty()`. Names without dashes are
+ * assumed to be camelCased JavaScript property names and set on the element's
+ * style object using property assignment, allowing the style object to
+ * translate JavaScript-style names to CSS property names.
+ *
+ * For example `styleMap({backgroundColor: 'red', 'border-top': '5px', '--size':
+ * '0'})` sets the `background-color`, `border-top` and `--size` properties.
+ *
+ * @param styleInfo {StyleInfo}
+ */
+const styleMap = directive(styleInfo => part => {
+    if (!(part instanceof AttributePart) || part instanceof PropertyPart || part.committer.name !== 'style' || part.committer.parts.length > 1) {
+        throw new Error('The `styleMap` directive must be used in the style attribute ' + 'and must be the only part in the attribute.');
+    }
+    // Handle static styles the first time we see a Part
+    if (!styleMapStatics.has(part)) {
+        part.committer.element.style.cssText = part.committer.strings.join(' ');
+        styleMapStatics.set(part, true);
+    }
+    const style = part.committer.element.style;
+    // Remove old properties that no longer exist in styleInfo
+    const oldInfo = styleMapCache.get(part);
+    for (const name in oldInfo) {
+        if (!(name in styleInfo)) {
+            if (name.indexOf('-') === -1) {
+                // tslint:disable-next-line:no-any
+                style[name] = null;
+            } else {
+                style.removeProperty(name);
+            }
+        }
+    }
+    // Add or update properties
+    for (const name in styleInfo) {
+        if (name.indexOf('-') === -1) {
+            // tslint:disable-next-line:no-any
+            style[name] = styleInfo[name];
+        } else {
+            style.setProperty(name, styleInfo[name]);
+        }
+    }
+    styleMapCache.set(part, styleInfo);
+});
+
 function bound01(n, max) {
     if (isOnePointZero(n)) {
         n = '100%';
@@ -3525,6 +3601,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         ha-card {
           cursor: pointer;
           overflow: hidden;
+          box-sizing: border-box;
         }
         ha-card.disabled {
           pointer-events: none;
@@ -3534,7 +3611,7 @@ let ButtonCard = class ButtonCard extends LitElement {
           display: inline-block;
           margin: auto;
         }
-        div.button-card-main {
+        ha-card.button-card-main {
           padding: 4% 0px;
           text-transform: none;
           font-weight: 400;
@@ -3565,12 +3642,6 @@ let ButtonCard = class ButtonCard extends LitElement {
           white-space: nowrap;
           overflow: hidden;
           min-width: 100%;
-        }
-        div.button-card-background-color {
-          border-bottom-left-radius: 2px;
-          border-bottom-right-radius: 2px;
-          border-top-left-radius: 2px;
-          border-top-right-radius: 2px;
         }
         @keyframes blink{
           0%{opacity:0;}
@@ -3758,7 +3829,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         return entityPicture;
     }
     buildStyle(state, configState) {
-        let cardStyle = '';
+        let cardStyle = {};
         let styleArray;
         if (state) {
             if (configState && configState.style) {
@@ -3770,16 +3841,12 @@ let ButtonCard = class ButtonCard extends LitElement {
             styleArray = this.config.style;
         }
         if (styleArray) {
-            styleArray.forEach(cssObject => {
-                const attribute = Object.keys(cssObject)[0];
-                const value = cssObject[attribute];
-                cardStyle += `${attribute}: ${value}; `;
-            });
+            cardStyle = Object.assign(cardStyle, ...styleArray);
         }
         return cardStyle;
     }
     buildEntityPictureStyle(state, configState) {
-        let entityPictureStyle = '';
+        let entityPictureStyle = {};
         let styleArray;
         if (state) {
             if (configState && configState.entity_picture_style) {
@@ -3791,11 +3858,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             styleArray = this.config.entity_picture_style;
         }
         if (styleArray) {
-            styleArray.forEach(cssObject => {
-                const attribute = Object.keys(cssObject)[0];
-                const value = cssObject[attribute];
-                entityPictureStyle += `${attribute}: ${value}; `;
-            });
+            entityPictureStyle = Object.assign(entityPictureStyle, ...styleArray);
         }
         return entityPictureStyle;
     }
@@ -3888,15 +3951,26 @@ let ButtonCard = class ButtonCard extends LitElement {
         const nameStateString = this.buildNameStateConcat(name, stateString);
         const entityPicture = this.buildEntityPicture(state, configState);
         const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
+        const divTableCellStyles = { width: this.config.size, height: 'auto' };
+        const haIconInlineStyle = {
+            color,
+            width: this.config.size,
+            height: 'auto'
+        };
+        const haIconTableStyle = Object.assign({}, haIconInlineStyle, { width: 'auto', 'max-width': this.config.size });
+        const entityPictureInlineStyle = Object.assign({}, haIconInlineStyle, entityPictureStyle);
+        const entityPictureTableStyle = Object.assign({}, haIconTableStyle, entityPictureStyle);
         switch (this.config.layout) {
             case 'icon_name_state':
                 return html`
-          <div class="divTable">
-            <div class="divTableBody">
-              <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+          <div class='divTable'>
+            <div class='divTableBody'>
+              <div class='divTableRow'>
+                <div class='divTableCell' style=${styleMap(divTableCellStyles)}>
+                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
+                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
+                    class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
               </div>
@@ -3908,9 +3982,11 @@ let ButtonCard = class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
+                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
+                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
+                    class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${name ? html`<div class="divTableCell">${name}</div>` : ''}
               </div>
@@ -3923,9 +3999,11 @@ let ButtonCard = class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
+                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
+                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
+                    class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined ? html`<div class="divTableCell">${stateString}</div>` : ''}
               </div>
@@ -3938,9 +4016,11 @@ let ButtonCard = class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
+                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
+                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
+                    class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br />${name}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -3954,9 +4034,11 @@ let ButtonCard = class ButtonCard extends LitElement {
           <div class="divTable">
             <div class="divTableBody">
               <div class="divTableRow">
-                <div class="divTableCell" style="width: ${this.config.size}; height: auto;">
-                  ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size};" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: auto; height: auto; max-width: ${this.config.size}; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
+                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
+                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
+                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
+                    class="${this.rotate(configState)}" />` : ''}
                 </div>
                 ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br />${stateString}</div>` : ''}
                 ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
@@ -3967,15 +4049,19 @@ let ButtonCard = class ButtonCard extends LitElement {
           `;
             case 'name_state':
                 return html`
-          ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: ${this.config.size}; height: auto; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconInlineStyle)}
+            icon=${icon} class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureInlineStyle)}
+            class="${this.rotate(configState)}" />` : ''}
           ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
           `;
             case 'vertical':
             default:
                 return html`
-          ${icon && !entityPicture ? html`<ha-icon style="color: ${color}; width: ${this.config.size}; height: auto;" icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${entityPicture ? html`<img src="${entityPicture}" style="color: ${color}; width: ${this.config.size}; height: auto; ${entityPictureStyle}" class="${this.rotate(configState)}" />` : ''}
+          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconInlineStyle)}
+            icon=${icon} class="${this.rotate(configState)}"></ha-icon>` : ''}
+          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureInlineStyle)}
+            class="${this.rotate(configState)}" />` : ''}
           ${name ? html`<div>${name}</div>` : ''}
           ${stateString ? html`<div>${stateString}</div>` : ''}
           `;
@@ -3986,22 +4072,18 @@ let ButtonCard = class ButtonCard extends LitElement {
         const fontColor = this.getFontColorBasedOnBackgroundColor(color);
         return html`
       <ha-card class="disabled">
-        <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};"></div>
+        <div style="color: ${fontColor}; background-color: ${color};"></div>
       </ha-card>
       `;
     }
     cardColoredHtml(state, configState) {
         const color = this.buildCssColorAttribute(state, configState);
         const fontColor = this.getFontColorBasedOnBackgroundColor(color);
-        const style = this.buildStyle(state, configState);
+        const style = Object.assign({ color: fontColor, 'background-color': color }, this.buildStyle(state, configState));
         return html`
-      <ha-card class="${this.isClickable(state) ? '' : 'disabled'}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
-        <div class="button-card-background-color" style="color: ${fontColor}; background-color: ${color};">
-          <div class="button-card-main" style="${style}">
-            ${this.buttonContent(state, configState, 'inherit')}
-          </div>
-        </div>
-        <mwc-ripple></mwc-ripple>
+      <ha-card class="button-card-main ${this.isClickable(state) ? '' : 'disabled'}" style=${styleMap(style)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this.buttonContent(state, configState, 'inherit')}
+      <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }
@@ -4009,11 +4091,9 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this.buildCssColorAttribute(state, configState);
         const style = this.buildStyle(state, configState);
         return html`
-      <ha-card class="${this.isClickable(state) ? '' : 'disabled'}" @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
-        <div class="button-card-main" style="${style}">
+      <ha-card class="button-card-main ${this.isClickable(state) ? '' : 'disabled'}" style=${styleMap(style)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
           ${this.buttonContent(state, configState, color)}
-        </div>
-        <mwc-ripple></mwc-ripple>
+      <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }

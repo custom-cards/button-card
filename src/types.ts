@@ -42,7 +42,7 @@ export interface StateConfig {
   name?: string;
   icon?: string;
   color?: string;
-  style?: CssStyleConfig;
+  style?: CssStyleConfig[];
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
   spin?: boolean;
