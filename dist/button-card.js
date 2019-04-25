@@ -4060,3 +4060,4 @@ let ButtonCard = class ButtonCard extends LitElement {
 __decorate([property()], ButtonCard.prototype, "hass", void 0);
 __decorate([property()], ButtonCard.prototype, "config", void 0);
 ButtonCard = __decorate([customElement("button-card")], ButtonCard);
+//# sourceMappingURL=button-card.js.map
