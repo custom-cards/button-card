@@ -5,28 +5,31 @@ import {
   Connection,
   MessageBase,
   HassServices,
-} from "home-assistant-js-websocket";
-import { HapticType } from "./haptic";
+} from 'home-assistant-js-websocket';
+import { HapticType } from './haptic';
 
 export interface ButtonCardConfig {
   type: string;
   entity?: string;
   name?: string;
   icon?: string;
-  color_type: "icon" | "card" | "label-card" | "blank-card"
+  color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
   color?: string;
-  size?: string;
+  size: string;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
   show_units?: boolean;
+  show_entity_picture?: boolean;
+  entity_picture?: string;
   units?: string;
   style?: CssStyleConfig[];
   state?: StateConfig[];
   confirmation?: string;
-  layout?: "vertical" | "icon_name_state" | "name_state" | "icon_name" | "icon_state" | "icon_name_state2nd" | "icon_state_name2nd";
+  layout?: 'vertical' | 'icon_name_state' | 'name_state' | 'icon_name' | 'icon_state' | 'icon_name_state2nd' | 'icon_state_name2nd';
+  entity_picture_style?: CssStyleConfig[];
 
   default_color: string;
   color_on: string;
@@ -34,12 +37,14 @@ export interface ButtonCardConfig {
 }
 
 export interface StateConfig {
-  operator?: "<" | "<=" | "==" | ">=" | ">" | "!=" | "regex" | "default";
+  operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'default';
   value?: any;
   name?: string;
   icon?: string;
   color?: string;
-  style?: CssStyleConfig;
+  style?: CssStyleConfig[];
+  entity_picture_style?: CssStyleConfig[];
+  entity_picture?: string;
   spin?: boolean;
 }
 
@@ -48,12 +53,12 @@ export interface CssStyleConfig {
 }
 
 export interface ToggleActionConfig {
-  action: "toggle";
+  action: 'toggle';
   haptic?: HapticType;
 }
 
 export interface CallServiceActionConfig {
-  action: "call-service";
+  action: 'call-service';
   haptic?: HapticType;
   service: string;
   service_data?: {
@@ -63,22 +68,22 @@ export interface CallServiceActionConfig {
 }
 
 export interface NavigateActionConfig {
-  action: "navigate";
+  action: 'navigate';
   haptic?: HapticType;
   navigation_path: string;
 }
 
 export interface MoreInfoActionConfig {
-  action: "more-info";
+  action: 'more-info';
   haptic?: HapticType;
 }
 
 export interface NoActionConfig {
-  action: "none";
+  action: 'none';
 }
 
 export interface UrlActionConfig {
-  action: "url";
+  action: 'url';
   haptic?: HapticType;
   url: string;
 }
@@ -95,16 +100,16 @@ export type ActionConfig =
 declare global {
   // for fire event
   interface HASSDomEvents {
-    "value-changed": {
+    'value-changed': {
       value: unknown;
     };
-    "config-changed": {
+    'config-changed': {
       config: ButtonCardConfig;
     };
-    "hass-more-info": {
+    'hass-more-info': {
       entityId: string | null;
     };
-    "ll-rebuild": {};
+    'll-rebuild': {};
     undefined;
   }
 }
@@ -134,9 +139,9 @@ export interface CurrentUser {
 
 export interface Theme {
   // Incomplete
-  "primary-color": string;
-  "text-primary-color": string;
-  "accent-color": string;
+  'primary-color': string;
+  'text-primary-color': string;
+  'accent-color': string;
 }
 
 export interface Themes {
@@ -205,7 +210,7 @@ export interface HomeAssistant {
     serviceData?: { [key: string]: any }
   ) => Promise<void>;
   callApi: <T>(
-    method: "GET" | "POST" | "PUT" | "DELETE",
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     path: string,
     parameters?: { [key: string]: any }
   ) => Promise<T>;

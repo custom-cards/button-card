@@ -8,12 +8,13 @@ export default {
   output: {
     dir: './dist',
     format: 'es',
+    sourcemap: true,
   },
   plugins: [
     resolve(),
     typescript(),
     json(),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     })],
 };

@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "msjsdiag.debugger-for-chrome",
+    "dbaeumer.vscode-eslint",
+    "runem.lit-plugin",
+  ]
+}
