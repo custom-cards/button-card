@@ -247,7 +247,7 @@ Horizontal stack with :
       color: rgb(223, 255, 97)
       icon: mdi:volume-plus
       tap_action:
-        action: service
+        action: call-service
         service: media_player.volume_up
         service_data:
           entity_id: media_player.livimg_room_speaker
@@ -256,7 +256,7 @@ Horizontal stack with :
       color: rgb(223, 255, 97)
       icon: mdi:volume-minus
       tap_action:
-        action: service
+        action: call-service
         service: media_player.volume_down
         service_data:
           entity_id: media_player.livimg_room_speaker
@@ -331,7 +331,7 @@ If you don't specify any operator, `==` will be used to match the current state 
   entity: input_select.cube_mode
   icon: mdi:cube
   tap_action:
-    action: service
+    action: call-service
     service: input_select.select_next
     service_data:
       entity_id: input_select.cube_mode
