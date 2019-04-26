@@ -8,6 +8,11 @@
       "type": "npm",
       "script": "build",
       "problemMatcher": []
+    },
+    {
+      "label": "watch",
+      "type": "npm",
+      "script": "watch"
     }
   ]
 }
