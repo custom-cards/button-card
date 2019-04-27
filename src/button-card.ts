@@ -4,7 +4,6 @@ import {
   customElement,
   property,
   TemplateResult,
-  css,
   CSSResult,
   PropertyValues,
 } from 'lit-element';
@@ -12,7 +11,6 @@ import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
-import { TinyColor } from '@ctrl/tinycolor';
 import domainIcon from './domain_icons';
 import {
   ButtonCardConfig,
@@ -20,10 +18,17 @@ import {
   StateConfig,
   CssStyleConfig,
 } from './types';
-import * as helpers from './helpers';
+import {
+  computeDomain,
+  computeEntity,
+  getFontColorBasedOnBackgroundColor,
+  buildNameStateConcat,
+  applyBrightnessToColor,
+  hasConfigOrEntityChanged,
+} from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
-import { hasConfigOrEntityChanged } from './has-changed';
+import { styles } from './styles';
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -32,93 +37,7 @@ class ButtonCard extends LitElement {
   @property() private config?: ButtonCardConfig;
 
   static get styles(): CSSResult {
-    return css`
-        ha-card {
-          cursor: pointer;
-          overflow: hidden;
-          box-sizing: border-box;
-        }
-        ha-card.disabled {
-          pointer-events: none;
-          cursor: default;
-        }
-        ha-icon {
-          display: inline-block;
-          margin: auto;
-        }
-        ha-card.button-card-main {
-          padding: 4% 0px;
-          text-transform: none;
-          font-weight: 400;
-          font-size: 1.2rem;
-          align-items: center;
-          text-align: center;
-          letter-spacing: normal;
-          width: 100%;
-        }
-        div.divTable{
-          display: table;
-          overflow: auto;
-          table-layout: fixed;
-          width: 100%;
-        }
-        div.divTableBody {
-          display: table-row-group;
-        }
-        div.divTableRow {
-          display: table-row;
-        }
-        .divTableCell {
-          display: table-cell;
-          vertical-align: middle;
-        }
-        div {
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          min-width: 100%;
-        }
-        @keyframes blink{
-          0%{opacity:0;}
-          50%{opacity:1;}
-          100%{opacity:0;}
-        }
-        @-webkit-keyframes rotating /* Safari and Chrome */ {
-          from {
-            -webkit-transform: rotate(0deg);
-            -o-transform: rotate(0deg);
-            transform: rotate(0deg);
-          }
-          to {
-            -webkit-transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes rotating {
-          from {
-            -ms-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
-            -webkit-transform: rotate(0deg);
-            -o-transform: rotate(0deg);
-            transform: rotate(0deg);
-          }
-          to {
-            -ms-transform: rotate(360deg);
-            -moz-transform: rotate(360deg);
-            -webkit-transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            transform: rotate(360deg);
-          }
-        }
-        .rotating {
-          -webkit-animation: rotating 2s linear infinite;
-          -moz-animation: rotating 2s linear infinite;
-          -ms-animation: rotating 2s linear infinite;
-          -o-animation: rotating 2s linear infinite;
-          animation: rotating 2s linear infinite;
-        }
-      `;
+    return styles;
   }
 
   protected render(): TemplateResult | void {
@@ -141,22 +60,6 @@ class ButtonCard extends LitElement {
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     return hasConfigOrEntityChanged(this, changedProps);
-  }
-
-  private getFontColorBasedOnBackgroundColor(backgroundColor: string): string {
-    let localColor = backgroundColor;
-    if (backgroundColor.substring(0, 3) === 'var') {
-      localColor = window.getComputedStyle(document.documentElement)
-        .getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
-    }
-    const colorObj = new TinyColor(localColor);
-    let fontColor = ''; // don't override by default
-    if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
-      fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
-    } else {
-      fontColor = 'rgb(234, 234, 234)';// dark colors - white font
-    }
-    return fontColor;
   }
 
   private testConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -228,6 +131,13 @@ class ButtonCard extends LitElement {
       if (state) {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
+          if (state.attributes.brightness) {
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+          }
+        } else if (state.attributes.brightness) {
+          color = applyBrightnessToColor(
+            this.getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
+          );
         } else {
           color = this.getDefaultColorForState(state);
         }
@@ -258,7 +168,7 @@ class ButtonCard extends LitElement {
     } else if (state && state.attributes) {
       icon = state.attributes.icon
         ? state.attributes.icon
-        : domainIcon(helpers.computeDomain(state.entity_id), state.state);
+        : domainIcon(computeDomain(state.entity_id), state.state);
     }
     return icon;
   }
@@ -335,7 +245,7 @@ class ButtonCard extends LitElement {
       name = this.config!.name;
     } else if (state) {
       name = state.attributes && state.attributes.friendly_name
-        ? state.attributes.friendly_name : helpers.computeEntity(state.entity_id);
+        ? state.attributes.friendly_name : computeEntity(state.entity_id);
     }
     return name;
   }
@@ -367,31 +277,12 @@ class ButtonCard extends LitElement {
     return units;
   }
 
-  private buildNameStateConcat(
-    name: string | undefined, stateString: string | undefined,
-  ): string | undefined {
-    if (!name && !stateString) {
-      return undefined;
-    }
-    let nameStateString: string | undefined;
-    if (stateString) {
-      if (name) {
-        nameStateString = `${name}: ${stateString}`;
-      } else {
-        nameStateString = stateString;
-      }
-    } else {
-      nameStateString = name;
-    }
-    return nameStateString;
-  }
-
   private isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
     if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
       || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
       if (state) {
-        switch (helpers.computeDomain(state.entity_id)) {
+        switch (computeDomain(state.entity_id)) {
           case 'sensor':
           case 'binary_sensor':
           case 'device_tracker':
@@ -423,7 +314,7 @@ class ButtonCard extends LitElement {
     const icon = this.buildIcon(state, configState);
     const name = this.buildName(state, configState);
     const stateString = this.buildStateString(state);
-    const nameStateString = this.buildNameStateConcat(name, stateString);
+    const nameStateString = buildNameStateConcat(name, stateString);
     const entityPicture = this.buildEntityPicture(state, configState);
     const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
 
@@ -558,7 +449,7 @@ class ButtonCard extends LitElement {
 
   private blankCardColoredHtml(state: HassEntity | undefined): TemplateResult {
     const color = this.buildCssColorAttribute(state, undefined);
-    const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+    const fontColor = getFontColorBasedOnBackgroundColor(color);
     return html`
       <ha-card class="disabled">
         <div style="color: ${fontColor}; background-color: ${color};"></div>
@@ -570,7 +461,7 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined, configState: StateConfig | undefined,
   ): TemplateResult {
     const color = this.buildCssColorAttribute(state, configState);
-    const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+    const fontColor = getFontColorBasedOnBackgroundColor(color);
     const style = {
       color: fontColor,
       'background-color': color,
@@ -615,7 +506,11 @@ class ButtonCard extends LitElement {
       ...config,
     };
     this.config!.default_color = 'var(--primary-text-color)';
-    this.config!.color_off = 'var(--paper-item-icon-color)';
+    if (this.config!.color_type !== 'icon') {
+      this.config!.color_off = 'var(--paper-card-background-color)';
+    } else {
+      this.config!.color_off = 'var(--paper-item-icon-color)';
+    }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
   }
 

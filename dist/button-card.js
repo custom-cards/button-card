@@ -2353,6 +2353,103 @@ const styleMap = directive(styleInfo => part => {
     styleMapCache.set(part, styleInfo);
 });
 
+/** Constants to be used in the frontend. */
+// Constants should be alphabetically sorted by name.
+// Arrays with values should be alphabetically sorted if order doesn't matter.
+// Each constant should have a description what it is supposed to be used for.
+/** Icon to use when no icon specified for domain. */
+const DEFAULT_DOMAIN_ICON = "hass:bookmark";
+/** States that we consider "off". */
+const STATES_OFF = ["closed", "locked", "off"];
+
+/**
+ * Return the icon to be used for a domain.
+ *
+ * Optionally pass in a state to influence the domain icon.
+ */
+const fixedIcons = {
+    alert: "hass:alert",
+    automation: "hass:playlist-play",
+    calendar: "hass:calendar",
+    camera: "hass:video",
+    climate: "hass:thermostat",
+    configurator: "hass:settings",
+    conversation: "hass:text-to-speech",
+    device_tracker: "hass:account",
+    fan: "hass:fan",
+    group: "hass:google-circles-communities",
+    history_graph: "hass:chart-line",
+    homeassistant: "hass:home-assistant",
+    homekit: "hass:home-automation",
+    image_processing: "hass:image-filter-frames",
+    input_boolean: "hass:drawing",
+    input_datetime: "hass:calendar-clock",
+    input_number: "hass:ray-vertex",
+    input_select: "hass:format-list-bulleted",
+    input_text: "hass:textbox",
+    light: "hass:lightbulb",
+    mailbox: "hass:mailbox",
+    notify: "hass:comment-alert",
+    person: "hass:account",
+    plant: "hass:flower",
+    proximity: "hass:apple-safari",
+    remote: "hass:remote",
+    scene: "hass:google-pages",
+    script: "hass:file-document",
+    sensor: "hass:eye",
+    simple_alarm: "hass:bell",
+    sun: "hass:white-balance-sunny",
+    switch: "hass:flash",
+    timer: "hass:timer",
+    updater: "hass:cloud-upload",
+    vacuum: "hass:robot-vacuum",
+    water_heater: "hass:thermometer",
+    weblink: "hass:open-in-new"
+};
+function domainIcon(domain, state) {
+    if (domain in fixedIcons) {
+        return fixedIcons[domain];
+    }
+    switch (domain) {
+        case "alarm_control_panel":
+            switch (state) {
+                case "armed_home":
+                    return "hass:bell-plus";
+                case "armed_night":
+                    return "hass:bell-sleep";
+                case "disarmed":
+                    return "hass:bell-outline";
+                case "triggered":
+                    return "hass:bell-ring";
+                default:
+                    return "hass:bell";
+            }
+        case "binary_sensor":
+            return state && state === "off" ? "hass:radiobox-blank" : "hass:checkbox-marked-circle";
+        case "cover":
+            return state === "closed" ? "hass:window-closed" : "hass:window-open";
+        case "lock":
+            return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
+        case "media_player":
+            return state && state !== "off" && state !== "idle" ? "hass:cast-connected" : "hass:cast";
+        case "zwave":
+            switch (state) {
+                case "dead":
+                    return "hass:emoticon-dead";
+                case "sleeping":
+                    return "hass:sleep";
+                case "initializing":
+                    return "hass:timer-sand";
+                default:
+                    return "hass:z-wave";
+            }
+        default:
+            // tslint:disable-next-line
+            console.warn("Unable to find icon for domain " + domain + " (" + state + ")");
+            return DEFAULT_DOMAIN_ICON;
+    }
+}
+
 function bound01(n, max) {
     if (isOnePointZero(n)) {
         n = '100%';
@@ -3194,108 +3291,64 @@ var TinyColor = function () {
     return TinyColor;
 }();
 
-/** Constants to be used in the frontend. */
-// Constants should be alphabetically sorted by name.
-// Arrays with values should be alphabetically sorted if order doesn't matter.
-// Each constant should have a description what it is supposed to be used for.
-/** Icon to use when no icon specified for domain. */
-const DEFAULT_DOMAIN_ICON = "hass:bookmark";
-/** States that we consider "off". */
-const STATES_OFF = ["closed", "locked", "off"];
-
-/**
- * Return the icon to be used for a domain.
- *
- * Optionally pass in a state to influence the domain icon.
- */
-const fixedIcons = {
-    alert: "hass:alert",
-    automation: "hass:playlist-play",
-    calendar: "hass:calendar",
-    camera: "hass:video",
-    climate: "hass:thermostat",
-    configurator: "hass:settings",
-    conversation: "hass:text-to-speech",
-    device_tracker: "hass:account",
-    fan: "hass:fan",
-    group: "hass:google-circles-communities",
-    history_graph: "hass:chart-line",
-    homeassistant: "hass:home-assistant",
-    homekit: "hass:home-automation",
-    image_processing: "hass:image-filter-frames",
-    input_boolean: "hass:drawing",
-    input_datetime: "hass:calendar-clock",
-    input_number: "hass:ray-vertex",
-    input_select: "hass:format-list-bulleted",
-    input_text: "hass:textbox",
-    light: "hass:lightbulb",
-    mailbox: "hass:mailbox",
-    notify: "hass:comment-alert",
-    person: "hass:account",
-    plant: "hass:flower",
-    proximity: "hass:apple-safari",
-    remote: "hass:remote",
-    scene: "hass:google-pages",
-    script: "hass:file-document",
-    sensor: "hass:eye",
-    simple_alarm: "hass:bell",
-    sun: "hass:white-balance-sunny",
-    switch: "hass:flash",
-    timer: "hass:timer",
-    updater: "hass:cloud-upload",
-    vacuum: "hass:robot-vacuum",
-    water_heater: "hass:thermometer",
-    weblink: "hass:open-in-new"
-};
-function domainIcon(domain, state) {
-    if (domain in fixedIcons) {
-        return fixedIcons[domain];
-    }
-    switch (domain) {
-        case "alarm_control_panel":
-            switch (state) {
-                case "armed_home":
-                    return "hass:bell-plus";
-                case "armed_night":
-                    return "hass:bell-sleep";
-                case "disarmed":
-                    return "hass:bell-outline";
-                case "triggered":
-                    return "hass:bell-ring";
-                default:
-                    return "hass:bell";
-            }
-        case "binary_sensor":
-            return state && state === "off" ? "hass:radiobox-blank" : "hass:checkbox-marked-circle";
-        case "cover":
-            return state === "closed" ? "hass:window-closed" : "hass:window-open";
-        case "lock":
-            return state && state === "unlocked" ? "hass:lock-open" : "hass:lock";
-        case "media_player":
-            return state && state !== "off" && state !== "idle" ? "hass:cast-connected" : "hass:cast";
-        case "zwave":
-            switch (state) {
-                case "dead":
-                    return "hass:emoticon-dead";
-                case "sleeping":
-                    return "hass:sleep";
-                case "initializing":
-                    return "hass:timer-sand";
-                default:
-                    return "hass:z-wave";
-            }
-        default:
-            // tslint:disable-next-line
-            console.warn("Unable to find icon for domain " + domain + " (" + state + ")");
-            return DEFAULT_DOMAIN_ICON;
-    }
-}
-
 function computeDomain(entityId) {
-    return entityId.substr(0, entityId.indexOf("."));
+    return entityId.substr(0, entityId.indexOf('.'));
 }
 function computeEntity(entityId) {
-    return entityId.substr(entityId.indexOf(".") + 1);
+    return entityId.substr(entityId.indexOf('.') + 1);
+}
+function getColorFromVariable(color) {
+    if (color.substring(0, 3) === 'var') {
+        return window.getComputedStyle(document.documentElement).getPropertyValue(color.substring(4).slice(0, -1)).trim();
+    }
+    return color;
+}
+function getFontColorBasedOnBackgroundColor(backgroundColor) {
+    const colorObj = new TinyColor(getColorFromVariable(backgroundColor));
+    if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
+        return 'rgb(62, 62, 62)'; // bright colors - black font
+    } else {
+        return 'rgb(234, 234, 234)'; // dark colors - white font
+    }
+}
+function buildNameStateConcat(name, stateString) {
+    if (!name && !stateString) {
+        return undefined;
+    }
+    let nameStateString;
+    if (stateString) {
+        if (name) {
+            nameStateString = `${name}: ${stateString}`;
+        } else {
+            nameStateString = stateString;
+        }
+    } else {
+        nameStateString = name;
+    }
+    return nameStateString;
+}
+function applyBrightnessToColor(color, brightness) {
+    const colorObj = new TinyColor(getColorFromVariable(color));
+    if (colorObj.isValid) {
+        const validColor = colorObj.darken(100 - brightness).toString();
+        if (validColor) return validColor;
+    }
+    return color;
+}
+// Check if config or Entity changed
+function hasConfigOrEntityChanged(element, changedProps) {
+    if (changedProps.has('config')) {
+        return true;
+    }
+    if (element.config.entity) {
+        const oldHass = changedProps.get('hass');
+        if (oldHass) {
+            return oldHass.states[element.config.entity] !== element.hass.states[element.config.entity];
+        }
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // Polymer legacy event helpers used courtesy of the Polymer project.
@@ -3579,111 +3632,97 @@ const longPress = directive(() => part => {
     longPressBind(part.committer.element);
 });
 
-// Check if config or Entity changed
-function hasConfigOrEntityChanged(element, changedProps) {
-    if (changedProps.has("config")) {
-        return true;
+const styles = css`
+  ha-card {
+    cursor: pointer;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  ha-card.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+  ha-icon {
+    display: inline-block;
+    margin: auto;
+  }
+  ha-card.button-card-main {
+    padding: 4% 0px;
+    text-transform: none;
+    font-weight: 400;
+    font-size: 1.2rem;
+    align-items: center;
+    text-align: center;
+    letter-spacing: normal;
+    width: 100%;
+  }
+  div.divTable{
+    display: table;
+    overflow: auto;
+    table-layout: fixed;
+    width: 100%;
+  }
+  div.divTableBody {
+    display: table-row-group;
+  }
+  div.divTableRow {
+    display: table-row;
+  }
+  .divTableCell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 100%;
+  }
+  @keyframes blink{
+    0%{opacity:0;}
+    50%{opacity:1;}
+    100%{opacity:0;}
+  }
+  @-webkit-keyframes rotating /* Safari and Chrome */ {
+    from {
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
     }
-    if (element.config.entity) {
-        const oldHass = changedProps.get("hass");
-        if (oldHass) {
-            return oldHass.states[element.config.entity] !== element.hass.states[element.config.entity];
-        }
-        return true;
-    } else {
-        return false;
+    to {
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
     }
-}
+  }
+  @keyframes rotating {
+    from {
+      -ms-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -ms-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  .rotating {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
+  }
+`;
 
 let ButtonCard = class ButtonCard extends LitElement {
     static get styles() {
-        return css`
-        ha-card {
-          cursor: pointer;
-          overflow: hidden;
-          box-sizing: border-box;
-        }
-        ha-card.disabled {
-          pointer-events: none;
-          cursor: default;
-        }
-        ha-icon {
-          display: inline-block;
-          margin: auto;
-        }
-        ha-card.button-card-main {
-          padding: 4% 0px;
-          text-transform: none;
-          font-weight: 400;
-          font-size: 1.2rem;
-          align-items: center;
-          text-align: center;
-          letter-spacing: normal;
-          width: 100%;
-        }
-        div.divTable{
-          display: table;
-          overflow: auto;
-          table-layout: fixed;
-          width: 100%;
-        }
-        div.divTableBody {
-          display: table-row-group;
-        }
-        div.divTableRow {
-          display: table-row;
-        }
-        .divTableCell {
-          display: table-cell;
-          vertical-align: middle;
-        }
-        div {
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          min-width: 100%;
-        }
-        @keyframes blink{
-          0%{opacity:0;}
-          50%{opacity:1;}
-          100%{opacity:0;}
-        }
-        @-webkit-keyframes rotating /* Safari and Chrome */ {
-          from {
-            -webkit-transform: rotate(0deg);
-            -o-transform: rotate(0deg);
-            transform: rotate(0deg);
-          }
-          to {
-            -webkit-transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes rotating {
-          from {
-            -ms-transform: rotate(0deg);
-            -moz-transform: rotate(0deg);
-            -webkit-transform: rotate(0deg);
-            -o-transform: rotate(0deg);
-            transform: rotate(0deg);
-          }
-          to {
-            -ms-transform: rotate(360deg);
-            -moz-transform: rotate(360deg);
-            -webkit-transform: rotate(360deg);
-            -o-transform: rotate(360deg);
-            transform: rotate(360deg);
-          }
-        }
-        .rotating {
-          -webkit-animation: rotating 2s linear infinite;
-          -moz-animation: rotating 2s linear infinite;
-          -ms-animation: rotating 2s linear infinite;
-          -o-animation: rotating 2s linear infinite;
-          animation: rotating 2s linear infinite;
-        }
-      `;
+        return styles;
     }
     render() {
         if (!this.config || !this.hass) {
@@ -3704,20 +3743,6 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     shouldUpdate(changedProps) {
         return hasConfigOrEntityChanged(this, changedProps);
-    }
-    getFontColorBasedOnBackgroundColor(backgroundColor) {
-        let localColor = backgroundColor;
-        if (backgroundColor.substring(0, 3) === 'var') {
-            localColor = window.getComputedStyle(document.documentElement).getPropertyValue(backgroundColor.substring(4).slice(0, -1)).trim();
-        }
-        const colorObj = new TinyColor(localColor);
-        let fontColor = ''; // don't override by default
-        if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
-            fontColor = 'rgb(62, 62, 62)'; // bright colors - black font
-        } else {
-            fontColor = 'rgb(234, 234, 234)'; // dark colors - white font
-        }
-        return fontColor;
     }
     testConfigState(state) {
         if (!state || !this.config.state) {
@@ -3785,6 +3810,11 @@ let ButtonCard = class ButtonCard extends LitElement {
             if (state) {
                 if (state.attributes.rgb_color) {
                     color = `rgb(${state.attributes.rgb_color.join(',')})`;
+                    if (state.attributes.brightness) {
+                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                    }
+                } else if (state.attributes.brightness) {
+                    color = applyBrightnessToColor(this.getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
                 } else {
                     color = this.getDefaultColorForState(state);
                 }
@@ -3901,22 +3931,6 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return units;
     }
-    buildNameStateConcat(name, stateString) {
-        if (!name && !stateString) {
-            return undefined;
-        }
-        let nameStateString;
-        if (stateString) {
-            if (name) {
-                nameStateString = `${name}: ${stateString}`;
-            } else {
-                nameStateString = stateString;
-            }
-        } else {
-            nameStateString = name;
-        }
-        return nameStateString;
-    }
     isClickable(state) {
         let clickable = true;
         if (this.config.tap_action.action === 'toggle' && this.config.hold_action.action === 'none' || this.config.hold_action.action === 'toggle' && this.config.tap_action.action === 'none') {
@@ -3948,7 +3962,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const icon = this.buildIcon(state, configState);
         const name = this.buildName(state, configState);
         const stateString = this.buildStateString(state);
-        const nameStateString = this.buildNameStateConcat(name, stateString);
+        const nameStateString = buildNameStateConcat(name, stateString);
         const entityPicture = this.buildEntityPicture(state, configState);
         const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
         const divTableCellStyles = { width: this.config.size, height: 'auto' };
@@ -4069,7 +4083,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     blankCardColoredHtml(state) {
         const color = this.buildCssColorAttribute(state, undefined);
-        const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+        const fontColor = getFontColorBasedOnBackgroundColor(color);
         return html`
       <ha-card class="disabled">
         <div style="color: ${fontColor}; background-color: ${color};"></div>
@@ -4078,7 +4092,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     cardColoredHtml(state, configState) {
         const color = this.buildCssColorAttribute(state, configState);
-        const fontColor = this.getFontColorBasedOnBackgroundColor(color);
+        const fontColor = getFontColorBasedOnBackgroundColor(color);
         const style = Object.assign({ color: fontColor, 'background-color': color }, this.buildStyle(state, configState));
         return html`
       <ha-card class="button-card-main ${this.isClickable(state) ? '' : 'disabled'}" style=${styleMap(style)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
@@ -4103,7 +4117,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
-        this.config.color_off = 'var(--paper-item-icon-color)';
+        if (this.config.color_type !== 'icon') {
+            this.config.color_off = 'var(--paper-card-background-color)';
+        } else {
+            this.config.color_off = 'var(--paper-item-icon-color)';
+        }
         this.config.color_on = 'var(--paper-item-icon-active-color)';
     }
     // The height of your card. Home Assistant uses this to automatically
