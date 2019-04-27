@@ -18,7 +18,14 @@ import {
   StateConfig,
   CssStyleConfig,
 } from './types';
-import * as helpers from './helpers';
+import {
+  computeDomain,
+  computeEntity,
+  getFontColorBasedOnBackgroundColor,
+  buildNameStateConcat,
+  applyBrightnessToColor,
+  hasConfigOrEntityChanged,
+} from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
 import { styles } from './styles';
@@ -52,7 +59,7 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    return helpers.hasConfigOrEntityChanged(this, changedProps);
+    return hasConfigOrEntityChanged(this, changedProps);
   }
 
   private testConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -125,10 +132,10 @@ class ButtonCard extends LitElement {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
           if (state.attributes.brightness) {
-            color = helpers.applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
           }
         } else if (state.attributes.brightness) {
-          color = helpers.applyBrightnessToColor(
+          color = applyBrightnessToColor(
             this.getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
           );
         } else {
@@ -161,7 +168,7 @@ class ButtonCard extends LitElement {
     } else if (state && state.attributes) {
       icon = state.attributes.icon
         ? state.attributes.icon
-        : domainIcon(helpers.computeDomain(state.entity_id), state.state);
+        : domainIcon(computeDomain(state.entity_id), state.state);
     }
     return icon;
   }
@@ -238,7 +245,7 @@ class ButtonCard extends LitElement {
       name = this.config!.name;
     } else if (state) {
       name = state.attributes && state.attributes.friendly_name
-        ? state.attributes.friendly_name : helpers.computeEntity(state.entity_id);
+        ? state.attributes.friendly_name : computeEntity(state.entity_id);
     }
     return name;
   }
@@ -275,7 +282,7 @@ class ButtonCard extends LitElement {
     if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
       || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
       if (state) {
-        switch (helpers.computeDomain(state.entity_id)) {
+        switch (computeDomain(state.entity_id)) {
           case 'sensor':
           case 'binary_sensor':
           case 'device_tracker':
@@ -307,7 +314,7 @@ class ButtonCard extends LitElement {
     const icon = this.buildIcon(state, configState);
     const name = this.buildName(state, configState);
     const stateString = this.buildStateString(state);
-    const nameStateString = helpers.buildNameStateConcat(name, stateString);
+    const nameStateString = buildNameStateConcat(name, stateString);
     const entityPicture = this.buildEntityPicture(state, configState);
     const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
 
@@ -442,7 +449,7 @@ class ButtonCard extends LitElement {
 
   private blankCardColoredHtml(state: HassEntity | undefined): TemplateResult {
     const color = this.buildCssColorAttribute(state, undefined);
-    const fontColor = helpers.getFontColorBasedOnBackgroundColor(color);
+    const fontColor = getFontColorBasedOnBackgroundColor(color);
     return html`
       <ha-card class="disabled">
         <div style="color: ${fontColor}; background-color: ${color};"></div>
@@ -454,7 +461,7 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined, configState: StateConfig | undefined,
   ): TemplateResult {
     const color = this.buildCssColorAttribute(state, configState);
-    const fontColor = helpers.getFontColorBasedOnBackgroundColor(color);
+    const fontColor = getFontColorBasedOnBackgroundColor(color);
     const style = {
       color: fontColor,
       'background-color': color,
@@ -502,7 +509,7 @@ class ButtonCard extends LitElement {
     if (this.config!.color_type !== 'icon') {
       this.config!.color_off = 'var(--paper-card-background-color)';
     } else {
-    this.config!.color_off = 'var(--paper-item-icon-color)';
+      this.config!.color_off = 'var(--paper-item-icon-color)';
     }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
   }
