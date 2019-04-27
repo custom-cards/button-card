@@ -3335,6 +3335,21 @@ function applyBrightnessToColor(color, brightness) {
     }
     return color;
 }
+// Check if config or Entity changed
+function hasConfigOrEntityChanged(element, changedProps) {
+    if (changedProps.has('config')) {
+        return true;
+    }
+    if (element.config.entity) {
+        const oldHass = changedProps.get('hass');
+        if (oldHass) {
+            return oldHass.states[element.config.entity] !== element.hass.states[element.config.entity];
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // Polymer legacy event helpers used courtesy of the Polymer project.
 //
@@ -3616,22 +3631,6 @@ const longPressBind = element => {
 const longPress = directive(() => part => {
     longPressBind(part.committer.element);
 });
-
-// Check if config or Entity changed
-function hasConfigOrEntityChanged(element, changedProps) {
-    if (changedProps.has("config")) {
-        return true;
-    }
-    if (element.config.entity) {
-        const oldHass = changedProps.get("hass");
-        if (oldHass) {
-            return oldHass.states[element.config.entity] !== element.hass.states[element.config.entity];
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
 
 const styles = css`
   ha-card {
@@ -4118,7 +4117,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
-        this.config.color_off = 'var(--paper-item-icon-color)';
+        if (this.config.color_type !== 'icon') {
+            this.config.color_off = 'var(--paper-card-background-color)';
+        } else {
+            this.config.color_off = 'var(--paper-item-icon-color)';
+        }
         this.config.color_on = 'var(--paper-item-icon-active-color)';
     }
     // The height of your card. Home Assistant uses this to automatically

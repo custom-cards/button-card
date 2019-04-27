@@ -21,7 +21,6 @@ import {
 import * as helpers from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
-import { hasConfigOrEntityChanged } from './has-changed';
 import { styles } from './styles';
 
 @customElement('button-card')
@@ -53,7 +52,7 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    return hasConfigOrEntityChanged(this, changedProps);
+    return helpers.hasConfigOrEntityChanged(this, changedProps);
   }
 
   private testConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -500,7 +499,11 @@ class ButtonCard extends LitElement {
       ...config,
     };
     this.config!.default_color = 'var(--primary-text-color)';
+    if (this.config!.color_type !== 'icon') {
+      this.config!.color_off = 'var(--paper-card-background-color)';
+    } else {
     this.config!.color_off = 'var(--paper-item-icon-color)';
+    }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
   }
 

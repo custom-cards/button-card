@@ -1,5 +1,6 @@
+import { PropertyValues } from 'lit-element';
 import { TinyColor } from '@ctrl/tinycolor';
-import { constants } from 'zlib';
+import { HomeAssistant } from './types';
 
 export function computeDomain(entityId: string): string {
   return entityId.substr(0, entityId.indexOf('.'));
@@ -54,4 +55,27 @@ export function applyBrightnessToColor(
     if (validColor) return validColor;
   }
   return color;
+}
+
+// Check if config or Entity changed
+export function hasConfigOrEntityChanged(
+  element: any,
+  changedProps: PropertyValues,
+): boolean {
+  if (changedProps.has('config')) {
+    return true;
+  }
+
+  if (element.config!.entity) {
+    const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
+    if (oldHass) {
+      return (
+        oldHass.states[element.config!.entity]
+        !== element.hass!.states[element.config!.entity]
+      );
+    }
+    return true;
+  } else {
+    return false;
+  }
 }
