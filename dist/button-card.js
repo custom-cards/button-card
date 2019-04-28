@@ -4033,6 +4033,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
+        const configCardStyle = this._buildStyle(state, configState);
         switch (this.config.color_type) {
             case 'blank-card':
                 return this._blankCardColoredHtml(state);
@@ -4042,13 +4043,17 @@ let ButtonCard = class ButtonCard extends LitElement {
                     const fontColor = getFontColorBasedOnBackgroundColor(color);
                     cardStyle.color = fontColor;
                     cardStyle['background-color'] = color;
-                    cardStyle = Object.assign({}, cardStyle, this._buildStyle(state, configState));
+                    cardStyle = Object.assign({}, cardStyle, configCardStyle);
                     buttonColor = 'inherit';
                     break;
                 }
             default:
-                cardStyle = this._buildStyle(state, configState);
+                cardStyle = configCardStyle;
                 break;
+        }
+        if (configCardStyle.width) {
+            this.style.setProperty('flex', '0 0 auto');
+            this.style.setProperty('max-width', 'fit-content');
         }
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">

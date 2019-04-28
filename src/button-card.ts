@@ -313,6 +313,8 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
+    const configCardStyle = this._buildStyle(state, configState);
+
     switch (this.config!.color_type) {
       case 'blank-card':
         return this._blankCardColoredHtml(state);
@@ -321,13 +323,17 @@ class ButtonCard extends LitElement {
         const fontColor = getFontColorBasedOnBackgroundColor(color);
         cardStyle.color = fontColor;
         cardStyle['background-color'] = color;
-        cardStyle = { ...cardStyle, ...this._buildStyle(state, configState) };
+        cardStyle = { ...cardStyle, ...configCardStyle };
         buttonColor = 'inherit';
         break;
       }
       default:
-        cardStyle = this._buildStyle(state, configState);
+        cardStyle = configCardStyle;
         break;
+    }
+    if (configCardStyle.width) {
+      this.style.setProperty('flex', '0 0 auto');
+      this.style.setProperty('max-width', 'fit-content');
     }
 
     return html`
