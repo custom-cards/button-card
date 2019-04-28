@@ -24,27 +24,10 @@ export const styles = css`
     letter-spacing: normal;
     width: 100%;
   }
-  div.divTable{
-    display: table;
-    overflow: auto;
-    table-layout: fixed;
-    width: 100%;
-  }
-  div.divTableBody {
-    display: table-row-group;
-  }
-  div.divTableRow {
-    display: table-row;
-  }
-  .divTableCell {
-    display: table-cell;
-    vertical-align: middle;
-  }
   div {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    min-width: 100%;
   }
   @keyframes blink{
     0%{opacity:0;}
@@ -85,6 +68,94 @@ export const styles = css`
     -ms-animation: rotating 2s linear infinite;
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
+  }
+
+  .container {
+    display: grid;
+    max-height: 100%;
+    text-align: center;
+    height: 100%;
+    align-items: middle;
+  }
+  .img-cell {
+    grid-area: i;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .icon {
+    height: 100%;
+    max-width: 100%;
+    object-fit: scale;
+    overflow: hidden;
+  }
+  .name {
+    grid-area: n;
+    max-width: 100%;
+    align-self: center;
+    justify-self: center;
+    /* margin: auto; */
+  }
+  .state {
+    grid-area: s;
+    max-width: 100%;
+    align-self: center;
+    justify-self: center;
+    /* margin: auto; */
+  }
+
+  .container.vertical {
+    grid-template-areas: "i" "n" "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content min-content;
+  }
+
+  .container.icon_name_state {
+    grid-template-areas: "i n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .container.icon_name {
+    grid-template-areas: "i n" "s s";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.icon_state {
+    grid-template-areas: "i s" "n n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.name_state {
+    grid-template-areas: "i" "n";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.icon_name_state2nd {
+    grid-template-areas: "i n" "i s";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.icon_name_state2nd .name {
+    align-self: end;
+  }
+  .container.icon_name_state2nd .state {
+    align-self: start;
+  }
+
+  .container.icon_state_name2nd {
+    grid-template-areas: "i s" "i n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.icon_state_name2nd .state {
+    align-self: end;
+  }
+  .container.icon_state_name2nd .name {
+    align-self: start;
   }
 `;
 

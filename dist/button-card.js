@@ -3656,27 +3656,10 @@ const styles = css`
     letter-spacing: normal;
     width: 100%;
   }
-  div.divTable{
-    display: table;
-    overflow: auto;
-    table-layout: fixed;
-    width: 100%;
-  }
-  div.divTableBody {
-    display: table-row-group;
-  }
-  div.divTableRow {
-    display: table-row;
-  }
-  .divTableCell {
-    display: table-cell;
-    vertical-align: middle;
-  }
   div {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    min-width: 100%;
   }
   @keyframes blink{
     0%{opacity:0;}
@@ -3718,6 +3701,94 @@ const styles = css`
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
   }
+
+  .container {
+    display: grid;
+    max-height: 100%;
+    text-align: center;
+    height: 100%;
+    align-items: middle;
+  }
+  .img-cell {
+    grid-area: i;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .icon {
+    height: 100%;
+    max-width: 100%;
+    object-fit: scale;
+    overflow: hidden;
+  }
+  .name {
+    grid-area: n;
+    max-width: 100%;
+    align-self: center;
+    justify-self: center;
+    /* margin: auto; */
+  }
+  .state {
+    grid-area: s;
+    max-width: 100%;
+    align-self: center;
+    justify-self: center;
+    /* margin: auto; */
+  }
+
+  .container.vertical {
+    grid-template-areas: "i" "n" "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content min-content;
+  }
+
+  .container.icon_name_state {
+    grid-template-areas: "i n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .container.icon_name {
+    grid-template-areas: "i n" "s s";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.icon_state {
+    grid-template-areas: "i s" "n n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.name_state {
+    grid-template-areas: "i" "n";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+
+  .container.icon_name_state2nd {
+    grid-template-areas: "i n" "i s";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.icon_name_state2nd .name {
+    align-self: end;
+  }
+  .container.icon_name_state2nd .state {
+    align-self: start;
+  }
+
+  .container.icon_state_name2nd {
+    grid-template-areas: "i s" "i n";
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.icon_state_name2nd .state {
+    align-self: end;
+  }
+  .container.icon_state_name2nd .name {
+    align-self: start;
+  }
 `;
 
 let ButtonCard = class ButtonCard extends LitElement {
@@ -3728,23 +3799,12 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!this.config || !this.hass) {
             return html``;
         }
-        const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
-        const configState = this.testConfigState(state);
-        switch (this.config.color_type) {
-            case 'blank-card':
-                return this.blankCardColoredHtml(state);
-            case 'label-card':
-            case 'card':
-                return this.cardColoredHtml(state, configState);
-            case 'icon':
-            default:
-                return this.iconColoredHtml(state, configState);
-        }
+        return this._cardHtml();
     }
     shouldUpdate(changedProps) {
         return hasConfigOrEntityChanged(this, changedProps);
     }
-    testConfigState(state) {
+    _getMatchingConfigState(state) {
         if (!state || !this.config.state) {
             return undefined;
         }
@@ -3786,7 +3846,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return retval;
     }
-    getDefaultColorForState(state) {
+    _getDefaultColorForState(state) {
         switch (state.state) {
             case 'on':
                 return this.config.color_on;
@@ -3796,7 +3856,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 return this.config.default_color;
         }
     }
-    buildCssColorAttribute(state, configState) {
+    _buildCssColorAttribute(state, configState) {
         let colorValue = '';
         let color;
         if (configState && configState.color) {
@@ -3814,9 +3874,9 @@ let ButtonCard = class ButtonCard extends LitElement {
                         color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
                     }
                 } else if (state.attributes.brightness) {
-                    color = applyBrightnessToColor(this.getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
+                    color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
                 } else {
-                    color = this.getDefaultColorForState(state);
+                    color = this._getDefaultColorForState(state);
                 }
             } else {
                 color = this.config.default_color;
@@ -3824,13 +3884,13 @@ let ButtonCard = class ButtonCard extends LitElement {
         } else if (colorValue) {
             color = colorValue;
         } else if (state) {
-            color = this.getDefaultColorForState(state);
+            color = this._getDefaultColorForState(state);
         } else {
             color = this.config.default_color;
         }
         return color;
     }
-    buildIcon(state, configState) {
+    _buildIcon(state, configState) {
         if (!this.config.show_icon) {
             return undefined;
         }
@@ -3844,7 +3904,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return icon;
     }
-    buildEntityPicture(state, configState) {
+    _buildEntityPicture(state, configState) {
         if (!this.config.show_entity_picture || !state && !configState && !this.config.entity_picture) {
             return undefined;
         }
@@ -3858,7 +3918,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return entityPicture;
     }
-    buildStyle(state, configState) {
+    _buildStyle(state, configState) {
         let cardStyle = {};
         let styleArray;
         if (state) {
@@ -3875,7 +3935,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return cardStyle;
     }
-    buildEntityPictureStyle(state, configState) {
+    _buildEntityPictureStyle(state, configState) {
         let entityPictureStyle = {};
         let styleArray;
         if (state) {
@@ -3892,7 +3952,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return entityPictureStyle;
     }
-    buildName(state, configState) {
+    _buildName(state, configState) {
         if (this.config.show_name === false) {
             return undefined;
         }
@@ -3906,10 +3966,10 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return name;
     }
-    buildStateString(state) {
+    _buildStateString(state) {
         let stateString;
         if (this.config.show_state && state && state.state) {
-            const units = this.buildUnits(state);
+            const units = this._buildUnits(state);
             if (units) {
                 stateString = `${state.state} ${units}`;
             } else {
@@ -3918,7 +3978,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return stateString;
     }
-    buildUnits(state) {
+    _buildUnits(state) {
         let units;
         if (state) {
             if (this.config.show_units) {
@@ -3931,7 +3991,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return units;
     }
-    isClickable(state) {
+    _isClickable(state) {
         let clickable = true;
         if (this.config.tap_action.action === 'toggle' && this.config.hold_action.action === 'none' || this.config.hold_action.action === 'toggle' && this.config.tap_action.action === 'none') {
             if (state) {
@@ -3955,134 +4015,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return clickable;
     }
-    rotate(configState) {
+    _rotate(configState) {
         return configState && configState.spin ? 'rotating' : '';
     }
-    buttonContent(state, configState, color) {
-        const icon = this.buildIcon(state, configState);
-        const name = this.buildName(state, configState);
-        const stateString = this.buildStateString(state);
-        const nameStateString = buildNameStateConcat(name, stateString);
-        const entityPicture = this.buildEntityPicture(state, configState);
-        const entityPictureStyle = this.buildEntityPictureStyle(state, configState);
-        const divTableCellStyles = { width: this.config.size, height: 'auto' };
-        const haIconInlineStyle = {
-            color,
-            width: this.config.size,
-            height: 'auto'
-        };
-        const haIconTableStyle = Object.assign({}, haIconInlineStyle, { width: 'auto', 'max-width': this.config.size });
-        const entityPictureInlineStyle = Object.assign({}, haIconInlineStyle, entityPictureStyle);
-        const entityPictureTableStyle = Object.assign({}, haIconTableStyle, entityPictureStyle);
-        switch (this.config.layout) {
-            case 'icon_name_state':
-                return html`
-          <div class='divTable'>
-            <div class='divTableBody'>
-              <div class='divTableRow'>
-                <div class='divTableCell' style=${styleMap(divTableCellStyles)}>
-                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
-                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
-                    class="${this.rotate(configState)}" />` : ''}
-                </div>
-                ${nameStateString ? html`<div class="divTableCell">${nameStateString}</div>` : ''}
-              </div>
-            </div>
-          </div>
-          `;
-            case 'icon_name':
-                return html`
-          <div class="divTable">
-            <div class="divTableBody">
-              <div class="divTableRow">
-                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
-                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
-                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
-                    class="${this.rotate(configState)}" />` : ''}
-                </div>
-                ${name ? html`<div class="divTableCell">${name}</div>` : ''}
-              </div>
-            </div>
-          </div>
-          ${stateString !== undefined ? html`<div>${stateString}</div>` : ''}
-          `;
-            case 'icon_state':
-                return html`
-          <div class="divTable">
-            <div class="divTableBody">
-              <div class="divTableRow">
-                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
-                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
-                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
-                    class="${this.rotate(configState)}" />` : ''}
-                </div>
-                ${stateString !== undefined ? html`<div class="divTableCell">${stateString}</div>` : ''}
-              </div>
-            </div>
-          </div>
-          ${name ? html`<div>${name}</div>` : ''}
-          `;
-            case 'icon_state_name2nd':
-                return html`
-          <div class="divTable">
-            <div class="divTableBody">
-              <div class="divTableRow">
-                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
-                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
-                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
-                    class="${this.rotate(configState)}" />` : ''}
-                </div>
-                ${stateString !== undefined && name ? html`<div class="divTableCell">${stateString}<br />${name}</div>` : ''}
-                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
-                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
-              </div>
-            </div>
-          </div>
-          `;
-            case 'icon_name_state2nd':
-                return html`
-          <div class="divTable">
-            <div class="divTableBody">
-              <div class="divTableRow">
-                <div class="divTableCell" style=${styleMap(divTableCellStyles)}>
-                  ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconTableStyle)}
-                    icon="${icon}" class="${this.rotate(configState)}"></ha-icon>` : ''}
-                  ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureTableStyle)}
-                    class="${this.rotate(configState)}" />` : ''}
-                </div>
-                ${stateString !== undefined && name ? html`<div class="divTableCell">${name}<br />${stateString}</div>` : ''}
-                ${!stateString && name ? html`<div class="divTableCell">${name}</div>` : ''}
-                ${stateString && !name ? html`<div class="divTableCell">${stateString}</div>` : ''}
-              </div>
-            </div>
-          </div>
-          `;
-            case 'name_state':
-                return html`
-          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconInlineStyle)}
-            icon=${icon} class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureInlineStyle)}
-            class="${this.rotate(configState)}" />` : ''}
-          ${nameStateString ? html`<div>${nameStateString}</div>` : ''}
-          `;
-            case 'vertical':
-            default:
-                return html`
-          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconInlineStyle)}
-            icon=${icon} class="${this.rotate(configState)}"></ha-icon>` : ''}
-          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureInlineStyle)}
-            class="${this.rotate(configState)}" />` : ''}
-          ${name ? html`<div>${name}</div>` : ''}
-          ${stateString ? html`<div>${stateString}</div>` : ''}
-          `;
-        }
-    }
-    blankCardColoredHtml(state) {
-        const color = this.buildCssColorAttribute(state, undefined);
+    _blankCardColoredHtml(state) {
+        const color = this._buildCssColorAttribute(state, undefined);
         const fontColor = getFontColorBasedOnBackgroundColor(color);
         return html`
       <ha-card class="disabled">
@@ -4090,32 +4027,85 @@ let ButtonCard = class ButtonCard extends LitElement {
       </ha-card>
       `;
     }
-    cardColoredHtml(state, configState) {
-        const color = this.buildCssColorAttribute(state, configState);
-        const fontColor = getFontColorBasedOnBackgroundColor(color);
-        const style = Object.assign({ color: fontColor, 'background-color': color }, this.buildStyle(state, configState));
+    _cardHtml() {
+        const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
+        const configState = this._getMatchingConfigState(state);
+        const color = this._buildCssColorAttribute(state, configState);
+        let buttonColor = color;
+        let cardStyle = {};
+        switch (this.config.color_type) {
+            case 'blank-card':
+                return this._blankCardColoredHtml(state);
+            case 'card':
+            case 'label-card':
+                {
+                    const fontColor = getFontColorBasedOnBackgroundColor(color);
+                    cardStyle.color = fontColor;
+                    cardStyle['background-color'] = color;
+                    cardStyle = Object.assign({}, cardStyle, this._buildStyle(state, configState));
+                    buttonColor = 'inherit';
+                    break;
+                }
+            default:
+                cardStyle = this._buildStyle(state, configState);
+                break;
+        }
         return html`
-      <ha-card class="button-card-main ${this.isClickable(state) ? '' : 'disabled'}" style=${styleMap(style)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
-        ${this.buttonContent(state, configState, 'inherit')}
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this._buttonContent(state, configState, buttonColor)}
       <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
     }
-    iconColoredHtml(state, configState) {
-        const color = this.buildCssColorAttribute(state, configState);
-        const style = this.buildStyle(state, configState);
+    _buttonContent(state, configState, color) {
+        const name = this._buildName(state, configState);
+        const stateString = this._buildStateString(state);
+        const nameStateString = buildNameStateConcat(name, stateString);
+        switch (this.config.layout) {
+            case 'icon_name_state':
+            case 'name_state':
+                return this._gridHtml(state, configState, this.config.layout, color, nameStateString, undefined);
+            default:
+                return this._gridHtml(state, configState, this.config.layout, color, name, stateString);
+        }
+    }
+    _gridHtml(state, configState, containerClass, color, name, stateString) {
         return html`
-      <ha-card class="button-card-main ${this.isClickable(state) ? '' : 'disabled'}" style=${styleMap(style)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
-          ${this.buttonContent(state, configState, color)}
-      <mwc-ripple></mwc-ripple>
-      </ha-card>
+      <div class="container ${containerClass}">
+        ${this._getIconHtml(state, configState, color)}
+        ${name ? html`<div class="name">${name}</div>` : ''}
+        ${stateString ? html`<div class="state">${stateString}</div>` : ''}
+      </div>
+    `;
+    }
+    _getIconHtml(state, configState, color) {
+        const icon = this._buildIcon(state, configState);
+        const entityPicture = this._buildEntityPicture(state, configState);
+        const entityPictureStyleFromConfig = this._buildEntityPictureStyle(state, configState);
+        const haIconStyle = {
+            color,
+            width: this.config.size,
+            'min-width': this.config.size
+        };
+        const entityPictureStyle = Object.assign({}, haIconStyle, entityPictureStyleFromConfig);
+        if (icon || entityPicture) {
+            return html`
+        <div class="img-cell">
+          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
+            icon="${icon}" class="icon ${this._rotate(configState)}"></ha-icon>` : ''}
+          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
+            class="${this._rotate(configState)}" />` : ''}
+        </div>
       `;
+        } else {
+            return html``;
+        }
     }
     setConfig(config) {
         if (!config) {
             throw new Error('Invalid configuration');
         }
-        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
+        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
         if (this.config.color_type !== 'icon') {
             this.config.color_off = 'var(--paper-card-background-color)';
