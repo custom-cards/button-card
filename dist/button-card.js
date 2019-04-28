@@ -3707,7 +3707,7 @@ const styles = css`
     max-height: 100%;
     text-align: center;
     height: 100%;
-    align-items: middle;
+    align-items: center;
   }
   .img-cell {
     grid-area: i;
