@@ -23,12 +23,15 @@ export interface ButtonCardConfig {
   show_icon?: boolean;
   show_units?: boolean;
   show_entity_picture?: boolean;
+  show_label?: boolean;
+  label?: string;
+  label_template?: string;
   entity_picture?: string;
   units?: string;
   style?: CssStyleConfig[];
   state?: StateConfig[];
   confirmation?: string;
-  layout: 'vertical' | 'icon_name_state' | 'name_state' | 'icon_name' | 'icon_state' | 'icon_name_state2nd' | 'icon_state_name2nd';
+  layout: Layout;
   entity_picture_style?: CssStyleConfig[];
 
   default_color: string;
@@ -36,8 +39,17 @@ export interface ButtonCardConfig {
   color_off: string;
 }
 
+export type Layout = 'vertical'
+  | 'icon_name_state'
+  | 'name_state'
+  | 'icon_name'
+  | 'icon_state'
+  | 'icon_name_state2nd'
+  | 'icon_state_name2nd'
+  | 'icon_label';
+
 export interface StateConfig {
-  operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'default';
+  operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'template' | 'default';
   value?: any;
   name?: string;
   icon?: string;
@@ -46,6 +58,8 @@ export interface StateConfig {
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
   spin?: boolean;
+  label?: string;
+  label_template?: string;
 }
 
 export interface CssStyleConfig {

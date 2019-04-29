@@ -61,8 +61,9 @@ export function applyBrightnessToColor(
 export function hasConfigOrEntityChanged(
   element: any,
   changedProps: PropertyValues,
+  forceUpdate: Boolean,
 ): boolean {
-  if (changedProps.has('config')) {
+  if (changedProps.has('config') || forceUpdate) {
     return true;
   }
 
