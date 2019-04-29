@@ -224,6 +224,26 @@ export const styles = css`
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
+  .container.name_state.no-icon {
+    grid-template-areas: "n" "l";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.name_state.no-icon .name {
+    align-self: end
+  }
+  .container.name_state.no-icon .label {
+    align-self: start
+  }
+
+  .container.name_state.no-icon.no-label {
+    grid-template-areas: "n";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container.name_state.no-icon.no-label .name {
+    align-self: center
+  }
 
   /* icon_name_state2nd default */
   .container.icon_name_state2nd {
