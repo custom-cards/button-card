@@ -62,7 +62,7 @@ export const styles = css`
       transform: rotate(360deg);
     }
   }
-  .rotating {
+  [rotating] {
     -webkit-animation: rotating 2s linear infinite;
     -moz-animation: rotating 2s linear infinite;
     -ms-animation: rotating 2s linear infinite;
@@ -108,6 +108,33 @@ export const styles = css`
     grid-template-areas: "i" "n" "s";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+  .container.vertical.no-icon {
+    grid-template-areas: "n" "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.vertical.no-icon .state {
+    align-self: start;
+  }
+  .container.vertical.no-icon .name {
+    align-self: end;
+  }
+  .container.vertical.no-icon.no-name {
+    grid-template-areas: "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container.vertical.no-icon.no-name .state {
+    align-self: center;
+  }
+  .container.vertical.no-icon.no-state {
+    grid-template-areas: "n";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container.vertical.no-icon.no-state .name {
+    align-self: center;
   }
 
   .container.icon_name_state {

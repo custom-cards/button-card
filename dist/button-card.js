@@ -3694,7 +3694,7 @@ const styles = css`
       transform: rotate(360deg);
     }
   }
-  .rotating {
+  [rotating] {
     -webkit-animation: rotating 2s linear infinite;
     -moz-animation: rotating 2s linear infinite;
     -ms-animation: rotating 2s linear infinite;
@@ -3740,6 +3740,33 @@ const styles = css`
     grid-template-areas: "i" "n" "s";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+  .container.vertical.no-icon {
+    grid-template-areas: "n" "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .container.vertical.no-icon .state {
+    align-self: start;
+  }
+  .container.vertical.no-icon .name {
+    align-self: end;
+  }
+  .container.vertical.no-icon.no-name {
+    grid-template-areas: "s";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container.vertical.no-icon.no-name .state {
+    align-self: center;
+  }
+  .container.vertical.no-icon.no-state {
+    grid-template-areas: "n";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .container.vertical.no-icon.no-state .name {
+    align-self: center;
   }
 
   .container.icon_name_state {
@@ -4016,7 +4043,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         return clickable;
     }
     _rotate(configState) {
-        return configState && configState.spin ? 'rotating' : '';
+        return configState && configState.spin ? true : false;
     }
     _blankCardColoredHtml(state) {
         const color = this._buildCssColorAttribute(state, undefined);
@@ -4075,9 +4102,14 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
     }
     _gridHtml(state, configState, containerClass, color, name, stateString) {
+        const iconTemplate = this._getIconHtml(state, configState, color);
+        const itemClass = ['container', containerClass];
+        if (!iconTemplate) itemClass.push('no-icon');
+        if (!name) itemClass.push('no-name');
+        if (!stateString) itemClass.push('no-state');
         return html`
-      <div class="container ${containerClass}">
-        ${this._getIconHtml(state, configState, color)}
+      <div class=${itemClass.join(' ')}>
+        ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name">${name}</div>` : ''}
         ${stateString ? html`<div class="state">${stateString}</div>` : ''}
       </div>
@@ -4097,13 +4129,13 @@ let ButtonCard = class ButtonCard extends LitElement {
             return html`
         <div class="img-cell">
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
-            icon="${icon}" class="icon ${this._rotate(configState)}"></ha-icon>` : ''}
+            .icon="${icon}" class="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
-            class="${this._rotate(configState)}" />` : ''}
+            class="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
       `;
         } else {
-            return html``;
+            return undefined;
         }
     }
     setConfig(config) {

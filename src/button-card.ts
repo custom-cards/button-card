@@ -293,8 +293,8 @@ class ButtonCard extends LitElement {
     return clickable;
   }
 
-  private _rotate(configState: StateConfig | undefined): string {
-    return configState && configState.spin ? 'rotating' : '';
+  private _rotate(configState: StateConfig | undefined): Boolean {
+    return configState && configState.spin ? true : false;
   }
 
   private _blankCardColoredHtml(state: HassEntity | undefined): TemplateResult {
@@ -372,9 +372,15 @@ class ButtonCard extends LitElement {
     name: string | undefined,
     stateString: string | undefined,
   ): TemplateResult {
+    const iconTemplate = this._getIconHtml(state, configState, color);
+    const itemClass: string[] = ['container', containerClass];
+    if (!iconTemplate) itemClass.push('no-icon');
+    if (!name) itemClass.push('no-name');
+    if (!stateString) itemClass.push('no-state');
+
     return html`
-      <div class="container ${containerClass}">
-        ${this._getIconHtml(state, configState, color)}
+      <div class=${itemClass.join(' ')}>
+        ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name">${name}</div>` : ''}
         ${stateString ? html`<div class="state">${stateString}</div>` : ''}
       </div>
@@ -385,8 +391,7 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined,
     configState: StateConfig | undefined,
     color: string,
-    // style: StyleInfo,
-  ): TemplateResult {
+  ): TemplateResult | undefined {
     const icon = this._buildIcon(state, configState);
     const entityPicture = this._buildEntityPicture(state, configState);
     const entityPictureStyleFromConfig = this._buildEntityPictureStyle(state, configState);
@@ -395,7 +400,6 @@ class ButtonCard extends LitElement {
       color,
       width: this.config!.size,
       'min-width': this.config!.size,
-      // 'min-width': style.height ? '100%' : this.config!.size,
     };
     const entityPictureStyle = {
       ...haIconStyle,
@@ -406,13 +410,13 @@ class ButtonCard extends LitElement {
       return html`
         <div class="img-cell">
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
-            icon="${icon}" class="icon ${this._rotate(configState)}"></ha-icon>` : ''}
+            .icon="${icon}" class="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
-            class="${this._rotate(configState)}" />` : ''}
+            class="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
       `;
     } else {
-      return html``;
+      return undefined;
     }
   }
 
