@@ -48,7 +48,17 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    return hasConfigOrEntityChanged(this, changedProps);
+    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
+    const configState = this._getMatchingConfigState(state);
+    const forceUpdate = (this.config!.show_label
+      && (configState
+        && configState.label_template
+        || this.config!.label_template)
+    )
+      || this.config!.state
+      && this.config!.state.find((elt) => { return elt.operator === 'template'; })
+      ? true : false;
+    return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
   }
 
   private _getMatchingConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -76,6 +86,11 @@ class ButtonCard extends LitElement {
             /* eslint no-unneeded-ternary: 0 */
             const matches = state.state.match(elt.value) ? true : false;
             return matches;
+          }
+          case 'template': {
+            return new Function('states', 'entity', 'user', 'hass',
+              `'use strict'; ${elt.value}`)
+              .call(this, this.hass!.states, state, this.hass!.user, this.hass);
           }
           case 'default':
             def = elt;
@@ -266,6 +281,36 @@ class ButtonCard extends LitElement {
     return units;
   }
 
+  private _buildLabel(
+    state: HassEntity | undefined,
+    configState: StateConfig | undefined,
+  ): string | undefined {
+    if (!this.config!.show_label) {
+      return undefined;
+    }
+    let label: string | undefined;
+    let matchingLabelTemplate: string | undefined;
+
+    if (configState && configState.label_template) {
+      matchingLabelTemplate = configState.label_template;
+    } else {
+      matchingLabelTemplate = this.config!.label_template;
+    }
+    if (!matchingLabelTemplate) {
+      if (configState && configState.label) {
+        label = configState.label;
+      } else {
+        label = this.config!.label;
+      }
+      return label;
+    }
+
+    /* eslint no-new-func: 0 */
+    return new Function('states', 'entity', 'user', 'hass',
+      `'use strict'; ${matchingLabelTemplate}`)
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+  }
+
   private _isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
     if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
@@ -374,15 +419,18 @@ class ButtonCard extends LitElement {
   ): TemplateResult {
     const iconTemplate = this._getIconHtml(state, configState, color);
     const itemClass: string[] = ['container', containerClass];
+    const label = this._buildLabel(state, configState);
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
+    if (!label) itemClass.push('no-label');
 
     return html`
       <div class=${itemClass.join(' ')}>
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name">${name}</div>` : ''}
         ${stateString ? html`<div class="state">${stateString}</div>` : ''}
+        ${label ? html`<div class="label">${label}</div>` : ''}
       </div>
     `;
   }
@@ -435,6 +483,7 @@ class ButtonCard extends LitElement {
       show_state: false,
       show_icon: true,
       show_units: true,
+      show_label: false,
       show_entity_picture: false,
       ...config,
     };

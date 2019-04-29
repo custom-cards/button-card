@@ -21,6 +21,7 @@ Lovelace Button card for your entities.
 - custom color (optional), or based on light rgb value
 - custom state definition with customizable color, icon and style (optional)
 - [custom size of the icon, width and height](#Play-with-width-height-and-icon-size) (optional)
+- Support for [templates](#templates) in some fields
 - custom icon (optional)
 - custom css style (optional)
 - multiple [layout](#Layout) support
@@ -52,10 +53,13 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
+| `label_template` | string | optional | `states['light.mylight'].attributes.brightness` | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
 | `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
 | `show_units` | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
+| `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label`/`label_template`
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
@@ -89,8 +93,12 @@ Lovelace Button card for your entities.
 | `spin`     | boolean       | `false`                                     | `true` \| `false`                                                                                                                                                          | Should the icon spin for this state?                                                          |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image |
 | `entity_picture_style` | object list | optional | `- border-radius: 50%`, `- filter: grayscale(100%)`, ... | Style applied to the entity picture for this state |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
+| `label_template` | string | optional | `states['light.mylight'].attributes.brightness` | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 
 ### Available operators
+
+The order of your elements in the `state` object matters. The first one which is `true` will match.
 
 | Operator  | `value` example | Description                                                                                              |
 | :-------: | --------------- | -------------------------------------------------------------------------------------------------------- |
@@ -101,6 +109,7 @@ Lovelace Button card for your entities.
 |    `>`    | `12`            | Current state is superior to `value`                                                                     |
 |   `!=`    | `'normal'`      | Current state is not equal (`!=` javascript) to `value`                                                  |
 |  `regex`  | `'^norm.*$'`    | `value` regex applied to current state does match                                                        |
+| `template` | `return states['input_select.light_mode'].state === 'night_mode'` | See [here](#state-templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
 | `default` | N/A             | If nothing matches, this is used                                                                         |
 
 ### Layout
@@ -111,14 +120,28 @@ It is fully compatible with every `show_*` option. Make sure you set `show_state
 
 Multiple values are possible, see the image below for examples:
 * `vertical` (default value if nothing is provided): Everything is centered vertically on top of each other
-* `icon_name_state`: Everything is aligned horizontally, name and state are concatenated
-* `name_state`: Icon sits on top of name and state concatenated on one line
-* `icon_name`: Icon and name are horizontally aligned, state is centered below
-* `icon_state`: Icon and state are horizontally aligned, name is centered below
-* `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state
-* `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name
+* `icon_name_state`: Everything is aligned horizontally, name and state are concatenated, label is centered below
+* `name_state`: Icon sits on top of name and state concatenated on one line, label below
+* `icon_name`: Icon and name are horizontally aligned, state and label are centered below
+* `icon_state`: Icon and state are horizontally aligned, name and label are centered below
+* `icon_label`: Icon and label are horizontally aligned, name and state are centered below
+* `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state, label below name and state
+* `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name, label below name and state
 
 ![layout_image](examples/layout.png)
+
+### Templates
+
+`label_template` supports templating.
+It will be interpreted as javascript code and the code should return a value.
+
+Inside the javascript code, you'll have access to those variables:
+* `entity`: The current entity object, if the entity is defined in the card
+* `states`: An object with all the states of all the entities (equivalent to `hass.states`)
+* `user`: The user object (equivalent to `hass.user`)
+* `hass`: The complete `hass` object
+
+See [here](#playing-with-label-templates) for some examples.
 
 ## Installation
 
@@ -465,6 +488,68 @@ If you specify a width for the card, it has to be in `px`. All the cards without
       name: 300px
       style:
         - height: 300px
+```
+### Templates Support
+
+#### Playing with label templates
+
+![label_template](examples/labels.png)
+
+```yaml
+- type: "custom:button-card"
+  color_type: icon
+  entity: light.test_light
+  label_template: >
+    var bri = states['light.test_light'].attributes.brightness;
+    return 'Brightness: ' + (bri ? bri : '0') + '%';
+  show_label: true
+  size: 15%
+  style:
+    - height: 100px
+- type: "custom:button-card"
+  color_type: icon
+  entity: light.test_light
+  layout: icon_label
+  label_template: >
+    return 'Other State: ' + states['switch.skylight'].state;
+  show_label: true
+  show_name: false
+  style:
+    - height: 100px
+```
+
+#### State Templates
+
+The javascript code inside `value` needs to return `true` of `false`.
+
+Example with `template`:
+```yaml
+- type: "custom:button-card"
+  color_type: icon
+  entity: switch.skylight
+  show_state: true
+  show_label: true
+  state:
+    - operator: template
+      value: >
+        return states['light.test_light'].attributes
+        && (states['light.test_light'].attributes.brightness <= 100)
+      icon: mdi:alert
+    - operator: default
+      icon: mdi:lightbulb
+- type: "custom:button-card"
+  color_type: icon
+  entity: light.test_light
+  show_label: true
+  state:
+    - operator: template
+      value: >
+        return states['input_select.light_mode'].state === 'night_mode'
+      icon: mdi:weather-night
+      label: Night Mode
+    - operator: default
+      icon: mdi:white-balance-sunny
+      label: Day Mode
 ```
 
 ## Credits
