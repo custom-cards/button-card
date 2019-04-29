@@ -20,7 +20,7 @@ Lovelace Button card for your entities.
 - state display (optional)
 - custom color (optional), or based on light rgb value
 - custom state definition with customizable color, icon and style (optional)
-- custom size (optional)
+- [custom size of the icon, width and height](#Play-with-width-height-and-icon-size) (optional)
 - custom icon (optional)
 - custom css style (optional)
 - multiple [layout](#Layout) support
@@ -406,6 +406,65 @@ You can make the whole button blink:
     - operator: default
       color: green
       icon: mdi:shield-check
+```
+
+### Play with width, height and icon size
+
+Through the `styles` you can specify the `width` and `height` of the card, and also the icon size through the main `size` option. Playing with icon size will growth the card unless a `height` is specified.
+
+If you specify a width for the card, it has to be in `px`. All the cards without a `width` defined will use the remaining space on the line.
+
+![height-width](examples/width_height.png)
+
+```yaml
+- type: horizontal-stack
+  cards:
+    - type: "custom:button-card"
+      entity: light.test_light
+      color: auto
+      name: s:default h:200px
+      style:
+        - height: 200px
+    - type: "custom:button-card"
+      entity: light.test_light
+      color_type: card
+      color: auto
+      name: s:100% h:200px
+      size: 100%
+      style:
+        - height: 200px
+    - type: "custom:button-card"
+      entity: light.test_light
+      color_type: card
+      color: auto
+      size: 10%
+      name: s:10% h:200px
+      style:
+        - height: 200px
+- type: horizontal-stack
+  cards:
+    - type: "custom:button-card"
+      entity: light.test_light
+      color: auto
+      name: 60px
+      style:
+        - height: 60px
+        - width: 60px
+    - type: "custom:button-card"
+      entity: light.test_light
+      color_type: card
+      color: auto
+      name: 80px
+      style:
+        - height: 80px
+        - width: 30px
+    - type: "custom:button-card"
+      entity: light.test_light
+      color_type: card
+      color: auto
+      name: 300px
+      style:
+        - height: 300px
 ```
 
 ## Credits

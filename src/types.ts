@@ -28,7 +28,7 @@ export interface ButtonCardConfig {
   style?: CssStyleConfig[];
   state?: StateConfig[];
   confirmation?: string;
-  layout?: 'vertical' | 'icon_name_state' | 'name_state' | 'icon_name' | 'icon_state' | 'icon_name_state2nd' | 'icon_state_name2nd';
+  layout: 'vertical' | 'icon_name_state' | 'name_state' | 'icon_name' | 'icon_state' | 'icon_name_state2nd' | 'icon_state_name2nd';
   entity_picture_style?: CssStyleConfig[];
 
   default_color: string;
