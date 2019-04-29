@@ -4180,11 +4180,11 @@ let ButtonCard = class ButtonCard extends LitElement {
     _rotate(configState) {
         return configState && configState.spin ? true : false;
     }
-    _blankCardColoredHtml(state) {
+    _blankCardColoredHtml(state, cardStyle) {
         const color = this._buildCssColorAttribute(state, undefined);
         const fontColor = getFontColorBasedOnBackgroundColor(color);
         return html`
-      <ha-card class="disabled">
+      <ha-card class="disabled" style=${styleMap(cardStyle)}>
         <div style="color: ${fontColor}; background-color: ${color};"></div>
       </ha-card>
       `;
@@ -4196,9 +4196,13 @@ let ButtonCard = class ButtonCard extends LitElement {
         let buttonColor = color;
         let cardStyle = {};
         const configCardStyle = this._buildStyle(state, configState);
+        if (configCardStyle.width) {
+            this.style.setProperty('flex', '0 0 auto');
+            this.style.setProperty('max-width', 'fit-content');
+        }
         switch (this.config.color_type) {
             case 'blank-card':
-                return this._blankCardColoredHtml(state);
+                return this._blankCardColoredHtml(state, configCardStyle);
             case 'card':
             case 'label-card':
                 {
@@ -4212,10 +4216,6 @@ let ButtonCard = class ButtonCard extends LitElement {
             default:
                 cardStyle = configCardStyle;
                 break;
-        }
-        if (configCardStyle.width) {
-            this.style.setProperty('flex', '0 0 auto');
-            this.style.setProperty('max-width', 'fit-content');
         }
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">

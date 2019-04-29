@@ -342,11 +342,14 @@ class ButtonCard extends LitElement {
     return configState && configState.spin ? true : false;
   }
 
-  private _blankCardColoredHtml(state: HassEntity | undefined): TemplateResult {
+  private _blankCardColoredHtml(
+    state: HassEntity | undefined,
+    cardStyle: StyleInfo,
+  ): TemplateResult {
     const color = this._buildCssColorAttribute(state, undefined);
     const fontColor = getFontColorBasedOnBackgroundColor(color);
     return html`
-      <ha-card class="disabled">
+      <ha-card class="disabled" style=${styleMap(cardStyle)}>
         <div style="color: ${fontColor}; background-color: ${color};"></div>
       </ha-card>
       `;
@@ -360,9 +363,13 @@ class ButtonCard extends LitElement {
     let cardStyle: StyleInfo = {};
     const configCardStyle = this._buildStyle(state, configState);
 
+    if (configCardStyle.width) {
+      this.style.setProperty('flex', '0 0 auto');
+      this.style.setProperty('max-width', 'fit-content');
+    }
     switch (this.config!.color_type) {
       case 'blank-card':
-        return this._blankCardColoredHtml(state);
+        return this._blankCardColoredHtml(state, configCardStyle);
       case 'card':
       case 'label-card': {
         const fontColor = getFontColorBasedOnBackgroundColor(color);
@@ -375,10 +382,6 @@ class ButtonCard extends LitElement {
       default:
         cardStyle = configCardStyle;
         break;
-    }
-    if (configCardStyle.width) {
-      this.style.setProperty('flex', '0 0 auto');
-      this.style.setProperty('max-width', 'fit-content');
     }
 
     return html`
