@@ -164,7 +164,7 @@ For each element in the card, styles can be defined in 2 places:
 Styles defined in each state are **additive** with the ones defined in the main part of the config. In the `state` part, just define the ones specific to your current state and keep the common ones in the main part of the config.
 
 The `style` object members are:
-* `card`: styles for the card itself
+* `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and it's content, unless redefined in elements below.
 * `icon`: styles for the icon
 * `entity_picture`: styles for the picture (if any)
 * `name`: styles for the name
