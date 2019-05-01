@@ -3614,10 +3614,10 @@ class LongPress extends HTMLElement {
 customElements.define("long-press-button-card", LongPress);
 const getLongPress = () => {
     const body = document.body;
-    if (body.querySelector("long-press")) {
-        return body.querySelector("long-press");
+    if (body.querySelector("long-press-button-card")) {
+        return body.querySelector("long-press-button-card");
     }
-    const longpress = document.createElement("long-press");
+    const longpress = document.createElement("long-press-button-card");
     body.appendChild(longpress);
     return longpress;
 };
