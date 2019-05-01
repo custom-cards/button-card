@@ -54,7 +54,7 @@ Lovelace Button card for your entities.
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
-| `label_template` | string | optional | `states['light.mylight'].attributes.brightness` | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
+| `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
 | `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
@@ -63,8 +63,7 @@ Lovelace Button card for your entities.
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
-| `style`        | object list | optional     | `- text-transform: none`                         | Define a list of css attribute and their value to apply to the card                                                                                                                                                                                                                                                                           |
-| `entity_picture_style` | object list | optional | `- border-radius: 50%`, `- filter: grayscale(100%)`, ... | Style applied to the entity picture |
+| `styles`        | object list | optional     | | See [styles](#styles)  |
 | `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
 | `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
@@ -89,12 +88,11 @@ Lovelace Button card for your entities.
 | `name`     | string        | optional                                    | Any string, `'Alert'`, `'My little switch is on'`, ...                                                                                                                     | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name |
 | `icon`     | string        | optional                                    | `mdi:battery`                                                                                                                                                              | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false` |
 | `color`    | string        | `var(--primary-text-color)`                 | Any color, eg: `rgb(28, 128, 199)` or `blue`                                                                                                                               | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`)       |
-| `style`    | string        | optional                                    | Any CSS style. If nothing is specified, the main style is used unless undefined. If you want to override the default style of the main part of the config, use `style: []` | Define a list of css attribute and their value to apply to the card                           |
+| `styles`    | string        | optional | | See [styles](#styles) |
 | `spin`     | boolean       | `false`                                     | `true` \| `false`                                                                                                                                                          | Should the icon spin for this state?                                                          |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image |
-| `entity_picture_style` | object list | optional | `- border-radius: 50%`, `- filter: grayscale(100%)`, ... | Style applied to the entity picture for this state |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
-| `label_template` | string | optional | `states['light.mylight'].attributes.brightness` | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
+| `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 
 ### Available operators
 
@@ -109,7 +107,7 @@ The order of your elements in the `state` object matters. The first one which is
 |    `>`    | `12`            | Current state is superior to `value`                                                                     |
 |   `!=`    | `'normal'`      | Current state is not equal (`!=` javascript) to `value`                                                  |
 |  `regex`  | `'^norm.*$'`    | `value` regex applied to current state does match                                                        |
-| `template` | `return states['input_select.light_mode'].state === 'night_mode'` | See [here](#state-templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
+| `template` | | See [templates](#templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
 | `default` | N/A             | If nothing matches, this is used                                                                         |
 
 ### Layout
@@ -132,8 +130,9 @@ Multiple values are possible, see the image below for examples:
 
 ### Templates
 
-`label_template` supports templating.
-It will be interpreted as javascript code and the code should return a value.
+`label_template` supports templating as well as `value` for `state` when `operator: template`
+* `label_template`: It will be interpreted as javascript code and the code should return a string
+* `value` for `state` when `operator: template`: It will be interpreted as javascript code and the code should return a boolean (`true` or `false`)
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
@@ -141,7 +140,74 @@ Inside the javascript code, you'll have access to those variables:
 * `user`: The user object (equivalent to `hass.user`)
 * `hass`: The complete `hass` object
 
-See [here](#playing-with-label-templates) for some examples.
+The value shouldn't be enclosed in quotes:
+```yaml
+label_template: >
+  return states['light.mylight'].attributes.brightness
+```
+or
+```yaml
+state:
+  - operator: template
+    value: >
+      return states['input_select.light_mode'].state === 'night_mode'
+```
+
+See [here](#templates-support) for some examples.
+
+### Styles
+
+For each element in the card, styles can be defined in 2 places:
+* in the main part of the config
+* in each state
+
+Styles defined in each state are **additive** with the ones defined in the main part of the config. In the `state` part, just define the ones specific to your current state and keep the common ones in the main part of the config.
+
+The `style` object members are:
+* `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and it's content, unless redefined in elements below.
+* `icon`: styles for the icon
+* `entity_picture`: styles for the picture (if any)
+* `name`: styles for the name
+* `state`: styles for the state
+* `label`: styles for the label
+
+```yaml
+- type: custom:button-card
+  [...]
+  styles:
+    card:
+      - xxxx: value
+    icon:
+      - xxxx: value
+    entity_picture:
+      - xxxx: value
+    name:
+      - xxxx: value
+    state:
+      - xxxx: value
+    label:
+      - xxxx: value
+  state:
+    - value: 'on'
+      styles:
+        card:
+          - yyyy: value
+        icon:
+          - yyyy: value
+        entity_picture:
+          - yyyy: value
+        name:
+          - yyyy: value
+        state:
+          - yyyy: value
+        label:
+          - yyyy: value
+```
+This will render:
+* The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
+* Same for all the others.
+
+See [styling](#styling) for a complete example.
 
 ## Installation
 
@@ -242,9 +308,10 @@ Light card with card color type, name, and automatic color:
   tap_action:
     action: more-info
   name: Home
-  style:
-    - font-size: 12px
-    - font-weight: bold
+  styles:
+    card:
+      - font-size: 12px
+      - font-weight: bold
 ```
 
 ---
@@ -389,8 +456,9 @@ The definition order matters, the first item to match will be the one selected.
     - operator: 'default' # used if nothing matches
       color: yellow
       icon: mdi: thermometer
-      style:
-        - opacity: 0.5
+      styles:
+        card:
+          - opacity: 0.5
 ```
 
 #### `tap_action` Navigate
@@ -424,8 +492,9 @@ You can make the whole button blink:
     - value: "on"
       color: red
       icon: mdi:alert
-      style:
-        - animation: blink 2s ease infinite
+      styles:
+        card:
+          - animation: blink 2s ease infinite
     - operator: default
       color: green
       icon: mdi:shield-check
@@ -446,48 +515,54 @@ If you specify a width for the card, it has to be in `px`. All the cards without
       entity: light.test_light
       color: auto
       name: s:default h:200px
-      style:
-        - height: 200px
+      styles:
+        card:
+          - height: 200px
     - type: "custom:button-card"
       entity: light.test_light
       color_type: card
       color: auto
       name: s:100% h:200px
       size: 100%
-      style:
-        - height: 200px
+      styles:
+        card:
+          - height: 200px
     - type: "custom:button-card"
       entity: light.test_light
       color_type: card
       color: auto
       size: 10%
       name: s:10% h:200px
-      style:
-        - height: 200px
+      styles:
+        card:
+          - height: 200px
 - type: horizontal-stack
   cards:
     - type: "custom:button-card"
       entity: light.test_light
       color: auto
       name: 60px
-      style:
-        - height: 60px
-        - width: 60px
+      styles:
+        card:
+          - height: 60px
+          - width: 60px
     - type: "custom:button-card"
       entity: light.test_light
       color_type: card
       color: auto
       name: 80px
-      style:
-        - height: 80px
-        - width: 30px
+      styles:
+        card:
+          - height: 80px
+          - width: 30px
     - type: "custom:button-card"
       entity: light.test_light
       color_type: card
       color: auto
       name: 300px
-      style:
-        - height: 300px
+      styles:
+        card:
+          - height: 300px
 ```
 ### Templates Support
 
@@ -504,8 +579,9 @@ If you specify a width for the card, it has to be in `px`. All the cards without
     return 'Brightness: ' + (bri ? bri : '0') + '%';
   show_label: true
   size: 15%
-  style:
-    - height: 100px
+  styles:
+    card:
+      - height: 100px
 - type: "custom:button-card"
   color_type: icon
   entity: light.test_light
@@ -514,8 +590,9 @@ If you specify a width for the card, it has to be in `px`. All the cards without
     return 'Other State: ' + states['switch.skylight'].state;
   show_label: true
   show_name: false
-  style:
-    - height: 100px
+  styles:
+    card:
+      - height: 100px
 ```
 
 #### State Templates
@@ -550,6 +627,76 @@ Example with `template`:
     - operator: default
       icon: mdi:white-balance-sunny
       label: Day Mode
+```
+
+### Styling
+
+![per-style-config](examples/per-style-config.gif)
+
+```yaml
+- type: "custom:button-card"
+  color_type: icon
+  entity: light.test_light
+  label_template: >
+    var bri = states['light.test_light'].attributes.brightness;
+    return 'Brightness: ' + (bri ? bri : '0') + '%';
+  show_label: true
+  show_state: true
+  size: 10%
+  styles:
+    card:
+      - height: 100px
+    label:
+      - color: gray
+      - font-size: 9px
+      - justify-self: start
+      - padding: 0px 5px
+    name:
+      - text-transform: uppercase
+      - letter-spacing: 0.5em
+      - font-familly: cursive
+      - justify-self: start
+      - padding: 0px 5px
+    state:
+      - justify-self: start
+      - font-size: 10px
+      - padding: 0px 5px
+  state:
+    - value: 'on'
+      styles:
+        state:
+          - color: green
+    - value: 'off'
+      styles:
+        state:
+          - color: red
+        card:
+          - filter: brightness(40%)
+- type: "custom:button-card"
+  color_type: icon
+  entity: light.test_light
+  layout: icon_label
+  label_template: >
+    return 'Other State: ' + states['switch.skylight'].state;
+  show_label: true
+  show_name: false
+  size: 100%
+  styles:
+    card:
+      - height: 200px
+    label:
+      - font-weight: bold
+      - writing-mode: vertical-rl
+      - text-orientation: mixed
+  state:
+    - value: 'on'
+      styles:
+        label:
+          - color: red
+    - value: 'off'
+      styles:
+        label:
+          - color: green
 ```
 
 ## Credits

@@ -3330,7 +3330,7 @@ function buildNameStateConcat(name, stateString) {
 function applyBrightnessToColor(color, brightness) {
     const colorObj = new TinyColor(getColorFromVariable(color));
     if (colorObj.isValid) {
-        const validColor = colorObj.darken(100 - brightness).toString();
+        const validColor = colorObj.mix('black', 100 - brightness).toString();
         if (validColor) return validColor;
     }
     return color;
@@ -3614,10 +3614,10 @@ class LongPress extends HTMLElement {
 customElements.define("long-press-button-card", LongPress);
 const getLongPress = () => {
     const body = document.body;
-    if (body.querySelector("long-press")) {
-        return body.querySelector("long-press");
+    if (body.querySelector("long-press-button-card")) {
+        return body.querySelector("long-press-button-card");
     }
-    const longpress = document.createElement("long-press");
+    const longpress = document.createElement("long-press-button-card");
     body.appendChild(longpress);
     return longpress;
 };
@@ -3955,9 +3955,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     shouldUpdate(changedProps) {
         const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
         const configState = this._getMatchingConfigState(state);
-        const forceUpdate = this.config.show_label && (configState && configState.label_template || this.config.label_template) || this.config.state && this.config.state.find(elt => {
-            return elt.operator === 'template';
-        }) ? true : false;
+        const forceUpdate = this.config.show_label && (configState && configState.label_template || this.config.label_template) || this.config.state && this.config.state.find(elt => elt.operator === 'template') ? true : false;
         return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
     }
     _getMatchingConfigState(state) {
@@ -4078,39 +4076,17 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return entityPicture;
     }
-    _buildStyle(state, configState) {
-        let cardStyle = {};
-        let styleArray;
-        if (state) {
-            if (configState && configState.style) {
-                styleArray = configState.style;
-            } else if (this.config.style) {
-                styleArray = this.config.style;
-            }
-        } else if (this.config.style) {
-            styleArray = this.config.style;
+    _buildStyleGeneric(configState, styleType) {
+        let style = {};
+        if (this.config.styles[styleType]) {
+            style = Object.assign(style, ...this.config.styles[styleType]);
         }
-        if (styleArray) {
-            cardStyle = Object.assign(cardStyle, ...styleArray);
+        if (configState && configState.styles[styleType]) {
+            let configStateStyle = {};
+            configStateStyle = Object.assign(configStateStyle, ...configState.styles[styleType]);
+            style = Object.assign({}, style, configStateStyle);
         }
-        return cardStyle;
-    }
-    _buildEntityPictureStyle(state, configState) {
-        let entityPictureStyle = {};
-        let styleArray;
-        if (state) {
-            if (configState && configState.entity_picture_style) {
-                styleArray = configState.entity_picture_style;
-            } else if (this.config.entity_picture_style) {
-                styleArray = this.config.entity_picture_style;
-            }
-        } else if (this.config.entity_picture_style) {
-            styleArray = this.config.entity_picture_style;
-        }
-        if (styleArray) {
-            entityPictureStyle = Object.assign(entityPictureStyle, ...styleArray);
-        }
-        return entityPictureStyle;
+        return style;
     }
     _buildName(state, configState) {
         if (this.config.show_name === false) {
@@ -4215,7 +4191,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
-        const configCardStyle = this._buildStyle(state, configState);
+        const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
             this.style.setProperty('max-width', 'fit-content');
@@ -4260,6 +4236,9 @@ let ButtonCard = class ButtonCard extends LitElement {
         const iconTemplate = this._getIconHtml(state, configState, color);
         const itemClass = ['container', containerClass];
         const label = this._buildLabel(state, configState);
+        const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
+        const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
+        const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
         if (!iconTemplate) itemClass.push('no-icon');
         if (!name) itemClass.push('no-name');
         if (!stateString) itemClass.push('no-state');
@@ -4267,21 +4246,18 @@ let ButtonCard = class ButtonCard extends LitElement {
         return html`
       <div class=${itemClass.join(' ')}>
         ${iconTemplate ? iconTemplate : ''}
-        ${name ? html`<div class="name">${name}</div>` : ''}
-        ${stateString ? html`<div class="state">${stateString}</div>` : ''}
-        ${label ? html`<div class="label">${label}</div>` : ''}
+        ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
+        ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
+        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${label}</div>` : ''}
       </div>
     `;
     }
     _getIconHtml(state, configState, color) {
         const icon = this._buildIcon(state, configState);
         const entityPicture = this._buildEntityPicture(state, configState);
-        const entityPictureStyleFromConfig = this._buildEntityPictureStyle(state, configState);
-        const haIconStyle = {
-            color,
-            width: this.config.size,
-            'min-width': this.config.size
-        };
+        const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
+        const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
+        const haIconStyle = Object.assign({ color, width: this.config.size, 'min-width': this.config.size }, haIconStyleFromConfig);
         const entityPictureStyle = Object.assign({}, haIconStyle, entityPictureStyleFromConfig);
         if (icon || entityPicture) {
             return html`
@@ -4308,6 +4284,30 @@ let ButtonCard = class ButtonCard extends LitElement {
             this.config.color_off = 'var(--paper-item-icon-color)';
         }
         this.config.color_on = 'var(--paper-item-icon-active-color)';
+        /* Temporary until we deprecate style and entity_picture_style config option */
+        if (!this.config.styles) {
+            this.config.styles = {};
+        }
+        if (this.config.style && !this.config.styles.card) {
+            this.config.styles.card = this.config.style;
+        }
+        if (this.config.entity_picture_style && !this.config.styles.entity_picture) {
+            this.config.styles.entity_picture = this.config.entity_picture_style;
+        }
+        if (this.config.state) {
+            /* eslint no-param-reassign: ["error", { "props": false }] */
+            this.config.state.forEach(s => {
+                if (!s.styles) {
+                    s.styles = {};
+                }
+                if (s.entity_picture_style && !s.styles.entity_picture) {
+                    s.styles.entity_picture = s.entity_picture_style;
+                }
+                if (s.style && !s.styles.card) {
+                    s.styles.card = s.style;
+                }
+            });
+        }
     }
     // The height of your card. Home Assistant uses this to automatically
     // distribute all cards over the available columns.

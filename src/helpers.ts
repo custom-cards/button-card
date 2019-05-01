@@ -51,7 +51,7 @@ export function applyBrightnessToColor(
 ): string {
   const colorObj = new TinyColor(getColorFromVariable(color));
   if (colorObj.isValid) {
-    const validColor = colorObj.darken(100 - brightness).toString();
+    const validColor = colorObj.mix('black', 100 - brightness).toString();
     if (validColor) return validColor;
   }
   return color;

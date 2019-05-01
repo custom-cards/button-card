@@ -164,11 +164,11 @@ customElements.define("long-press-button-card", LongPress);
 
 const getLongPress = (): LongPress => {
   const body = document.body;
-  if (body.querySelector("long-press")) {
-    return body.querySelector("long-press") as LongPress;
+  if (body.querySelector("long-press-button-card")) {
+    return body.querySelector("long-press-button-card") as LongPress;
   }
 
-  const longpress = document.createElement("long-press");
+  const longpress = document.createElement("long-press-button-card");
   body.appendChild(longpress);
 
   return longpress as LongPress;
