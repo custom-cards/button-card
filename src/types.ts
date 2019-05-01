@@ -30,6 +30,7 @@ export interface ButtonCardConfig {
   units?: string;
   style?: CssStyleConfig[];
   state?: StateConfig[];
+  styles: StylesConfig;
   confirmation?: string;
   layout: Layout;
   entity_picture_style?: CssStyleConfig[];
@@ -57,9 +58,19 @@ export interface StateConfig {
   style?: CssStyleConfig[];
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
+  styles: StylesConfig;
   spin?: boolean;
   label?: string;
   label_template?: string;
+}
+
+export interface StylesConfig {
+  card?: CssStyleConfig[];
+  entity_picture?: CssStyleConfig[];
+  icon?: CssStyleConfig[];
+  name?: CssStyleConfig[];
+  state?: CssStyleConfig[];
+  label?: CssStyleConfig[];
 }
 
 export interface CssStyleConfig {
