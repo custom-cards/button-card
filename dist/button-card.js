@@ -4090,44 +4090,6 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return style;
     }
-    // private _buildStyle(
-    //   state: HassEntity | undefined, configState: StateConfig | undefined,
-    // ): StyleInfo {
-    //   let cardStyle: StyleInfo = {};
-    //   let styleArray: CssStyleConfig[] | undefined;
-    //   if (state) {
-    //     if (configState && configState.style) {
-    //       styleArray = configState.style;
-    //     } else if (this.config!.style) {
-    //       styleArray = this.config!.style;
-    //     }
-    //   } else if (this.config!.style) {
-    //     styleArray = this.config!.style;
-    //   }
-    //   if (styleArray) {
-    //     cardStyle = Object.assign(cardStyle, ...styleArray);
-    //   }
-    //   return cardStyle;
-    // }
-    // private _buildEntityPictureStyle(
-    //   state: HassEntity | undefined, configState: StateConfig | undefined,
-    // ): StyleInfo {
-    //   let entityPictureStyle: StyleInfo = {};
-    //   let styleArray: CssStyleConfig[] | undefined;
-    //   if (state) {
-    //     if (configState && configState.entity_picture_style) {
-    //       styleArray = configState.entity_picture_style;
-    //     } else if (this.config!.entity_picture_style) {
-    //       styleArray = this.config!.entity_picture_style;
-    //     }
-    //   } else if (this.config!.entity_picture_style) {
-    //     styleArray = this.config!.entity_picture_style;
-    //   }
-    //   if (styleArray) {
-    //     entityPictureStyle = Object.assign(entityPictureStyle, ...styleArray);
-    //   }
-    //   return entityPictureStyle;
-    // }
     _buildName(state, configState) {
         if (this.config.show_name === false) {
             return undefined;
