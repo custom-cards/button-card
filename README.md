@@ -153,7 +153,7 @@ state:
       return states['input_select.light_mode'].state === 'night_mode'
 ```
 
-See [here](#playing-with-label-templates) for some examples.
+See [here](#templates-support) for some examples.
 
 ### Styles
 
