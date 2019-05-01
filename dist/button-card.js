@@ -3955,9 +3955,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     shouldUpdate(changedProps) {
         const state = this.config.entity ? this.hass.states[this.config.entity] : undefined;
         const configState = this._getMatchingConfigState(state);
-        const forceUpdate = this.config.show_label && (configState && configState.label_template || this.config.label_template) || this.config.state && this.config.state.find(elt => {
-            return elt.operator === 'template';
-        }) ? true : false;
+        const forceUpdate = this.config.show_label && (configState && configState.label_template || this.config.label_template) || this.config.state && this.config.state.find(elt => elt.operator === 'template') ? true : false;
         return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
     }
     _getMatchingConfigState(state) {

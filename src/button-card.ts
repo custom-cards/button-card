@@ -56,7 +56,7 @@ class ButtonCard extends LitElement {
         || this.config!.label_template)
     )
       || this.config!.state
-      && this.config!.state.find((elt) => { return elt.operator === 'template'; })
+      && this.config!.state.find(elt => elt.operator === 'template')
       ? true : false;
     return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
   }
