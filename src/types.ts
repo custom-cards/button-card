@@ -16,6 +16,7 @@ export interface ButtonCardConfig {
   color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
   color?: string;
   size: string;
+  lock: boolean;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   show_name?: boolean;

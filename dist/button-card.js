@@ -2353,6 +2353,47 @@ const styleMap = directive(styleInfo => part => {
     styleMapCache.set(part, styleInfo);
 });
 
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+// For each part, remember the value that was last rendered to the part by the
+// unsafeHTML directive, and the DocumentFragment that was last set as a value.
+// The DocumentFragment is used as a unique key to check if the last value
+// rendered to the part was with unsafeHTML. If not, we'll always re-render the
+// value passed to unsafeHTML.
+const previousValues = new WeakMap();
+/**
+ * Renders the result as HTML, rather than text.
+ *
+ * Note, this is unsafe to use with any user-provided input that hasn't been
+ * sanitized or escaped, as it may lead to cross-site-scripting
+ * vulnerabilities.
+ */
+const unsafeHTML = directive(value => part => {
+    if (!(part instanceof NodePart)) {
+        throw new Error('unsafeHTML can only be used in text bindings');
+    }
+    const previousValue = previousValues.get(part);
+    if (previousValue !== undefined && isPrimitive(value) && value === previousValue.value && part.value === previousValue.fragment) {
+        return;
+    }
+    const template = document.createElement('template');
+    template.innerHTML = value; // innerHTML casts to string internally
+    const fragment = document.importNode(template.content, true);
+    part.setValue(fragment);
+    previousValues.set(part, { value, fragment });
+});
+
 /** Constants to be used in the frontend. */
 // Constants should be alphabetically sorted by name.
 // Arrays with values should be alphabetically sorted if order doesn't matter.
@@ -3661,6 +3702,34 @@ const styles = css`
     white-space: nowrap;
     overflow: hidden;
   }
+  #overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: right;
+    z-index: 1;
+  }
+  #lock {
+    margin-top: 8px;
+    opacity: 0.5;
+    margin-right: 7px;
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  @keyframes fadeOut{
+    0% {opacity: 0.5;}
+    20% {opacity: 0;}
+    80% {opacity: 0;}
+    100% {opacity: 0.5;}
+  }
+  .fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+  }
   @keyframes blink{
     0%{opacity:0;}
     50%{opacity:1;}
@@ -3940,6 +4009,15 @@ const styles = css`
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
+
+  .container.rgb_light {
+    grid-template-areas: "c" "b" "n" "s" "l";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr repeat(4, min-content);
+  }
+  .container.rgb_light #btcColorPicker {
+    justify-self: center;
+  }
 `;
 
 let ButtonCard = class ButtonCard extends LitElement {
@@ -4191,6 +4269,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
+        let lockStyle = {};
         const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
@@ -4204,6 +4283,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 {
                     const fontColor = getFontColorBasedOnBackgroundColor(color);
                     cardStyle.color = fontColor;
+                    lockStyle.color = fontColor;
                     cardStyle['background-color'] = color;
                     cardStyle = Object.assign({}, cardStyle, configCardStyle);
                     buttonColor = 'inherit';
@@ -4215,10 +4295,21 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
       <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
+    }
+    _getLock(lockStyle) {
+        if (this.config.lock) {
+            return html`
+        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock}>
+          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+        </div>
+      `;
+        }
+        return html``;
     }
     _buttonContent(state, configState, color) {
         const name = this._buildName(state, configState);
@@ -4248,7 +4339,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${label}</div>` : ''}
+        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
       </div>
     `;
     }
@@ -4329,6 +4420,27 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         const config = ev.target.config;
         handleClick(this, this.hass, config, true);
+    }
+    _handleLock(ev) {
+        ev.stopPropagation();
+        const overlay = this.shadowRoot.getElementById('overlay');
+        overlay.style.setProperty('pointer-events', 'none');
+        const lock = this.shadowRoot.getElementById('lock');
+        if (lock) {
+            const icon = document.createAttribute('icon');
+            icon.value = 'mdi:lock-open-outline';
+            lock.attributes.setNamedItem(icon);
+            lock.classList.add('fadeOut');
+        }
+        window.setTimeout(() => {
+            overlay.style.setProperty('pointer-events', '');
+            if (lock) {
+                lock.classList.remove('fadeOut');
+                const icon = document.createAttribute('icon');
+                icon.value = 'mdi:lock-outline';
+                lock.attributes.setNamedItem(icon);
+            }
+        }, 5000);
     }
 };
 __decorate([property()], ButtonCard.prototype, "hass", void 0);

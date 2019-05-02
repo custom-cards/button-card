@@ -29,6 +29,34 @@ export const styles = css`
     white-space: nowrap;
     overflow: hidden;
   }
+  #overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: right;
+    z-index: 1;
+  }
+  #lock {
+    margin-top: 8px;
+    opacity: 0.5;
+    margin-right: 7px;
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  @keyframes fadeOut{
+    0% {opacity: 0.5;}
+    20% {opacity: 0;}
+    80% {opacity: 0;}
+    100% {opacity: 0.5;}
+  }
+  .fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+  }
   @keyframes blink{
     0%{opacity:0;}
     50%{opacity:1;}
@@ -307,6 +335,15 @@ export const styles = css`
     grid-template-areas: "i l" "n n" "s s";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+
+  .container.rgb_light {
+    grid-template-areas: "c" "b" "n" "s" "l";
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr repeat(4, min-content);
+  }
+  .container.rgb_light #btcColorPicker {
+    justify-self: center;
   }
 `;
 

@@ -8,6 +8,7 @@ import {
   PropertyValues,
 } from 'lit-element';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
@@ -340,6 +341,7 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
+    let lockStyle: StyleInfo = {};
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
 
     if (configCardStyle.width) {
@@ -353,6 +355,7 @@ class ButtonCard extends LitElement {
       case 'label-card': {
         const fontColor = getFontColorBasedOnBackgroundColor(color);
         cardStyle.color = fontColor;
+        lockStyle.color = fontColor;
         cardStyle['background-color'] = color;
         cardStyle = { ...cardStyle, ...configCardStyle };
         buttonColor = 'inherit';
@@ -365,10 +368,22 @@ class ButtonCard extends LitElement {
 
     return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
       <mwc-ripple></mwc-ripple>
       </ha-card>
       `;
+  }
+
+  private _getLock(lockStyle: StyleInfo): TemplateResult {
+    if (this.config!.lock) {
+      return html`
+        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock}>
+          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+        </div>
+      `;
+    }
+    return html``;
   }
 
   private _buttonContent(
@@ -415,7 +430,7 @@ class ButtonCard extends LitElement {
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${label}</div>` : ''}
+        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
       </div>
     `;
   }
@@ -532,5 +547,28 @@ class ButtonCard extends LitElement {
     }
     const config = ev.target.config;
     handleClick(this, this.hass!, config, true);
+  }
+
+  private _handleLock(ev): void {
+    ev.stopPropagation();
+    const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
+    overlay.style.setProperty('pointer-events', 'none');
+
+    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
+    if (lock) {
+      const icon = document.createAttribute('icon');
+      icon.value = 'mdi:lock-open-outline';
+      lock.attributes.setNamedItem(icon);
+      lock.classList.add('fadeOut');
+    }
+    window.setTimeout(() => {
+      overlay.style.setProperty('pointer-events', '');
+      if (lock) {
+        lock.classList.remove('fadeOut');
+        const icon = document.createAttribute('icon');
+        icon.value = 'mdi:lock-outline';
+        lock.attributes.setNamedItem(icon);
+      }
+    }, 5000);
   }
 }
