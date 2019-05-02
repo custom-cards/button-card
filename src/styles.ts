@@ -336,15 +336,6 @@ export const styles = css`
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
-
-  .container.rgb_light {
-    grid-template-areas: "c" "b" "n" "s" "l";
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr repeat(4, min-content);
-  }
-  .container.rgb_light #btcColorPicker {
-    justify-self: center;
-  }
 `;
 
 export default styles;
