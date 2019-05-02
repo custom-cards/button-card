@@ -141,7 +141,7 @@ Multiple values are possible, see the image below for examples:
         ? '<span style="color: #00FF00;">enabled</span>'
         : '<span style="color: #FF0000;">disabled</span>')
     + ' / '
-    + + (states['binary_sensor.status'].state === 'on' ? 'connected' : 'disconnected')
+    + (states['binary_sensor.status'].state === 'on' ? 'connected' : 'disconnected')
   ```
   ![label-template-example](examples/label_template.png)
 * `value` for `state` when `operator: template`: It will be interpreted as javascript code and the code should return a boolean (`true` or `false`)
