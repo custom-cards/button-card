@@ -4295,7 +4295,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     _getLock(lockStyle) {
         if (this.config.lock) {
             return html`
-        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock}>
+        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
         </div>
       `;
