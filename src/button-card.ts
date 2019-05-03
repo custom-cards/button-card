@@ -26,6 +26,7 @@ import {
   buildNameStateConcat,
   applyBrightnessToColor,
   hasConfigOrEntityChanged,
+  getLightColorBasedOnTemperature,
 } from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
@@ -136,6 +137,17 @@ class ButtonCard extends LitElement {
       if (state) {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
+          if (state.attributes.brightness) {
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+          }
+        } else if (state.attributes.color_temp
+          && state.attributes.min_mireds
+          && state.attributes.max_mireds) {
+          color = getLightColorBasedOnTemperature(
+            state.attributes.color_temp,
+            state.attributes.min_mireds,
+            state.attributes.max_mireds,
+          );
           if (state.attributes.brightness) {
             color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
           }

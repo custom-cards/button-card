@@ -3331,6 +3331,15 @@ var TinyColor = function () {
     };
     return TinyColor;
 }();
+function tinycolor(color, opts) {
+    if (color === void 0) {
+        color = '';
+    }
+    if (opts === void 0) {
+        opts = {};
+    }
+    return new TinyColor(color, opts);
+}
 
 function computeDomain(entityId) {
     return entityId.substr(0, entityId.indexOf('.'));
@@ -3350,6 +3359,17 @@ function getFontColorBasedOnBackgroundColor(backgroundColor) {
         return 'rgb(62, 62, 62)'; // bright colors - black font
     } else {
         return 'rgb(234, 234, 234)'; // dark colors - white font
+    }
+}
+function getLightColorBasedOnTemperature(current, min, max) {
+    const high = new TinyColor('rgb(255, 160, 0)'); // orange-ish
+    const low = new TinyColor('rgb(166, 209, 255)'); // blue-ish
+    const middle = new TinyColor('white');
+    const mixAmount = (current - min) / (max - min) * 100;
+    if (mixAmount < 50) {
+        return tinycolor(low).mix(middle, mixAmount * 2).toRgbString();
+    } else {
+        return tinycolor(middle).mix(high, (mixAmount - 50) * 2).toRgbString();
     }
 }
 function buildNameStateConcat(name, stateString) {
@@ -4098,6 +4118,11 @@ let ButtonCard = class ButtonCard extends LitElement {
             if (state) {
                 if (state.attributes.rgb_color) {
                     color = `rgb(${state.attributes.rgb_color.join(',')})`;
+                    if (state.attributes.brightness) {
+                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                    }
+                } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
+                    color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
                     if (state.attributes.brightness) {
                         color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
                     }
