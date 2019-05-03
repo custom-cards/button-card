@@ -24,6 +24,7 @@ export interface ButtonCardConfig {
   show_icon?: boolean;
   show_units?: boolean;
   show_entity_picture?: boolean;
+  show_last_changed?: boolean;
   show_label?: boolean;
   label?: string;
   label_template?: string;

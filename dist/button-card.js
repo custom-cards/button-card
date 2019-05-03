@@ -4197,6 +4197,9 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return units;
     }
+    _buildLastChanged(state) {
+        return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label"></ha-relative-time>` : html``;
+    }
     _buildLabel(state, configState) {
         if (!this.config.show_label) {
             return undefined;
@@ -4321,6 +4324,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
         const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
         const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
+        const lastChangedTemplate = this._buildLastChanged(state);
         if (!iconTemplate) itemClass.push('no-icon');
         if (!name) itemClass.push('no-name');
         if (!stateString) itemClass.push('no-state');
@@ -4330,7 +4334,8 @@ let ButtonCard = class ButtonCard extends LitElement {
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${label && !this.config.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${this.config.show_last_changed ? lastChangedTemplate : ''}
       </div>
     `;
     }
