@@ -5,6 +5,7 @@ export const styles = css`
     cursor: pointer;
     overflow: hidden;
     box-sizing: border-box;
+    position: relative;
   }
   ha-card.disabled {
     pointer-events: none;

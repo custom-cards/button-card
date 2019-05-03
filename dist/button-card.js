@@ -3678,6 +3678,7 @@ const styles = css`
     cursor: pointer;
     overflow: hidden;
     box-sizing: border-box;
+    position: relative;
   }
   ha-card.disabled {
     pointer-events: none;
@@ -4260,7 +4261,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
-        let lockStyle = {};
+        const lockStyle = {};
         const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
@@ -4288,7 +4289,7 @@ let ButtonCard = class ButtonCard extends LitElement {
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-      <mwc-ripple></mwc-ripple>
+        ${this.config.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
       </ha-card>
       `;
     }
@@ -4415,9 +4416,12 @@ let ButtonCard = class ButtonCard extends LitElement {
     _handleLock(ev) {
         ev.stopPropagation();
         const overlay = this.shadowRoot.getElementById('overlay');
+        const haCard = this.shadowRoot.firstElementChild;
         overlay.style.setProperty('pointer-events', 'none');
+        const paperRipple = document.createElement('paper-ripple');
         const lock = this.shadowRoot.getElementById('lock');
         if (lock) {
+            haCard.appendChild(paperRipple);
             const icon = document.createAttribute('icon');
             icon.value = 'mdi:lock-open-outline';
             lock.attributes.setNamedItem(icon);
@@ -4430,6 +4434,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 const icon = document.createAttribute('icon');
                 icon.value = 'mdi:lock-outline';
                 lock.attributes.setNamedItem(icon);
+                haCard.removeChild(paperRipple);
             }
         }, 5000);
     }

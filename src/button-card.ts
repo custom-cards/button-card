@@ -341,7 +341,7 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
-    let lockStyle: StyleInfo = {};
+    const lockStyle: StyleInfo = {};
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
 
     if (configCardStyle.width) {
@@ -370,7 +370,7 @@ class ButtonCard extends LitElement {
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-      <mwc-ripple></mwc-ripple>
+        ${this.config!.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
       </ha-card>
       `;
   }
@@ -552,10 +552,13 @@ class ButtonCard extends LitElement {
   private _handleLock(ev): void {
     ev.stopPropagation();
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
+    const haCard = this.shadowRoot!.firstElementChild as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
+    const paperRipple = document.createElement('paper-ripple');
 
     const lock = this.shadowRoot!.getElementById('lock') as LitElement;
     if (lock) {
+      haCard.appendChild(paperRipple);
       const icon = document.createAttribute('icon');
       icon.value = 'mdi:lock-open-outline';
       lock.attributes.setNamedItem(icon);
@@ -568,6 +571,7 @@ class ButtonCard extends LitElement {
         const icon = document.createAttribute('icon');
         icon.value = 'mdi:lock-outline';
         lock.attributes.setNamedItem(icon);
+        haCard.removeChild(paperRipple);
       }
     }, 5000);
   }
