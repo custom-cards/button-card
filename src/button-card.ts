@@ -275,8 +275,9 @@ class ButtonCard extends LitElement {
 
   private _buildLastChanged(
     state: HassEntity | undefined,
+    style: StyleInfo,
   ): TemplateResult {
-    return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label"></ha-relative-time>` : html``;
+    return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
   }
 
   private _buildLabel(
@@ -440,7 +441,7 @@ class ButtonCard extends LitElement {
     const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
     const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
     const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
-    const lastChangedTemplate = this._buildLastChanged(state);
+    const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
