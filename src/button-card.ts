@@ -323,14 +323,16 @@ class ButtonCard extends LitElement {
   }
 
   private _blankCardColoredHtml(
-    state: HassEntity | undefined,
     cardStyle: StyleInfo,
   ): TemplateResult {
-    const color = this._buildCssColorAttribute(state, undefined);
-    const fontColor = getFontColorBasedOnBackgroundColor(color);
+    const blankCardStyle = {
+      background: 'none',
+      'box-shadow': 'none',
+      ...cardStyle,
+    };
     return html`
-      <ha-card class="disabled" style=${styleMap(cardStyle)}>
-        <div style="color: ${fontColor}; background-color: ${color};"></div>
+      <ha-card class="disabled" style=${styleMap(blankCardStyle)}>
+        <div></div>
       </ha-card>
       `;
   }
@@ -350,7 +352,7 @@ class ButtonCard extends LitElement {
     }
     switch (this.config!.color_type) {
       case 'blank-card':
-        return this._blankCardColoredHtml(state, configCardStyle);
+        return this._blankCardColoredHtml(configCardStyle);
       case 'card':
       case 'label-card': {
         const fontColor = getFontColorBasedOnBackgroundColor(color);
