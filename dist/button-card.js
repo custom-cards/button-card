@@ -2353,6 +2353,47 @@ const styleMap = directive(styleInfo => part => {
     styleMapCache.set(part, styleInfo);
 });
 
+/**
+ * @license
+ * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+// For each part, remember the value that was last rendered to the part by the
+// unsafeHTML directive, and the DocumentFragment that was last set as a value.
+// The DocumentFragment is used as a unique key to check if the last value
+// rendered to the part was with unsafeHTML. If not, we'll always re-render the
+// value passed to unsafeHTML.
+const previousValues = new WeakMap();
+/**
+ * Renders the result as HTML, rather than text.
+ *
+ * Note, this is unsafe to use with any user-provided input that hasn't been
+ * sanitized or escaped, as it may lead to cross-site-scripting
+ * vulnerabilities.
+ */
+const unsafeHTML = directive(value => part => {
+    if (!(part instanceof NodePart)) {
+        throw new Error('unsafeHTML can only be used in text bindings');
+    }
+    const previousValue = previousValues.get(part);
+    if (previousValue !== undefined && isPrimitive(value) && value === previousValue.value && part.value === previousValue.fragment) {
+        return;
+    }
+    const template = document.createElement('template');
+    template.innerHTML = value; // innerHTML casts to string internally
+    const fragment = document.importNode(template.content, true);
+    part.setValue(fragment);
+    previousValues.set(part, { value, fragment });
+});
+
 /** Constants to be used in the frontend. */
 // Constants should be alphabetically sorted by name.
 // Arrays with values should be alphabetically sorted if order doesn't matter.
@@ -3290,6 +3331,15 @@ var TinyColor = function () {
     };
     return TinyColor;
 }();
+function tinycolor(color, opts) {
+    if (color === void 0) {
+        color = '';
+    }
+    if (opts === void 0) {
+        opts = {};
+    }
+    return new TinyColor(color, opts);
+}
 
 function computeDomain(entityId) {
     return entityId.substr(0, entityId.indexOf('.'));
@@ -3309,6 +3359,17 @@ function getFontColorBasedOnBackgroundColor(backgroundColor) {
         return 'rgb(62, 62, 62)'; // bright colors - black font
     } else {
         return 'rgb(234, 234, 234)'; // dark colors - white font
+    }
+}
+function getLightColorBasedOnTemperature(current, min, max) {
+    const high = new TinyColor('rgb(255, 160, 0)'); // orange-ish
+    const low = new TinyColor('rgb(166, 209, 255)'); // blue-ish
+    const middle = new TinyColor('white');
+    const mixAmount = (current - min) / (max - min) * 100;
+    if (mixAmount < 50) {
+        return tinycolor(low).mix(middle, mixAmount * 2).toRgbString();
+    } else {
+        return tinycolor(middle).mix(high, (mixAmount - 50) * 2).toRgbString();
     }
 }
 function buildNameStateConcat(name, stateString) {
@@ -3637,6 +3698,7 @@ const styles = css`
     cursor: pointer;
     overflow: hidden;
     box-sizing: border-box;
+    position: relative;
   }
   ha-card.disabled {
     pointer-events: none;
@@ -3660,6 +3722,34 @@ const styles = css`
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+  #overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: right;
+    z-index: 1;
+  }
+  #lock {
+    margin-top: 8px;
+    opacity: 0.5;
+    margin-right: 7px;
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  @keyframes fadeOut{
+    0% {opacity: 0.5;}
+    20% {opacity: 0;}
+    80% {opacity: 0;}
+    100% {opacity: 0.5;}
+  }
+  .fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
   }
   @keyframes blink{
     0%{opacity:0;}
@@ -4031,6 +4121,11 @@ let ButtonCard = class ButtonCard extends LitElement {
                     if (state.attributes.brightness) {
                         color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
                     }
+                } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
+                    color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
+                    if (state.attributes.brightness) {
+                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                    }
                 } else if (state.attributes.brightness) {
                     color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
                 } else {
@@ -4127,6 +4222,9 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return units;
     }
+    _buildLastChanged(state, style) {
+        return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
+    }
     _buildLabel(state, configState) {
         if (!this.config.show_label) {
             return undefined;
@@ -4176,12 +4274,11 @@ let ButtonCard = class ButtonCard extends LitElement {
     _rotate(configState) {
         return configState && configState.spin ? true : false;
     }
-    _blankCardColoredHtml(state, cardStyle) {
-        const color = this._buildCssColorAttribute(state, undefined);
-        const fontColor = getFontColorBasedOnBackgroundColor(color);
+    _blankCardColoredHtml(cardStyle) {
+        const blankCardStyle = Object.assign({ background: 'none', 'box-shadow': 'none' }, cardStyle);
         return html`
-      <ha-card class="disabled" style=${styleMap(cardStyle)}>
-        <div style="color: ${fontColor}; background-color: ${color};"></div>
+      <ha-card class="disabled" style=${styleMap(blankCardStyle)}>
+        <div></div>
       </ha-card>
       `;
     }
@@ -4191,6 +4288,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
+        const lockStyle = {};
         const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
@@ -4198,12 +4296,13 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         switch (this.config.color_type) {
             case 'blank-card':
-                return this._blankCardColoredHtml(state, configCardStyle);
+                return this._blankCardColoredHtml(configCardStyle);
             case 'card':
             case 'label-card':
                 {
                     const fontColor = getFontColorBasedOnBackgroundColor(color);
                     cardStyle.color = fontColor;
+                    lockStyle.color = fontColor;
                     cardStyle['background-color'] = color;
                     cardStyle = Object.assign({}, cardStyle, configCardStyle);
                     buttonColor = 'inherit';
@@ -4215,10 +4314,21 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-      <mwc-ripple></mwc-ripple>
+        ${this.config.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
       </ha-card>
       `;
+    }
+    _getLock(lockStyle) {
+        if (this.config.lock) {
+            return html`
+        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
+          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+        </div>
+      `;
+        }
+        return html``;
     }
     _buttonContent(state, configState, color) {
         const name = this._buildName(state, configState);
@@ -4239,6 +4349,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
         const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
         const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
+        const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
         if (!iconTemplate) itemClass.push('no-icon');
         if (!name) itemClass.push('no-name');
         if (!stateString) itemClass.push('no-state');
@@ -4248,7 +4359,8 @@ let ButtonCard = class ButtonCard extends LitElement {
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${label}</div>` : ''}
+        ${label && !this.config.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${this.config.show_last_changed ? lastChangedTemplate : ''}
       </div>
     `;
     }
@@ -4329,6 +4441,31 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         const config = ev.target.config;
         handleClick(this, this.hass, config, true);
+    }
+    _handleLock(ev) {
+        ev.stopPropagation();
+        const overlay = this.shadowRoot.getElementById('overlay');
+        const haCard = this.shadowRoot.firstElementChild;
+        overlay.style.setProperty('pointer-events', 'none');
+        const paperRipple = document.createElement('paper-ripple');
+        const lock = this.shadowRoot.getElementById('lock');
+        if (lock) {
+            haCard.appendChild(paperRipple);
+            const icon = document.createAttribute('icon');
+            icon.value = 'mdi:lock-open-outline';
+            lock.attributes.setNamedItem(icon);
+            lock.classList.add('fadeOut');
+        }
+        window.setTimeout(() => {
+            overlay.style.setProperty('pointer-events', '');
+            if (lock) {
+                lock.classList.remove('fadeOut');
+                const icon = document.createAttribute('icon');
+                icon.value = 'mdi:lock-outline';
+                lock.attributes.setNamedItem(icon);
+                haCard.removeChild(paperRipple);
+            }
+        }, 5000);
     }
 };
 __decorate([property()], ButtonCard.prototype, "hass", void 0);

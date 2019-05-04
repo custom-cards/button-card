@@ -1,5 +1,5 @@
 import { PropertyValues } from 'lit-element';
-import { TinyColor } from '@ctrl/tinycolor';
+import tinycolor, { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant } from './types';
 
 export function computeDomain(entityId: string): string {
@@ -24,6 +24,22 @@ export function getFontColorBasedOnBackgroundColor(backgroundColor: string): str
     return 'rgb(62, 62, 62)'; // bright colors - black font
   } else {
     return 'rgb(234, 234, 234)';// dark colors - white font
+  }
+}
+
+export function getLightColorBasedOnTemperature(
+  current: number,
+  min: number,
+  max: number,
+): string {
+  const high = new TinyColor('rgb(255, 160, 0)'); // orange-ish
+  const low = new TinyColor('rgb(166, 209, 255)'); // blue-ish
+  const middle = new TinyColor('white');
+  const mixAmount = (current - min) / (max - min) * 100;
+  if (mixAmount < 50) {
+    return tinycolor(low).mix(middle, mixAmount * 2).toRgbString();
+  } else {
+    return tinycolor(middle).mix(high, (mixAmount - 50) * 2).toRgbString();
   }
 }
 

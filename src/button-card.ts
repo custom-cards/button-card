@@ -8,6 +8,7 @@ import {
   PropertyValues,
 } from 'lit-element';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
@@ -25,6 +26,7 @@ import {
   buildNameStateConcat,
   applyBrightnessToColor,
   hasConfigOrEntityChanged,
+  getLightColorBasedOnTemperature,
 } from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
@@ -135,6 +137,17 @@ class ButtonCard extends LitElement {
       if (state) {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
+          if (state.attributes.brightness) {
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+          }
+        } else if (state.attributes.color_temp
+          && state.attributes.min_mireds
+          && state.attributes.max_mireds) {
+          color = getLightColorBasedOnTemperature(
+            state.attributes.color_temp,
+            state.attributes.min_mireds,
+            state.attributes.max_mireds,
+          );
           if (state.attributes.brightness) {
             color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
           }
@@ -260,6 +273,13 @@ class ButtonCard extends LitElement {
     return units;
   }
 
+  private _buildLastChanged(
+    state: HassEntity | undefined,
+    style: StyleInfo,
+  ): TemplateResult {
+    return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
+  }
+
   private _buildLabel(
     state: HassEntity | undefined,
     configState: StateConfig | undefined,
@@ -322,14 +342,16 @@ class ButtonCard extends LitElement {
   }
 
   private _blankCardColoredHtml(
-    state: HassEntity | undefined,
     cardStyle: StyleInfo,
   ): TemplateResult {
-    const color = this._buildCssColorAttribute(state, undefined);
-    const fontColor = getFontColorBasedOnBackgroundColor(color);
+    const blankCardStyle = {
+      background: 'none',
+      'box-shadow': 'none',
+      ...cardStyle,
+    };
     return html`
-      <ha-card class="disabled" style=${styleMap(cardStyle)}>
-        <div style="color: ${fontColor}; background-color: ${color};"></div>
+      <ha-card class="disabled" style=${styleMap(blankCardStyle)}>
+        <div></div>
       </ha-card>
       `;
   }
@@ -340,6 +362,7 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
+    const lockStyle: StyleInfo = {};
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
 
     if (configCardStyle.width) {
@@ -348,11 +371,12 @@ class ButtonCard extends LitElement {
     }
     switch (this.config!.color_type) {
       case 'blank-card':
-        return this._blankCardColoredHtml(state, configCardStyle);
+        return this._blankCardColoredHtml(configCardStyle);
       case 'card':
       case 'label-card': {
         const fontColor = getFontColorBasedOnBackgroundColor(color);
         cardStyle.color = fontColor;
+        lockStyle.color = fontColor;
         cardStyle['background-color'] = color;
         cardStyle = { ...cardStyle, ...configCardStyle };
         buttonColor = 'inherit';
@@ -365,10 +389,22 @@ class ButtonCard extends LitElement {
 
     return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+        ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-      <mwc-ripple></mwc-ripple>
+        ${this.config!.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
       </ha-card>
       `;
+  }
+
+  private _getLock(lockStyle: StyleInfo): TemplateResult {
+    if (this.config!.lock) {
+      return html`
+        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
+          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+        </div>
+      `;
+    }
+    return html``;
   }
 
   private _buttonContent(
@@ -405,6 +441,7 @@ class ButtonCard extends LitElement {
     const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
     const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
     const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
+    const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
@@ -415,7 +452,8 @@ class ButtonCard extends LitElement {
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${label}</div>` : ''}
+        ${label && !this.config!.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${this.config!.show_last_changed ? lastChangedTemplate : ''}
       </div>
     `;
   }
@@ -532,5 +570,32 @@ class ButtonCard extends LitElement {
     }
     const config = ev.target.config;
     handleClick(this, this.hass!, config, true);
+  }
+
+  private _handleLock(ev): void {
+    ev.stopPropagation();
+    const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
+    const haCard = this.shadowRoot!.firstElementChild as LitElement;
+    overlay.style.setProperty('pointer-events', 'none');
+    const paperRipple = document.createElement('paper-ripple');
+
+    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
+    if (lock) {
+      haCard.appendChild(paperRipple);
+      const icon = document.createAttribute('icon');
+      icon.value = 'mdi:lock-open-outline';
+      lock.attributes.setNamedItem(icon);
+      lock.classList.add('fadeOut');
+    }
+    window.setTimeout(() => {
+      overlay.style.setProperty('pointer-events', '');
+      if (lock) {
+        lock.classList.remove('fadeOut');
+        const icon = document.createAttribute('icon');
+        icon.value = 'mdi:lock-outline';
+        lock.attributes.setNamedItem(icon);
+        haCard.removeChild(paperRipple);
+      }
+    }, 5000);
   }
 }

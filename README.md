@@ -59,13 +59,15 @@ Lovelace Button card for your entities.
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
 | `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
 | `show_units` | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
-| `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label`/`label_template`
+| `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label`/`label_template` |
+| `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles`        | object list | optional     | | See [styles](#styles)  |
 | `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
 | `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
+| `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 
 ### Action
@@ -131,7 +133,18 @@ Multiple values are possible, see the image below for examples:
 ### Templates
 
 `label_template` supports templating as well as `value` for `state` when `operator: template`
-* `label_template`: It will be interpreted as javascript code and the code should return a string
+* `label_template`: It will be interpreted as javascript code and the code should return a string.
+  `label_template` supports inline HTML, so you can do stuff like:
+  ```yaml
+  label_template: >
+    return 'Connection: '
+    + (states['switch.connection'].state === 'on'
+        ? '<span style="color: #00FF00;">enabled</span>'
+        : '<span style="color: #FF0000;">disabled</span>')
+    + ' / '
+    + (states['binary_sensor.status'].state === 'on' ? 'connected' : 'disconnected')
+  ```
+  ![label-template-example](examples/label_template.png)
 * `value` for `state` when `operator: template`: It will be interpreted as javascript code and the code should return a boolean (`true` or `false`)
 
 Inside the javascript code, you'll have access to those variables:
@@ -697,6 +710,23 @@ Example with `template`:
       styles:
         label:
           - color: green
+```
+
+### Lock
+
+![lock-animation](examples/lock.gif)
+
+```yaml
+- type: horizontal-stack
+  cards:
+    - type: "custom:button-card"
+      entity: switch.test
+      lock: true
+    - type: "custom:button-card"
+      color_type: card
+      lock: true
+      color: black
+      entity: switch.test
 ```
 
 ## Credits
