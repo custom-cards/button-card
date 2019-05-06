@@ -4350,12 +4350,13 @@ let ButtonCard = class ButtonCard extends LitElement {
         const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
         const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
         const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
+        const gridStyleFromConfig = this._buildStyleGeneric(configState, 'grid');
         if (!iconTemplate) itemClass.push('no-icon');
         if (!name) itemClass.push('no-name');
         if (!stateString) itemClass.push('no-state');
         if (!label && !lastChangedTemplate) itemClass.push('no-label');
         return html`
-      <div id="container" class=${itemClass.join(' ')}>
+      <div id="container" class=${itemClass.join(' ')} style=${styleMap(gridStyleFromConfig)}>
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
         ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}

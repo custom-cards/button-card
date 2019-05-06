@@ -73,6 +73,7 @@ export interface StylesConfig {
   name?: CssStyleConfig[];
   state?: CssStyleConfig[];
   label?: CssStyleConfig[];
+  grid?: CssStyleConfig[];
 }
 
 export interface CssStyleConfig {
