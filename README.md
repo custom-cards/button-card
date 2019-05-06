@@ -170,6 +170,8 @@ See [here](#templates-support) for some examples.
 
 ### Styles
 
+#### Easy styling options
+
 For each element in the card, styles can be defined in 2 places:
 * in the main part of the config
 * in each state
@@ -221,6 +223,85 @@ This will render:
 * Same for all the others.
 
 See [styling](#styling) for a complete example.
+
+#### ADVANCED styling options
+
+For advanced styling, there are 2 other options in the `styles` config object:
+* `grid`: mainly layout for the grid
+* `img_cell`: mainly how you position your icon in it's cell
+
+This is how the button is constructed (HTML elements):
+![elements in the button](examples/button-card-elements.png)
+
+The `grid` element uses CSS grids to design the layout of the card:
+* `img_cell` element is going to the `grid-area: i` by default
+* `name` element is going to the `grid-area: n` by default
+* `state` element is going to the `grid-area: s` by default
+* `label` element is going to the `grid-area: l` by default
+
+You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [home-assitant's community forum][forum] for that.
+
+To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
+
+Some examples:
+* label on top:
+  ```yaml
+  styles:
+    grid:
+      - grid-template-areas: '"l" "i" "n" "s"'
+      - grid-template-rows: min-content 1fr min-content min-content
+      - grid-template-columns: 1fr
+  ```
+* icon on the right side (by overloading an existing layout):
+  ```yaml
+  - type: "custom:button-card"
+    entity: sensor.sensor1
+    layout: icon_state_name2nd
+    show_state: true
+    show_name: true
+    show_label: true
+    label: label
+    styles:
+      grid:
+        - grid-template-areas: '"n i" "s i" "l i"'
+        - grid-template-columns: 1fr 40%
+  ```
+
+* Apple Homekit-like buttons:
+  ![apple-like-buttons](examples/apple_style.gif)
+  ```yaml
+  - type: custom:button-card
+    entity: switch.skylight
+    name: <3 Apple
+    icon: mdi:fire
+    show_state: true
+    styles:
+      card:
+        - width: 100px
+        - height: 100px
+      grid:
+        - grid-template-areas: '"i" "n" "s"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: 1fr min-content min-content
+      img_cell:
+        - align-self: start
+        - text-align: start
+      name:
+        - justify-self: start
+        - padding-left: 10px
+        - font-weight: bold
+        - text-transform: lowercase
+      state:
+        - justify-self: start
+        - padding-left: 10px
+    state:
+      - value: 'off'
+        styles:
+          card:
+            - filter: opacity(50%)
+          icon:
+            - filter: grayscale(100%)
+  ```
 
 ## Installation
 
