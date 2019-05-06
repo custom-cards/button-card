@@ -3718,7 +3718,7 @@ const styles = css`
     letter-spacing: normal;
     width: 100%;
   }
-  div {
+  .ellipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -3792,34 +3792,34 @@ const styles = css`
     animation: rotating 2s linear infinite;
   }
 
-  .container {
+  #container {
     display: grid;
     max-height: 100%;
     text-align: center;
     height: 100%;
     align-items: center;
   }
-  .img-cell {
+  #img-cell {
+    /* display: flex; */
     grid-area: i;
-    height: 100%;
     width: 100%;
     max-width: 100%;
   }
 
-  .icon {
+  ha-icon#icon, img#icon {
     height: 100%;
     max-width: 100%;
-    object-fit: scale;
+    object-fit: contain;
     overflow: hidden;
   }
-  .name {
+  #name {
     grid-area: n;
     max-width: 100%;
     align-self: center;
     justify-self: center;
     /* margin: auto; */
   }
-  .state {
+  #state {
     grid-area: s;
     max-width: 100%;
     align-self: center;
@@ -3827,205 +3827,205 @@ const styles = css`
     /* margin: auto; */
   }
 
-  .label {
+  #label {
     grid-area: l;
     max-width: 100%;
     align-self: center;
     justify-self: center;
   }
 
-  .container.vertical {
+  #container.vertical {
     grid-template-areas: "i" "n" "s" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content min-content;
   }
   /* Vertical No Icon */
-  .container.vertical.no-icon {
+  #container.vertical.no-icon {
     grid-template-areas: "n" "s" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content 1fr;
   }
-  .container.vertical.no-icon .state {
+  #container.vertical.no-icon #state {
     align-self: center;
   }
-  .container.vertical.no-icon .name {
+  #container.vertical.no-icon #name {
     align-self: end;
   }
-  .container.vertical.no-icon .label {
+  #container.vertical.no-icon #label {
     align-self: start;
   }
 
   /* Vertical No Icon No Name */
-  .container.vertical.no-icon.no-name {
+  #container.vertical.no-icon.no-name {
     grid-template-areas: "s" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.vertical.no-icon.no-name .state {
+  #container.vertical.no-icon.no-name #state {
     align-self: end;
   }
-  .container.vertical.no-icon.no-name .label {
+  #container.vertical.no-icon.no-name #label {
     align-self: start;
   }
 
   /* Vertical No Icon No State */
-  .container.vertical.no-icon.no-state {
+  #container.vertical.no-icon.no-state {
     grid-template-areas: "n" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.vertical.no-icon.no-state .name {
+  #container.vertical.no-icon.no-state #name {
     align-self: end;
   }
-  .container.vertical.no-icon.no-state .label {
+  #container.vertical.no-icon.no-state #label {
     align-self: start;
   }
 
   /* Vertical No Icon No Label */
-  .container.vertical.no-icon.no-label {
+  #container.vertical.no-icon.no-label {
     grid-template-areas: "n" "s";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.vertical.no-icon.no-label .name {
+  #container.vertical.no-icon.no-label #name {
     align-self: end;
   }
-  .container.vertical.no-icon.no-label .state {
+  #container.vertical.no-icon.no-label #state {
     align-self: start;
   }
 
   /* Vertical No Icon No Label No Name */
-  .container.vertical.no-icon.no-label.no-name {
+  #container.vertical.no-icon.no-label.no-name {
     grid-template-areas: "s";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
-  .container.vertical.no-icon.no-label.no-name .state {
+  #container.vertical.no-icon.no-label.no-name #state {
     align-self: center;
   }
   /* Vertical No Icon No Label No State */
-  .container.vertical.no-icon.no-label.no-state {
+  #container.vertical.no-icon.no-label.no-state {
     grid-template-areas: "n";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
-  .container.vertical.no-icon.no-label.no-state .name {
+  #container.vertical.no-icon.no-label.no-state #name {
     align-self: center;
   }
 
   /* Vertical No Icon No Name No State */
-  .container.vertical.no-icon.no-name.no-state {
+  #container.vertical.no-icon.no-name.no-state {
     grid-template-areas: "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
-  .container.vertical.no-icon.no-name.no-state .label {
+  #container.vertical.no-icon.no-name.no-state #label {
     align-self: center;
   }
 
-  .container.icon_name_state {
+  #container.icon_name_state {
     grid-template-areas: "i n" "l l";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content;
   }
 
-  .container.icon_name {
+  #container.icon_name {
     grid-template-areas: "i n" "s s" "l l";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
 
-  .container.icon_state {
+  #container.icon_state {
     grid-template-areas: "i s" "n n" "l l";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
 
-  .container.name_state {
+  #container.name_state {
     grid-template-areas: "i" "n" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
-  .container.name_state.no-icon {
+  #container.name_state.no-icon {
     grid-template-areas: "n" "l";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.name_state.no-icon .name {
+  #container.name_state.no-icon #name {
     align-self: end
   }
-  .container.name_state.no-icon .label {
+  #container.name_state.no-icon #label {
     align-self: start
   }
 
-  .container.name_state.no-icon.no-label {
+  #container.name_state.no-icon.no-label {
     grid-template-areas: "n";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
-  .container.name_state.no-icon.no-label .name {
+  #container.name_state.no-icon.no-label #name {
     align-self: center
   }
 
   /* icon_name_state2nd default */
-  .container.icon_name_state2nd {
+  #container.icon_name_state2nd {
     grid-template-areas: "i n" "i s" "i l";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content 1fr;
   }
-  .container.icon_name_state2nd .name {
+  #container.icon_name_state2nd #name {
     align-self: end;
   }
-  .container.icon_name_state2nd .state {
+  #container.icon_name_state2nd #state {
     align-self: center;
   }
-  .container.icon_name_state2nd .label {
+  #container.icon_name_state2nd #label {
     align-self: start;
   }
 
   /* icon_name_state2nd No Label */
-  .container.icon_name_state2nd.no-label {
+  #container.icon_name_state2nd.no-label {
     grid-template-areas: "i n" "i s";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.icon_name_state2nd .name {
+  #container.icon_name_state2nd #name {
     align-self: end;
   }
-  .container.icon_name_state2nd .state {
+  #container.icon_name_state2nd #state {
     align-self: start;
   }
 
   /* icon_state_name2nd Default */
-  .container.icon_state_name2nd {
+  #container.icon_state_name2nd {
     grid-template-areas: "i s" "i n" "i l";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content 1fr;
   }
-  .container.icon_state_name2nd .state {
+  #container.icon_state_name2nd #state {
     align-self: end;
   }
-  .container.icon_state_name2nd .name {
+  #container.icon_state_name2nd #name {
     align-self: center;
   }
-  .container.icon_state_name2nd .state {
+  #container.icon_state_name2nd #state {
     align-self: start;
   }
 
   /* icon_state_name2nd No Label */
-  .container.icon_state_name2nd.no-label {
+  #container.icon_state_name2nd.no-label {
     grid-template-areas: "i s" "i n";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  .container.icon_state_name2nd .state {
+  #container.icon_state_name2nd #state {
     align-self: end;
   }
-  .container.icon_state_name2nd .name {
+  #container.icon_state_name2nd #name {
     align-self: start;
   }
 
-  .container.icon_label {
+  #container.icon_label {
     grid-template-areas: "i l" "n n" "s s";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
@@ -4223,7 +4223,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         return units;
     }
     _buildLastChanged(state, style) {
-        return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
+        return this.config.show_last_changed && state ? html`<ha-relative-time id="label" class="ellipsis" .hass="${this.hass}" .datetime="${state.last_changed}" style=${styleMap(style)}></ha-relative-time>` : undefined;
     }
     _buildLabel(state, configState) {
         if (!this.config.show_label) {
@@ -4316,7 +4316,7 @@ let ButtonCard = class ButtonCard extends LitElement {
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-        ${this.config.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
+        ${this.config.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
       </ha-card>
       `;
     }
@@ -4344,7 +4344,7 @@ let ButtonCard = class ButtonCard extends LitElement {
     }
     _gridHtml(state, configState, containerClass, color, name, stateString) {
         const iconTemplate = this._getIconHtml(state, configState, color);
-        const itemClass = ['container', containerClass];
+        const itemClass = [containerClass];
         const label = this._buildLabel(state, configState);
         const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
         const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
@@ -4353,14 +4353,14 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!iconTemplate) itemClass.push('no-icon');
         if (!name) itemClass.push('no-name');
         if (!stateString) itemClass.push('no-state');
-        if (!label) itemClass.push('no-label');
+        if (!label && !lastChangedTemplate) itemClass.push('no-label');
         return html`
-      <div class=${itemClass.join(' ')}>
+      <div id="container" class=${itemClass.join(' ')}>
         ${iconTemplate ? iconTemplate : ''}
-        ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
-        ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label && !this.config.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
-        ${this.config.show_last_changed ? lastChangedTemplate : ''}
+        ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
+        ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
+        ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${lastChangedTemplate ? lastChangedTemplate : ''}
       </div>
     `;
     }
@@ -4369,15 +4369,15 @@ let ButtonCard = class ButtonCard extends LitElement {
         const entityPicture = this._buildEntityPicture(state, configState);
         const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
         const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
-        const haIconStyle = Object.assign({ color, width: this.config.size, 'min-width': this.config.size }, haIconStyleFromConfig);
+        const haIconStyle = Object.assign({ color, width: this.config.size }, haIconStyleFromConfig);
         const entityPictureStyle = Object.assign({}, haIconStyle, entityPictureStyleFromConfig);
         if (icon || entityPicture) {
             return html`
-        <div class="img-cell">
+        <div id="img-cell">
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
-            .icon="${icon}" class="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
+            .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
-            class="icon" ?rotating=${this._rotate(configState)} />` : ''}
+            id="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
       `;
         } else {

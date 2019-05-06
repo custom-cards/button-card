@@ -276,8 +276,8 @@ class ButtonCard extends LitElement {
   private _buildLastChanged(
     state: HassEntity | undefined,
     style: StyleInfo,
-  ): TemplateResult {
-    return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
+  ): TemplateResult | undefined {
+    return this.config!.show_last_changed && state ? html`<ha-relative-time id="label" class="ellipsis" .hass="${this.hass}" .datetime="${state.last_changed}" style=${styleMap(style)}></ha-relative-time>` : undefined;
   }
 
   private _buildLabel(
@@ -391,7 +391,7 @@ class ButtonCard extends LitElement {
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-        ${this.config!.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
+        ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
       </ha-card>
       `;
   }
@@ -436,7 +436,7 @@ class ButtonCard extends LitElement {
     stateString: string | undefined,
   ): TemplateResult {
     const iconTemplate = this._getIconHtml(state, configState, color);
-    const itemClass: string[] = ['container', containerClass];
+    const itemClass: string[] = [containerClass];
     const label = this._buildLabel(state, configState);
     const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
     const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
@@ -445,15 +445,15 @@ class ButtonCard extends LitElement {
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
-    if (!label) itemClass.push('no-label');
+    if (!label && !lastChangedTemplate) itemClass.push('no-label');
 
     return html`
-      <div class=${itemClass.join(' ')}>
+      <div id="container" class=${itemClass.join(' ')}>
         ${iconTemplate ? iconTemplate : ''}
-        ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
-        ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label && !this.config!.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
-        ${this.config!.show_last_changed ? lastChangedTemplate : ''}
+        ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
+        ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
+        ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${lastChangedTemplate ? lastChangedTemplate : ''}
       </div>
     `;
   }
@@ -471,7 +471,6 @@ class ButtonCard extends LitElement {
     const haIconStyle = {
       color,
       width: this.config!.size,
-      'min-width': this.config!.size,
       ...haIconStyleFromConfig,
     };
     const entityPictureStyle = {
@@ -481,11 +480,11 @@ class ButtonCard extends LitElement {
 
     if (icon || entityPicture) {
       return html`
-        <div class="img-cell">
+        <div id="img-cell">
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
-            .icon="${icon}" class="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
+            .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
-            class="icon" ?rotating=${this._rotate(configState)} />` : ''}
+            id="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
       `;
     } else {
