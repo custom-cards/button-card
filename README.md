@@ -1,4 +1,4 @@
-# Button Card
+# Button Card <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -13,37 +13,35 @@ Lovelace Button card for your entities.
 
 ![all](examples/all.gif)
 
-## TOC
+## TOC <!-- omit in toc -->
 
-- [Button Card](#button-card)
-  - [TOC](#toc)
-  - [Features](#features)
-  - [Configuration](#configuration)
-    - [Main Options](#main-options)
-    - [Action](#action)
-    - [State](#state)
-    - [Available operators](#available-operators)
-    - [Layout](#layout)
-    - [Templates](#templates)
-    - [Styles](#styles)
-      - [Easy styling options](#easy-styling-options)
-      - [ADVANCED styling options](#advanced-styling-options)
-  - [Installation](#installation)
-    - [Manual Installation](#manual-installation)
-    - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-custom_updater)
-  - [Examples](#examples)
-    - [Configuration with states](#configuration-with-states)
-      - [Default behavior](#default-behavior)
-      - [With Operator on state](#with-operator-on-state)
-      - [`tap_action` Navigate](#tap_action-navigate)
-      - [blink](#blink)
-    - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
-    - [Templates Support](#templates-support)
-      - [Playing with label templates](#playing-with-label-templates)
-      - [State Templates](#state-templates)
-    - [Styling](#styling)
-    - [Lock](#lock)
-  - [Credits](#credits)
+- [Features](#features)
+- [Configuration](#configuration)
+  - [Main Options](#main-options)
+  - [Action](#action)
+  - [State](#state)
+  - [Available operators](#available-operators)
+  - [Layout](#layout)
+  - [Templates](#templates)
+  - [Styles](#styles)
+    - [Easy styling options](#easy-styling-options)
+    - [ADVANCED styling options](#advanced-styling-options)
+- [Installation](#installation)
+  - [Manual Installation](#manual-installation)
+  - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-custom_updater)
+- [Examples](#examples)
+  - [Configuration with states](#configuration-with-states)
+    - [Default behavior](#default-behavior)
+    - [With Operator on state](#with-operator-on-state)
+    - [`tap_action` Navigate](#tap_action-navigate)
+    - [blink](#blink)
+  - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
+  - [Templates Support](#templates-support)
+    - [Playing with label templates](#playing-with-label-templates)
+    - [State Templates](#state-templates)
+  - [Styling](#styling)
+  - [Lock](#lock)
+- [Credits](#credits)
 
 
 ## Features
