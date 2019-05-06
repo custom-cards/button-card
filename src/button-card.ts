@@ -468,6 +468,7 @@ class ButtonCard extends LitElement {
     const entityPicture = this._buildEntityPicture(state, configState);
     const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
     const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
+    const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
 
     const haIconStyle = {
       color,
@@ -481,7 +482,7 @@ class ButtonCard extends LitElement {
 
     if (icon || entityPicture) {
       return html`
-        <div id="img-cell">
+        <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
             .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}

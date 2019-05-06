@@ -3699,6 +3699,9 @@ const styles = css`
     overflow: hidden;
     box-sizing: border-box;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   ha-card.disabled {
     pointer-events: none;
@@ -3804,6 +3807,7 @@ const styles = css`
     grid-area: i;
     width: 100%;
     max-width: 100%;
+    align-self: center;
   }
 
   ha-icon#icon, img#icon {
@@ -3811,6 +3815,7 @@ const styles = css`
     max-width: 100%;
     object-fit: contain;
     overflow: hidden;
+    vertical-align: middle;
   }
   #name {
     grid-area: n;
@@ -3834,6 +3839,9 @@ const styles = css`
     justify-self: center;
   }
 
+  #container {
+    width: 100%;
+  }
   #container.vertical {
     grid-template-areas: "i" "n" "s" "l";
     grid-template-columns: 1fr;
@@ -4370,11 +4378,12 @@ let ButtonCard = class ButtonCard extends LitElement {
         const entityPicture = this._buildEntityPicture(state, configState);
         const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
         const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
+        const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
         const haIconStyle = Object.assign({ color, width: this.config.size }, haIconStyleFromConfig);
         const entityPictureStyle = Object.assign({}, haIconStyle, entityPictureStyleFromConfig);
         if (icon || entityPicture) {
             return html`
-        <div id="img-cell">
+        <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
             .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}

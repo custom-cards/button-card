@@ -6,6 +6,9 @@ export const styles = css`
     overflow: hidden;
     box-sizing: border-box;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   ha-card.disabled {
     pointer-events: none;
@@ -111,6 +114,7 @@ export const styles = css`
     grid-area: i;
     width: 100%;
     max-width: 100%;
+    align-self: center;
   }
 
   ha-icon#icon, img#icon {
@@ -118,6 +122,7 @@ export const styles = css`
     max-width: 100%;
     object-fit: contain;
     overflow: hidden;
+    vertical-align: middle;
   }
   #name {
     grid-area: n;
@@ -141,6 +146,9 @@ export const styles = css`
     justify-self: center;
   }
 
+  #container {
+    width: 100%;
+  }
   #container.vertical {
     grid-template-areas: "i" "n" "s" "l";
     grid-template-columns: 1fr;
