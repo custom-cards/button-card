@@ -9,6 +9,7 @@ import {
 } from 'lit-element';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
+import { ifDefined } from 'lit-html/directives/if-defined';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
@@ -396,7 +397,7 @@ class ButtonCard extends LitElement {
     }
 
     return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}

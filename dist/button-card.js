@@ -2394,6 +2394,36 @@ const unsafeHTML = directive(value => part => {
     previousValues.set(part, { value, fragment });
 });
 
+/**
+ * @license
+ * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * For AttributeParts, sets the attribute if the value is defined and removes
+ * the attribute if the value is undefined.
+ *
+ * For other part types, this directive is a no-op.
+ */
+const ifDefined = directive(value => part => {
+    if (value === undefined && part instanceof AttributePart) {
+        if (value !== part.value) {
+            const name = part.committer.name;
+            part.committer.element.removeAttribute(name);
+        }
+    } else {
+        part.setValue(value);
+    }
+});
+
 /** Constants to be used in the frontend. */
 // Constants should be alphabetically sorted by name.
 // Arrays with values should be alphabetically sorted if order doesn't matter.
@@ -3561,13 +3591,13 @@ const handleClick = (node, hass, config, hold) => {
 
 // See https://github.com/home-assistant/home-assistant-polymer/pull/2457
 // on how to undo mwc -> paper migration
-// import "@material/mwc-ripple";
-const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+// import '@material/mwc-ripple';
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 class LongPress extends HTMLElement {
     constructor() {
         super();
         this.holdTime = 500;
-        this.ripple = document.createElement("paper-ripple");
+        this.ripple = document.createElement('paper-ripple');
         this.timer = undefined;
         this.held = false;
         this.cooldownStart = false;
@@ -3575,18 +3605,18 @@ class LongPress extends HTMLElement {
     }
     connectedCallback() {
         Object.assign(this.style, {
-            borderRadius: "50%",
-            position: "absolute",
-            width: isTouch ? "100px" : "50px",
-            height: isTouch ? "100px" : "50px",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none"
+            borderRadius: '50%',
+            position: 'absolute',
+            width: isTouch ? '100px' : '50px',
+            height: isTouch ? '100px' : '50px',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
         });
         this.appendChild(this.ripple);
-        this.ripple.style.color = "#03a9f4"; // paper-ripple
-        this.ripple.style.color = "var(--primary-color)"; // paper-ripple
+        this.ripple.style.color = '#03a9f4'; // paper-ripple
+        this.ripple.style.color = 'var(--primary-color)'; // paper-ripple
         // this.ripple.primary = true;
-        ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(ev => {
+        ['touchcancel', 'mouseout', 'mouseup', 'touchmove', 'mousewheel', 'wheel', 'scroll'].forEach(ev => {
             document.addEventListener(ev, () => {
                 clearTimeout(this.timer);
                 this.stopAnimation();
@@ -3595,11 +3625,12 @@ class LongPress extends HTMLElement {
         });
     }
     bind(element) {
+        /* eslint no-param-reassign: 0 */
         if (element.longPress) {
             return;
         }
         element.longPress = true;
-        element.addEventListener("contextmenu", ev => {
+        element.addEventListener('contextmenu', ev => {
             const e = ev || window.event;
             if (e.preventDefault) {
                 e.preventDefault();
@@ -3628,30 +3659,49 @@ class LongPress extends HTMLElement {
             this.timer = window.setTimeout(() => {
                 this.startAnimation(x, y);
                 this.held = true;
+                if (element.repeat) {
+                    if (!element.isRepeating) {
+                        element.isRepeating = true;
+                        this.repeatTimeout = setInterval(() => {
+                            element.dispatchEvent(new Event('ha-hold'));
+                        }, element.repeat);
+                    }
+                }
             }, this.holdTime);
             this.cooldownStart = true;
             window.setTimeout(() => this.cooldownStart = false, 100);
         };
         const clickEnd = ev => {
-            if (this.cooldownEnd || ["touchend", "touchcancel"].includes(ev.type) && this.timer === undefined) {
+            if (this.cooldownEnd || ['touchend', 'touchcancel'].includes(ev.type) && this.timer === undefined) {
+                if (element.isRepeating && this.repeatTimeout) {
+                    clearInterval(this.repeatTimeout);
+                    element.isRepeating = false;
+                }
                 return;
             }
             clearTimeout(this.timer);
+            if (element.isRepeating && this.repeatTimeout) {
+                clearInterval(this.repeatTimeout);
+                element.isRepeating = false;
+            }
+            element.isRepeating = false;
             this.stopAnimation();
             this.timer = undefined;
             if (this.held) {
-                element.dispatchEvent(new Event("ha-hold"));
+                if (!element.repeat) {
+                    element.dispatchEvent(new Event('ha-hold'));
+                }
             } else {
-                element.dispatchEvent(new Event("ha-click"));
+                element.dispatchEvent(new Event('ha-click'));
             }
             this.cooldownEnd = true;
             window.setTimeout(() => this.cooldownEnd = false, 100);
         };
-        element.addEventListener("touchstart", clickStart, { passive: true });
-        element.addEventListener("touchend", clickEnd);
-        element.addEventListener("touchcancel", clickEnd);
-        element.addEventListener("mousedown", clickStart, { passive: true });
-        element.addEventListener("click", clickEnd);
+        element.addEventListener('touchstart', clickStart, { passive: true });
+        element.addEventListener('touchend', clickEnd);
+        element.addEventListener('touchcancel', clickEnd);
+        element.addEventListener('mousedown', clickStart, { passive: true });
+        element.addEventListener('click', clickEnd);
     }
     startAnimation(x, y) {
         Object.assign(this.style, {
@@ -3669,16 +3719,16 @@ class LongPress extends HTMLElement {
         this.ripple.holdDown = false; // paper-ripple
         // this.ripple.active = false;
         // this.ripple.disabled = true;
-        this.style.display = "none";
+        this.style.display = 'none';
     }
 }
-customElements.define("long-press-button-card", LongPress);
+customElements.define('long-press-button-card', LongPress);
 const getLongPress = () => {
     const body = document.body;
-    if (body.querySelector("long-press-button-card")) {
-        return body.querySelector("long-press-button-card");
+    if (body.querySelector('long-press-button-card')) {
+        return body.querySelector('long-press-button-card');
     }
-    const longpress = document.createElement("long-press-button-card");
+    const longpress = document.createElement('long-press-button-card');
     body.appendChild(longpress);
     return longpress;
 };
@@ -4355,7 +4405,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 break;
         }
         return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
