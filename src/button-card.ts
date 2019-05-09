@@ -31,6 +31,7 @@ import {
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
 import { styles } from './styles';
+import computeStateDisplay from './compute_state_display';
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -64,7 +65,13 @@ class ButtonCard extends LitElement {
   }
 
   private _getMatchingConfigState(state: HassEntity | undefined): StateConfig | undefined {
-    if (!state || !this.config!.state) {
+    if (!this.config!.state) {
+      return undefined;
+    }
+    const hasTemplate = this.config!.state.find(
+      elt => elt.operator === 'template',
+    );
+    if (!state && !hasTemplate) {
       return undefined;
     }
     let def: StateConfig | undefined;
@@ -73,20 +80,20 @@ class ButtonCard extends LitElement {
         switch (elt.operator) {
           case '==':
             /* eslint eqeqeq: 0 */
-            return (state!.state == elt.value);
+            return (state && state.state == elt.value);
           case '<=':
-            return (state!.state <= elt.value);
+            return (state && state.state <= elt.value);
           case '<':
-            return (state!.state < elt.value);
+            return (state && state.state < elt.value);
           case '>=':
-            return (state!.state >= elt.value);
+            return (state && state.state >= elt.value);
           case '>':
-            return (state.state > elt.value);
+            return (state && state.state > elt.value);
           case '!=':
-            return (state.state != elt.value);
+            return (state && state.state != elt.value);
           case 'regex': {
             /* eslint no-unneeded-ternary: 0 */
-            const matches = state.state.match(elt.value) ? true : false;
+            const matches = state && state.state.match(elt.value) ? true : false;
             return matches;
           }
           case 'template': {
@@ -101,7 +108,7 @@ class ButtonCard extends LitElement {
             return false;
         }
       } else {
-        return (elt.value == state.state);
+        return state && (elt.value == state.state);
       }
     });
     if (!retval && def) {
@@ -249,11 +256,12 @@ class ButtonCard extends LitElement {
   private _buildStateString(state: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
     if (this.config!.show_state && state && state.state) {
+      const localizedState = computeStateDisplay(this.hass!.localize, state);
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
       } else {
-        stateString = state.state;
+        stateString = localizedState;
       }
     }
     return stateString;

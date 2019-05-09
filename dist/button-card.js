@@ -4040,6 +4040,35 @@ const styles = css`
   }
 `;
 
+var computeStateDisplay = (localize, stateObj) => {
+    let display;
+    const domain = computeDomain(stateObj.entity_id);
+    if (domain === 'binary_sensor') {
+        // Try device class translation, then default binary sensor translation
+        if (stateObj.attributes.device_class) {
+            display = localize(`state.${domain}.${stateObj.attributes.device_class}.${stateObj.state}`);
+        }
+        if (!display) {
+            display = localize(`state.${domain}.default.${stateObj.state}`);
+        }
+    } else if (stateObj.attributes.unit_of_measurement && !['unknown', 'unavailable'].includes(stateObj.state)) {
+        display = stateObj.state;
+    } else if (domain === 'zwave') {
+        if (['initializing', 'dead'].includes(stateObj.state)) {
+            display = localize(`state.zwave.query_stage.${stateObj.state}`, 'query_stage', stateObj.attributes.query_stage);
+        } else {
+            display = localize(`state.zwave.default.${stateObj.state}`);
+        }
+    } else {
+        display = localize(`state.${domain}.${stateObj.state}`);
+    }
+    // Fall back to default, component backend translation, or raw state if nothing else matches.
+    if (!display) {
+        display = localize(`state.default.${stateObj.state}`) || localize(`component.${domain}.state.${stateObj.state}`) || stateObj.state;
+    }
+    return display;
+};
+
 let ButtonCard = class ButtonCard extends LitElement {
     static get styles() {
         return styles;
@@ -4057,7 +4086,11 @@ let ButtonCard = class ButtonCard extends LitElement {
         return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
     }
     _getMatchingConfigState(state) {
-        if (!state || !this.config.state) {
+        if (!this.config.state) {
+            return undefined;
+        }
+        const hasTemplate = this.config.state.find(elt => elt.operator === 'template');
+        if (!state && !hasTemplate) {
             return undefined;
         }
         let def;
@@ -4066,21 +4099,21 @@ let ButtonCard = class ButtonCard extends LitElement {
                 switch (elt.operator) {
                     case '==':
                         /* eslint eqeqeq: 0 */
-                        return state.state == elt.value;
+                        return state && state.state == elt.value;
                     case '<=':
-                        return state.state <= elt.value;
+                        return state && state.state <= elt.value;
                     case '<':
-                        return state.state < elt.value;
+                        return state && state.state < elt.value;
                     case '>=':
-                        return state.state >= elt.value;
+                        return state && state.state >= elt.value;
                     case '>':
-                        return state.state > elt.value;
+                        return state && state.state > elt.value;
                     case '!=':
-                        return state.state != elt.value;
+                        return state && state.state != elt.value;
                     case 'regex':
                         {
                             /* eslint no-unneeded-ternary: 0 */
-                            const matches = state.state.match(elt.value) ? true : false;
+                            const matches = state && state.state.match(elt.value) ? true : false;
                             return matches;
                         }
                     case 'template':
@@ -4094,7 +4127,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                         return false;
                 }
             } else {
-                return elt.value == state.state;
+                return state && elt.value == state.state;
             }
         });
         if (!retval && def) {
@@ -4208,11 +4241,12 @@ let ButtonCard = class ButtonCard extends LitElement {
     _buildStateString(state) {
         let stateString;
         if (this.config.show_state && state && state.state) {
+            const localizedState = computeStateDisplay(this.hass.localize, state);
             const units = this._buildUnits(state);
             if (units) {
                 stateString = `${state.state} ${units}`;
             } else {
-                stateString = state.state;
+                stateString = localizedState;
             }
         }
         return stateString;
