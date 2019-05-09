@@ -115,13 +115,11 @@ class LongPress extends HTMLElement implements LongPress {
       this.timer = window.setTimeout(() => {
         this.startAnimation(x, y);
         this.held = true;
-        if (element.repeat) {
-          if (!element.isRepeating) {
-            element.isRepeating = true;
-            this.repeatTimeout = setInterval(() => {
-              element.dispatchEvent(new Event('ha-hold'));
-            }, element.repeat);
-          }
+        if (element.repeat && !element.isRepeating) {
+          element.isRepeating = true;
+          this.repeatTimeout = setInterval(() => {
+            element.dispatchEvent(new Event('ha-hold'));
+          }, element.repeat);
         }
       }, this.holdTime);
 
@@ -144,7 +142,6 @@ class LongPress extends HTMLElement implements LongPress {
       clearTimeout(this.timer);
       if (element.isRepeating && this.repeatTimeout) {
         clearInterval(this.repeatTimeout);
-        element.isRepeating = false;
       }
       element.isRepeating = false;
       this.stopAnimation();

@@ -3659,13 +3659,11 @@ class LongPress extends HTMLElement {
             this.timer = window.setTimeout(() => {
                 this.startAnimation(x, y);
                 this.held = true;
-                if (element.repeat) {
-                    if (!element.isRepeating) {
-                        element.isRepeating = true;
-                        this.repeatTimeout = setInterval(() => {
-                            element.dispatchEvent(new Event('ha-hold'));
-                        }, element.repeat);
-                    }
+                if (element.repeat && !element.isRepeating) {
+                    element.isRepeating = true;
+                    this.repeatTimeout = setInterval(() => {
+                        element.dispatchEvent(new Event('ha-hold'));
+                    }, element.repeat);
                 }
             }, this.holdTime);
             this.cooldownStart = true;
@@ -3682,7 +3680,6 @@ class LongPress extends HTMLElement {
             clearTimeout(this.timer);
             if (element.isRepeating && this.repeatTimeout) {
                 clearInterval(this.repeatTimeout);
-                element.isRepeating = false;
             }
             element.isRepeating = false;
             this.stopAnimation();
