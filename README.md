@@ -1,4 +1,4 @@
-# Button Card
+# Button Card <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -13,28 +13,58 @@ Lovelace Button card for your entities.
 
 ![all](examples/all.gif)
 
+## TOC <!-- omit in toc -->
+
+- [Features](#features)
+- [Configuration](#configuration)
+  - [Main Options](#main-options)
+  - [Action](#action)
+  - [State](#state)
+  - [Available operators](#available-operators)
+  - [Layout](#layout)
+  - [Templates](#templates)
+  - [Styles](#styles)
+    - [Easy styling options](#easy-styling-options)
+    - [ADVANCED styling options](#advanced-styling-options)
+- [Installation](#installation)
+  - [Manual Installation](#manual-installation)
+  - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-custom_updater)
+- [Examples](#examples)
+  - [Configuration with states](#configuration-with-states)
+    - [Default behavior](#default-behavior)
+    - [With Operator on state](#with-operator-on-state)
+    - [`tap_action` Navigate](#tap_action-navigate)
+    - [blink](#blink)
+  - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
+  - [Templates Support](#templates-support)
+    - [Playing with label templates](#playing-with-label-templates)
+    - [State Templates](#state-templates)
+  - [Styling](#styling)
+  - [Lock](#lock)
+- [Credits](#credits)
+
+
 ## Features
 
 - works with any toggleable entity
 - 6 available actions on **tap** and/or **hold**: `none`, `toggle`, `more-info`, `navigate`, `url` and `call-service`
 - state display (optional)
-- custom color (optional), or based on light rgb value
+- custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
 - [custom size of the icon, width and height](#Play-with-width-height-and-icon-size) (optional)
 - Support for [templates](#templates) in some fields
 - custom icon (optional)
 - custom css style (optional)
-- multiple [layout](#Layout) support
-- units can be redefined or hidden
+- multiple [layout](#Layout) support and [custom layout](#advanced-styling-options) support
+- units for sensors can be redefined or hidden
 - 2 color types
   - `icon` : apply color settings to the icon only
   - `card` : apply color settings to the card only
 - automatic font color if color_type is set to `card`
-- support unit of measurement
 - blank card and label card (for organization)
 - [blink](#blink) animation support
 - rotating animation support
-- confirmation popup for sensitive items (optional)
+- confirmation popup for sensitive items (optional) or [locking mecanism](#lock)
 - haptic support for the [Beta IOS App](http://home-assistant.io/ios/beta)
 - support for [custom_updater](https://github.com/custom-components/custom_updater)
 
@@ -170,6 +200,8 @@ See [here](#templates-support) for some examples.
 
 ### Styles
 
+#### Easy styling options
+
 For each element in the card, styles can be defined in 2 places:
 * in the main part of the config
 * in each state
@@ -221,6 +253,85 @@ This will render:
 * Same for all the others.
 
 See [styling](#styling) for a complete example.
+
+#### ADVANCED styling options
+
+For advanced styling, there are 2 other options in the `styles` config object:
+* `grid`: mainly layout for the grid
+* `img_cell`: mainly how you position your icon in it's cell
+
+This is how the button is constructed (HTML elements):
+![elements in the button](examples/button-card-elements.png)
+
+The `grid` element uses CSS grids to design the layout of the card:
+* `img_cell` element is going to the `grid-area: i` by default
+* `name` element is going to the `grid-area: n` by default
+* `state` element is going to the `grid-area: s` by default
+* `label` element is going to the `grid-area: l` by default
+
+You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [home-assitant's community forum][forum] for that.
+
+To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
+
+Some examples:
+* label on top:
+  ```yaml
+  styles:
+    grid:
+      - grid-template-areas: '"l" "i" "n" "s"'
+      - grid-template-rows: min-content 1fr min-content min-content
+      - grid-template-columns: 1fr
+  ```
+* icon on the right side (by overloading an existing layout):
+  ```yaml
+  - type: "custom:button-card"
+    entity: sensor.sensor1
+    layout: icon_state_name2nd
+    show_state: true
+    show_name: true
+    show_label: true
+    label: label
+    styles:
+      grid:
+        - grid-template-areas: '"n i" "s i" "l i"'
+        - grid-template-columns: 1fr 40%
+  ```
+
+* Apple Homekit-like buttons:
+  ![apple-like-buttons](examples/apple_style.gif)
+  ```yaml
+  - type: custom:button-card
+    entity: switch.skylight
+    name: <3 Apple
+    icon: mdi:fire
+    show_state: true
+    styles:
+      card:
+        - width: 100px
+        - height: 100px
+      grid:
+        - grid-template-areas: '"i" "n" "s"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: 1fr min-content min-content
+      img_cell:
+        - align-self: start
+        - text-align: start
+      name:
+        - justify-self: start
+        - padding-left: 10px
+        - font-weight: bold
+        - text-transform: lowercase
+      state:
+        - justify-self: start
+        - padding-left: 10px
+    state:
+      - value: 'off'
+        styles:
+          card:
+            - filter: opacity(50%)
+          icon:
+            - filter: grayscale(100%)
+  ```
 
 ## Installation
 

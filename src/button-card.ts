@@ -31,6 +31,7 @@ import {
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
 import { styles } from './styles';
+import computeStateDisplay from './compute_state_display';
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -64,7 +65,13 @@ class ButtonCard extends LitElement {
   }
 
   private _getMatchingConfigState(state: HassEntity | undefined): StateConfig | undefined {
-    if (!state || !this.config!.state) {
+    if (!this.config!.state) {
+      return undefined;
+    }
+    const hasTemplate = this.config!.state.find(
+      elt => elt.operator === 'template',
+    );
+    if (!state && !hasTemplate) {
       return undefined;
     }
     let def: StateConfig | undefined;
@@ -73,20 +80,20 @@ class ButtonCard extends LitElement {
         switch (elt.operator) {
           case '==':
             /* eslint eqeqeq: 0 */
-            return (state!.state == elt.value);
+            return (state && state.state == elt.value);
           case '<=':
-            return (state!.state <= elt.value);
+            return (state && state.state <= elt.value);
           case '<':
-            return (state!.state < elt.value);
+            return (state && state.state < elt.value);
           case '>=':
-            return (state!.state >= elt.value);
+            return (state && state.state >= elt.value);
           case '>':
-            return (state.state > elt.value);
+            return (state && state.state > elt.value);
           case '!=':
-            return (state.state != elt.value);
+            return (state && state.state != elt.value);
           case 'regex': {
             /* eslint no-unneeded-ternary: 0 */
-            const matches = state.state.match(elt.value) ? true : false;
+            const matches = state && state.state.match(elt.value) ? true : false;
             return matches;
           }
           case 'template': {
@@ -101,7 +108,7 @@ class ButtonCard extends LitElement {
             return false;
         }
       } else {
-        return (elt.value == state.state);
+        return state && (elt.value == state.state);
       }
     });
     if (!retval && def) {
@@ -249,11 +256,12 @@ class ButtonCard extends LitElement {
   private _buildStateString(state: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
     if (this.config!.show_state && state && state.state) {
+      const localizedState = computeStateDisplay(this.hass!.localize, state);
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
       } else {
-        stateString = state.state;
+        stateString = localizedState;
       }
     }
     return stateString;
@@ -276,8 +284,8 @@ class ButtonCard extends LitElement {
   private _buildLastChanged(
     state: HassEntity | undefined,
     style: StyleInfo,
-  ): TemplateResult {
-    return state ? html`<ha-relative-time .hass="${this.hass}" .datetime="${state.last_changed}" class="label" style=${styleMap(style)}></ha-relative-time>` : html``;
+  ): TemplateResult | undefined {
+    return this.config!.show_last_changed && state ? html`<ha-relative-time id="label" class="ellipsis" .hass="${this.hass}" .datetime="${state.last_changed}" style=${styleMap(style)}></ha-relative-time>` : undefined;
   }
 
   private _buildLabel(
@@ -391,7 +399,7 @@ class ButtonCard extends LitElement {
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
-        ${this.config!.lock ? '' : html`<paper-ripple id="ripple"></paper-ripple>`}
+        ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
       </ha-card>
       `;
   }
@@ -436,24 +444,25 @@ class ButtonCard extends LitElement {
     stateString: string | undefined,
   ): TemplateResult {
     const iconTemplate = this._getIconHtml(state, configState, color);
-    const itemClass: string[] = ['container', containerClass];
+    const itemClass: string[] = [containerClass];
     const label = this._buildLabel(state, configState);
     const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
     const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
     const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
     const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
+    const gridStyleFromConfig = this._buildStyleGeneric(configState, 'grid');
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
-    if (!label) itemClass.push('no-label');
+    if (!label && !lastChangedTemplate) itemClass.push('no-label');
 
     return html`
-      <div class=${itemClass.join(' ')}>
+      <div id="container" class=${itemClass.join(' ')} style=${styleMap(gridStyleFromConfig)}>
         ${iconTemplate ? iconTemplate : ''}
-        ${name ? html`<div class="name" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
-        ${stateString ? html`<div class="state" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label && !this.config!.show_last_changed ? html`<div class="label" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
-        ${this.config!.show_last_changed ? lastChangedTemplate : ''}
+        ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${name}</div>` : ''}
+        ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
+        ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${lastChangedTemplate ? lastChangedTemplate : ''}
       </div>
     `;
   }
@@ -467,11 +476,11 @@ class ButtonCard extends LitElement {
     const entityPicture = this._buildEntityPicture(state, configState);
     const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
     const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
+    const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
 
     const haIconStyle = {
       color,
       width: this.config!.size,
-      'min-width': this.config!.size,
       ...haIconStyleFromConfig,
     };
     const entityPictureStyle = {
@@ -481,11 +490,11 @@ class ButtonCard extends LitElement {
 
     if (icon || entityPicture) {
       return html`
-        <div class="img-cell">
+        <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
           ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
-            .icon="${icon}" class="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
+            .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
           ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
-            class="icon" ?rotating=${this._rotate(configState)} />` : ''}
+            id="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
       `;
     } else {
