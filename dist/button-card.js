@@ -3774,6 +3774,11 @@ const styles = css`
     overflow: hidden;
   }
   #overlay {
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 8px 7px;
+    opacity: 0.5;
+    /* DO NOT override items below */
     position: absolute;
     left: 0;
     right: 0;
@@ -3781,11 +3786,6 @@ const styles = css`
     bottom: 0;
     z-index: 1;
     display: flex;
-    /* Do not override above */
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 8px 7px;
-    opacity: 0.5;
   }
   #lock {
     -webkit-animation-duration: 5s;
