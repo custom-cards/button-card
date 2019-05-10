@@ -9,6 +9,7 @@ import {
 } from 'lit-element';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
+import { ifDefined } from 'lit-html/directives/if-defined';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
@@ -128,6 +129,36 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _getColorForLightEntity(state: HassEntity | undefined): string {
+    let color: string = this.config!.default_color;
+    if (state) {
+      if (state.attributes.rgb_color) {
+        color = `rgb(${state.attributes.rgb_color.join(',')})`;
+        if (state.attributes.brightness) {
+          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+        }
+      } else if (state.attributes.color_temp
+        && state.attributes.min_mireds
+        && state.attributes.max_mireds) {
+        color = getLightColorBasedOnTemperature(
+          state.attributes.color_temp,
+          state.attributes.min_mireds,
+          state.attributes.max_mireds,
+        );
+        if (state.attributes.brightness) {
+          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+        }
+      } else if (state.attributes.brightness) {
+        color = applyBrightnessToColor(
+          this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
+        );
+      } else {
+        color = this._getDefaultColorForState(state);
+      }
+    }
+    return color;
+  }
+
   private _buildCssColorAttribute(
     state: HassEntity | undefined, configState: StateConfig | undefined,
   ): string {
@@ -141,33 +172,7 @@ class ButtonCard extends LitElement {
       colorValue = this.config!.color;
     }
     if (colorValue == 'auto') {
-      if (state) {
-        if (state.attributes.rgb_color) {
-          color = `rgb(${state.attributes.rgb_color.join(',')})`;
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-          }
-        } else if (state.attributes.color_temp
-          && state.attributes.min_mireds
-          && state.attributes.max_mireds) {
-          color = getLightColorBasedOnTemperature(
-            state.attributes.color_temp,
-            state.attributes.min_mireds,
-            state.attributes.max_mireds,
-          );
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-          }
-        } else if (state.attributes.brightness) {
-          color = applyBrightnessToColor(
-            this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
-          );
-        } else {
-          color = this._getDefaultColorForState(state);
-        }
-      } else {
-        color = this.config!.default_color;
-      }
+      color = this._getColorForLightEntity(state);
     } else if (colorValue) {
       color = colorValue;
     } else if (state) {
@@ -370,7 +375,8 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
-    const lockStyle: StyleInfo = {};
+    let lockStyle: StyleInfo = {};
+    const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
 
     if (configCardStyle.width) {
@@ -394,9 +400,11 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
+    lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config!.dbltap_action!.action !== 'none'} .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -510,6 +518,7 @@ class ButtonCard extends LitElement {
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
+      dbltap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -568,7 +577,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false);
+    handleClick(this, this.hass!, config, false, false);
   }
 
   private _handleHold(ev): void {
@@ -578,7 +587,17 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, true);
+    handleClick(this, this.hass!, config, true, false);
+  }
+
+  private _handleDblTap(ev): void {
+    /* eslint no-alert: 0 */
+    if (this.config!.confirmation
+      && !window.confirm(this.config!.confirmation)) {
+      return;
+    }
+    const config = ev.target.config;
+    handleClick(this, this.hass!, config, false, true);
   }
 
   private _handleLock(ev): void {

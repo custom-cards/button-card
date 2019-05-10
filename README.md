@@ -25,6 +25,7 @@ Lovelace Button card for your entities.
   - [Templates](#templates)
   - [Styles](#styles)
     - [Easy styling options](#easy-styling-options)
+    - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
@@ -47,7 +48,7 @@ Lovelace Button card for your entities.
 ## Features
 
 - works with any toggleable entity
-- 6 available actions on **tap** and/or **hold**: `none`, `toggle`, `more-info`, `navigate`, `url` and `call-service`
+- 6 available actions on **tap** and/or **hold** and/or **double click**: `none`, `toggle`, `more-info`, `navigate`, `url` and `call-service`
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
@@ -82,6 +83,7 @@ Lovelace Button card for your entities.
 | `size`         | string      | `40%`        | `20px`                                           | Size of the icon. Can be percentage or pixel                                                                                                                                                                                                                                                                                                  |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
+| `dbltap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
 | `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
 | `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
@@ -215,6 +217,7 @@ The `style` object members are:
 * `name`: styles for the name
 * `state`: styles for the state
 * `label`: styles for the label
+* `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
 
 ```yaml
 - type: custom:button-card
@@ -253,6 +256,21 @@ This will render:
 * Same for all the others.
 
 See [styling](#styling) for a complete example.
+
+#### Light entity color variable
+
+If a light entity is assigned to the button, then the CSS variable `--button-card-light-color` will contain the current light color so that you can use it in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
+
+![css-var](examples/color-variable.gif)
+
+```yaml
+styles:
+  name:
+    color: var(--button-card-light-color)
+  card:
+    - -webkit-box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
+    - box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
+```
 
 #### ADVANCED styling options
 
@@ -298,6 +316,7 @@ Some examples:
   ```
 
 * Apple Homekit-like buttons:
+
   ![apple-like-buttons](examples/apple_style.gif)
   ```yaml
   - type: custom:button-card

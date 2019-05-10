@@ -19,6 +19,7 @@ export interface ButtonCardConfig {
   lock: boolean;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
+  dbltap_action?: ActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
@@ -75,6 +76,7 @@ export interface StylesConfig {
   label?: CssStyleConfig[];
   grid?: CssStyleConfig[];
   img_cell?: CssStyleConfig[];
+  lock?: CssStyleConfig[];
 }
 
 export interface CssStyleConfig {
@@ -83,12 +85,14 @@ export interface CssStyleConfig {
 
 export interface ToggleActionConfig {
   action: 'toggle';
+  repeat?: number | undefined;
   haptic?: HapticType;
 }
 
 export interface CallServiceActionConfig {
   action: 'call-service';
   haptic?: HapticType;
+  repeat?: number | undefined;
   service: string;
   service_data?: {
     entity_id?: string | [string];
@@ -99,21 +103,25 @@ export interface CallServiceActionConfig {
 export interface NavigateActionConfig {
   action: 'navigate';
   haptic?: HapticType;
+  repeat?: number | undefined;
   navigation_path: string;
 }
 
 export interface MoreInfoActionConfig {
   action: 'more-info';
+  repeat?: number | undefined;
   haptic?: HapticType;
 }
 
 export interface NoActionConfig {
   action: 'none';
+  repeat?: number | undefined;
 }
 
 export interface UrlActionConfig {
   action: 'url';
   haptic?: HapticType;
+  repeat?: number | undefined;
   url: string;
 }
 

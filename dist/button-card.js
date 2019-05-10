@@ -2394,6 +2394,36 @@ const unsafeHTML = directive(value => part => {
     previousValues.set(part, { value, fragment });
 });
 
+/**
+ * @license
+ * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+/**
+ * For AttributeParts, sets the attribute if the value is defined and removes
+ * the attribute if the value is undefined.
+ *
+ * For other part types, this directive is a no-op.
+ */
+const ifDefined = directive(value => part => {
+    if (value === undefined && part instanceof AttributePart) {
+        if (value !== part.value) {
+            const name = part.committer.name;
+            part.committer.element.removeAttribute(name);
+        }
+    } else {
+        part.setValue(value);
+    }
+});
+
 /** Constants to be used in the frontend. */
 // Constants should be alphabetically sorted by name.
 // Arrays with values should be alphabetically sorted if order doesn't matter.
@@ -3510,9 +3540,11 @@ const forwardHaptic = (el, hapticType) => {
     fireEvent(el, "haptic", hapticType);
 };
 
-const handleClick = (node, hass, config, hold) => {
+const handleClick = (node, hass, config, hold, dblClick) => {
     let actionConfig;
-    if (hold && config.hold_action) {
+    if (dblClick && config.dbltap_action) {
+        actionConfig = config.dbltap_action;
+    } else if (hold && config.hold_action) {
         actionConfig = config.hold_action;
     } else if (!hold && config.tap_action) {
         actionConfig = config.tap_action;
@@ -3561,32 +3593,33 @@ const handleClick = (node, hass, config, hold) => {
 
 // See https://github.com/home-assistant/home-assistant-polymer/pull/2457
 // on how to undo mwc -> paper migration
-// import "@material/mwc-ripple";
-const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+// import '@material/mwc-ripple';
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 class LongPress extends HTMLElement {
     constructor() {
         super();
         this.holdTime = 500;
-        this.ripple = document.createElement("paper-ripple");
+        this.ripple = document.createElement('paper-ripple');
         this.timer = undefined;
         this.held = false;
         this.cooldownStart = false;
         this.cooldownEnd = false;
+        this.nbClicks = 0;
     }
     connectedCallback() {
         Object.assign(this.style, {
-            borderRadius: "50%",
-            position: "absolute",
-            width: isTouch ? "100px" : "50px",
-            height: isTouch ? "100px" : "50px",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none"
+            borderRadius: '50%',
+            position: 'absolute',
+            width: isTouch ? '100px' : '50px',
+            height: isTouch ? '100px' : '50px',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
         });
         this.appendChild(this.ripple);
-        this.ripple.style.color = "#03a9f4"; // paper-ripple
-        this.ripple.style.color = "var(--primary-color)"; // paper-ripple
+        this.ripple.style.color = '#03a9f4'; // paper-ripple
+        this.ripple.style.color = 'var(--primary-color)'; // paper-ripple
         // this.ripple.primary = true;
-        ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(ev => {
+        ['touchcancel', 'mouseout', 'mouseup', 'touchmove', 'mousewheel', 'wheel', 'scroll'].forEach(ev => {
             document.addEventListener(ev, () => {
                 clearTimeout(this.timer);
                 this.stopAnimation();
@@ -3595,11 +3628,12 @@ class LongPress extends HTMLElement {
         });
     }
     bind(element) {
+        /* eslint no-param-reassign: 0 */
         if (element.longPress) {
             return;
         }
         element.longPress = true;
-        element.addEventListener("contextmenu", ev => {
+        element.addEventListener('contextmenu', ev => {
             const e = ev || window.event;
             if (e.preventDefault) {
                 e.preventDefault();
@@ -3628,30 +3662,60 @@ class LongPress extends HTMLElement {
             this.timer = window.setTimeout(() => {
                 this.startAnimation(x, y);
                 this.held = true;
+                if (element.repeat && !element.isRepeating) {
+                    element.isRepeating = true;
+                    this.repeatTimeout = setInterval(() => {
+                        element.dispatchEvent(new Event('ha-hold'));
+                    }, element.repeat);
+                }
             }, this.holdTime);
             this.cooldownStart = true;
             window.setTimeout(() => this.cooldownStart = false, 100);
         };
         const clickEnd = ev => {
-            if (this.cooldownEnd || ["touchend", "touchcancel"].includes(ev.type) && this.timer === undefined) {
+            if (this.cooldownEnd || ['touchend', 'touchcancel'].includes(ev.type) && this.timer === undefined) {
+                if (element.isRepeating && this.repeatTimeout) {
+                    clearInterval(this.repeatTimeout);
+                    element.isRepeating = false;
+                }
                 return;
             }
             clearTimeout(this.timer);
+            if (element.isRepeating && this.repeatTimeout) {
+                clearInterval(this.repeatTimeout);
+            }
+            element.isRepeating = false;
             this.stopAnimation();
             this.timer = undefined;
             if (this.held) {
-                element.dispatchEvent(new Event("ha-hold"));
+                if (!element.repeat) {
+                    element.dispatchEvent(new Event('ha-hold'));
+                }
+            } else if (element.hasDblClick) {
+                if (this.nbClicks === 0) {
+                    this.nbClicks += 1;
+                    this.dblClickTimeout = window.setTimeout(() => {
+                        if (this.nbClicks === 1) {
+                            this.nbClicks = 0;
+                            element.dispatchEvent(new Event('ha-click'));
+                        }
+                    }, 250);
+                } else {
+                    this.nbClicks = 0;
+                    clearTimeout(this.dblClickTimeout);
+                    element.dispatchEvent(new Event('ha-dblclick'));
+                }
             } else {
-                element.dispatchEvent(new Event("ha-click"));
+                element.dispatchEvent(new Event('ha-click'));
             }
             this.cooldownEnd = true;
             window.setTimeout(() => this.cooldownEnd = false, 100);
         };
-        element.addEventListener("touchstart", clickStart, { passive: true });
-        element.addEventListener("touchend", clickEnd);
-        element.addEventListener("touchcancel", clickEnd);
-        element.addEventListener("mousedown", clickStart, { passive: true });
-        element.addEventListener("click", clickEnd);
+        element.addEventListener('touchstart', clickStart, { passive: true });
+        element.addEventListener('touchend', clickEnd);
+        element.addEventListener('touchcancel', clickEnd);
+        element.addEventListener('mousedown', clickStart, { passive: true });
+        element.addEventListener('click', clickEnd);
     }
     startAnimation(x, y) {
         Object.assign(this.style, {
@@ -3669,16 +3733,16 @@ class LongPress extends HTMLElement {
         this.ripple.holdDown = false; // paper-ripple
         // this.ripple.active = false;
         // this.ripple.disabled = true;
-        this.style.display = "none";
+        this.style.display = 'none';
     }
 }
-customElements.define("long-press-button-card", LongPress);
+customElements.define('long-press-button-card', LongPress);
 const getLongPress = () => {
     const body = document.body;
-    if (body.querySelector("long-press-button-card")) {
-        return body.querySelector("long-press-button-card");
+    if (body.querySelector('long-press-button-card')) {
+        return body.querySelector('long-press-button-card');
     }
-    const longpress = document.createElement("long-press-button-card");
+    const longpress = document.createElement('long-press-button-card');
     body.appendChild(longpress);
     return longpress;
 };
@@ -3727,22 +3791,25 @@ const styles = css`
     overflow: hidden;
   }
   #overlay {
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 8px 7px;
+    opacity: 0.5;
+    /* DO NOT override items below */
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    text-align: right;
     z-index: 1;
+    display: flex;
   }
   #lock {
-    margin-top: 8px;
-    opacity: 0.5;
-    margin-right: 7px;
     -webkit-animation-duration: 5s;
     animation-duration: 5s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+    margin: unset;
   }
   @keyframes fadeOut{
     0% {opacity: 0.5;}
@@ -4016,7 +4083,7 @@ const styles = css`
   #container.icon_state_name2nd #name {
     align-self: center;
   }
-  #container.icon_state_name2nd #state {
+  #container.icon_state_name2nd #label {
     align-self: start;
   }
 
@@ -4145,6 +4212,27 @@ let ButtonCard = class ButtonCard extends LitElement {
                 return this.config.default_color;
         }
     }
+    _getColorForLightEntity(state) {
+        let color = this.config.default_color;
+        if (state) {
+            if (state.attributes.rgb_color) {
+                color = `rgb(${state.attributes.rgb_color.join(',')})`;
+                if (state.attributes.brightness) {
+                    color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                }
+            } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
+                color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
+                if (state.attributes.brightness) {
+                    color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                }
+            } else if (state.attributes.brightness) {
+                color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
+            } else {
+                color = this._getDefaultColorForState(state);
+            }
+        }
+        return color;
+    }
     _buildCssColorAttribute(state, configState) {
         let colorValue = '';
         let color;
@@ -4156,25 +4244,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             colorValue = this.config.color;
         }
         if (colorValue == 'auto') {
-            if (state) {
-                if (state.attributes.rgb_color) {
-                    color = `rgb(${state.attributes.rgb_color.join(',')})`;
-                    if (state.attributes.brightness) {
-                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-                    }
-                } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
-                    color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
-                    if (state.attributes.brightness) {
-                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-                    }
-                } else if (state.attributes.brightness) {
-                    color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
-                } else {
-                    color = this._getDefaultColorForState(state);
-                }
-            } else {
-                color = this.config.default_color;
-            }
+            color = this._getColorForLightEntity(state);
         } else if (colorValue) {
             color = colorValue;
         } else if (state) {
@@ -4330,7 +4400,8 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
-        const lockStyle = {};
+        let lockStyle = {};
+        const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
         const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
@@ -4354,8 +4425,10 @@ let ButtonCard = class ButtonCard extends LitElement {
                 cardStyle = configCardStyle;
                 break;
         }
+        this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
+        lockStyle = Object.assign({}, lockStyle, lockStyleFromConfig);
         return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config.dbltap_action.action !== 'none'} .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -4432,7 +4505,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!config) {
             throw new Error('Invalid configuration');
         }
-        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, config);
+        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, dbltap_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
         if (this.config.color_type !== 'icon') {
             this.config.color_off = 'var(--paper-card-background-color)';
@@ -4476,7 +4549,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             return;
         }
         const config = ev.target.config;
-        handleClick(this, this.hass, config, false);
+        handleClick(this, this.hass, config, false, false);
     }
     _handleHold(ev) {
         /* eslint no-alert: 0 */
@@ -4484,7 +4557,15 @@ let ButtonCard = class ButtonCard extends LitElement {
             return;
         }
         const config = ev.target.config;
-        handleClick(this, this.hass, config, true);
+        handleClick(this, this.hass, config, true, false);
+    }
+    _handleDblTap(ev) {
+        /* eslint no-alert: 0 */
+        if (this.config.confirmation && !window.confirm(this.config.confirmation)) {
+            return;
+        }
+        const config = ev.target.config;
+        handleClick(this, this.hass, config, false, true);
     }
     _handleLock(ev) {
         ev.stopPropagation();
