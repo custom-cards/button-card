@@ -215,6 +215,7 @@ The `style` object members are:
 * `name`: styles for the name
 * `state`: styles for the state
 * `label`: styles for the label
+* `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
 
 ```yaml
 - type: custom:button-card

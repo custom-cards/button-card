@@ -3779,17 +3779,20 @@ const styles = css`
     right: 0;
     top: 0;
     bottom: 0;
-    text-align: right;
     z-index: 1;
+    display: flex;
+    /* Do not override above */
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 8px 7px;
+    opacity: 0.5;
   }
   #lock {
-    margin-top: 8px;
-    opacity: 0.5;
-    margin-right: 7px;
     -webkit-animation-duration: 5s;
     animation-duration: 5s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+    margin: unset;
   }
   @keyframes fadeOut{
     0% {opacity: 0.5;}
@@ -4377,7 +4380,8 @@ let ButtonCard = class ButtonCard extends LitElement {
         const color = this._buildCssColorAttribute(state, configState);
         let buttonColor = color;
         let cardStyle = {};
-        const lockStyle = {};
+        let lockStyle = {};
+        const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
         const configCardStyle = this._buildStyleGeneric(configState, 'card');
         if (configCardStyle.width) {
             this.style.setProperty('flex', '0 0 auto');
@@ -4401,6 +4405,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 cardStyle = configCardStyle;
                 break;
         }
+        lockStyle = Object.assign({}, lockStyle, lockStyleFromConfig);
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}

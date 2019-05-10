@@ -371,7 +371,8 @@ class ButtonCard extends LitElement {
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
-    const lockStyle: StyleInfo = {};
+    let lockStyle: StyleInfo = {};
+    const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
 
     if (configCardStyle.width) {
@@ -395,6 +396,7 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
+    lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">

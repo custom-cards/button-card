@@ -75,6 +75,7 @@ export interface StylesConfig {
   label?: CssStyleConfig[];
   grid?: CssStyleConfig[];
   img_cell?: CssStyleConfig[];
+  lock?: CssStyleConfig[];
 }
 
 export interface CssStyleConfig {

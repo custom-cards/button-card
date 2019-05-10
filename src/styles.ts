@@ -39,17 +39,20 @@ export const styles = css`
     right: 0;
     top: 0;
     bottom: 0;
-    text-align: right;
     z-index: 1;
+    display: flex;
+    /* Do not override above */
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 8px 7px;
+    opacity: 0.5;
   }
   #lock {
-    margin-top: 8px;
-    opacity: 0.5;
-    margin-right: 7px;
     -webkit-animation-duration: 5s;
     animation-duration: 5s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+    margin: unset;
   }
   @keyframes fadeOut{
     0% {opacity: 0.5;}
