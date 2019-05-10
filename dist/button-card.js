@@ -3540,9 +3540,11 @@ const forwardHaptic = (el, hapticType) => {
     fireEvent(el, "haptic", hapticType);
 };
 
-const handleClick = (node, hass, config, hold) => {
+const handleClick = (node, hass, config, hold, dblClick) => {
     let actionConfig;
-    if (hold && config.hold_action) {
+    if (dblClick && config.dbltap_action) {
+        actionConfig = config.dbltap_action;
+    } else if (hold && config.hold_action) {
         actionConfig = config.hold_action;
     } else if (!hold && config.tap_action) {
         actionConfig = config.tap_action;
@@ -3602,6 +3604,7 @@ class LongPress extends HTMLElement {
         this.held = false;
         this.cooldownStart = false;
         this.cooldownEnd = false;
+        this.nbClicks = 0;
     }
     connectedCallback() {
         Object.assign(this.style, {
@@ -3687,6 +3690,20 @@ class LongPress extends HTMLElement {
             if (this.held) {
                 if (!element.repeat) {
                     element.dispatchEvent(new Event('ha-hold'));
+                }
+            } else if (element.hasDblClick) {
+                if (this.nbClicks === 0) {
+                    this.nbClicks += 1;
+                    this.dblClickTimeout = window.setTimeout(() => {
+                        if (this.nbClicks === 1) {
+                            this.nbClicks = 0;
+                            element.dispatchEvent(new Event('ha-click'));
+                        }
+                    }, 250);
+                } else {
+                    this.nbClicks = 0;
+                    clearTimeout(this.dblClickTimeout);
+                    element.dispatchEvent(new Event('ha-dblclick'));
                 }
             } else {
                 element.dispatchEvent(new Event('ha-click'));
@@ -4407,7 +4424,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         }
         lockStyle = Object.assign({}, lockStyle, lockStyleFromConfig);
         return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config.dbltap_action.action !== 'none'} .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -4484,7 +4501,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!config) {
             throw new Error('Invalid configuration');
         }
-        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, config);
+        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, dbltap_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, config);
         this.config.default_color = 'var(--primary-text-color)';
         if (this.config.color_type !== 'icon') {
             this.config.color_off = 'var(--paper-card-background-color)';
@@ -4528,7 +4545,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             return;
         }
         const config = ev.target.config;
-        handleClick(this, this.hass, config, false);
+        handleClick(this, this.hass, config, false, false);
     }
     _handleHold(ev) {
         /* eslint no-alert: 0 */
@@ -4536,7 +4553,15 @@ let ButtonCard = class ButtonCard extends LitElement {
             return;
         }
         const config = ev.target.config;
-        handleClick(this, this.hass, config, true);
+        handleClick(this, this.hass, config, true, false);
+    }
+    _handleDblTap(ev) {
+        /* eslint no-alert: 0 */
+        if (this.config.confirmation && !window.confirm(this.config.confirmation)) {
+            return;
+        }
+        const config = ev.target.config;
+        handleClick(this, this.hass, config, false, true);
     }
     _handleLock(ev) {
         ev.stopPropagation();

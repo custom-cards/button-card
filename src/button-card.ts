@@ -399,7 +399,7 @@ class ButtonCard extends LitElement {
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
+      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config!.dbltap_action!.action !== 'none'} .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -513,6 +513,7 @@ class ButtonCard extends LitElement {
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
+      dbltap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -571,7 +572,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false);
+    handleClick(this, this.hass!, config, false, false);
   }
 
   private _handleHold(ev): void {
@@ -581,7 +582,17 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, true);
+    handleClick(this, this.hass!, config, true, false);
+  }
+
+  private _handleDblTap(ev): void {
+    /* eslint no-alert: 0 */
+    if (this.config!.confirmation
+      && !window.confirm(this.config!.confirmation)) {
+      return;
+    }
+    const config = ev.target.config;
+    handleClick(this, this.hass!, config, false, true);
   }
 
   private _handleLock(ev): void {

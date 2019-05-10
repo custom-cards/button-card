@@ -15,6 +15,7 @@ interface LongPressElement extends Element {
   longPress?: boolean;
   repeat?: number | undefined;
   isRepeating?: boolean | undefined;
+  hasDblClick?: boolean | undefined;
 }
 
 class LongPress extends HTMLElement implements LongPress {
@@ -32,6 +33,10 @@ class LongPress extends HTMLElement implements LongPress {
 
   private repeatTimeout: NodeJS.Timeout | undefined;
 
+  private dblClickTimeout: number | undefined;
+
+  private nbClicks: number;
+
   constructor() {
     super();
     this.holdTime = 500;
@@ -40,6 +45,7 @@ class LongPress extends HTMLElement implements LongPress {
     this.held = false;
     this.cooldownStart = false;
     this.cooldownEnd = false;
+    this.nbClicks = 0;
   }
 
   public connectedCallback() {
@@ -149,6 +155,20 @@ class LongPress extends HTMLElement implements LongPress {
       if (this.held) {
         if (!element.repeat) {
           element.dispatchEvent(new Event('ha-hold'));
+        }
+      } else if (element.hasDblClick) {
+        if (this.nbClicks === 0) {
+          this.nbClicks += 1;
+          this.dblClickTimeout = window.setTimeout(() => {
+            if (this.nbClicks === 1) {
+              this.nbClicks = 0;
+              element.dispatchEvent(new Event('ha-click'));
+            }
+          }, 250);
+        } else {
+          this.nbClicks = 0;
+          clearTimeout(this.dblClickTimeout);
+          element.dispatchEvent(new Event('ha-dblclick'));
         }
       } else {
         element.dispatchEvent(new Event('ha-click'));
