@@ -326,7 +326,7 @@ export const styles = css`
   #container.icon_state_name2nd #name {
     align-self: center;
   }
-  #container.icon_state_name2nd #state {
+  #container.icon_state_name2nd #label {
     align-self: start;
   }
 
