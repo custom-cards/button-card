@@ -4212,6 +4212,27 @@ let ButtonCard = class ButtonCard extends LitElement {
                 return this.config.default_color;
         }
     }
+    _getColorForLightEntity(state) {
+        let color = this.config.default_color;
+        if (state) {
+            if (state.attributes.rgb_color) {
+                color = `rgb(${state.attributes.rgb_color.join(',')})`;
+                if (state.attributes.brightness) {
+                    color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                }
+            } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
+                color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
+                if (state.attributes.brightness) {
+                    color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+                }
+            } else if (state.attributes.brightness) {
+                color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
+            } else {
+                color = this._getDefaultColorForState(state);
+            }
+        }
+        return color;
+    }
     _buildCssColorAttribute(state, configState) {
         let colorValue = '';
         let color;
@@ -4223,25 +4244,7 @@ let ButtonCard = class ButtonCard extends LitElement {
             colorValue = this.config.color;
         }
         if (colorValue == 'auto') {
-            if (state) {
-                if (state.attributes.rgb_color) {
-                    color = `rgb(${state.attributes.rgb_color.join(',')})`;
-                    if (state.attributes.brightness) {
-                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-                    }
-                } else if (state.attributes.color_temp && state.attributes.min_mireds && state.attributes.max_mireds) {
-                    color = getLightColorBasedOnTemperature(state.attributes.color_temp, state.attributes.min_mireds, state.attributes.max_mireds);
-                    if (state.attributes.brightness) {
-                        color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-                    }
-                } else if (state.attributes.brightness) {
-                    color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
-                } else {
-                    color = this._getDefaultColorForState(state);
-                }
-            } else {
-                color = this.config.default_color;
-            }
+            color = this._getColorForLightEntity(state);
         } else if (colorValue) {
             color = colorValue;
         } else if (state) {
@@ -4422,6 +4425,7 @@ let ButtonCard = class ButtonCard extends LitElement {
                 cardStyle = configCardStyle;
                 break;
         }
+        this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
         lockStyle = Object.assign({}, lockStyle, lockStyleFromConfig);
         return html`
       <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config.dbltap_action.action !== 'none'} .repeat=${ifDefined(this.config.hold_action.repeat)} .longpress="${longPress()}" .config="${this.config}">

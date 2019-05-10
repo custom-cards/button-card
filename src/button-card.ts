@@ -129,6 +129,36 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _getColorForLightEntity(state: HassEntity | undefined): string {
+    let color: string = this.config!.default_color;
+    if (state) {
+      if (state.attributes.rgb_color) {
+        color = `rgb(${state.attributes.rgb_color.join(',')})`;
+        if (state.attributes.brightness) {
+          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+        }
+      } else if (state.attributes.color_temp
+        && state.attributes.min_mireds
+        && state.attributes.max_mireds) {
+        color = getLightColorBasedOnTemperature(
+          state.attributes.color_temp,
+          state.attributes.min_mireds,
+          state.attributes.max_mireds,
+        );
+        if (state.attributes.brightness) {
+          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+        }
+      } else if (state.attributes.brightness) {
+        color = applyBrightnessToColor(
+          this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
+        );
+      } else {
+        color = this._getDefaultColorForState(state);
+      }
+    }
+    return color;
+  }
+
   private _buildCssColorAttribute(
     state: HassEntity | undefined, configState: StateConfig | undefined,
   ): string {
@@ -142,33 +172,7 @@ class ButtonCard extends LitElement {
       colorValue = this.config!.color;
     }
     if (colorValue == 'auto') {
-      if (state) {
-        if (state.attributes.rgb_color) {
-          color = `rgb(${state.attributes.rgb_color.join(',')})`;
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-          }
-        } else if (state.attributes.color_temp
-          && state.attributes.min_mireds
-          && state.attributes.max_mireds) {
-          color = getLightColorBasedOnTemperature(
-            state.attributes.color_temp,
-            state.attributes.min_mireds,
-            state.attributes.max_mireds,
-          );
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-          }
-        } else if (state.attributes.brightness) {
-          color = applyBrightnessToColor(
-            this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5,
-          );
-        } else {
-          color = this._getDefaultColorForState(state);
-        }
-      } else {
-        color = this.config!.default_color;
-      }
+      color = this._getColorForLightEntity(state);
     } else if (colorValue) {
       color = colorValue;
     } else if (state) {
@@ -396,6 +400,7 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`

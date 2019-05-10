@@ -25,6 +25,7 @@ Lovelace Button card for your entities.
   - [Templates](#templates)
   - [Styles](#styles)
     - [Easy styling options](#easy-styling-options)
+    - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
@@ -254,6 +255,21 @@ This will render:
 * The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
 * Same for all the others.
 
+#### Light entity color variable
+
+If a light entity is assigned to the button, then the CSS variable `--button-card-light-color` will contain the current light color so that you can use it in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
+
+![css-var](examples/color-variable.gif)
+
+```yaml
+styles:
+  name:
+    color: var(--button-card-light-color)
+  card:
+    - -webkit-box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
+    - box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
+```
+
 See [styling](#styling) for a complete example.
 
 #### ADVANCED styling options
@@ -300,6 +316,7 @@ Some examples:
   ```
 
 * Apple Homekit-like buttons:
+
   ![apple-like-buttons](examples/apple_style.gif)
   ```yaml
   - type: custom:button-card
