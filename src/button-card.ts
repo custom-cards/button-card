@@ -28,6 +28,7 @@ import {
   applyBrightnessToColor,
   hasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
+  getLovelace,
 } from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
@@ -515,6 +516,13 @@ class ButtonCard extends LitElement {
       throw new Error('Invalid configuration');
     }
 
+    const ll = getLovelace();
+    let template: ButtonCardConfig = { ...config };
+    let tplName: string | undefined = template.template;
+    while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
+      template = { ...ll.config.button_card_templates[tplName], ...template };
+      tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
+    }
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
@@ -528,7 +536,7 @@ class ButtonCard extends LitElement {
       show_units: true,
       show_label: false,
       show_entity_picture: false,
-      ...config,
+      ...template,
     };
     this.config!.default_color = 'var(--primary-text-color)';
     if (this.config!.color_type !== 'icon') {

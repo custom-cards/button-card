@@ -9,6 +9,7 @@ import {
 import { HapticType } from './haptic';
 
 export interface ButtonCardConfig {
+  template?: string;
   type: string;
   entity?: string;
   name?: string;

@@ -3441,6 +3441,23 @@ function hasConfigOrEntityChanged(element, changedProps, forceUpdate) {
         return false;
     }
 }
+function getLovelace() {
+    let root = document.querySelector('home-assistant');
+    root = root && root.shadowRoot;
+    root = root && root.querySelector('home-assistant-main');
+    root = root && root.shadowRoot;
+    root = root && root.querySelector('app-drawer-layout partial-panel-resolver');
+    root = root && root.shadowRoot || root;
+    root = root && root.querySelector('ha-panel-lovelace');
+    root = root && root.shadowRoot;
+    root = root && root.querySelector('hui-root');
+    if (root) {
+        const ll = root.lovelace;
+        ll.current_view = root.___curView;
+        return ll;
+    }
+    return null;
+}
 
 // Polymer legacy event helpers used courtesy of the Polymer project.
 //
@@ -3585,7 +3602,11 @@ const handleClick = (node, hass, config, hold, dblClick) => {
                     return;
                 }
                 const [domain, service] = actionConfig.service.split(".", 2);
-                hass.callService(domain, service, actionConfig.service_data);
+                const localActionConfig = Object.assign({}, actionConfig);
+                if (actionConfig.service_data && actionConfig.service_data.entity_id === 'entity') {
+                    localActionConfig.service_data.entity_id = config.entity;
+                }
+                hass.callService(domain, service, localActionConfig.service_data);
                 if (actionConfig.haptic) forwardHaptic(node, actionConfig.haptic);
             }
     }
@@ -4505,7 +4526,14 @@ let ButtonCard = class ButtonCard extends LitElement {
         if (!config) {
             throw new Error('Invalid configuration');
         }
-        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, dbltap_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, config);
+        const ll = getLovelace();
+        let template = Object.assign({}, config);
+        let tplName = template.template;
+        while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
+            template = Object.assign({}, ll.config.button_card_templates[tplName], template);
+            tplName = ll.config.button_card_templates[tplName].template;
+        }
+        this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, dbltap_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, template);
         this.config.default_color = 'var(--primary-text-color)';
         if (this.config.color_type !== 'icon') {
             this.config.color_off = 'var(--paper-card-background-color)';
