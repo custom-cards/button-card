@@ -19,7 +19,10 @@ import {
   hasConfigOrEntityChanged,
   computeDomain,
   computeEntity,
-  longPress
+  longPress,
+  timerTimeRemaining,
+  secondsToDuration,
+  durationToSeconds
 } from "custom-card-helpers";
 
 import { ButtonCardConfig, StateConfig } from "./types";
@@ -37,8 +40,17 @@ class ButtonCard extends LitElement {
 
   @property() private config?: ButtonCardConfig;
 
+  @property() private _timeRemaining?: number;
+
+  private _interval?: number;
+
   static get styles(): CSSResult {
     return styles;
+  }
+
+  public disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._clearInterval();
   }
 
   protected render(): TemplateResult | void {
@@ -60,8 +72,64 @@ class ButtonCard extends LitElement {
       (this.config!.state &&
         this.config!.state.find(elt => elt.operator === "template"))
         ? true
-        : false;
+        : false || changedProps.has("_timeRemaining");
     return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
+  }
+
+  protected updated(changedProps: PropertyValues) {
+    super.updated(changedProps);
+
+    if (
+      this.config &&
+      this.config.entity &&
+      computeDomain(this.config.entity) === "timer" &&
+      changedProps.has("hass")
+    ) {
+      const stateObj = this.hass!.states[this.config.entity];
+      const oldHass = changedProps.get("hass") as this["hass"];
+      const oldStateObj = oldHass
+        ? oldHass.states[this.config.entity]
+        : undefined;
+
+      if (oldStateObj !== stateObj) {
+        this._startInterval(stateObj);
+      } else if (!stateObj) {
+        this._clearInterval();
+      }
+    }
+  }
+
+  private _clearInterval(): void {
+    if (this._interval) {
+      window.clearInterval(this._interval);
+      this._interval = undefined;
+    }
+  }
+
+  private _startInterval(stateObj: HassEntity): void {
+    this._clearInterval();
+    this._calculateRemaining(stateObj);
+
+    if (stateObj.state === "active") {
+      this._interval = window.setInterval(
+        () => this._calculateRemaining(stateObj),
+        1000
+      );
+    }
+  }
+
+  private _calculateRemaining(stateObj: HassEntity): void {
+    this._timeRemaining = timerTimeRemaining(stateObj);
+  }
+
+  private _computeTimeDisplay(stateObj: HassEntity): string | undefined {
+    if (!stateObj) {
+      return undefined;
+    }
+
+    return secondsToDuration(
+      this._timeRemaining || durationToSeconds(stateObj.attributes["duration"])
+    );
   }
 
   private _getMatchingConfigState(
@@ -301,6 +369,8 @@ class ButtonCard extends LitElement {
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
+      } else if (computeDomain(state.entity_id) === "timer") {
+        stateString = this._computeTimeDisplay(state);
       } else {
         stateString = localizedState;
       }

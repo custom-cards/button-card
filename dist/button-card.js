@@ -188,17 +188,17 @@ function t(t, e, n, i) {
 }();function A(t) {
   let e = E.get(t.type);void 0 === e && (e = { stringsArray: new WeakMap(), keyString: new Map() }, E.set(t.type, e));let n = e.stringsArray.get(t.strings);if (void 0 !== n) return n;const i = t.strings.join(l);return void 0 === (n = e.keyString.get(i)) && (n = new d(t, t.getTemplateElement()), e.keyString.set(i, n)), e.stringsArray.set(t.strings, n), n;
 }const E = new Map(),
-      T = new WeakMap();(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const H = (t, ...e) => new b(t, e, "html", N),
-      D = 133;function O(t, e) {
+      T = new WeakMap();(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const D = (t, ...e) => new b(t, e, "html", N),
+      H = 133;function R(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, D, null, !1);let s = $(i),
+        r = document.createTreeWalker(n, H, null, !1);let s = $(i),
       a = i[s],
       o = -1,
       l = 0;const c = [];let h = null;for (; r.nextNode();) {
     o++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[s = $(i, s)];
   }c.forEach(t => t.parentNode.removeChild(t));
-}const R = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, D, null, !1);for (; n.nextNode();) e++;return e;
+}const O = t => {
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, H, null, !1);for (; n.nextNode();) e++;return e;
 },
       $ = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
@@ -209,24 +209,24 @@ function t(t, e, n, i) {
     const n = e.getTemplateElement();L && window.ShadyCSS.prepareTemplateDom(n, t), r = new d(e, n), i.keyString.set(s, r);
   }return i.stringsArray.set(e.strings, r), r;
 },
-      j = ["html", "svg"],
-      Y = new Set(),
-      z = (t, e, n) => {
-  Y.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const r = document.createElement("style");for (let t = 0; t < i.length; t++) {
+      I = ["html", "svg"],
+      j = new Set(),
+      Y = (t, e, n) => {
+  j.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const r = document.createElement("style");for (let t = 0; t < i.length; t++) {
     const e = i[t];e.parentNode.removeChild(e), r.textContent += e.textContent;
   }if ((t => {
-    j.forEach(e => {
+    I.forEach(e => {
       const n = E.get(V(e, t));void 0 !== n && n.keyString.forEach(t => {
         const { element: { content: e } } = t,
               n = new Set();Array.from(e.querySelectorAll("style")).forEach(t => {
           n.add(t);
-        }), O(t, n);
+        }), R(t, n);
       });
     });
   })(n), function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, D, null, !1);let a = $(r),
+    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, H, null, !1);let a = $(r),
         o = 0,
-        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = R(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
+        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = O(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
       if (o > 0) {
         for (; -1 !== a;) r[a].index += o, a = $(r, a);return;
       }a = $(r, a);
@@ -234,9 +234,9 @@ function t(t, e, n, i) {
   }(e, r, e.element.content.firstChild), window.ShadyCSS.prepareTemplateStyles(e.element, n), window.ShadyCSS.nativeShadow) {
     const n = e.element.content.querySelector("style");t.insertBefore(n.cloneNode(!0), t.firstChild);
   } else {
-    e.element.content.insertBefore(r, e.element.content.firstChild);const t = new Set();t.add(r), O(e, t);
+    e.element.content.insertBefore(r, e.element.content.firstChild);const t = new Set();t.add(r), R(e, t);
   }
-};window.JSCompiler_renameProperty = (t, e) => t;const I = { toAttribute(t, e) {
+};window.JSCompiler_renameProperty = (t, e) => t;const z = { toAttribute(t, e) {
     switch (e) {case Boolean:
         return t ? "" : null;case Object:case Array:
         return null == t ? t : JSON.stringify(t);}return t;
@@ -247,7 +247,7 @@ function t(t, e, n, i) {
         return JSON.parse(t);}return t;
   } },
       U = (t, e) => e !== t && (e == e || t == t),
-      q = { attribute: !0, type: String, converter: I, reflect: !1, hasChanged: U },
+      q = { attribute: !0, type: String, converter: z, reflect: !1, hasChanged: U },
       B = Promise.resolve(!0),
       W = 1,
       G = 4,
@@ -281,11 +281,11 @@ function t(t, e, n, i) {
     return n(t, e);
   }static _propertyValueFromAttribute(t, e) {
     const n = e.type,
-          i = e.converter || I,
+          i = e.converter || z,
           r = "function" == typeof i ? i : i.fromAttribute;return r ? r(t, n) : t;
   }static _propertyValueToAttribute(t, e) {
     if (void 0 === e.reflect) return;const n = e.type,
-          i = e.converter;return (i && i.toAttribute || I.toAttribute)(t, n);
+          i = e.converter;return (i && i.toAttribute || z.toAttribute)(t, n);
   }initialize() {
     this._saveInstanceProperties(), this._requestUpdate();
   }_saveInstanceProperties() {
@@ -399,11 +399,11 @@ function t(t, e, n, i) {
   const i = n.scopeName,
         r = T.has(e),
         a = e instanceof ShadowRoot && L && t instanceof b,
-        o = a && !Y.has(i),
+        o = a && !j.has(i),
         l = o ? document.createDocumentFragment() : e;if (((t, e, n) => {
     let i = T.get(e);void 0 === i && (s(e, e.firstChild), T.set(e, i = new w(Object.assign({ templateFactory: A }, n))), i.appendInto(e)), i.setValue(t), i.commit();
   })(t, l, Object.assign({ templateFactory: F(i) }, n)), o) {
-    const t = T.get(l);T.delete(l), t.value instanceof g && z(l, t.value.template, i), s(e, e.firstChild), e.appendChild(l), T.set(e, t);
+    const t = T.get(l);T.delete(l), t.value instanceof g && Y(l, t.value.template, i), s(e, e.firstChild), e.appendChild(l), T.set(e, t);
   }!r && a && window.ShadyCSS.styleElement(e.host);
 };const ot = new WeakMap(),
       lt = new WeakMap(),
@@ -520,7 +520,9 @@ function t(t, e, n, i) {
   }], ZZ: ["[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z", function (t, e) {
     var n,
         i = (e + "").match(/([+-]|\d\d)/gi);i && (n = 60 * i[1] + parseInt(i[2], 10), t.timezoneOffset = "+" === i[0] ? n : -n);
-  }] };Ct.dd = Ct.d, Ct.dddd = Ct.ddd, Ct.DD = Ct.D, Ct.mm = Ct.m, Ct.hh = Ct.H = Ct.HH = Ct.h, Ct.MM = Ct.M, Ct.ss = Ct.s, Ct.A = Ct.a, ft.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, ft.format = function (t, e, n) {
+  }] };function Pt(t) {
+  var e = t.split(":").map(Number);return 3600 * e[0] + 60 * e[1] + e[2];
+}Ct.dd = Ct.d, Ct.dddd = Ct.ddd, Ct.DD = Ct.D, Ct.mm = Ct.m, Ct.hh = Ct.H = Ct.HH = Ct.h, Ct.MM = Ct.M, Ct.ss = Ct.s, Ct.A = Ct.a, ft.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, ft.format = function (t, e, n) {
   var i = n || ft.i18n;if ("number" == typeof t && (t = new Date(t)), "[object Date]" !== Object.prototype.toString.call(t) || isNaN(t.getTime())) throw new Error("Invalid Date in fecha.format");e = ft.masks[e] || e || ft.masks.default;var r = [];return (e = (e = e.replace(gt, function (t, e) {
     return r.push(e), "@@@";
   })).replace(pt, function (e) {
@@ -542,7 +544,7 @@ function t(t, e, n, i) {
     return a.shift();
   });var c = t.match(new RegExp(l, "i"));if (!c) return null;for (var h = 1; h < c.length; h++) s[h - 1](r, c[h], i);var u,
       d = new Date();return !0 === r.isPm && null != r.hour && 12 != +r.hour ? r.hour = +r.hour + 12 : !1 === r.isPm && 12 == +r.hour && (r.hour = 0), null != r.timezoneOffset ? (r.minute = +(r.minute || 0) - +r.timezoneOffset, u = new Date(Date.UTC(r.year || d.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0))) : u = new Date(r.year || d.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0), u;
-};var Pt = function () {
+};var Nt = function () {
   try {
     new Date().toLocaleDateString("i");
   } catch (t) {
@@ -553,7 +555,7 @@ function t(t, e, n, i) {
 } : function (t) {
   return ft.format(t, "mediumDate");
 },
-    Nt = function () {
+    At = function () {
   try {
     new Date().toLocaleString("i");
   } catch (t) {
@@ -564,7 +566,7 @@ function t(t, e, n, i) {
 } : function (t) {
   return ft.format(t, "haDateTime");
 },
-    At = function () {
+    Et = function () {
   try {
     new Date().toLocaleTimeString("i");
   } catch (t) {
@@ -574,56 +576,59 @@ function t(t, e, n, i) {
   return t.toLocaleTimeString(e, { hour: "numeric", minute: "2-digit" });
 } : function (t) {
   return ft.format(t, "shortTime");
-};function Et(t) {
+},
+    Tt = function (t) {
+  return t < 10 ? "0" + t : t;
+};function Dt(t) {
   return t.substr(0, t.indexOf("."));
-}function Tt(t, e, n) {
+}function Ht(t, e, n) {
   var i,
       r = function (t) {
-    return Et(t.entity_id);
+    return Dt(t.entity_id);
   }(e);if ("binary_sensor" === r) e.attributes.device_class && (i = t("state." + r + "." + e.attributes.device_class + "." + e.state)), i || (i = t("state." + r + ".default." + e.state));else if (e.attributes.unit_of_measurement && !["unknown", "unavailable"].includes(e.state)) i = e.state + " " + e.attributes.unit_of_measurement;else if ("input_datetime" === r) {
     var s;if (e.attributes.has_time) {
-      if (e.attributes.has_date) s = new Date(e.attributes.year, e.attributes.month - 1, e.attributes.day, e.attributes.hour, e.attributes.minute), i = Nt(s, n);else {
-        var a = new Date();s = new Date(a.getFullYear(), a.getMonth(), a.getDay(), e.attributes.hour, e.attributes.minute), i = At(s, n);
+      if (e.attributes.has_date) s = new Date(e.attributes.year, e.attributes.month - 1, e.attributes.day, e.attributes.hour, e.attributes.minute), i = At(s, n);else {
+        var a = new Date();s = new Date(a.getFullYear(), a.getMonth(), a.getDay(), e.attributes.hour, e.attributes.minute), i = Et(s, n);
       }
-    } else s = new Date(e.attributes.year, e.attributes.month - 1, e.attributes.day), i = Pt(s, n);
+    } else s = new Date(e.attributes.year, e.attributes.month - 1, e.attributes.day), i = Nt(s, n);
   } else i = "zwave" === r ? ["initializing", "dead"].includes(e.state) ? t("state.zwave.query_stage." + e.state, "query_stage", e.attributes.query_stage) : t("state.zwave.default." + e.state) : t("state." + r + "." + e.state);return i || (i = t("state.default." + e.state) || t("component." + r + ".state." + e.state) || e.state), i;
-}var Ht = "hass:bookmark",
-    Dt = ["closed", "locked", "off"],
-    Ot = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Rt = function (t, e, n, i) {
+}var Rt = "hass:bookmark",
+    Ot = ["closed", "locked", "off"],
+    $t = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Vt = function (t, e, n, i) {
   i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
 },
-    $t = function (t, e) {
-  Rt(t, "haptic", e);
+    Lt = function (t, e) {
+  Vt(t, "haptic", e);
 },
-    Vt = function (t, e) {
+    Ft = function (t, e) {
   return function (t, e, n) {
     void 0 === n && (n = !0);var i,
-        r = Et(e),
+        r = Dt(e),
         s = "group" === r ? "homeassistant" : r;switch (r) {case "lock":
         i = n ? "unlock" : "lock";break;case "cover":
         i = n ? "open_cover" : "close_cover";break;default:
         i = n ? "turn_on" : "turn_off";}return t.callService(s, i, { entity_id: e });
-  }(t, e, Dt.includes(t.states[e].state));
+  }(t, e, Ot.includes(t.states[e].state));
 },
-    Lt = function (t, e, n, i, r) {
+    It = function (t, e, n, i, r) {
   var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && (Rt(t, "hass-more-info", { entityId: n.entity ? n.entity : n.camera_image }), s.haptic && $t(t, s.haptic));break;case "navigate":
+      (n.entity || n.camera_image) && (Vt(t, "hass-more-info", { entityId: n.entity ? n.entity : n.camera_image }), s.haptic && Lt(t, s.haptic));break;case "navigate":
       s.navigation_path && (function (t, e, n) {
-        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Rt(window, "location-changed", { replace: n });
-      }(0, s.navigation_path), s.haptic && $t(t, s.haptic));break;case "url":
-      s.url && window.open(s.url), s.haptic && $t(t, s.haptic);break;case "toggle":
-      n.entity && (Vt(e, n.entity), s.haptic && $t(t, s.haptic));break;case "call-service":
-      if (!s.service) return;var a = s.service.split(".", 2);e.callService(a[0], a[1], s.service_data), s.haptic && $t(t, s.haptic);}
-};const Ft = new WeakMap();String(Math.random()).slice(2);try {
+        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Vt(window, "location-changed", { replace: n });
+      }(0, s.navigation_path), s.haptic && Lt(t, s.haptic));break;case "url":
+      s.url && window.open(s.url), s.haptic && Lt(t, s.haptic);break;case "toggle":
+      n.entity && (Ft(e, n.entity), s.haptic && Lt(t, s.haptic));break;case "call-service":
+      if (!s.service) return;var a = s.service.split(".", 2);e.callService(a[0], a[1], s.service_data), s.haptic && Lt(t, s.haptic);}
+};const jt = new WeakMap();String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var jt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
-    Yt = function (t) {
+} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var Yt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+    zt = function (t) {
   function e() {
     t.call(this), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
   }return t && (e.__proto__ = t), (e.prototype = Object.create(t && t.prototype)).constructor = e, e.prototype.connectedCallback = function () {
-    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: jt ? "100px" : "50px", height: jt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
+    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: Yt ? "100px" : "50px", height: Yt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
       document.addEventListener(e, function () {
         clearTimeout(t.timer), t.stopAnimation(), t.timer = void 0;
       }, { passive: !0 });
@@ -654,7 +659,7 @@ function t(t, e, n, i) {
   }, e.prototype.stopAnimation = function () {
     this.ripple.holdDown = !1, this.style.display = "none";
   }, e;
-}(HTMLElement);customElements.define("long-press-custom-card-helpers", Yt);var zt = (t => (...t) => {
+}(HTMLElement);customElements.define("long-press-custom-card-helpers", zt);var Ut = (t => (...t) => {
   const e = function () {
     return function (t) {
       !function (t) {
@@ -663,23 +668,23 @@ function t(t, e, n, i) {
         }();e && e.bind(t);
       }(t.committer.element);
     };
-  }(...t);return Ft.set(e, !0), e;
-})();function It(t, e) {
+  }(...t);return jt.set(e, !0), e;
+})();function qt(t, e) {
   (function (t) {
     return "string" == typeof t && -1 !== t.indexOf(".") && 1 === parseFloat(t);
   })(t) && (t = "100%");var n = function (t) {
     return "string" == typeof t && -1 !== t.indexOf("%");
   }(t);return t = 360 === e ? t : Math.min(e, Math.max(0, parseFloat(t))), n && (t = parseInt(String(t * e), 10) / 100), Math.abs(t - e) < 1e-6 ? 1 : t = 360 === e ? (t < 0 ? t % e + e : t % e) / parseFloat(String(e)) : t % e / parseFloat(String(e));
-}function Ut(t) {
-  return Math.min(1, Math.max(0, t));
-}function qt(t) {
-  return t = parseFloat(t), (isNaN(t) || t < 0 || t > 1) && (t = 1), t;
 }function Bt(t) {
-  return t <= 1 ? 100 * Number(t) + "%" : t;
+  return Math.min(1, Math.max(0, t));
 }function Wt(t) {
+  return t = parseFloat(t), (isNaN(t) || t < 0 || t > 1) && (t = 1), t;
+}function Gt(t) {
+  return t <= 1 ? 100 * Number(t) + "%" : t;
+}function Jt(t) {
   return 1 === t.length ? "0" + t : String(t);
-}function Gt(t, e, n) {
-  t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
+}function Zt(t, e, n) {
+  t = qt(t, 255), e = qt(e, 255), n = qt(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
       a = 0,
@@ -689,8 +694,8 @@ function t(t, e, n, i) {
         s = (n - t) / l + 2;break;case n:
         s = (t - e) / l + 4;}s /= 6;
   }return { h: s, s: a, l: o };
-}function Jt(t, e, n) {
-  t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
+}function Xt(t, e, n) {
+  t = qt(t, 255), e = qt(e, 255), n = qt(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
       a = i,
@@ -701,13 +706,13 @@ function t(t, e, n, i) {
         s = (n - t) / o + 2;break;case n:
         s = (t - e) / o + 4;}s /= 6;
   }return { h: s, s: l, v: a };
-}function Zt(t, e, n, i) {
-  var r = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
-}function Xt(t) {
-  return Kt(t) / 255;
-}function Kt(t) {
+}function Kt(t, e, n, i) {
+  var r = [Jt(Math.round(t).toString(16)), Jt(Math.round(e).toString(16)), Jt(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
+}function Qt(t) {
+  return te(t) / 255;
+}function te(t) {
   return parseInt(t, 16);
-}var Qt = { aliceblue: "#f0f8ff", antiquewhite: "#faebd7", aqua: "#00ffff", aquamarine: "#7fffd4", azure: "#f0ffff", beige: "#f5f5dc", bisque: "#ffe4c4", black: "#000000", blanchedalmond: "#ffebcd", blue: "#0000ff", blueviolet: "#8a2be2", brown: "#a52a2a", burlywood: "#deb887", cadetblue: "#5f9ea0", chartreuse: "#7fff00", chocolate: "#d2691e", coral: "#ff7f50", cornflowerblue: "#6495ed", cornsilk: "#fff8dc", crimson: "#dc143c", cyan: "#00ffff", darkblue: "#00008b", darkcyan: "#008b8b", darkgoldenrod: "#b8860b", darkgray: "#a9a9a9", darkgreen: "#006400", darkgrey: "#a9a9a9", darkkhaki: "#bdb76b", darkmagenta: "#8b008b", darkolivegreen: "#556b2f", darkorange: "#ff8c00", darkorchid: "#9932cc", darkred: "#8b0000", darksalmon: "#e9967a", darkseagreen: "#8fbc8f", darkslateblue: "#483d8b", darkslategray: "#2f4f4f", darkslategrey: "#2f4f4f", darkturquoise: "#00ced1", darkviolet: "#9400d3", deeppink: "#ff1493", deepskyblue: "#00bfff", dimgray: "#696969", dimgrey: "#696969", dodgerblue: "#1e90ff", firebrick: "#b22222", floralwhite: "#fffaf0", forestgreen: "#228b22", fuchsia: "#ff00ff", gainsboro: "#dcdcdc", ghostwhite: "#f8f8ff", gold: "#ffd700", goldenrod: "#daa520", gray: "#808080", green: "#008000", greenyellow: "#adff2f", grey: "#808080", honeydew: "#f0fff0", hotpink: "#ff69b4", indianred: "#cd5c5c", indigo: "#4b0082", ivory: "#fffff0", khaki: "#f0e68c", lavender: "#e6e6fa", lavenderblush: "#fff0f5", lawngreen: "#7cfc00", lemonchiffon: "#fffacd", lightblue: "#add8e6", lightcoral: "#f08080", lightcyan: "#e0ffff", lightgoldenrodyellow: "#fafad2", lightgray: "#d3d3d3", lightgreen: "#90ee90", lightgrey: "#d3d3d3", lightpink: "#ffb6c1", lightsalmon: "#ffa07a", lightseagreen: "#20b2aa", lightskyblue: "#87cefa", lightslategray: "#778899", lightslategrey: "#778899", lightsteelblue: "#b0c4de", lightyellow: "#ffffe0", lime: "#00ff00", limegreen: "#32cd32", linen: "#faf0e6", magenta: "#ff00ff", maroon: "#800000", mediumaquamarine: "#66cdaa", mediumblue: "#0000cd", mediumorchid: "#ba55d3", mediumpurple: "#9370db", mediumseagreen: "#3cb371", mediumslateblue: "#7b68ee", mediumspringgreen: "#00fa9a", mediumturquoise: "#48d1cc", mediumvioletred: "#c71585", midnightblue: "#191970", mintcream: "#f5fffa", mistyrose: "#ffe4e1", moccasin: "#ffe4b5", navajowhite: "#ffdead", navy: "#000080", oldlace: "#fdf5e6", olive: "#808000", olivedrab: "#6b8e23", orange: "#ffa500", orangered: "#ff4500", orchid: "#da70d6", palegoldenrod: "#eee8aa", palegreen: "#98fb98", paleturquoise: "#afeeee", palevioletred: "#db7093", papayawhip: "#ffefd5", peachpuff: "#ffdab9", peru: "#cd853f", pink: "#ffc0cb", plum: "#dda0dd", powderblue: "#b0e0e6", purple: "#800080", rebeccapurple: "#663399", red: "#ff0000", rosybrown: "#bc8f8f", royalblue: "#4169e1", saddlebrown: "#8b4513", salmon: "#fa8072", sandybrown: "#f4a460", seagreen: "#2e8b57", seashell: "#fff5ee", sienna: "#a0522d", silver: "#c0c0c0", skyblue: "#87ceeb", slateblue: "#6a5acd", slategray: "#708090", slategrey: "#708090", snow: "#fffafa", springgreen: "#00ff7f", steelblue: "#4682b4", tan: "#d2b48c", teal: "#008080", thistle: "#d8bfd8", tomato: "#ff6347", turquoise: "#40e0d0", violet: "#ee82ee", wheat: "#f5deb3", white: "#ffffff", whitesmoke: "#f5f5f5", yellow: "#ffff00", yellowgreen: "#9acd32" };function te(t) {
+}var ee = { aliceblue: "#f0f8ff", antiquewhite: "#faebd7", aqua: "#00ffff", aquamarine: "#7fffd4", azure: "#f0ffff", beige: "#f5f5dc", bisque: "#ffe4c4", black: "#000000", blanchedalmond: "#ffebcd", blue: "#0000ff", blueviolet: "#8a2be2", brown: "#a52a2a", burlywood: "#deb887", cadetblue: "#5f9ea0", chartreuse: "#7fff00", chocolate: "#d2691e", coral: "#ff7f50", cornflowerblue: "#6495ed", cornsilk: "#fff8dc", crimson: "#dc143c", cyan: "#00ffff", darkblue: "#00008b", darkcyan: "#008b8b", darkgoldenrod: "#b8860b", darkgray: "#a9a9a9", darkgreen: "#006400", darkgrey: "#a9a9a9", darkkhaki: "#bdb76b", darkmagenta: "#8b008b", darkolivegreen: "#556b2f", darkorange: "#ff8c00", darkorchid: "#9932cc", darkred: "#8b0000", darksalmon: "#e9967a", darkseagreen: "#8fbc8f", darkslateblue: "#483d8b", darkslategray: "#2f4f4f", darkslategrey: "#2f4f4f", darkturquoise: "#00ced1", darkviolet: "#9400d3", deeppink: "#ff1493", deepskyblue: "#00bfff", dimgray: "#696969", dimgrey: "#696969", dodgerblue: "#1e90ff", firebrick: "#b22222", floralwhite: "#fffaf0", forestgreen: "#228b22", fuchsia: "#ff00ff", gainsboro: "#dcdcdc", ghostwhite: "#f8f8ff", gold: "#ffd700", goldenrod: "#daa520", gray: "#808080", green: "#008000", greenyellow: "#adff2f", grey: "#808080", honeydew: "#f0fff0", hotpink: "#ff69b4", indianred: "#cd5c5c", indigo: "#4b0082", ivory: "#fffff0", khaki: "#f0e68c", lavender: "#e6e6fa", lavenderblush: "#fff0f5", lawngreen: "#7cfc00", lemonchiffon: "#fffacd", lightblue: "#add8e6", lightcoral: "#f08080", lightcyan: "#e0ffff", lightgoldenrodyellow: "#fafad2", lightgray: "#d3d3d3", lightgreen: "#90ee90", lightgrey: "#d3d3d3", lightpink: "#ffb6c1", lightsalmon: "#ffa07a", lightseagreen: "#20b2aa", lightskyblue: "#87cefa", lightslategray: "#778899", lightslategrey: "#778899", lightsteelblue: "#b0c4de", lightyellow: "#ffffe0", lime: "#00ff00", limegreen: "#32cd32", linen: "#faf0e6", magenta: "#ff00ff", maroon: "#800000", mediumaquamarine: "#66cdaa", mediumblue: "#0000cd", mediumorchid: "#ba55d3", mediumpurple: "#9370db", mediumseagreen: "#3cb371", mediumslateblue: "#7b68ee", mediumspringgreen: "#00fa9a", mediumturquoise: "#48d1cc", mediumvioletred: "#c71585", midnightblue: "#191970", mintcream: "#f5fffa", mistyrose: "#ffe4e1", moccasin: "#ffe4b5", navajowhite: "#ffdead", navy: "#000080", oldlace: "#fdf5e6", olive: "#808000", olivedrab: "#6b8e23", orange: "#ffa500", orangered: "#ff4500", orchid: "#da70d6", palegoldenrod: "#eee8aa", palegreen: "#98fb98", paleturquoise: "#afeeee", palevioletred: "#db7093", papayawhip: "#ffefd5", peachpuff: "#ffdab9", peru: "#cd853f", pink: "#ffc0cb", plum: "#dda0dd", powderblue: "#b0e0e6", purple: "#800080", rebeccapurple: "#663399", red: "#ff0000", rosybrown: "#bc8f8f", royalblue: "#4169e1", saddlebrown: "#8b4513", salmon: "#fa8072", sandybrown: "#f4a460", seagreen: "#2e8b57", seashell: "#fff5ee", sienna: "#a0522d", silver: "#c0c0c0", skyblue: "#87ceeb", slateblue: "#6a5acd", slategray: "#708090", slategrey: "#708090", snow: "#fffafa", springgreen: "#00ff7f", steelblue: "#4682b4", tan: "#d2b48c", teal: "#008080", thistle: "#d8bfd8", tomato: "#ff6347", turquoise: "#40e0d0", violet: "#ee82ee", wheat: "#f5deb3", white: "#ffffff", whitesmoke: "#f5f5f5", yellow: "#ffff00", yellowgreen: "#9acd32" };function ne(t) {
   var e,
       n,
       i,
@@ -718,30 +723,30 @@ function t(t, e, n, i) {
       l = null,
       c = !1,
       h = !1;return "string" == typeof t && (t = function (t) {
-    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Qt[t]) t = Qt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = re.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = re.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = re.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = re.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = re.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = re.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = re.hex8.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), a: Xt(n[4]), format: e ? "name" : "hex8" };if (n = re.hex6.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), format: e ? "name" : "hex" };if (n = re.hex4.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), a: Xt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = re.hex3.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
-  }(t)), "object" == typeof t && (se(t.r) && se(t.g) && se(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * It(e, 255), g: 255 * It(n, 255), b: 255 * It(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : se(t.h) && se(t.s) && se(t.v) ? (a = Bt(t.s), o = Bt(t.v), r = function (t, e, n) {
-    t = 6 * It(t, 360), e = It(e, 100), n = It(n, 100);var i = Math.floor(t),
+    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (ee[t]) t = ee[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = ae.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = ae.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = ae.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = ae.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = ae.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = ae.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = ae.hex8.exec(t)) return { r: te(n[1]), g: te(n[2]), b: te(n[3]), a: Qt(n[4]), format: e ? "name" : "hex8" };if (n = ae.hex6.exec(t)) return { r: te(n[1]), g: te(n[2]), b: te(n[3]), format: e ? "name" : "hex" };if (n = ae.hex4.exec(t)) return { r: te(n[1] + n[1]), g: te(n[2] + n[2]), b: te(n[3] + n[3]), a: Qt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = ae.hex3.exec(t)) return { r: te(n[1] + n[1]), g: te(n[2] + n[2]), b: te(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
+  }(t)), "object" == typeof t && (oe(t.r) && oe(t.g) && oe(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * qt(e, 255), g: 255 * qt(n, 255), b: 255 * qt(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : oe(t.h) && oe(t.s) && oe(t.v) ? (a = Gt(t.s), o = Gt(t.v), r = function (t, e, n) {
+    t = 6 * qt(t, 360), e = qt(e, 100), n = qt(n, 100);var i = Math.floor(t),
         r = t - i,
         s = n * (1 - e),
         a = n * (1 - r * e),
         o = n * (1 - (1 - r) * e),
         l = i % 6;return { r: 255 * [n, a, s, s, o, n][l], g: 255 * [o, n, n, a, s, s][l], b: 255 * [s, s, o, n, n, a][l] };
-  }(t.h, a, o), c = !0, h = "hsv") : se(t.h) && se(t.s) && se(t.l) && (a = Bt(t.s), l = Bt(t.l), r = function (t, e, n) {
+  }(t.h, a, o), c = !0, h = "hsv") : oe(t.h) && oe(t.s) && oe(t.l) && (a = Gt(t.s), l = Gt(t.l), r = function (t, e, n) {
     var i, r, s;function a(t, e, n) {
       return n < 0 && (n += 1), n > 1 && (n -= 1), n < 1 / 6 ? t + 6 * n * (e - t) : n < .5 ? e : n < 2 / 3 ? t + (e - t) * (2 / 3 - n) * 6 : t;
-    }if (t = It(t, 360), e = It(e, 100), n = It(n, 100), 0 === e) r = n, s = n, i = n;else {
+    }if (t = qt(t, 360), e = qt(e, 100), n = qt(n, 100), 0 === e) r = n, s = n, i = n;else {
       var o = n < .5 ? n * (1 + e) : n + e - n * e,
           l = 2 * n - o;i = a(l, o, t + 1 / 3), r = a(l, o, t), s = a(l, o, t - 1 / 3);
     }return { r: 255 * i, g: 255 * r, b: 255 * s };
-  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = qt(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
-}var ee = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
-    ne = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
-    ie = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
-    re = { CSS_UNIT: new RegExp(ee), rgb: new RegExp("rgb" + ne), rgba: new RegExp("rgba" + ie), hsl: new RegExp("hsl" + ne), hsla: new RegExp("hsla" + ie), hsv: new RegExp("hsv" + ne), hsva: new RegExp("hsva" + ie), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function se(t) {
-  return Boolean(re.CSS_UNIT.exec(String(t)));
-}var ae = function () {
+  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = Wt(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
+}var ie = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
+    re = "[\\s|\\(]+(" + ie + ")[,|\\s]+(" + ie + ")[,|\\s]+(" + ie + ")\\s*\\)?",
+    se = "[\\s|\\(]+(" + ie + ")[,|\\s]+(" + ie + ")[,|\\s]+(" + ie + ")[,|\\s]+(" + ie + ")\\s*\\)?",
+    ae = { CSS_UNIT: new RegExp(ie), rgb: new RegExp("rgb" + re), rgba: new RegExp("rgba" + se), hsl: new RegExp("hsl" + re), hsla: new RegExp("hsla" + se), hsv: new RegExp("hsv" + re), hsva: new RegExp("hsva" + se), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function oe(t) {
+  return Boolean(ae.CSS_UNIT.exec(String(t)));
+}var le = function () {
   function t(e, n) {
-    if (void 0 === e && (e = ""), void 0 === n && (n = {}), e instanceof t) return e;this.originalInput = e;var i = te(e);this.originalInput = e, this.r = i.r, this.g = i.g, this.b = i.b, this.a = i.a, this.roundA = Math.round(100 * this.a) / 100, this.format = n.format || i.format, this.gradientType = n.gradientType, this.r < 1 && (this.r = Math.round(this.r)), this.g < 1 && (this.g = Math.round(this.g)), this.b < 1 && (this.b = Math.round(this.b)), this.isValid = i.ok;
+    if (void 0 === e && (e = ""), void 0 === n && (n = {}), e instanceof t) return e;this.originalInput = e;var i = ne(e);this.originalInput = e, this.r = i.r, this.g = i.g, this.b = i.b, this.a = i.a, this.roundA = Math.round(100 * this.a) / 100, this.format = n.format || i.format, this.gradientType = n.gradientType, this.r < 1 && (this.r = Math.round(this.r)), this.g < 1 && (this.g = Math.round(this.g)), this.b < 1 && (this.b = Math.round(this.b)), this.isValid = i.ok;
   }return t.prototype.isDark = function () {
     return this.getBrightness() < 128;
   }, t.prototype.isLight = function () {
@@ -756,29 +761,29 @@ function t(t, e, n, i) {
   }, t.prototype.getAlpha = function () {
     return this.a;
   }, t.prototype.setAlpha = function (t) {
-    return this.a = qt(t), this.roundA = Math.round(100 * this.a) / 100, this;
+    return this.a = Wt(t), this.roundA = Math.round(100 * this.a) / 100, this;
   }, t.prototype.toHsv = function () {
-    var t = Jt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, v: t.v, a: this.a };
+    var t = Xt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, v: t.v, a: this.a };
   }, t.prototype.toHsvString = function () {
-    var t = Jt(this.r, this.g, this.b),
+    var t = Xt(this.r, this.g, this.b),
         e = Math.round(360 * t.h),
         n = Math.round(100 * t.s),
         i = Math.round(100 * t.v);return 1 === this.a ? "hsv(" + e + ", " + n + "%, " + i + "%)" : "hsva(" + e + ", " + n + "%, " + i + "%, " + this.roundA + ")";
   }, t.prototype.toHsl = function () {
-    var t = Gt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, l: t.l, a: this.a };
+    var t = Zt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, l: t.l, a: this.a };
   }, t.prototype.toHslString = function () {
-    var t = Gt(this.r, this.g, this.b),
+    var t = Zt(this.r, this.g, this.b),
         e = Math.round(360 * t.h),
         n = Math.round(100 * t.s),
         i = Math.round(100 * t.l);return 1 === this.a ? "hsl(" + e + ", " + n + "%, " + i + "%)" : "hsla(" + e + ", " + n + "%, " + i + "%, " + this.roundA + ")";
   }, t.prototype.toHex = function (t) {
-    return void 0 === t && (t = !1), Zt(this.r, this.g, this.b, t);
+    return void 0 === t && (t = !1), Kt(this.r, this.g, this.b, t);
   }, t.prototype.toHexString = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex(t);
   }, t.prototype.toHex8 = function (t) {
     return void 0 === t && (t = !1), function (t, e, n, i, r) {
       var s,
-          a = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16)), Wt((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
+          a = [Jt(Math.round(t).toString(16)), Jt(Math.round(e).toString(16)), Jt(Math.round(n).toString(16)), Jt((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
     }(this.r, this.g, this.b, this.a, t);
   }, t.prototype.toHex8String = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex8(t);
@@ -790,15 +795,15 @@ function t(t, e, n, i) {
         n = Math.round(this.b);return 1 === this.a ? "rgb(" + t + ", " + e + ", " + n + ")" : "rgba(" + t + ", " + e + ", " + n + ", " + this.roundA + ")";
   }, t.prototype.toPercentageRgb = function () {
     var t = function (t) {
-      return Math.round(100 * It(t, 255)) + "%";
+      return Math.round(100 * qt(t, 255)) + "%";
     };return { r: t(this.r), g: t(this.g), b: t(this.b), a: this.a };
   }, t.prototype.toPercentageRgbString = function () {
     var t = function (t) {
-      return Math.round(100 * It(t, 255));
+      return Math.round(100 * qt(t, 255));
     };return 1 === this.a ? "rgb(" + t(this.r) + "%, " + t(this.g) + "%, " + t(this.b) + "%)" : "rgba(" + t(this.r) + "%, " + t(this.g) + "%, " + t(this.b) + "%, " + this.roundA + ")";
   }, t.prototype.toName = function () {
-    if (0 === this.a) return "transparent";if (this.a < 1) return !1;for (var t = "#" + Zt(this.r, this.g, this.b, !1), e = 0, n = Object.keys(Qt); e < n.length; e++) {
-      var i = n[e];if (Qt[i] === t) return i;
+    if (0 === this.a) return "transparent";if (this.a < 1) return !1;for (var t = "#" + Kt(this.r, this.g, this.b, !1), e = 0, n = Object.keys(ee); e < n.length; e++) {
+      var i = n[e];if (ee[i] === t) return i;
     }return !1;
   }, t.prototype.toString = function (t) {
     var e = Boolean(t);t = t || this.format;var n = !1,
@@ -806,19 +811,19 @@ function t(t, e, n, i) {
   }, t.prototype.clone = function () {
     return new t(this.toString());
   }, t.prototype.lighten = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.l += e / 100, n.l = Ut(n.l), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.l += e / 100, n.l = Bt(n.l), new t(n);
   }, t.prototype.brighten = function (e) {
     void 0 === e && (e = 10);var n = this.toRgb();return n.r = Math.max(0, Math.min(255, n.r - Math.round(-e / 100 * 255))), n.g = Math.max(0, Math.min(255, n.g - Math.round(-e / 100 * 255))), n.b = Math.max(0, Math.min(255, n.b - Math.round(-e / 100 * 255))), new t(n);
   }, t.prototype.darken = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.l -= e / 100, n.l = Ut(n.l), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.l -= e / 100, n.l = Bt(n.l), new t(n);
   }, t.prototype.tint = function (t) {
     return void 0 === t && (t = 10), this.mix("white", t);
   }, t.prototype.shade = function (t) {
     return void 0 === t && (t = 10), this.mix("black", t);
   }, t.prototype.desaturate = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.s -= e / 100, n.s = Ut(n.s), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.s -= e / 100, n.s = Bt(n.s), new t(n);
   }, t.prototype.saturate = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.s += e / 100, n.s = Ut(n.s), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.s += e / 100, n.s = Bt(n.s), new t(n);
   }, t.prototype.greyscale = function () {
     return this.desaturate(100);
   }, t.prototype.spin = function (e) {
@@ -848,15 +853,15 @@ function t(t, e, n, i) {
   }, t.prototype.equals = function (e) {
     return this.toRgbString() === new t(e).toRgbString();
   }, t;
-}();function oe(t, e) {
-  return void 0 === t && (t = ""), void 0 === e && (e = {}), new ae(t, e);
-}function le(t) {
+}();function ce(t, e) {
+  return void 0 === t && (t = ""), void 0 === e && (e = {}), new le(t, e);
+}function he(t) {
   return "var" === t.substring(0, 3) ? window.getComputedStyle(document.documentElement).getPropertyValue(t.substring(4).slice(0, -1)).trim() : t;
-}function ce(t, e) {
-  const n = new ae(le(t));if (n.isValid) {
+}function ue(t, e) {
+  const n = new le(he(t));if (n.isValid) {
     const t = n.mix("black", 100 - e).toString();if (t) return t;
   }return t;
-}const he = ((t, ...e) => {
+}const de = ((t, ...e) => {
   const n = e.reduce((e, n, i) => e + (t => {
     if (t instanceof rt) return t.cssText;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${t}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`);
   })(n) + t[i + 1], t[0]);return new rt(n, it);
@@ -1223,18 +1228,43 @@ function t(t, e, n, i) {
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
-`;let ue = class extends at {
+`;let fe = class extends at {
   static get styles() {
-    return he;
+    return de;
+  }disconnectedCallback() {
+    super.disconnectedCallback(), this._clearInterval();
   }render() {
-    return this.config && this.hass ? this._cardHtml() : H``;
+    return this.config && this.hass ? this._cardHtml() : D``;
   }shouldUpdate(t) {
     const e = this.config.entity ? this.hass.states[this.config.entity] : void 0,
-          n = this._getMatchingConfigState(e);return function (t, e, n) {
+          n = this._getMatchingConfigState(e),
+          i = !!(this.config.show_label && (n && n.label_template || this.config.label_template) || this.config.state && this.config.state.find(t => "template" === t.operator)) || t.has("_timeRemaining");return function (t, e, n) {
       if (e.has("config") || n) return !0;if (t.config.entity) {
         var i = e.get("hass");return !i || i.states[t.config.entity] !== t.hass.states[t.config.entity];
       }return !1;
-    }(this, t, !!(this.config.show_label && (n && n.label_template || this.config.label_template) || this.config.state && this.config.state.find(t => "template" === t.operator)));
+    }(this, t, i);
+  }updated(t) {
+    if (super.updated(t), this.config && this.config.entity && "timer" === Dt(this.config.entity) && t.has("hass")) {
+      const e = this.hass.states[this.config.entity],
+            n = t.get("hass");(n ? n.states[this.config.entity] : void 0) !== e ? this._startInterval(e) : e || this._clearInterval();
+    }
+  }_clearInterval() {
+    this._interval && (window.clearInterval(this._interval), this._interval = void 0);
+  }_startInterval(t) {
+    this._clearInterval(), this._calculateRemaining(t), "active" === t.state && (this._interval = window.setInterval(() => this._calculateRemaining(t), 1e3));
+  }_calculateRemaining(t) {
+    this._timeRemaining = function (t) {
+      var e = Pt(t.attributes.remaining);if ("active" === t.state) {
+        var n = new Date().getTime(),
+            i = new Date(t.last_changed).getTime();e = Math.max(e - (n - i) / 1e3, 0);
+      }return e;
+    }(t);
+  }_computeTimeDisplay(t) {
+    if (t) return function (t) {
+      var e = Math.floor(t / 3600),
+          n = Math.floor(t % 3600 / 60),
+          i = Math.floor(t % 3600 % 60);return e > 0 ? e + ":" + Tt(n) + ":" + Tt(i) : n > 0 ? n + ":" + Tt(i) : i > 0 ? "" + i : null;
+    }(this._timeRemaining || Pt(t.attributes.duration));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
       if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
@@ -1255,18 +1285,18 @@ function t(t, e, n, i) {
         return this.config.color_off;default:
         return this.config.default_color;}
   }_getColorForLightEntity(t) {
-    let e = this.config.default_color;return t && (t.attributes.rgb_color ? (e = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (e = ce(e, (t.attributes.brightness + 245) / 5))) : t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (e = function (t, e, n) {
-      const i = new ae("rgb(255, 160, 0)"),
-            r = new ae("rgb(166, 209, 255)"),
-            s = new ae("white"),
-            a = (t - e) / (n - e) * 100;return a < 50 ? oe(r).mix(s, 2 * a).toRgbString() : oe(s).mix(i, 2 * (a - 50)).toRgbString();
-    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (e = ce(e, (t.attributes.brightness + 245) / 5))) : e = t.attributes.brightness ? ce(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), e;
+    let e = this.config.default_color;return t && (t.attributes.rgb_color ? (e = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (e = ue(e, (t.attributes.brightness + 245) / 5))) : t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (e = function (t, e, n) {
+      const i = new le("rgb(255, 160, 0)"),
+            r = new le("rgb(166, 209, 255)"),
+            s = new le("white"),
+            a = (t - e) / (n - e) * 100;return a < 50 ? ce(r).mix(s, 2 * a).toRgbString() : ce(s).mix(i, 2 * (a - 50)).toRgbString();
+    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (e = ue(e, (t.attributes.brightness + 245) / 5))) : e = t.attributes.brightness ? ue(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), e;
   }_buildCssColorAttribute(t, e) {
     let n,
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i ? this._getColorForLightEntity(t) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in Ot) return Ot[t];switch (t) {case "alarm_control_panel":
+      if (t in $t) return $t[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":
@@ -1282,8 +1312,8 @@ function t(t, e, n, i) {
               return "hass:sleep";case "initializing":
               return "hass:timer-sand";default:
               return "hass:z-wave";}default:
-          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Ht;}
-    }(Et(t.entity_id), t.state)), n;
+          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Rt;}
+    }(Dt(t.entity_id), t.state)), n;
   }_buildEntityPicture(t, e) {
     if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n;return n = e && e.entity_picture ? e.entity_picture : this.config.entity_picture ? this.config.entity_picture : t && t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0;
   }_buildStyleGeneric(t, e) {
@@ -1294,13 +1324,13 @@ function t(t, e, n, i) {
     if (!1 === this.config.show_name) return;let n;var i;return e && e.name ? n = e.name : this.config.name ? n = this.config.name : t && (n = t.attributes && t.attributes.friendly_name ? t.attributes.friendly_name : (i = t.entity_id).substr(i.indexOf(".") + 1)), n;
   }_buildStateString(t) {
     let e;if (this.config.show_state && t && t.state) {
-      const n = Tt(this.hass.localize, t, this.hass.language),
-            i = this._buildUnits(t);e = i ? `${t.state} ${i}` : n;
+      const n = Ht(this.hass.localize, t, this.hass.language),
+            i = this._buildUnits(t);e = i ? `${t.state} ${i}` : "timer" === Dt(t.entity_id) ? this._computeTimeDisplay(t) : n;
     }return e;
   }_buildUnits(t) {
     let e;return t && this.config.show_units && (e = t.attributes && t.attributes.unit_of_measurement && !this.config.units ? t.attributes.unit_of_measurement : this.config.units ? this.config.units : void 0), e;
   }_buildLastChanged(t, e) {
-    return this.config.show_last_changed && t ? H`
+    return this.config.show_last_changed && t ? D`
           <ha-relative-time
             id="label"
             class="ellipsis"
@@ -1313,14 +1343,14 @@ function t(t, e, n, i) {
     if (!this.config.show_label) return;let n, i;return (i = e && e.label_template ? e.label_template : this.config.label_template) ? new Function("states", "entity", "user", "hass", `'use strict'; ${i}`).call(this, this.hass.states, t, this.hass.user, this.hass) : n = e && e.label ? e.label : this.config.label;
   }_isClickable(t) {
     let e = !0;if ("toggle" === this.config.tap_action.action && "none" === this.config.hold_action.action || "toggle" === this.config.hold_action.action && "none" === this.config.tap_action.action) {
-      if (t) switch (Et(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
+      if (t) switch (Dt(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
           e = !1;break;default:
           e = !0;} else e = !1;
     } else e = "none" != this.config.tap_action.action || "none" != this.config.hold_action.action;return e;
   }_rotate(t) {
     return !(!t || !t.spin);
   }_blankCardColoredHtml(t) {
-    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return H`
+    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return D`
       <ha-card class="disabled" style=${ct(e)}>
         <div></div>
       </ha-card>
@@ -1335,10 +1365,10 @@ function t(t, e, n, i) {
         return this._blankCardColoredHtml(o);case "card":case "label-card":
         {
           const t = function (t) {
-            const e = new ae(le(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
+            const e = new le(he(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
           }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, o), i = "inherit";break;
         }default:
-        r = o;}return this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t)), s = Object.assign({}, s, a), H`
+        r = o;}return this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t)), s = Object.assign({}, s, a), D`
       <ha-card
         class="button-card-main ${this._isClickable(t) ? "" : "disabled"}"
         style=${ct(r)}
@@ -1347,22 +1377,22 @@ function t(t, e, n, i) {
         @ha-dblclick=${this._handleDblTap}
         .hasDblClick=${"none" !== this.config.dbltap_action.action}
         .repeat=${dt(this.config.hold_action.repeat)}
-        .longpress="${zt()}"
+        .longpress="${Ut()}"
         .config="${this.config}"
       >
         ${this._getLock(s)}
         ${this._buttonContent(t, e, i)}
-        ${this.config.lock ? "" : H`
+        ${this.config.lock ? "" : D`
               <mwc-ripple id="ripple"></mwc-ripple>
             `}
       </ha-card>
     `;
   }_getLock(t) {
-    return this.config.lock ? H`
+    return this.config.lock ? D`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
         </div>
-      ` : H``;
+      ` : D``;
   }_buttonContent(t, e, n) {
     const i = this._buildName(t, e),
           r = this._buildStateString(t),
@@ -1379,14 +1409,14 @@ function t(t, e, n, i) {
           h = this._buildStyleGeneric(e, "state"),
           u = this._buildStyleGeneric(e, "label"),
           d = this._buildLastChanged(t, u),
-          f = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || d || o.push("no-label"), H`
+          f = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || d || o.push("no-label"), D`
       <div
         id="container"
         class=${o.join(" ")}
         style=${ct(f)}
       >
         ${a || ""}
-        ${r ? H`
+        ${r ? D`
               <div
                 id="name"
                 class="ellipsis"
@@ -1395,7 +1425,7 @@ function t(t, e, n, i) {
                 ${r}
               </div>
             ` : ""}
-        ${s ? H`
+        ${s ? D`
               <div
                 id="state"
                 class="ellipsis"
@@ -1404,7 +1434,7 @@ function t(t, e, n, i) {
                 ${s}
               </div>
             ` : ""}
-        ${l && !d ? H`
+        ${l && !d ? D`
               <div
                 id="label"
                 class="ellipsis"
@@ -1423,9 +1453,9 @@ function t(t, e, n, i) {
           a = this._buildStyleGeneric(e, "icon"),
           o = this._buildStyleGeneric(e, "img_cell"),
           l = Object.assign({ color: n, width: this.config.size }, a),
-          c = Object.assign({}, l, s);return i || r ? H`
+          c = Object.assign({}, l, s);return i || r ? D`
         <div id="img-cell" style=${ct(o)}>
-          ${i && !r ? H`
+          ${i && !r ? D`
                 <ha-icon
                   style=${ct(l)}
                   .icon="${i}"
@@ -1433,7 +1463,7 @@ function t(t, e, n, i) {
                   ?rotating=${this._rotate(e)}
                 ></ha-icon>
               ` : ""}
-          ${r ? H`
+          ${r ? D`
                 <img
                   src="${r}"
                   style=${ct(c)}
@@ -1450,11 +1480,11 @@ function t(t, e, n, i) {
   }getCardSize() {
     return 3;
   }_handleTap(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !1, !1);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;It(this, this.hass, e, !1, !1);
   }_handleHold(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !0, !1);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;It(this, this.hass, e, !0, !1);
   }_handleDblTap(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !1, !0);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;It(this, this.hass, e, !1, !0);
   }_handleLock(t) {
     t.stopPropagation();const e = this.shadowRoot.getElementById("overlay"),
           n = this.shadowRoot.firstElementChild;e.style.setProperty("pointer-events", "none");const i = document.createElement("paper-ripple"),
@@ -1466,9 +1496,9 @@ function t(t, e, n, i) {
       }
     }, 5e3);
   }
-};t([et()], ue.prototype, "hass", void 0), t([et()], ue.prototype, "config", void 0), ue = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
+};t([et()], fe.prototype, "hass", void 0), t([et()], fe.prototype, "config", void 0), t([et()], fe.prototype, "_timeRemaining", void 0), fe = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
   const { kind: n, elements: i } = e;return { kind: n, elements: i, finisher(e) {
       window.customElements.define(t, e);
     } };
-})(t, e))("button-card")], ue);
+})(t, e))("button-card")], fe);
 //# sourceMappingURL=button-card.js.map
