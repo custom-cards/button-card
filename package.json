@@ -1,6 +1,6 @@
 {
   "name": "button-card",
-  "version": "1.0.0",
+  "version": "1.9.0",
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "pre-commit": [
@@ -49,14 +49,16 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-typescript2": "^0.20.1",
+    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-typescript2": "^0.21.0",
     "ts-lit-plugin": "^1.0.5",
     "typescript": "^3.4.4",
     "typescript-styled-plugin": "^0.14.0"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^2.4.0",
-    "home-assistant-js-websocket": "^3.4.0",
+    "custom-card-helpers": "^1.1.8",
+    "home-assistant-js-websocket": "^4.1.2",
     "lit-element": "^2.1.0",
     "lit-html": "^1.0.0"
   }

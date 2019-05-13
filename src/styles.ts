@@ -1,4 +1,4 @@
-import { css } from 'lit-element';
+import { css } from "lit-element";
 
 export const styles = css`
   ha-card {
@@ -54,20 +54,34 @@ export const styles = css`
     animation-fill-mode: both;
     margin: unset;
   }
-  @keyframes fadeOut{
-    0% {opacity: 0.5;}
-    20% {opacity: 0;}
-    80% {opacity: 0;}
-    100% {opacity: 0.5;}
+  @keyframes fadeOut {
+    0% {
+      opacity: 0.5;
+    }
+    20% {
+      opacity: 0;
+    }
+    80% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0.5;
+    }
   }
   .fadeOut {
     -webkit-animation-name: fadeOut;
     animation-name: fadeOut;
   }
-  @keyframes blink{
-    0%{opacity:0;}
-    50%{opacity:1;}
-    100%{opacity:0;}
+  @keyframes blink {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
   @-webkit-keyframes rotating /* Safari and Chrome */ {
     from {
@@ -120,7 +134,8 @@ export const styles = css`
     align-self: center;
   }
 
-  ha-icon#icon, img#icon {
+  ha-icon#icon,
+  img#icon {
     height: 100%;
     max-width: 100%;
     object-fit: contain;
@@ -270,10 +285,10 @@ export const styles = css`
     grid-template-rows: 1fr 1fr;
   }
   #container.name_state.no-icon #name {
-    align-self: end
+    align-self: end;
   }
   #container.name_state.no-icon #label {
-    align-self: start
+    align-self: start;
   }
 
   #container.name_state.no-icon.no-label {
@@ -282,7 +297,7 @@ export const styles = css`
     grid-template-rows: 1fr;
   }
   #container.name_state.no-icon.no-label #name {
-    align-self: center
+    align-self: center;
   }
 
   /* icon_name_state2nd default */
