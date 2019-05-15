@@ -3458,6 +3458,31 @@ function getLovelace() {
     }
     return null;
 }
+/**
+* Performs a deep merge of objects and returns new object. Does not modify
+* objects (immutable) and merges arrays via concatenation and filtering.
+*
+* @param {...object} objects - Objects to merge
+* @returns {object} New object with merged key/values
+*/
+function mergeDeep(...objects) {
+    const isObject = obj => obj && typeof obj === 'object';
+    return objects.reduce((prev, obj) => {
+        Object.keys(obj).forEach(key => {
+            const pVal = prev[key];
+            const oVal = obj[key];
+            if (Array.isArray(pVal) && Array.isArray(oVal)) {
+                /* eslint no-param-reassign: 0 */
+                prev[key] = pVal.concat(...oVal);
+            } else if (isObject(pVal) && isObject(oVal)) {
+                prev[key] = mergeDeep(pVal, oVal);
+            } else {
+                prev[key] = oVal;
+            }
+        });
+        return prev;
+    }, {});
+}
 
 // Polymer legacy event helpers used courtesy of the Polymer project.
 //
@@ -4530,7 +4555,7 @@ let ButtonCard = class ButtonCard extends LitElement {
         let template = Object.assign({}, config);
         let tplName = template.template;
         while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
-            template = Object.assign({}, ll.config.button_card_templates[tplName], template);
+            template = mergeDeep(ll.config.button_card_templates[tplName], template);
             tplName = ll.config.button_card_templates[tplName].template;
         }
         this.config = Object.assign({ tap_action: { action: 'toggle' }, hold_action: { action: 'none' }, dbltap_action: { action: 'none' }, layout: 'vertical', size: '40%', color_type: 'icon', show_name: true, show_state: false, show_icon: true, show_units: true, show_label: false, show_entity_picture: false }, template);

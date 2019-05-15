@@ -29,6 +29,7 @@ import {
   hasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
   getLovelace,
+  mergeDeep,
 } from './helpers';
 import { handleClick } from './handle-click';
 import { longPress } from './long-press';
@@ -520,7 +521,7 @@ class ButtonCard extends LitElement {
     let template: ButtonCardConfig = { ...config };
     let tplName: string | undefined = template.template;
     while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
-      template = { ...ll.config.button_card_templates[tplName], ...template };
+      template = mergeDeep(ll.config.button_card_templates[tplName], template);
       tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
     }
     this.config = {
