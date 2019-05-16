@@ -27,6 +27,7 @@ Lovelace Button card for your entities.
     - [Easy styling options](#easy-styling-options)
     - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
+  - [Configuration Templates](#configuration-templates)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
   - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-custom_updater)
@@ -76,6 +77,7 @@ Lovelace Button card for your entities.
 | Name           | Type        | Default      | Supported options                                | Description                                                                                                                                                                                                                                                                                                                                   |
 | -------------- | ----------- | ------------ | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `type`         | string      | **Required** | `custom:button-card`                             | Type of the card                                                                                                                                                                                                                                                                                                                              |
+| `template` | string | optional | any valid template from `button_card_templates` | See [configuration template](#Configuration-Templates) |
 | `entity`       | string      | optional | `switch.ac`                                      | entity_id                                                                                                                                                                                                                                                                                                                                     |
 | `icon`         | string      | optional     | `mdi:air-conditioner`                            | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`                                                                                                                                                                                                     |
 | `color_type`   | string      | `icon`       | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).          |
@@ -110,7 +112,7 @@ Lovelace Button card for your entities.
 | `navigation_path` | string | none     | Eg: `/lovelace/0/`                                               | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate                                |
 | `url`             | string | none     | Eg: `https://www.google.fr`                                      | URL to open on click when action is `url`. The URL will open in a new tab                                |
 | `service`         | string | none     | Any service                                                      | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
-| `service_data`    | object | none     | Any service data                                                 | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` |
+| `service_data`    | object | none     | Any service data                                                 | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
 
@@ -352,6 +354,47 @@ Some examples:
           icon:
             - filter: grayscale(100%)
   ```
+
+### Configuration Templates
+* Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄
+* You can overload any parameter with a new one, **appart from the states**. The state arrays in templates will be concatenated together with your config, meaning you can **add** new states but not change/delete states. Your main config states will be appended to the ones in the template.
+* You can also inherit another template from within a template.
+
+In `ui-lovelace.yaml` (or in another file using `!import`)
+```yaml
+button_card_templates:
+  header:
+    styles:
+      card:
+        - padding: 5px 15px
+        - background-color: var(--paper-item-icon-active-color)
+      name:
+        - text-transform: uppercase
+        - color: var(--primary-background-color)
+        - justify-self: start
+        - font-weight: bold
+      label:
+        - text-transform: uppercase
+        - color: var(--primary-background-color)
+        - justify-self: start
+        - font-weight: bold
+
+header_red:
+  template: header
+  styles:
+    card:
+      - background-color: '#FF0000'
+
+my_little_template:
+  [...]
+```
+
+And then where you use button-card, you can apply this template, and/or overload it:
+```yaml
+- type: custom:button-card
+  template: header_red
+  name: My Test Header
+```
 
 ## Installation
 
