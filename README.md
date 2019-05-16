@@ -379,14 +379,14 @@ button_card_templates:
         - justify-self: start
         - font-weight: bold
 
-header_red:
-  template: header
-  styles:
-    card:
-      - background-color: '#FF0000'
+  header_red:
+    template: header
+    styles:
+      card:
+        - background-color: '#FF0000'
 
-my_little_template:
-  [...]
+  my_little_template:
+    [...]
 ```
 
 And then where you use button-card, you can apply this template, and/or overload it:
