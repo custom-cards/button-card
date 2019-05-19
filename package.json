@@ -4,13 +4,12 @@
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "pre-commit": [
-    "build",
-    "commit_dist"
+    "pre-commit"
   ],
   "scripts": {
+    "pre-commit": "./hooks/pre-commit.sh",
     "build": "npm run rollup && npm run babel",
     "rollup": "rollup -c",
-    "commit_dist": "git add dist/button-card.js",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/button-card.ts",
     "watch": "rollup -c rollup.debug.config.js --watch"
