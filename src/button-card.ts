@@ -100,9 +100,7 @@ class ButtonCard extends LitElement {
             return matches;
           }
           case 'template': {
-            return new Function('states', 'entity', 'user', 'hass',
-              `'use strict'; ${elt.value}`)
-              .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+            return this._evalTemplate(state, elt.value);
           }
           case 'default':
             def = elt;
@@ -118,6 +116,12 @@ class ButtonCard extends LitElement {
       return def;
     }
     return retval;
+  }
+
+  private _evalTemplate(state: HassEntity | undefined, func: any): any {
+    return new Function('states', 'entity', 'user', 'hass',
+      `'use strict'; ${func}`)
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
   }
 
   private _getDefaultColorForState(state: HassEntity): string {
@@ -216,15 +220,26 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let entityPicture: string | undefined;
-    if (configState && configState.entity_picture) {
-      entityPicture = configState.entity_picture;
-    } else if (this.config!.entity_picture) {
-      entityPicture = this.config!.entity_picture;
+    let matchingEntityPictureTemplate: string | undefined;
+
+    if (configState && configState.entity_picture_template) {
+      matchingEntityPictureTemplate = configState.entity_picture_template;
     } else {
-      entityPicture = state && state.attributes && state.attributes.entity_picture
-        ? state.attributes.entity_picture : undefined;
+      matchingEntityPictureTemplate = this.config!.entity_picture_template;
     }
-    return entityPicture;
+    if (!matchingEntityPictureTemplate) {
+      if (configState && configState.entity_picture) {
+        entityPicture = configState.entity_picture;
+      } else if (this.config!.entity_picture) {
+        entityPicture = this.config!.entity_picture;
+      } else if (state) {
+        entityPicture = state.attributes && state.attributes.entity_picture
+          ? state.attributes.entity_picture : undefined;
+      }
+      return entityPicture;
+    }
+
+    return this._evalTemplate(state, matchingEntityPictureTemplate);
   }
 
   private _buildStyleGeneric(
@@ -253,15 +268,26 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let name: string | undefined;
-    if (configState && configState.name) {
-      name = configState.name;
-    } else if (this.config!.name) {
-      name = this.config!.name;
-    } else if (state) {
-      name = state.attributes && state.attributes.friendly_name
-        ? state.attributes.friendly_name : computeEntity(state.entity_id);
+    let matchingNameTemplate: string | undefined;
+
+    if (configState && configState.name_template) {
+      matchingNameTemplate = configState.name_template;
+    } else {
+      matchingNameTemplate = this.config!.name_template;
     }
-    return name;
+    if (!matchingNameTemplate) {
+      if (configState && configState.name) {
+        name = configState.name;
+      } else if (this.config!.name) {
+        name = this.config!.name;
+      } else if (state) {
+        name = state.attributes && state.attributes.friendly_name
+          ? state.attributes.friendly_name : computeEntity(state.entity_id);
+      }
+      return name;
+    }
+
+    return this._evalTemplate(state, matchingNameTemplate);
   }
 
   private _buildStateString(state: HassEntity | undefined): string | undefined {
@@ -323,10 +349,7 @@ class ButtonCard extends LitElement {
       return label;
     }
 
-    /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass',
-      `'use strict'; ${matchingLabelTemplate}`)
-      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+    return this._evalTemplate(state, matchingLabelTemplate);
   }
 
   private _isClickable(state: HassEntity | undefined): boolean {
