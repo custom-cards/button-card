@@ -232,10 +232,10 @@ class ButtonCard extends LitElement {
     styleType: string,
   ): StyleInfo {
     let style: StyleInfo = {};
-    if (this.config!.styles[styleType]) {
+    if (this.config!.styles && this.config!.styles[styleType]) {
       style = Object.assign(style, ...this.config!.styles[styleType]);
     }
-    if (configState && configState.styles[styleType]) {
+    if (configState && configState.styles && configState.styles[styleType]) {
       let configStateStyle: StyleInfo = {};
       configStateStyle = Object.assign(configStateStyle, ...configState.styles[styleType]);
       style = {
@@ -550,31 +550,6 @@ class ButtonCard extends LitElement {
       this.config!.color_off = 'var(--paper-item-icon-color)';
     }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
-
-    /* Temporary until we deprecate style and entity_picture_style config option */
-    if (!this.config.styles) {
-      this.config.styles = {};
-    }
-    if (this.config.style && !this.config.styles.card) {
-      this.config.styles.card = this.config.style;
-    }
-    if (this.config.entity_picture_style && !this.config.styles.entity_picture) {
-      this.config.styles.entity_picture = this.config.entity_picture_style;
-    }
-    if (this.config.state) {
-      /* eslint no-param-reassign: ["error", { "props": false }] */
-      this.config.state.forEach((s) => {
-        if (!s.styles) {
-          s.styles = {};
-        }
-        if (s.entity_picture_style && !s.styles.entity_picture) {
-          s.styles.entity_picture = s.entity_picture_style;
-        }
-        if (s.style && !s.styles.card) {
-          s.styles.card = s.style;
-        }
-      });
-    }
   }
 
   // The height of your card. Home Assistant uses this to automatically
