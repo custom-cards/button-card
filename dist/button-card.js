@@ -1270,16 +1270,16 @@ const ot = new WeakMap(),
         return this.config.color_on;case "off":
         return this.config.color_off;default:
         return this.config.default_color;}
-  }_getColorForLightEntity(t) {
-    let e = this.config.default_color;return t && (t.attributes.rgb_color ? (e = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (e = jt(e, (t.attributes.brightness + 245) / 5))) : t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (e = function (t, e, i) {
+  }_getColorForLightEntity(t, e) {
+    let i = this.config.default_color;return t && (t.attributes.rgb_color ? (i = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (i = jt(i, (t.attributes.brightness + 245) / 5))) : e && t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (i = function (t, e, i) {
       const n = new Rt("rgb(255, 160, 0)"),
             s = new Rt("rgb(166, 209, 255)"),
             r = new Rt("white"),
             a = (t - e) / (i - e) * 100;return a < 50 ? Ot(s).mix(r, 2 * a).toRgbString() : Ot(r).mix(n, 2 * (a - 50)).toRgbString();
-    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (e = jt(e, (t.attributes.brightness + 245) / 5))) : e = t.attributes.brightness ? jt(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), e;
+    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (i = jt(i, (t.attributes.brightness + 245) / 5))) : i = t.attributes.brightness ? jt(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), i;
   }_buildCssColorAttribute(t, e) {
     let i,
-        n = "";return e && e.color ? n = e.color : "auto" !== this.config.color && t && "off" === t.state ? n = this.config.color_off : this.config.color && (n = this.config.color), i = "auto" == n ? this._getColorForLightEntity(t) : n || (t ? this._getDefaultColorForState(t) : this.config.default_color);
+        n = "";return e && e.color ? n = e.color : "auto" !== this.config.color && t && "off" === t.state ? n = this.config.color_off : this.config.color && (n = this.config.color), i = "auto" == n || "auto-no-temperature" == n ? this._getColorForLightEntity(t, "auto-no-temperature" !== n) : n || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let i;return e && e.icon ? i = e.icon : this.config.icon ? i = this.config.icon : t && t.attributes && (i = t.attributes.icon ? t.attributes.icon : function (t, e) {
       if (t in mt) return mt[t];switch (t) {case "alarm_control_panel":
@@ -1348,7 +1348,7 @@ const ot = new WeakMap(),
             const e = new Rt(Ht(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
           }(i);s.color = t, r.color = t, s["background-color"] = i, s = Object.assign({}, s, o), n = "inherit";break;
         }default:
-        s = o;}return this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t)), r = Object.assign({}, r, a), $`
+        s = o;}return this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), r = Object.assign({}, r, a), $`
       <ha-card class="button-card-main ${this._isClickable(t) ? "" : "disabled"}" style=${ct(s)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${"none" !== this.config.dbltap_action.action} .repeat=${ut(this.config.hold_action.repeat)} .longpress="${Bt()}" .config="${this.config}">
         ${this._getLock(r)}
         ${this._buttonContent(t, e, n)}
@@ -1358,7 +1358,7 @@ const ot = new WeakMap(),
   }_getLock(t) {
     return this.config.lock ? $`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
-          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+          <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       ` : $``;
   }_buttonContent(t, e, i) {

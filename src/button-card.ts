@@ -131,7 +131,10 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _getColorForLightEntity(state: HassEntity | undefined): string {
+  private _getColorForLightEntity(
+    state: HassEntity | undefined,
+    useTemperature: boolean,
+  ): string {
     let color: string = this.config!.default_color;
     if (state) {
       if (state.attributes.rgb_color) {
@@ -139,7 +142,8 @@ class ButtonCard extends LitElement {
         if (state.attributes.brightness) {
           color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
         }
-      } else if (state.attributes.color_temp
+      } else if (useTemperature
+        && state.attributes.color_temp
         && state.attributes.min_mireds
         && state.attributes.max_mireds) {
         color = getLightColorBasedOnTemperature(
@@ -173,8 +177,8 @@ class ButtonCard extends LitElement {
     } else if (this.config!.color) {
       colorValue = this.config!.color;
     }
-    if (colorValue == 'auto') {
-      color = this._getColorForLightEntity(state);
+    if (colorValue == 'auto' || colorValue == 'auto-no-temperature') {
+      color = this._getColorForLightEntity(state, colorValue !== 'auto-no-temperature');
     } else if (colorValue) {
       color = colorValue;
     } else if (state) {
@@ -402,7 +406,7 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
-    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
@@ -418,7 +422,7 @@ class ButtonCard extends LitElement {
     if (this.config!.lock) {
       return html`
         <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
-          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+          <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       `;
     }

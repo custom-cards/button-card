@@ -15,7 +15,7 @@ export interface ButtonCardConfig {
   name?: string;
   icon?: string;
   color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
-  color?: string;
+  color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
   lock: boolean;
   tap_action?: ActionConfig;
@@ -58,7 +58,7 @@ export interface StateConfig {
   value?: any;
   name?: string;
   icon?: string;
-  color?: string;
+  color?: 'auto' | 'auto-no-temperature' | string;
   style?: CssStyleConfig[];
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
