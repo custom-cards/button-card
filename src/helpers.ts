@@ -1,6 +1,7 @@
 import { PropertyValues } from 'lit-element';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant } from 'custom-card-helpers';
+import { StateConfig } from './types';
 
 export function computeDomain(entityId: string): string {
   return entityId.substr(0, entityId.indexOf('.'));
@@ -124,4 +125,27 @@ export function mergeDeep(...objects: any): any {
 
     return prev;
   }, {});
+}
+
+export function mergeStatesById(
+  intoStates: StateConfig[] | undefined,
+  fromStates: StateConfig[] | undefined,
+): StateConfig[] {
+  let resultStateConfigs: StateConfig[] = [];
+  if (intoStates) {
+    intoStates.forEach((intoState) => {
+      let localState = intoState;
+      if (fromStates) {
+        fromStates.forEach((fromState) => {
+          if (fromState.id && intoState.id && fromState.id == intoState.id)
+            localState = mergeDeep(localState, fromState);
+        })
+      }
+      resultStateConfigs.push(localState);
+    });
+  }
+  if (fromStates) {
+    resultStateConfigs = resultStateConfigs.concat(fromStates.filter(x => !intoStates ? true : !intoStates.find(y => y.id && x.id ? y.id == x.id : false)));
+  }
+  return resultStateConfigs;
 }

@@ -1082,7 +1082,13 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     const r = t[i],
           s = n[i];Array.isArray(r) && Array.isArray(s) ? t[i] = r.concat(...s) : e(r) && e(s) ? t[i] = ce(r, s) : t[i] = s;
   }), t), {});
-}const he = ((t, ...e) => {
+}function he(t, e) {
+  let n = [];return t && t.forEach(t => {
+    let i = t;e && e.forEach(e => {
+      e.id && t.id && e.id == t.id && (i = ce(i, e));
+    }), n.push(i);
+  }), e && (n = n.concat(e.filter(e => !t || !t.find(t => !(!t.id || !e.id) && t.id == e.id)))), n;
+}const de = ((t, ...e) => {
   const n = e.reduce((e, n, i) => e + (t => {
     if (t instanceof rt) return t.cssText;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${t}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`);
   })(n) + t[i + 1], t[0]);return new rt(n, it);
@@ -1434,9 +1440,9 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
-`;let de = class extends at {
+`;let ue = class extends at {
   static get styles() {
-    return he;
+    return de;
   }render() {
     return this.config && this.hass ? this._cardHtml() : R``;
   }shouldUpdate(t) {
@@ -1622,7 +1628,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         var e = t.lovelace;return e.current_view = t.___curView, e;
       }return null;
     }();let n = Object.assign({}, t),
-        i = n.template;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = ce(e.config.button_card_templates[i], n), i = e.config.button_card_templates[i].template;this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";
+        i = n.template,
+        r = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = ce(e.config.button_card_templates[i], n), r = he(e.config.button_card_templates[i].state, r), i = e.config.button_card_templates[i].template;n.state = r, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";
   }getCardSize() {
     return 3;
   }_handleTap(t) {
@@ -1642,8 +1649,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       }
     }, 5e3);
   }
-};t([et()], de.prototype, "hass", void 0), t([et()], de.prototype, "config", void 0), de = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
+};t([et()], ue.prototype, "hass", void 0), t([et()], ue.prototype, "config", void 0), ue = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
   const { kind: n, elements: i } = e;return { kind: n, elements: i, finisher(e) {
       window.customElements.define(t, e);
     } };
-})(t, e))("button-card")], de);
+})(t, e))("button-card")], ue);

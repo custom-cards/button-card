@@ -47,6 +47,7 @@ export type Layout = 'vertical'
   | 'icon_label';
 
 export interface StateConfig {
+  id?: string;
   operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'template' | 'default';
   value?: any;
   name?: string;

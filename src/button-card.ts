@@ -36,6 +36,7 @@ import {
   myHasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
   mergeDeep,
+  mergeStatesById,
 } from './helpers';
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
@@ -592,10 +593,13 @@ class ButtonCard extends LitElement {
     const ll = getLovelace();
     let template: ButtonCardConfig = { ...config };
     let tplName: string | undefined = template.template;
+    let mergedStateConfig: StateConfig[] | undefined = config.state;
     while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
       template = mergeDeep(ll.config.button_card_templates[tplName], template);
+      mergedStateConfig = mergeStatesById((ll.config.button_card_templates[tplName] as ButtonCardConfig).state, mergedStateConfig);
       tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
     }
+    template.state = mergedStateConfig;
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
