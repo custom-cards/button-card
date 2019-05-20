@@ -10,31 +10,35 @@ import {
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
+import { classMap, ClassInfo } from 'lit-html/directives/class-map.js';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
-import domainIcon from './domain_icons';
 import {
   ButtonCardConfig,
-  HomeAssistant,
   StateConfig,
-  CssStyleConfig,
 } from './types';
+import {
+  domainIcon,
+  HomeAssistant,
+  handleClick,
+  getLovelace,
+  // Still not working...
+  // longPress,
+} from 'custom-card-helpers';
+import { longPress } from './long-press';
 import {
   computeDomain,
   computeEntity,
   getFontColorBasedOnBackgroundColor,
   buildNameStateConcat,
   applyBrightnessToColor,
-  hasConfigOrEntityChanged,
+  myHasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
-  getLovelace,
   mergeDeep,
 } from './helpers';
-import { handleClick } from './handle-click';
-import { longPress } from './long-press';
 import { styles } from './styles';
-import computeStateDisplay from './compute_state_display';
+import myComputeStateDisplay from './compute_state_display';
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -64,7 +68,7 @@ class ButtonCard extends LitElement {
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
       ? true : false;
-    return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
+    return myHasConfigOrEntityChanged(this, changedProps, forceUpdate);
   }
 
   private _getMatchingConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -293,7 +297,7 @@ class ButtonCard extends LitElement {
   private _buildStateString(state: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
     if (this.config!.show_state && state && state.state) {
-      const localizedState = computeStateDisplay(this.hass!.localize, state);
+      const localizedState = myComputeStateDisplay(this.hass!.localize, state);
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
@@ -322,7 +326,15 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined,
     style: StyleInfo,
   ): TemplateResult | undefined {
-    return this.config!.show_last_changed && state ? html`<ha-relative-time id="label" class="ellipsis" .hass="${this.hass}" .datetime="${state.last_changed}" style=${styleMap(style)}></ha-relative-time>` : undefined;
+    return this.config!.show_last_changed && state ?
+      html`
+        <ha-relative-time
+          id="label"
+          class="ellipsis"
+          .hass="${this.hass}"
+          .datetime="${state.last_changed}"
+          style=${styleMap(style)}
+        ></ha-relative-time>` : undefined;
   }
 
   private _buildLabel(
@@ -354,8 +366,19 @@ class ButtonCard extends LitElement {
 
   private _isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
-    if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
-      || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
+    if (
+      this.config!.tap_action!.action === 'toggle'
+      && this.config!.hold_action!.action === 'none'
+      && this.config!.dbltap_action!.action === 'none'
+
+      || this.config!.hold_action!.action === 'toggle'
+      && this.config!.tap_action!.action === 'none'
+      && this.config!.dbltap_action!.action === 'none'
+
+      || this.config!.dbltap_action!.action === 'toggle'
+      && this.config!.tap_action!.action === 'none'
+      && this.config!.hold_action!.action === 'none'
+    ) {
       if (state) {
         switch (computeDomain(state.entity_id)) {
           case 'sensor':
@@ -370,8 +393,11 @@ class ButtonCard extends LitElement {
       } else {
         clickable = false;
       }
-    } else if (this.config!.tap_action!.action != 'none'
-      || this.config!.hold_action!.action != 'none') {
+    } else if (
+      this.config!.tap_action!.action != 'none'
+      || this.config!.hold_action!.action != 'none'
+      || this.config!.dbltap_action!.action != 'none'
+    ) {
       clickable = true;
     } else {
       clickable = false;
@@ -407,7 +433,10 @@ class ButtonCard extends LitElement {
     let lockStyle: StyleInfo = {};
     const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
-
+    const classList: ClassInfo = {
+      'button-card-main': true,
+      disabled: !this._isClickable(state),
+    }
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
       this.style.setProperty('max-width', 'fit-content');
@@ -433,7 +462,17 @@ class ButtonCard extends LitElement {
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config!.dbltap_action!.action !== 'none'} .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
+      <ha-card
+        class=${classMap(classList)}
+        style=${styleMap(cardStyle)}
+        @ha-click="${this._handleTap}"
+        @ha-hold="${this._handleHold}"
+        @ha-dblclick=${this._handleDblTap}
+        .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
+        .repeat=${ifDefined(this.config!.hold_action!.repeat)}
+        .longpress=${longPress()}
+        .config="${this.config}"
+      >
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -451,6 +490,12 @@ class ButtonCard extends LitElement {
     }
     return html``;
   }
+
+  // private longPress = directive(() => (part: PropertyPart) => {
+  //   customElements.whenDefined('long-press-custom-card-helpers').then(() => {
+  //     longPressBind(part.committer.element);
+  //   });
+  // })
 
   private _buttonContent(
     state: HassEntity | undefined,

@@ -90,6 +90,7 @@ Lovelace Button card for your entities.
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
 | `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 | `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
+| `name_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `name` |
 | `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
 | `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
 | `show_units` | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
@@ -97,6 +98,7 @@ Lovelace Button card for your entities.
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state |
+| `entity_picture_template` | string | optional | | See [templates](#templates). Any javascript code which returns a path to a file or a url as a string. Overrides `entity_picture` |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles`        | object list | optional     | | See [styles](#styles)  |
 | `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
@@ -109,6 +111,7 @@ Lovelace Button card for your entities.
 | Name              | Type   | Default  | Supported options                                                | Description                                                                                              |
 | ----------------- | ------ | -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `action`          | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url` | Action to perform                                                                                        |
+| `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
 | `navigation_path` | string | none     | Eg: `/lovelace/0/`                                               | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate                                |
 | `url`             | string | none     | Eg: `https://www.google.fr`                                      | URL to open on click when action is `url`. The URL will open in a new tab                                |
 | `service`         | string | none     | Any service                                                      | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
@@ -123,11 +126,13 @@ Lovelace Button card for your entities.
 | `operator` | string        | `==`                                        | See [Available Operators](#Available-operators)                                                                                                                            | The operator used to compare the current state against the `value`                            |
 | `value`    | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string                                                                                          | The value which will be compared against the current state of the entity                      |
 | `name`     | string        | optional                                    | Any string, `'Alert'`, `'My little switch is on'`, ...                                                                                                                     | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name |
+| `name_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `name` |
 | `icon`     | string        | optional                                    | `mdi:battery`                                                                                                                                                              | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false` |
 | `color`    | string        | `var(--primary-text-color)`                 | Any color, eg: `rgb(28, 128, 199)` or `blue`                                                                                                                               | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`)       |
 | `styles`    | string        | optional | | See [styles](#styles) |
 | `spin`     | boolean       | `false`                                     | `true` \| `false`                                                                                                                                                          | Should the icon spin for this state?                                                          |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image |
+| `entity_picture_template` | string | optional | | See [templates](#templates). Any javascript code which returns a path to a file or a url as a string. Overrides `entity_picture` |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
 | `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
 
@@ -167,7 +172,7 @@ Multiple values are possible, see the image below for examples:
 
 ### Templates
 
-`label_template` supports templating as well as `value` for `state` when `operator: template`
+`label_template`, `name_template`, `entity_picture_template` supports templating as well as `value` for `state` when `operator: template`
 * `label_template`: It will be interpreted as javascript code and the code should return a string.
   `label_template` supports inline HTML, so you can do stuff like:
   ```yaml
@@ -180,6 +185,8 @@ Multiple values are possible, see the image below for examples:
     + (states['binary_sensor.status'].state === 'on' ? 'connected' : 'disconnected')
   ```
   ![label-template-example](examples/label_template.png)
+* `name_template`: It will be interpreted as javascript code and the code should return a string.
+* `entity_picture_template`: It will be interpreted as javascript code and the code should return a path to a file or a url as a string.
 * `value` for `state` when `operator: template`: It will be interpreted as javascript code and the code should return a boolean (`true` or `false`)
 
 Inside the javascript code, you'll have access to those variables:
