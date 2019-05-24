@@ -459,6 +459,10 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
+    if (this.config!.aspect_ratio) {
+      cardStyle['--aspect-ratio'] = this.config!.aspect_ratio;
+      cardStyle.padding = '0px';
+    }
     this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
@@ -491,12 +495,6 @@ class ButtonCard extends LitElement {
     }
     return html``;
   }
-
-  // private longPress = directive(() => (part: PropertyPart) => {
-  //   customElements.whenDefined('long-press-custom-card-helpers').then(() => {
-  //     longPressBind(part.committer.element);
-  //   });
-  // })
 
   private _buttonContent(
     state: HassEntity | undefined,
@@ -560,13 +558,15 @@ class ButtonCard extends LitElement {
     const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
     const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
     const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
+    const haCardStyleFromConfig = this._buildStyleGeneric(configState, 'card');
 
-    const haIconStyle = {
+    const haIconStyle: StyleInfo = {
       color,
       width: this.config!.size,
+      position: !this.config!.aspect_ratio && !haCardStyleFromConfig.height ? 'relative' : 'absolute',
       ...haIconStyleFromConfig,
     };
-    const entityPictureStyle = {
+    const entityPictureStyle: StyleInfo = {
       ...haIconStyle,
       ...entityPictureStyleFromConfig,
     };
