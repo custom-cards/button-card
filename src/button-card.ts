@@ -587,7 +587,7 @@ class ButtonCard extends LitElement {
 
   public setConfig(config: ButtonCardConfig): void {
     if (!config) {
-      throw new Error('Invalid configuration');
+      throw new Error('Invalid test');
     }
 
     const ll = getLovelace();

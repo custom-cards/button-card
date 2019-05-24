@@ -1657,7 +1657,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         </div>
       ` : void 0;
   }setConfig(t) {
-    if (!t) throw new Error("Invalid configuration");const e = function () {
+    if (!t) throw new Error("Invalid test");const e = function () {
       var t = document.querySelector("home-assistant");if (t = (t = (t = (t = (t = (t = (t = (t = t && t.shadowRoot) && t.querySelector("home-assistant-main")) && t.shadowRoot) && t.querySelector("app-drawer-layout partial-panel-resolver")) && t.shadowRoot || t) && t.querySelector("ha-panel-lovelace")) && t.shadowRoot) && t.querySelector("hui-root")) {
         var e = t.lovelace;return e.current_view = t.___curView, e;
       }return null;
