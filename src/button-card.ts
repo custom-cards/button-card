@@ -10,31 +10,36 @@ import {
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
+import { classMap, ClassInfo } from 'lit-html/directives/class-map.js';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
-import domainIcon from './domain_icons';
 import {
   ButtonCardConfig,
-  HomeAssistant,
   StateConfig,
-  CssStyleConfig,
 } from './types';
+import {
+  domainIcon,
+  HomeAssistant,
+  handleClick,
+  getLovelace,
+  // Still not working...
+  // longPress,
+} from 'custom-card-helpers';
+import { longPress } from './long-press';
 import {
   computeDomain,
   computeEntity,
   getFontColorBasedOnBackgroundColor,
   buildNameStateConcat,
   applyBrightnessToColor,
-  hasConfigOrEntityChanged,
+  myHasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
-  getLovelace,
   mergeDeep,
+  mergeStatesById,
 } from './helpers';
-import { handleClick } from './handle-click';
-import { longPress } from './long-press';
 import { styles } from './styles';
-import computeStateDisplay from './compute_state_display';
+import myComputeStateDisplay from './compute_state_display';
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -64,7 +69,7 @@ class ButtonCard extends LitElement {
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
       ? true : false;
-    return hasConfigOrEntityChanged(this, changedProps, forceUpdate);
+    return myHasConfigOrEntityChanged(this, changedProps, forceUpdate);
   }
 
   private _getMatchingConfigState(state: HassEntity | undefined): StateConfig | undefined {
@@ -100,9 +105,7 @@ class ButtonCard extends LitElement {
             return matches;
           }
           case 'template': {
-            return new Function('states', 'entity', 'user', 'hass',
-              `'use strict'; ${elt.value}`)
-              .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+            return this._evalTemplate(state, elt.value);
           }
           case 'default':
             def = elt;
@@ -120,6 +123,12 @@ class ButtonCard extends LitElement {
     return retval;
   }
 
+  private _evalTemplate(state: HassEntity | undefined, func: any): any {
+    return new Function('states', 'entity', 'user', 'hass',
+      `'use strict'; ${func}`)
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+  }
+
   private _getDefaultColorForState(state: HassEntity): string {
     switch (state.state) {
       case 'on':
@@ -131,7 +140,10 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _getColorForLightEntity(state: HassEntity | undefined): string {
+  private _getColorForLightEntity(
+    state: HassEntity | undefined,
+    useTemperature: boolean,
+  ): string {
     let color: string = this.config!.default_color;
     if (state) {
       if (state.attributes.rgb_color) {
@@ -139,7 +151,8 @@ class ButtonCard extends LitElement {
         if (state.attributes.brightness) {
           color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
         }
-      } else if (state.attributes.color_temp
+      } else if (useTemperature
+        && state.attributes.color_temp
         && state.attributes.min_mireds
         && state.attributes.max_mireds) {
         color = getLightColorBasedOnTemperature(
@@ -173,8 +186,8 @@ class ButtonCard extends LitElement {
     } else if (this.config!.color) {
       colorValue = this.config!.color;
     }
-    if (colorValue == 'auto') {
-      color = this._getColorForLightEntity(state);
+    if (colorValue == 'auto' || colorValue == 'auto-no-temperature') {
+      color = this._getColorForLightEntity(state, colorValue !== 'auto-no-temperature');
     } else if (colorValue) {
       color = colorValue;
     } else if (state) {
@@ -212,15 +225,26 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let entityPicture: string | undefined;
-    if (configState && configState.entity_picture) {
-      entityPicture = configState.entity_picture;
-    } else if (this.config!.entity_picture) {
-      entityPicture = this.config!.entity_picture;
+    let matchingEntityPictureTemplate: string | undefined;
+
+    if (configState && configState.entity_picture_template) {
+      matchingEntityPictureTemplate = configState.entity_picture_template;
     } else {
-      entityPicture = state && state.attributes && state.attributes.entity_picture
-        ? state.attributes.entity_picture : undefined;
+      matchingEntityPictureTemplate = this.config!.entity_picture_template;
     }
-    return entityPicture;
+    if (!matchingEntityPictureTemplate) {
+      if (configState && configState.entity_picture) {
+        entityPicture = configState.entity_picture;
+      } else if (this.config!.entity_picture) {
+        entityPicture = this.config!.entity_picture;
+      } else if (state) {
+        entityPicture = state.attributes && state.attributes.entity_picture
+          ? state.attributes.entity_picture : undefined;
+      }
+      return entityPicture;
+    }
+
+    return this._evalTemplate(state, matchingEntityPictureTemplate);
   }
 
   private _buildStyleGeneric(
@@ -228,10 +252,10 @@ class ButtonCard extends LitElement {
     styleType: string,
   ): StyleInfo {
     let style: StyleInfo = {};
-    if (this.config!.styles[styleType]) {
+    if (this.config!.styles && this.config!.styles[styleType]) {
       style = Object.assign(style, ...this.config!.styles[styleType]);
     }
-    if (configState && configState.styles[styleType]) {
+    if (configState && configState.styles && configState.styles[styleType]) {
       let configStateStyle: StyleInfo = {};
       configStateStyle = Object.assign(configStateStyle, ...configState.styles[styleType]);
       style = {
@@ -249,21 +273,32 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let name: string | undefined;
-    if (configState && configState.name) {
-      name = configState.name;
-    } else if (this.config!.name) {
-      name = this.config!.name;
-    } else if (state) {
-      name = state.attributes && state.attributes.friendly_name
-        ? state.attributes.friendly_name : computeEntity(state.entity_id);
+    let matchingNameTemplate: string | undefined;
+
+    if (configState && configState.name_template) {
+      matchingNameTemplate = configState.name_template;
+    } else {
+      matchingNameTemplate = this.config!.name_template;
     }
-    return name;
+    if (!matchingNameTemplate) {
+      if (configState && configState.name) {
+        name = configState.name;
+      } else if (this.config!.name) {
+        name = this.config!.name;
+      } else if (state) {
+        name = state.attributes && state.attributes.friendly_name
+          ? state.attributes.friendly_name : computeEntity(state.entity_id);
+      }
+      return name;
+    }
+
+    return this._evalTemplate(state, matchingNameTemplate);
   }
 
   private _buildStateString(state: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
     if (this.config!.show_state && state && state.state) {
-      const localizedState = computeStateDisplay(this.hass!.localize, state);
+      const localizedState = myComputeStateDisplay(this.hass!.localize, state);
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
@@ -292,7 +327,15 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined,
     style: StyleInfo,
   ): TemplateResult | undefined {
-    return this.config!.show_last_changed && state ? html`<ha-relative-time id="label" class="ellipsis" .hass="${this.hass}" .datetime="${state.last_changed}" style=${styleMap(style)}></ha-relative-time>` : undefined;
+    return this.config!.show_last_changed && state ?
+      html`
+        <ha-relative-time
+          id="label"
+          class="ellipsis"
+          .hass="${this.hass}"
+          .datetime="${state.last_changed}"
+          style=${styleMap(style)}
+        ></ha-relative-time>` : undefined;
   }
 
   private _buildLabel(
@@ -319,16 +362,24 @@ class ButtonCard extends LitElement {
       return label;
     }
 
-    /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass',
-      `'use strict'; ${matchingLabelTemplate}`)
-      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+    return this._evalTemplate(state, matchingLabelTemplate);
   }
 
   private _isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
-    if (this.config!.tap_action!.action === 'toggle' && this.config!.hold_action!.action === 'none'
-      || this.config!.hold_action!.action === 'toggle' && this.config!.tap_action!.action === 'none') {
+    if (
+      this.config!.tap_action!.action === 'toggle'
+      && this.config!.hold_action!.action === 'none'
+      && this.config!.dbltap_action!.action === 'none'
+
+      || this.config!.hold_action!.action === 'toggle'
+      && this.config!.tap_action!.action === 'none'
+      && this.config!.dbltap_action!.action === 'none'
+
+      || this.config!.dbltap_action!.action === 'toggle'
+      && this.config!.tap_action!.action === 'none'
+      && this.config!.hold_action!.action === 'none'
+    ) {
       if (state) {
         switch (computeDomain(state.entity_id)) {
           case 'sensor':
@@ -343,8 +394,11 @@ class ButtonCard extends LitElement {
       } else {
         clickable = false;
       }
-    } else if (this.config!.tap_action!.action != 'none'
-      || this.config!.hold_action!.action != 'none') {
+    } else if (
+      this.config!.tap_action!.action != 'none'
+      || this.config!.hold_action!.action != 'none'
+      || this.config!.dbltap_action!.action != 'none'
+    ) {
       clickable = true;
     } else {
       clickable = false;
@@ -380,7 +434,10 @@ class ButtonCard extends LitElement {
     let lockStyle: StyleInfo = {};
     const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
-
+    const classList: ClassInfo = {
+      'button-card-main': true,
+      disabled: !this._isClickable(state),
+    }
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
       this.style.setProperty('max-width', 'fit-content');
@@ -402,11 +459,25 @@ class ButtonCard extends LitElement {
         cardStyle = configCardStyle;
         break;
     }
-    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state));
+    if (this.config!.aspect_ratio) {
+      cardStyle['--aspect-ratio'] = this.config!.aspect_ratio;
+      cardStyle.padding = '0px';
+    }
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <ha-card class="button-card-main ${this._isClickable(state) ? '' : 'disabled'}" style=${styleMap(cardStyle)} @ha-click="${this._handleTap}" @ha-hold="${this._handleHold}" @ha-dblclick=${this._handleDblTap} .hasDblClick=${this.config!.dbltap_action!.action !== 'none'} .repeat=${ifDefined(this.config!.hold_action!.repeat)} .longpress="${longPress()}" .config="${this.config}">
+      <ha-card
+        class=${classMap(classList)}
+        style=${styleMap(cardStyle)}
+        @ha-click="${this._handleTap}"
+        @ha-hold="${this._handleHold}"
+        @ha-dblclick=${this._handleDblTap}
+        .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
+        .repeat=${ifDefined(this.config!.hold_action!.repeat)}
+        .longpress=${longPress()}
+        .config="${this.config}"
+      >
         ${this._getLock(lockStyle)}
         ${this._buttonContent(state, configState, buttonColor)}
         ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
@@ -418,7 +489,7 @@ class ButtonCard extends LitElement {
     if (this.config!.lock) {
       return html`
         <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
-          <ha-icon id="lock" icon="mdi:lock-outline"></iron-icon>
+          <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       `;
     }
@@ -487,13 +558,15 @@ class ButtonCard extends LitElement {
     const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
     const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
     const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
+    const haCardStyleFromConfig = this._buildStyleGeneric(configState, 'card');
 
-    const haIconStyle = {
+    const haIconStyle: StyleInfo = {
       color,
       width: this.config!.size,
+      position: !this.config!.aspect_ratio && !haCardStyleFromConfig.height ? 'relative' : 'absolute',
       ...haIconStyleFromConfig,
     };
-    const entityPictureStyle = {
+    const entityPictureStyle: StyleInfo = {
       ...haIconStyle,
       ...entityPictureStyleFromConfig,
     };
@@ -520,10 +593,13 @@ class ButtonCard extends LitElement {
     const ll = getLovelace();
     let template: ButtonCardConfig = { ...config };
     let tplName: string | undefined = template.template;
+    let mergedStateConfig: StateConfig[] | undefined = config.state;
     while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
       template = mergeDeep(ll.config.button_card_templates[tplName], template);
+      mergedStateConfig = mergeStatesById((ll.config.button_card_templates[tplName] as ButtonCardConfig).state, mergedStateConfig);
       tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
     }
+    template.state = mergedStateConfig;
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
@@ -546,31 +622,6 @@ class ButtonCard extends LitElement {
       this.config!.color_off = 'var(--paper-item-icon-color)';
     }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
-
-    /* Temporary until we deprecate style and entity_picture_style config option */
-    if (!this.config.styles) {
-      this.config.styles = {};
-    }
-    if (this.config.style && !this.config.styles.card) {
-      this.config.styles.card = this.config.style;
-    }
-    if (this.config.entity_picture_style && !this.config.styles.entity_picture) {
-      this.config.styles.entity_picture = this.config.entity_picture_style;
-    }
-    if (this.config.state) {
-      /* eslint no-param-reassign: ["error", { "props": false }] */
-      this.config.state.forEach((s) => {
-        if (!s.styles) {
-          s.styles = {};
-        }
-        if (s.entity_picture_style && !s.styles.entity_picture) {
-          s.styles.entity_picture = s.entity_picture_style;
-        }
-        if (s.style && !s.styles.card) {
-          s.styles.card = s.style;
-        }
-      });
-    }
   }
 
   // The height of your card. Home Assistant uses this to automatically

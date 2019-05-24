@@ -107,25 +107,37 @@ export const styles = css`
 
   #container {
     display: grid;
-    max-height: 100%;
-    text-align: center;
+    width: 100%;
     height: 100%;
+    text-align: center;
     align-items: center;
   }
   #img-cell {
-    /* display: flex; */
+    display: flex;
     grid-area: i;
+    height: 100%;
     width: 100%;
     max-width: 100%;
+    max-height: 100%;
     align-self: center;
+    justify-self: center;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    position: relative;
   }
 
-  ha-icon#icon, img#icon {
+  ha-icon#icon {
     height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    overflow: hidden;
-    vertical-align: middle;
+    width: 100%;
+    max-height: 100%;
+    position: absolute;
+  }
+  img#icon {
+    display: block;
+    height: auto;
+    width: 100%;
+    position: absolute;
   }
   #name {
     grid-area: n;
@@ -149,9 +161,6 @@ export const styles = css`
     justify-self: center;
   }
 
-  #container {
-    width: 100%;
-  }
   #container.vertical {
     grid-template-areas: "i" "n" "s" "l";
     grid-template-columns: 1fr;
@@ -347,6 +356,30 @@ export const styles = css`
     grid-template-areas: "i l" "n n" "s s";
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+
+  [style*="--aspect-ratio"] > :first-child {
+    width: 100%;
+  }
+  [style*="--aspect-ratio"] > img {
+    height: auto;
+  }
+  @supports (--custom:property) {
+    [style*="--aspect-ratio"] {
+      position: relative;
+      padding: 0px;
+    }
+    [style*="--aspect-ratio"]::before {
+      content: "";
+      display: block;
+      padding-bottom: calc(100% / (var(--aspect-ratio)));
+    }
+    [style*="--aspect-ratio"] > :first-child {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
   }
 `;
 

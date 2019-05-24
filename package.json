@@ -4,13 +4,12 @@
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "pre-commit": [
-    "build",
-    "commit_dist"
+    "pre-commit"
   ],
   "scripts": {
+    "pre-commit": "./hooks/pre-commit.sh",
     "build": "npm run rollup && npm run babel",
     "rollup": "rollup -c",
-    "commit_dist": "git add dist/button-card.js",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/button-card.ts",
     "watch": "rollup -c rollup.debug.config.js --watch"
@@ -33,30 +32,31 @@
   },
   "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/plugin-proposal-decorators": "^7.4.0",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
     "babel-cli": "^6.26.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
     "npm": "^6.9.0",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.17.0",
-    "rollup": "^1.10.1",
+    "prettier": "^1.17.1",
+    "rollup": "^1.12.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-node-resolve": "^4.2.4",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-typescript2": "^0.20.1",
-    "ts-lit-plugin": "^1.0.5",
+    "ts-lit-plugin": "^1.0.6",
     "typescript": "^3.4.4",
     "typescript-styled-plugin": "^0.14.0"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^2.4.0",
+    "custom-card-helpers": "^1.2.1",
     "home-assistant-js-websocket": "^3.4.0",
     "lit-element": "^2.1.0",
     "lit-html": "^1.0.0"

@@ -1,11 +1,11 @@
 import { HassEntity } from 'home-assistant-js-websocket';
 import { computeDomain } from './helpers';
-import { LocalizeFunc } from './types';
+import { LocalizeFunc } from 'custom-card-helpers';
 
 export default (
   localize: LocalizeFunc,
   stateObj: HassEntity,
-): string => {
+): string | undefined => {
   let display: string | undefined;
   const domain = computeDomain(stateObj.entity_id);
 
