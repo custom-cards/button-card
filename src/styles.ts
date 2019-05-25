@@ -367,7 +367,6 @@ export const styles = css`
   @supports (--custom:property) {
     [style*="--aspect-ratio"] {
       position: relative;
-      padding: 0px;
     }
     [style*="--aspect-ratio"]::before {
       content: "";

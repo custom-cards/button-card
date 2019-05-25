@@ -432,6 +432,7 @@ class ButtonCard extends LitElement {
     let buttonColor = color;
     let cardStyle: StyleInfo = {};
     let lockStyle: StyleInfo = {};
+    let aspectRatio: StyleInfo = {};
     const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
     const classList: ClassInfo = {
@@ -460,28 +461,30 @@ class ButtonCard extends LitElement {
         break;
     }
     if (this.config!.aspect_ratio) {
-      cardStyle['--aspect-ratio'] = this.config!.aspect_ratio;
-      cardStyle.padding = '0px';
+      aspectRatio['--aspect-ratio'] = this.config!.aspect_ratio;
+      cardStyle.position = 'absolute';
     }
     this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <ha-card
-        class=${classMap(classList)}
-        style=${styleMap(cardStyle)}
-        @ha-click="${this._handleTap}"
-        @ha-hold="${this._handleHold}"
-        @ha-dblclick=${this._handleDblTap}
-        .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
-        .repeat=${ifDefined(this.config!.hold_action!.repeat)}
-        .longpress=${longPress()}
-        .config="${this.config}"
-      >
-        ${this._getLock(lockStyle)}
-        ${this._buttonContent(state, configState, buttonColor)}
-        ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
-      </ha-card>
+      <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
+        <ha-card
+          class=${classMap(classList)}
+          style=${styleMap(cardStyle)}
+          @ha-click="${this._handleTap}"
+          @ha-hold="${this._handleHold}"
+          @ha-dblclick=${this._handleDblTap}
+          .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
+          .repeat=${ifDefined(this.config!.hold_action!.repeat)}
+          .longpress=${longPress()}
+          .config="${this.config}"
+        >
+          ${this._getLock(lockStyle)}
+          ${this._buttonContent(state, configState, buttonColor)}
+          ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
+        </ha-card>
+      </div>
       `;
   }
 

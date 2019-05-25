@@ -10,7 +10,7 @@ export interface ButtonCardConfig {
   color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
   color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
-  aspect_ratio?: string?
+  aspect_ratio?: string;
   lock: boolean;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;

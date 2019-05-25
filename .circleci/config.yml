@@ -19,7 +19,7 @@ jobs:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
+      - run: rm -rf ~/repo/node_modules/custom-card-helpers/.git
       - run: npm install
 
       - save_cache:

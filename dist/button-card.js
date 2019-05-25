@@ -1,7 +1,7 @@
 function t(t, e, n, i) {
   var r,
       s = arguments.length,
-      a = s < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(t, e, n, i);else for (var o = t.length - 1; o >= 0; o--) (r = t[o]) && (a = (s < 3 ? r(a) : s > 3 ? r(e, n, a) : r(e, n)) || a);return s > 3 && a && Object.defineProperty(e, n, a), a;
+      o = s < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) o = Reflect.decorate(t, e, n, i);else for (var a = t.length - 1; a >= 0; a--) (r = t[a]) && (o = (s < 3 ? r(o) : s > 3 ? r(e, n, o) : r(e, n)) || o);return s > 3 && o && Object.defineProperty(e, n, o), o;
   /**
    * @license
    * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -26,8 +26,8 @@ function t(t, e, n, i) {
     const e = i.nextSibling;t.removeChild(i), i = e;
   }
 },
-      a = {},
       o = {},
+      a = {},
       l = `{{lit-${String(Math.random()).slice(2)}}}`,
       c = `\x3c!--${l}--\x3e`,
       h = new RegExp(`${l}|${c}`),
@@ -36,22 +36,22 @@ function t(t, e, n, i) {
     this.parts = [], this.element = e;let n = -1,
         i = 0;const r = [],
           s = e => {
-      const a = e.content,
-            o = document.createTreeWalker(a, 133, null, !1);let c = 0;for (; o.nextNode();) {
-        n++;const e = o.currentNode;if (1 === e.nodeType) {
+      const o = e.content,
+            a = document.createTreeWalker(o, 133, null, !1);let c = 0;for (; a.nextNode();) {
+        n++;const e = a.currentNode;if (1 === e.nodeType) {
           if (e.hasAttributes()) {
             const r = e.attributes;let s = 0;for (let t = 0; t < r.length; t++) r[t].value.indexOf(l) >= 0 && s++;for (; s-- > 0;) {
               const r = t.strings[i],
                     s = m.exec(r)[2],
-                    a = s.toLowerCase() + d,
-                    o = e.getAttribute(a).split(h);this.parts.push({ type: "attribute", index: n, name: s, strings: o }), e.removeAttribute(a), i += o.length - 1;
+                    o = s.toLowerCase() + d,
+                    a = e.getAttribute(o).split(h);this.parts.push({ type: "attribute", index: n, name: s, strings: a }), e.removeAttribute(o), i += a.length - 1;
             }
           }"TEMPLATE" === e.tagName && s(e);
         } else if (3 === e.nodeType) {
           const t = e.data;if (t.indexOf(l) >= 0) {
             const s = e.parentNode,
-                  a = t.split(h),
-                  o = a.length - 1;for (let t = 0; t < o; t++) s.insertBefore("" === a[t] ? f() : document.createTextNode(a[t]), e), this.parts.push({ type: "node", index: ++n });"" === a[o] ? (s.insertBefore(f(), e), r.push(e)) : e.data = a[o], i += o;
+                  o = t.split(h),
+                  a = o.length - 1;for (let t = 0; t < a; t++) s.insertBefore("" === o[t] ? f() : document.createTextNode(o[t]), e), this.parts.push({ type: "node", index: ++n });"" === o[a] ? (s.insertBefore(f(), e), r.push(e)) : e.data = o[a], i += a;
           }
         } else if (8 === e.nodeType) if (e.data === l) {
           const t = e.parentNode;null !== e.previousSibling && n !== c || (n++, t.insertBefore(f(), e)), c = n, this.parts.push({ type: "node", index: n }), null === e.nextSibling ? e.data = "" : (r.push(e), n--), i++;
@@ -86,13 +86,13 @@ class g {
     const t = r ? this.template.element.content.cloneNode(!0) : document.importNode(this.template.element.content, !0),
           e = this.template.parts;let n = 0,
         i = 0;const s = t => {
-      const r = document.createTreeWalker(t, 133, null, !1);let a = r.nextNode();for (; n < e.length && null !== a;) {
+      const r = document.createTreeWalker(t, 133, null, !1);let o = r.nextNode();for (; n < e.length && null !== o;) {
         const t = e[n];if (p(t)) {
           if (i === t.index) {
             if ("node" === t.type) {
-              const t = this.processor.handleTextExpression(this.options);t.insertAfterNode(a.previousSibling), this._parts.push(t);
-            } else this._parts.push(...this.processor.handleAttributeExpressions(a, t.name, t.strings, this.options));n++;
-          } else i++, "TEMPLATE" === a.nodeName && s(a.content), a = r.nextNode();
+              const t = this.processor.handleTextExpression(this.options);t.insertAfterNode(o.previousSibling), this._parts.push(t);
+            } else this._parts.push(...this.processor.handleAttributeExpressions(o, t.name, t.strings, this.options));n++;
+          } else i++, "TEMPLATE" === o.nodeName && s(o.content), o = r.nextNode();
         } else this._parts.push(void 0), n++;
       }
     };return s(t), r && (document.adoptNode(t), customElements.upgrade(t)), t;
@@ -153,11 +153,11 @@ class g {
   constructor(t) {
     this.value = void 0, this.committer = t;
   }setValue(t) {
-    t === a || y(t) && t === this.value || (this.value = t, i(t) || (this.committer.dirty = !0));
+    t === o || y(t) && t === this.value || (this.value = t, i(t) || (this.committer.dirty = !0));
   }commit() {
     for (; i(this.value);) {
-      const t = this.value;this.value = a, t(this);
-    }this.value !== a && this.committer.commit();
+      const t = this.value;this.value = o, t(this);
+    }this.value !== o && this.committer.commit();
   }
 }class w {
   constructor(t) {
@@ -174,8 +174,8 @@ class g {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = a, t(this);
-    }const t = this._pendingValue;t !== a && (y(t) ? t !== this.value && this._commitText(t) : t instanceof b ? this._commitTemplateResult(t) : t instanceof Node ? this._commitNode(t) : Array.isArray(t) || t[Symbol.iterator] ? this._commitIterable(t) : t === o ? (this.value = o, this.clear()) : this._commitText(t));
+      const t = this._pendingValue;this._pendingValue = o, t(this);
+    }const t = this._pendingValue;t !== o && (y(t) ? t !== this.value && this._commitText(t) : t instanceof b ? this._commitTemplateResult(t) : t instanceof Node ? this._commitNode(t) : Array.isArray(t) || t[Symbol.iterator] ? this._commitIterable(t) : t === a ? (this.value = a, this.clear()) : this._commitText(t));
   }_insert(t) {
     this.endNode.parentNode.insertBefore(t, this.endNode);
   }_commitNode(t) {
@@ -200,8 +200,8 @@ class g {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = a, t(this);
-    }if (this._pendingValue === a) return;const t = !!this._pendingValue;this.value !== t && (t ? this.element.setAttribute(this.name, "") : this.element.removeAttribute(this.name)), this.value = t, this._pendingValue = a;
+      const t = this._pendingValue;this._pendingValue = o, t(this);
+    }if (this._pendingValue === o) return;const t = !!this._pendingValue;this.value !== t && (t ? this.element.setAttribute(this.name, "") : this.element.removeAttribute(this.name)), this.value = t, this._pendingValue = o;
   }
 }class x extends v {
   constructor(t, e, n) {
@@ -224,11 +224,11 @@ class g {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = a, t(this);
-    }if (this._pendingValue === a) return;const t = this._pendingValue,
+      const t = this._pendingValue;this._pendingValue = o, t(this);
+    }if (this._pendingValue === o) return;const t = this._pendingValue,
           e = this.value,
           n = null == t || null != e && (t.capture !== e.capture || t.once !== e.once || t.passive !== e.passive),
-          r = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), r && (this._options = C(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = a;
+          r = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), r && (this._options = C(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = o;
   }handleEvent(t) {
     "function" == typeof this.value ? this.value.call(this.eventContext || this.element, t) : this.value.handleEvent(t);
   }
@@ -294,8 +294,8 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const R = (t, ...e) => new b(t, e, "html", A),
-      $ = 133;
+(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const $ = (t, ...e) => new b(t, e, "html", A),
+      R = 133;
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -310,14 +310,14 @@ class g {
  * http://polymer.github.io/PATENTS.txt
  */function H(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, $, null, !1);let s = D(i),
-      a = i[s],
-      o = -1,
+        r = document.createTreeWalker(n, R, null, !1);let s = D(i),
+      o = i[s],
+      a = -1,
       l = 0;const c = [];let h = null;for (; r.nextNode();) {
-    o++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[s = D(i, s)];
+    a++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== o && o.index === a;) o.index = null !== h ? -1 : o.index - l, o = i[s = D(i, s)];
   }c.forEach(t => t.parentNode.removeChild(t));
 }const O = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, $, null, !1);for (; n.nextNode();) e++;return e;
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, R, null, !1);for (; n.nextNode();) e++;return e;
 },
       D = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
@@ -357,12 +357,12 @@ const L = (t, e) => `${t}--${e}`;let V = !0;void 0 === window.ShadyCSS ? V = !1 
       });
     });
   })(n), function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, $, null, !1);let a = D(r),
-        o = 0,
-        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = O(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
-      if (o > 0) {
-        for (; -1 !== a;) r[a].index += o, a = D(r, a);return;
-      }a = D(r, a);
+    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, R, null, !1);let o = D(r),
+        a = 0,
+        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (a = O(e), n.parentNode.insertBefore(e, n)); -1 !== o && r[o].index === l;) {
+      if (a > 0) {
+        for (; -1 !== o;) r[o].index += a, o = D(r, o);return;
+      }o = D(r, o);
     }
   }(e, r, e.element.content.firstChild), window.ShadyCSS.prepareTemplateStyles(e.element, n), window.ShadyCSS.nativeShadow) {
     const n = e.element.content.querySelector("style");t.insertBefore(n.cloneNode(!0), t.firstChild);
@@ -559,7 +559,7 @@ found at http://polymer.github.io/PATENTS.txt
   for (let i = 0, r = e.length; i < r; i++) {
     const r = e[i];Array.isArray(r) ? t(r, n) : n.push(r);
   }return n;
-}(t);class at extends K {
+}(t);class ot extends K {
   static finalize() {
     super.finalize(), this._styles = this.hasOwnProperty(JSCompiler_renameProperty("styles", this)) ? this._getUniqueStyles() : this._styles || [];
   }static _getUniqueStyles() {
@@ -580,16 +580,16 @@ found at http://polymer.github.io/PATENTS.txt
       const e = document.createElement("style");e.textContent = t.cssText, this.renderRoot.appendChild(e);
     }));
   }render() {}
-}at.finalized = !0, at.render = (t, e, n) => {
+}ot.finalized = !0, ot.render = (t, e, n) => {
   const i = n.scopeName,
         r = N.has(e),
-        a = e instanceof ShadowRoot && V && t instanceof b,
-        o = a && !I.has(i),
-        l = o ? document.createDocumentFragment() : e;if (((t, e, n) => {
+        o = e instanceof ShadowRoot && V && t instanceof b,
+        a = o && !I.has(i),
+        l = a ? document.createDocumentFragment() : e;if (((t, e, n) => {
     let i = N.get(e);void 0 === i && (s(e, e.firstChild), N.set(e, i = new w(Object.assign({ templateFactory: P }, n))), i.appendInto(e)), i.setValue(t), i.commit();
-  })(t, l, Object.assign({ templateFactory: j(i) }, n)), o) {
+  })(t, l, Object.assign({ templateFactory: j(i) }, n)), a) {
     const t = N.get(l);N.delete(l), t.value instanceof g && Y(l, t.value.template, i), s(e, e.firstChild), e.appendChild(l), N.set(e, t);
-  }!r && a && window.ShadyCSS.styleElement(e.host);
+  }!r && o && window.ShadyCSS.styleElement(e.host);
 };
 /**
  * @license
@@ -604,11 +604,11 @@ found at http://polymer.github.io/PATENTS.txt
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-const ot = new WeakMap(),
+const at = new WeakMap(),
       lt = new WeakMap(),
       ct = n(t => e => {
   if (!(e instanceof _) || e instanceof k || "style" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `styleMap` directive must be used in the style attribute and must be the only part in the attribute.");lt.has(e) || (e.committer.element.style.cssText = e.committer.strings.join(" "), lt.set(e, !0));const n = e.committer.element.style,
-        i = ot.get(e);for (const e in i) e in t || (-1 === e.indexOf("-") ? n[e] = null : n.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? n[e] = t[e] : n.setProperty(e, t[e]);ot.set(e, t);
+        i = at.get(e);for (const e in i) e in t || (-1 === e.indexOf("-") ? n[e] = null : n.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? n[e] = t[e] : n.setProperty(e, t[e]);at.set(e, t);
 }),
       ht = new WeakMap(),
       dt = n(t => e => {
@@ -750,15 +750,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
 }, gt.parse = function (t, e, n) {
   var i = n || gt.i18n;if ("string" != typeof e) throw new Error("Invalid format in fecha.parse");if (e = gt.masks[e] || e, t.length > 1e3) return null;var r = {},
       s = [],
-      a = [];e = e.replace(vt, function (t, e) {
-    return a.push(e), "@@@";
-  });var o,
-      l = (o = e, o.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
+      o = [];e = e.replace(vt, function (t, e) {
+    return o.push(e), "@@@";
+  });var a,
+      l = (a = e, a.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
     if (Pt[t]) {
       var e = Pt[t];return s.push(e[1]), "(" + e[0] + ")";
     }return t;
   });l = l.replace(/@@@/g, function () {
-    return a.shift();
+    return o.shift();
   });var c = t.match(new RegExp(l, "i"));if (!c) return null;for (var h = 1; h < c.length; h++) s[h - 1](r, c[h], i);var d,
       u = new Date();return !0 === r.isPm && null != r.hour && 12 != +r.hour ? r.hour = +r.hour + 12 : !1 === r.isPm && 12 == +r.hour && (r.hour = 0), null != r.timezoneOffset ? (r.minute = +(r.minute || 0) - +r.timezoneOffset, d = new Date(Date.UTC(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0))) : d = new Date(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0), d;
 };(function () {
@@ -781,17 +781,17 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }
 }();var Tt = "hass:bookmark",
     Nt = ["closed", "locked", "off"],
-    Rt = function (t, e, n, i) {
+    $t = function (t, e, n, i) {
   i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
 },
-    $t = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ht = function (t, e) {
-  Rt(t, "haptic", e);
+    Rt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ht = function (t, e) {
+  $t(t, "haptic", e);
 },
     Ot = function (t, e, n, i, r) {
   var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && (Rt(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ht(t, s.haptic));break;case "navigate":
+      (n.entity || n.camera_image) && ($t(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ht(t, s.haptic));break;case "navigate":
       s.navigation_path && (function (t, e, n) {
-        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Rt(window, "location-changed", { replace: n });
+        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), $t(window, "location-changed", { replace: n });
       }(0, s.navigation_path), s.haptic && Ht(t, s.haptic));break;case "url":
       s.url && window.open(s.url), s.haptic && Ht(t, s.haptic);break;case "toggle":
       n.entity && (function (t, e) {
@@ -806,7 +806,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               i = n ? "turn_on" : "turn_off";}t.callService(s, i, { entity_id: e });
         })(t, e, Nt.includes(t.states[e].state));
       }(e, n.entity), s.haptic && Ht(t, s.haptic));break;case "call-service":
-      if (!s.service) return;var a = s.service.split(".", 2);e.callService(a[0], a[1], s.service_data), s.haptic && Ht(t, s.haptic);}
+      if (!s.service) return;var o = s.service.split(".", 2);e.callService(o[0], o[1], s.service_data), s.haptic && Ht(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
@@ -901,25 +901,25 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
-      a = 0,
-      o = (i + r) / 2;if (i === r) a = 0, s = 0;else {
-    var l = i - r;switch (a = o > .5 ? l / (2 - i - r) : l / (i + r), i) {case t:
+      o = 0,
+      a = (i + r) / 2;if (i === r) o = 0, s = 0;else {
+    var l = i - r;switch (o = a > .5 ? l / (2 - i - r) : l / (i + r), i) {case t:
         s = (e - n) / l + (e < n ? 6 : 0);break;case e:
         s = (n - t) / l + 2;break;case n:
         s = (t - e) / l + 4;}s /= 6;
-  }return { h: s, s: a, l: o };
+  }return { h: s, s: o, l: a };
 }function Wt(t, e, n) {
   t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
-      a = i,
-      o = i - r,
-      l = 0 === i ? 0 : o / i;if (i === r) s = 0;else {
+      o = i,
+      a = i - r,
+      l = 0 === i ? 0 : a / i;if (i === r) s = 0;else {
     switch (i) {case t:
-        s = (e - n) / o + (e < n ? 6 : 0);break;case e:
-        s = (n - t) / o + 2;break;case n:
-        s = (t - e) / o + 4;}s /= 6;
-  }return { h: s, s: l, v: a };
+        s = (e - n) / a + (e < n ? 6 : 0);break;case e:
+        s = (n - t) / a + 2;break;case n:
+        s = (t - e) / a + 4;}s /= 6;
+  }return { h: s, s: l, v: o };
 }function Gt(t, e, n, i) {
   var r = [Ut(Math.round(t).toString(16)), Ut(Math.round(e).toString(16)), Ut(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
 }function Jt(t) {
@@ -932,27 +932,27 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       i,
       r = { r: 0, g: 0, b: 0 },
       s = 1,
-      a = null,
       o = null,
+      a = null,
       l = null,
       c = !1,
       h = !1;return "string" == typeof t && (t = function (t) {
     if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Xt[t]) t = Xt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = ne.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = ne.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = ne.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = ne.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = ne.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = ne.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = ne.hex8.exec(t)) return { r: Zt(n[1]), g: Zt(n[2]), b: Zt(n[3]), a: Jt(n[4]), format: e ? "name" : "hex8" };if (n = ne.hex6.exec(t)) return { r: Zt(n[1]), g: Zt(n[2]), b: Zt(n[3]), format: e ? "name" : "hex" };if (n = ne.hex4.exec(t)) return { r: Zt(n[1] + n[1]), g: Zt(n[2] + n[2]), b: Zt(n[3] + n[3]), a: Jt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = ne.hex3.exec(t)) return { r: Zt(n[1] + n[1]), g: Zt(n[2] + n[2]), b: Zt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
-  }(t)), "object" == typeof t && (ie(t.r) && ie(t.g) && ie(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * It(e, 255), g: 255 * It(n, 255), b: 255 * It(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : ie(t.h) && ie(t.s) && ie(t.v) ? (a = qt(t.s), o = qt(t.v), r = function (t, e, n) {
+  }(t)), "object" == typeof t && (ie(t.r) && ie(t.g) && ie(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * It(e, 255), g: 255 * It(n, 255), b: 255 * It(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : ie(t.h) && ie(t.s) && ie(t.v) ? (o = qt(t.s), a = qt(t.v), r = function (t, e, n) {
     t = 6 * It(t, 360), e = It(e, 100), n = It(n, 100);var i = Math.floor(t),
         r = t - i,
         s = n * (1 - e),
-        a = n * (1 - r * e),
-        o = n * (1 - (1 - r) * e),
-        l = i % 6;return { r: 255 * [n, a, s, s, o, n][l], g: 255 * [o, n, n, a, s, s][l], b: 255 * [s, s, o, n, n, a][l] };
-  }(t.h, a, o), c = !0, h = "hsv") : ie(t.h) && ie(t.s) && ie(t.l) && (a = qt(t.s), l = qt(t.l), r = function (t, e, n) {
-    var i, r, s;function a(t, e, n) {
+        o = n * (1 - r * e),
+        a = n * (1 - (1 - r) * e),
+        l = i % 6;return { r: 255 * [n, o, s, s, a, n][l], g: 255 * [a, n, n, o, s, s][l], b: 255 * [s, s, a, n, n, o][l] };
+  }(t.h, o, a), c = !0, h = "hsv") : ie(t.h) && ie(t.s) && ie(t.l) && (o = qt(t.s), l = qt(t.l), r = function (t, e, n) {
+    var i, r, s;function o(t, e, n) {
       return n < 0 && (n += 1), n > 1 && (n -= 1), n < 1 / 6 ? t + 6 * n * (e - t) : n < .5 ? e : n < 2 / 3 ? t + (e - t) * (2 / 3 - n) * 6 : t;
     }if (t = It(t, 360), e = It(e, 100), n = It(n, 100), 0 === e) r = n, s = n, i = n;else {
-      var o = n < .5 ? n * (1 + e) : n + e - n * e,
-          l = 2 * n - o;i = a(l, o, t + 1 / 3), r = a(l, o, t), s = a(l, o, t - 1 / 3);
+      var a = n < .5 ? n * (1 + e) : n + e - n * e,
+          l = 2 * n - a;i = o(l, a, t + 1 / 3), r = o(l, a, t), s = o(l, a, t - 1 / 3);
     }return { r: 255 * i, g: 255 * r, b: 255 * s };
-  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = zt(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
+  }(t.h, o, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = zt(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
 }var Qt = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
     te = "[\\s|\\(]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")\\s*\\)?",
     ee = "[\\s|\\(]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")\\s*\\)?",
@@ -997,7 +997,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.toHex8 = function (t) {
     return void 0 === t && (t = !1), function (t, e, n, i, r) {
       var s,
-          a = [Ut(Math.round(t).toString(16)), Ut(Math.round(e).toString(16)), Ut(Math.round(n).toString(16)), Ut((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
+          o = [Ut(Math.round(t).toString(16)), Ut(Math.round(e).toString(16)), Ut(Math.round(n).toString(16)), Ut((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && o[0].charAt(0) === o[0].charAt(1) && o[1].charAt(0) === o[1].charAt(1) && o[2].charAt(0) === o[2].charAt(1) && o[3].charAt(0) === o[3].charAt(1) ? o[0].charAt(0) + o[1].charAt(0) + o[2].charAt(0) + o[3].charAt(0) : o.join("");
     }(this.r, this.g, this.b, this.a, t);
   }, t.prototype.toHex8String = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex8(t);
@@ -1054,7 +1054,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.complement = function () {
     var e = this.toHsl();return e.h = (e.h + 180) % 360, new t(e);
   }, t.prototype.monochromatic = function (e) {
-    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, r = n.s, s = n.v, a = [], o = 1 / e; e--;) a.push(new t({ h: i, s: r, v: s })), s = (s + o) % 1;return a;
+    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, r = n.s, s = n.v, o = [], a = 1 / e; e--;) o.push(new t({ h: i, s: r, v: s })), s = (s + a) % 1;return o;
   }, t.prototype.splitcomplement = function () {
     var e = this.toHsl(),
         n = e.h;return [this, new t({ h: (n + 72) % 360, s: e.s, l: e.l }), new t({ h: (n + 216) % 360, s: e.s, l: e.l })];
@@ -1063,18 +1063,18 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.tetrad = function () {
     return this.polyad(4);
   }, t.prototype.polyad = function (e) {
-    for (var n = this.toHsl(), i = n.h, r = [this], s = 360 / e, a = 1; a < e; a++) r.push(new t({ h: (i + a * s) % 360, s: n.s, l: n.l }));return r;
+    for (var n = this.toHsl(), i = n.h, r = [this], s = 360 / e, o = 1; o < e; o++) r.push(new t({ h: (i + o * s) % 360, s: n.s, l: n.l }));return r;
   }, t.prototype.equals = function (e) {
     return this.toRgbString() === new t(e).toRgbString();
   }, t;
 }();function se(t, e) {
   return void 0 === t && (t = ""), void 0 === e && (e = {}), new re(t, e);
-}function ae(t) {
-  return t.substr(0, t.indexOf("."));
 }function oe(t) {
+  return t.substr(0, t.indexOf("."));
+}function ae(t) {
   return "var" === t.substring(0, 3) ? window.getComputedStyle(document.documentElement).getPropertyValue(t.substring(4).slice(0, -1)).trim() : t;
 }function le(t, e) {
-  const n = new re(oe(t));if (n.isValid) {
+  const n = new re(ae(t));if (n.isValid) {
     const t = n.mix("black", 100 - e).toString();if (t) return t;
   }return t;
 }function ce(...t) {
@@ -1459,7 +1459,6 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   @supports (--custom:property) {
     [style*="--aspect-ratio"] {
       position: relative;
-      padding: 0px;
     }
     [style*="--aspect-ratio"]::before {
       content: "";
@@ -1473,11 +1472,11 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       height: 100%;
     }
   }
-`;let ue = class extends at {
+`;let ue = class extends ot {
   static get styles() {
     return de;
   }render() {
-    return this.config && this.hass ? this._cardHtml() : R``;
+    return this.config && this.hass ? this._cardHtml() : $``;
   }shouldUpdate(t) {
     const e = this.config.entity ? this.hass.states[this.config.entity] : void 0,
           n = this._getMatchingConfigState(e);return function (t, e, n) {
@@ -1511,14 +1510,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       const i = new re("rgb(255, 160, 0)"),
             r = new re("rgb(166, 209, 255)"),
             s = new re("white"),
-            a = (t - e) / (n - e) * 100;return a < 50 ? se(r).mix(s, 2 * a).toRgbString() : se(s).mix(i, 2 * (a - 50)).toRgbString();
+            o = (t - e) / (n - e) * 100;return o < 50 ? se(r).mix(s, 2 * o).toRgbString() : se(s).mix(i, 2 * (o - 50)).toRgbString();
     }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (n = le(n, (t.attributes.brightness + 245) / 5))) : n = t.attributes.brightness ? le(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), n;
   }_buildCssColorAttribute(t, e) {
     let n,
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i || "auto-no-temperature" == i ? this._getColorForLightEntity(t, "auto-no-temperature" !== i) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in $t) return $t[t];switch (t) {case "alarm_control_panel":
+      if (t in Rt) return Rt[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":
@@ -1535,7 +1534,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               return "hass:timer-sand";default:
               return "hass:z-wave";}default:
           return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Tt;}
-    }(ae(t.entity_id), t.state)), n;
+    }(oe(t.entity_id), t.state)), n;
   }_buildEntityPicture(t, e) {
     if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n, i;return (i = e && e.entity_picture_template ? e.entity_picture_template : this.config.entity_picture_template) ? this._evalTemplate(t, i) : (e && e.entity_picture ? n = e.entity_picture : this.config.entity_picture ? n = this.config.entity_picture : t && (n = t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0), n);
   }_buildStyleGeneric(t, e) {
@@ -1547,14 +1546,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_buildStateString(t) {
     let e;if (this.config.show_state && t && t.state) {
       const n = ((t, e) => {
-        let n;const i = ae(e.entity_id);return "binary_sensor" === i ? (e.attributes.device_class && (n = t(`state.${i}.${e.attributes.device_class}.${e.state}`)), n || (n = t(`state.${i}.default.${e.state}`))) : n = e.attributes.unit_of_measurement && !["unknown", "unavailable"].includes(e.state) ? e.state : "zwave" === i ? ["initializing", "dead"].includes(e.state) ? t(`state.zwave.query_stage.${e.state}`, "query_stage", e.attributes.query_stage) : t(`state.zwave.default.${e.state}`) : t(`state.${i}.${e.state}`), n || (n = t(`state.default.${e.state}`) || t(`component.${i}.state.${e.state}`) || e.state), n;
+        let n;const i = oe(e.entity_id);return "binary_sensor" === i ? (e.attributes.device_class && (n = t(`state.${i}.${e.attributes.device_class}.${e.state}`)), n || (n = t(`state.${i}.default.${e.state}`))) : n = e.attributes.unit_of_measurement && !["unknown", "unavailable"].includes(e.state) ? e.state : "zwave" === i ? ["initializing", "dead"].includes(e.state) ? t(`state.zwave.query_stage.${e.state}`, "query_stage", e.attributes.query_stage) : t(`state.zwave.default.${e.state}`) : t(`state.${i}.${e.state}`), n || (n = t(`state.default.${e.state}`) || t(`component.${i}.state.${e.state}`) || e.state), n;
       })(this.hass.localize, t),
             i = this._buildUnits(t);e = i ? `${t.state} ${i}` : n;
     }return e;
   }_buildUnits(t) {
     let e;return t && this.config.show_units && (e = t.attributes && t.attributes.unit_of_measurement && !this.config.units ? t.attributes.unit_of_measurement : this.config.units ? this.config.units : void 0), e;
   }_buildLastChanged(t, e) {
-    return this.config.show_last_changed && t ? R`
+    return this.config.show_last_changed && t ? $`
         <ha-relative-time
           id="label"
           class="ellipsis"
@@ -1566,14 +1565,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     if (!this.config.show_label) return;let n, i;return (i = e && e.label_template ? e.label_template : this.config.label_template) ? this._evalTemplate(t, i) : n = e && e.label ? e.label : this.config.label;
   }_isClickable(t) {
     let e = !0;if ("toggle" === this.config.tap_action.action && "none" === this.config.hold_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.hold_action.action && "none" === this.config.tap_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.dbltap_action.action && "none" === this.config.tap_action.action && "none" === this.config.hold_action.action) {
-      if (t) switch (ae(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
+      if (t) switch (oe(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
           e = !1;break;default:
           e = !0;} else e = !1;
     } else e = "none" != this.config.tap_action.action || "none" != this.config.hold_action.action || "none" != this.config.dbltap_action.action;return e;
   }_rotate(t) {
     return !(!t || !t.spin);
   }_blankCardColoredHtml(t) {
-    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return R`
+    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return $`
       <ha-card class="disabled" style=${ct(e)}>
         <div></div>
       </ha-card>
@@ -1583,38 +1582,41 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           e = this._getMatchingConfigState(t),
           n = this._buildCssColorAttribute(t, e);let i = n,
         r = {},
-        s = {};const a = this._buildStyleGeneric(e, "lock"),
-          o = this._buildStyleGeneric(e, "card"),
-          l = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (o.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
-        return this._blankCardColoredHtml(o);case "card":case "label-card":
+        s = {},
+        o = {};const a = this._buildStyleGeneric(e, "lock"),
+          l = this._buildStyleGeneric(e, "card"),
+          c = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (l.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
+        return this._blankCardColoredHtml(l);case "card":case "label-card":
         {
           const t = function (t) {
-            const e = new re(oe(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
-          }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, o), i = "inherit";break;
+            const e = new re(ae(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
+          }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, l), i = "inherit";break;
         }default:
-        r = o;}return this.config.aspect_ratio && (r["--aspect-ratio"] = this.config.aspect_ratio, r.padding = "0px"), this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, a), R`
-      <ha-card
-        class=${mt(l)}
-        style=${ct(r)}
-        @ha-click="${this._handleTap}"
-        @ha-hold="${this._handleHold}"
-        @ha-dblclick=${this._handleDblTap}
-        .hasDblClick=${"none" !== this.config.dbltap_action.action}
-        .repeat=${ut(this.config.hold_action.repeat)}
-        .longpress=${Ft()}
-        .config="${this.config}"
-      >
-        ${this._getLock(s)}
-        ${this._buttonContent(t, e, i)}
-        ${this.config.lock ? "" : R`<mwc-ripple id="ripple"></mwc-ripple>`}
-      </ha-card>
+        r = l;}return this.config.aspect_ratio && (o["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute"), this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, a), $`
+      <div id="aspect-ratio" style=${ct(o)}>
+        <ha-card
+          class=${mt(c)}
+          style=${ct(r)}
+          @ha-click="${this._handleTap}"
+          @ha-hold="${this._handleHold}"
+          @ha-dblclick=${this._handleDblTap}
+          .hasDblClick=${"none" !== this.config.dbltap_action.action}
+          .repeat=${ut(this.config.hold_action.repeat)}
+          .longpress=${Ft()}
+          .config="${this.config}"
+        >
+          ${this._getLock(s)}
+          ${this._buttonContent(t, e, i)}
+          ${this.config.lock ? "" : $`<mwc-ripple id="ripple"></mwc-ripple>`}
+        </ha-card>
+      </div>
       `;
   }_getLock(t) {
-    return this.config.lock ? R`
+    return this.config.lock ? $`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
-      ` : R``;
+      ` : $``;
   }_buttonContent(t, e, n) {
     const i = this._buildName(t, e),
           r = this._buildStateString(t),
@@ -1624,19 +1626,19 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         return this._gridHtml(t, e, this.config.layout, n, s, void 0);default:
         return this._gridHtml(t, e, this.config.layout, n, i, r);}
   }_gridHtml(t, e, n, i, r, s) {
-    const a = this._getIconHtml(t, e, i),
-          o = [n],
+    const o = this._getIconHtml(t, e, i),
+          a = [n],
           l = this._buildLabel(t, e),
           c = this._buildStyleGeneric(e, "name"),
           h = this._buildStyleGeneric(e, "state"),
           d = this._buildStyleGeneric(e, "label"),
           u = this._buildLastChanged(t, d),
-          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), R`
-      <div id="container" class=${o.join(" ")} style=${ct(p)}>
-        ${a || ""}
-        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
-        ${s ? R`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
-        ${l && !u ? R`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
+          p = this._buildStyleGeneric(e, "grid");return o || a.push("no-icon"), r || a.push("no-name"), s || a.push("no-state"), l || u || a.push("no-label"), $`
+      <div id="container" class=${a.join(" ")} style=${ct(p)}>
+        ${o || ""}
+        ${r ? $`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
+        ${s ? $`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
+        ${l && !u ? $`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
         ${u || ""}
       </div>
     `;
@@ -1644,15 +1646,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     const i = this._buildIcon(t, e),
           r = this._buildEntityPicture(t, e),
           s = this._buildStyleGeneric(e, "entity_picture"),
-          a = this._buildStyleGeneric(e, "icon"),
-          o = this._buildStyleGeneric(e, "img_cell"),
+          o = this._buildStyleGeneric(e, "icon"),
+          a = this._buildStyleGeneric(e, "img_cell"),
           l = this._buildStyleGeneric(e, "card"),
-          c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, a),
-          h = Object.assign({}, c, s);return i || r ? R`
-        <div id="img-cell" style=${ct(o)}>
-          ${i && !r ? R`<ha-icon style=${ct(c)}
+          c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, o),
+          h = Object.assign({}, c, s);return i || r ? $`
+        <div id="img-cell" style=${ct(a)}>
+          ${i && !r ? $`<ha-icon style=${ct(c)}
             .icon="${i}" id="icon" ?rotating=${this._rotate(e)}></ha-icon>` : ""}
-          ${r ? R`<img src="${r}" style=${ct(h)}
+          ${r ? $`<img src="${r}" style=${ct(h)}
             id="icon" ?rotating=${this._rotate(e)} />` : ""}
         </div>
       ` : void 0;
