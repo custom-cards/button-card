@@ -463,6 +463,8 @@ class ButtonCard extends LitElement {
     if (this.config!.aspect_ratio) {
       aspectRatio['--aspect-ratio'] = this.config!.aspect_ratio;
       cardStyle.position = 'absolute';
+    } else {
+      aspectRatio.display = 'inline';
     }
     this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
