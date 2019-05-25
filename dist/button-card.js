@@ -809,7 +809,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       if (!s.service) return;var a = s.service.split(".", 2),
           o = a[0],
           l = a[1],
-          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, s.service_data), s.haptic && Ht(t, s.haptic);}
+          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, c), s.haptic && Ht(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
