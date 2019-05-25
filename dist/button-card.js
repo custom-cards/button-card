@@ -809,7 +809,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       if (!s.service) return;var a = s.service.split(".", 2),
           o = a[0],
           l = a[1],
-          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, s.service_data), s.haptic && Ht(t, s.haptic);}
+          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, c), s.haptic && Ht(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
@@ -1595,7 +1595,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
             const e = new re(oe(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
           }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, l), i = "inherit";break;
         }default:
-        r = l;}return this.config.aspect_ratio && (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute"), this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, o), $`
+        r = l;}return this.config.aspect_ratio ? (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute") : a.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, o), $`
       <div id="aspect-ratio" style=${ct(a)}>
         <ha-card
           class=${mt(c)}
