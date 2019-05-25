@@ -294,8 +294,8 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const R = (t, ...e) => new b(t, e, "html", A),
-      $ = 133;
+(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const $ = (t, ...e) => new b(t, e, "html", A),
+      R = 133;
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -310,14 +310,14 @@ class g {
  * http://polymer.github.io/PATENTS.txt
  */function H(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, $, null, !1);let s = D(i),
+        r = document.createTreeWalker(n, R, null, !1);let s = D(i),
       a = i[s],
       o = -1,
       l = 0;const c = [];let h = null;for (; r.nextNode();) {
     o++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[s = D(i, s)];
   }c.forEach(t => t.parentNode.removeChild(t));
 }const O = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, $, null, !1);for (; n.nextNode();) e++;return e;
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, R, null, !1);for (; n.nextNode();) e++;return e;
 },
       D = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
@@ -357,7 +357,7 @@ const L = (t, e) => `${t}--${e}`;let V = !0;void 0 === window.ShadyCSS ? V = !1 
       });
     });
   })(n), function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, $, null, !1);let a = D(r),
+    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, R, null, !1);let a = D(r),
         o = 0,
         l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = O(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
       if (o > 0) {
@@ -781,17 +781,17 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }
 }();var Tt = "hass:bookmark",
     Nt = ["closed", "locked", "off"],
-    Rt = function (t, e, n, i) {
+    $t = function (t, e, n, i) {
   i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
 },
-    $t = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ht = function (t, e) {
-  Rt(t, "haptic", e);
+    Rt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ht = function (t, e) {
+  $t(t, "haptic", e);
 },
     Ot = function (t, e, n, i, r) {
   var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && (Rt(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ht(t, s.haptic));break;case "navigate":
+      (n.entity || n.camera_image) && ($t(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ht(t, s.haptic));break;case "navigate":
       s.navigation_path && (function (t, e, n) {
-        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Rt(window, "location-changed", { replace: n });
+        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), $t(window, "location-changed", { replace: n });
       }(0, s.navigation_path), s.haptic && Ht(t, s.haptic));break;case "url":
       s.url && window.open(s.url), s.haptic && Ht(t, s.haptic);break;case "toggle":
       n.entity && (function (t, e) {
@@ -806,7 +806,10 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               i = n ? "turn_on" : "turn_off";}t.callService(s, i, { entity_id: e });
         })(t, e, Nt.includes(t.states[e].state));
       }(e, n.entity), s.haptic && Ht(t, s.haptic));break;case "call-service":
-      if (!s.service) return;var a = s.service.split(".", 2);e.callService(a[0], a[1], s.service_data), s.haptic && Ht(t, s.haptic);}
+      if (!s.service) return;var a = s.service.split(".", 2),
+          o = a[0],
+          l = a[1],
+          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, s.service_data), s.haptic && Ht(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
@@ -1459,7 +1462,6 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   @supports (--custom:property) {
     [style*="--aspect-ratio"] {
       position: relative;
-      padding: 0px;
     }
     [style*="--aspect-ratio"]::before {
       content: "";
@@ -1477,7 +1479,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   static get styles() {
     return de;
   }render() {
-    return this.config && this.hass ? this._cardHtml() : R``;
+    return this.config && this.hass ? this._cardHtml() : $``;
   }shouldUpdate(t) {
     const e = this.config.entity ? this.hass.states[this.config.entity] : void 0,
           n = this._getMatchingConfigState(e);return function (t, e, n) {
@@ -1518,7 +1520,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i || "auto-no-temperature" == i ? this._getColorForLightEntity(t, "auto-no-temperature" !== i) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in $t) return $t[t];switch (t) {case "alarm_control_panel":
+      if (t in Rt) return Rt[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":
@@ -1554,7 +1556,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_buildUnits(t) {
     let e;return t && this.config.show_units && (e = t.attributes && t.attributes.unit_of_measurement && !this.config.units ? t.attributes.unit_of_measurement : this.config.units ? this.config.units : void 0), e;
   }_buildLastChanged(t, e) {
-    return this.config.show_last_changed && t ? R`
+    return this.config.show_last_changed && t ? $`
         <ha-relative-time
           id="label"
           class="ellipsis"
@@ -1573,7 +1575,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_rotate(t) {
     return !(!t || !t.spin);
   }_blankCardColoredHtml(t) {
-    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return R`
+    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return $`
       <ha-card class="disabled" style=${ct(e)}>
         <div></div>
       </ha-card>
@@ -1583,38 +1585,41 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           e = this._getMatchingConfigState(t),
           n = this._buildCssColorAttribute(t, e);let i = n,
         r = {},
-        s = {};const a = this._buildStyleGeneric(e, "lock"),
-          o = this._buildStyleGeneric(e, "card"),
-          l = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (o.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
-        return this._blankCardColoredHtml(o);case "card":case "label-card":
+        s = {},
+        a = {};const o = this._buildStyleGeneric(e, "lock"),
+          l = this._buildStyleGeneric(e, "card"),
+          c = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (l.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
+        return this._blankCardColoredHtml(l);case "card":case "label-card":
         {
           const t = function (t) {
             const e = new re(oe(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
-          }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, o), i = "inherit";break;
+          }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, l), i = "inherit";break;
         }default:
-        r = o;}return this.config.aspect_ratio && (r["--aspect-ratio"] = this.config.aspect_ratio, r.padding = "0px"), this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, a), R`
-      <ha-card
-        class=${mt(l)}
-        style=${ct(r)}
-        @ha-click="${this._handleTap}"
-        @ha-hold="${this._handleHold}"
-        @ha-dblclick=${this._handleDblTap}
-        .hasDblClick=${"none" !== this.config.dbltap_action.action}
-        .repeat=${ut(this.config.hold_action.repeat)}
-        .longpress=${Ft()}
-        .config="${this.config}"
-      >
-        ${this._getLock(s)}
-        ${this._buttonContent(t, e, i)}
-        ${this.config.lock ? "" : R`<mwc-ripple id="ripple"></mwc-ripple>`}
-      </ha-card>
+        r = l;}return this.config.aspect_ratio && (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute"), this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, o), $`
+      <div id="aspect-ratio" style=${ct(a)}>
+        <ha-card
+          class=${mt(c)}
+          style=${ct(r)}
+          @ha-click="${this._handleTap}"
+          @ha-hold="${this._handleHold}"
+          @ha-dblclick=${this._handleDblTap}
+          .hasDblClick=${"none" !== this.config.dbltap_action.action}
+          .repeat=${ut(this.config.hold_action.repeat)}
+          .longpress=${Ft()}
+          .config="${this.config}"
+        >
+          ${this._getLock(s)}
+          ${this._buttonContent(t, e, i)}
+          ${this.config.lock ? "" : $`<mwc-ripple id="ripple"></mwc-ripple>`}
+        </ha-card>
+      </div>
       `;
   }_getLock(t) {
-    return this.config.lock ? R`
+    return this.config.lock ? $`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
-      ` : R``;
+      ` : $``;
   }_buttonContent(t, e, n) {
     const i = this._buildName(t, e),
           r = this._buildStateString(t),
@@ -1631,12 +1636,12 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           h = this._buildStyleGeneric(e, "state"),
           d = this._buildStyleGeneric(e, "label"),
           u = this._buildLastChanged(t, d),
-          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), R`
+          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), $`
       <div id="container" class=${o.join(" ")} style=${ct(p)}>
         ${a || ""}
-        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
-        ${s ? R`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
-        ${l && !u ? R`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
+        ${r ? $`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
+        ${s ? $`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
+        ${l && !u ? $`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
         ${u || ""}
       </div>
     `;
@@ -1648,11 +1653,11 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           o = this._buildStyleGeneric(e, "img_cell"),
           l = this._buildStyleGeneric(e, "card"),
           c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, a),
-          h = Object.assign({}, c, s);return i || r ? R`
+          h = Object.assign({}, c, s);return i || r ? $`
         <div id="img-cell" style=${ct(o)}>
-          ${i && !r ? R`<ha-icon style=${ct(c)}
+          ${i && !r ? $`<ha-icon style=${ct(c)}
             .icon="${i}" id="icon" ?rotating=${this._rotate(e)}></ha-icon>` : ""}
-          ${r ? R`<img src="${r}" style=${ct(h)}
+          ${r ? $`<img src="${r}" style=${ct(h)}
             id="icon" ?rotating=${this._rotate(e)} />` : ""}
         </div>
       ` : void 0;

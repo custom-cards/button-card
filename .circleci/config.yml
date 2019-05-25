@@ -1,0 +1,60 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+
+jobs:
+  build:
+    <<: *defaults
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:lts
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: rm -rf ~/repo/node_modules/custom-card-helpers/.git
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: npm run build
+
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+  create-draft-release:
+    <<: *defaults
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            VERSION=$(cat package.json | jq -r '.version')
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -draft ${VERSION} ~/repo/dist/*.js
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build
+      - create-draft-release:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
