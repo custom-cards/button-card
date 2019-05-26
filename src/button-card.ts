@@ -472,6 +472,7 @@ class ButtonCard extends LitElement {
     return html`
       <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
         <ha-card
+          id="card"
           class=${classMap(classList)}
           style=${styleMap(cardStyle)}
           @ha-click="${this._handleTap}"
@@ -668,7 +669,7 @@ class ButtonCard extends LitElement {
   private _handleLock(ev): void {
     ev.stopPropagation();
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
-    const haCard = this.shadowRoot!.firstElementChild as LitElement;
+    const haCard = this.shadowRoot!.getElementById('card') as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
     const paperRipple = document.createElement('paper-ripple');
 

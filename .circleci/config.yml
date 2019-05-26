@@ -16,8 +16,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - deps-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - deps-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-
+            - deps-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
             - deps-{{ .Environment.CACHE_VERSION }}-
       - run: rm -rf ~/repo/node_modules/custom-card-helpers/.git
       - run: npm install
@@ -25,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: deps-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: deps-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
 
       - run: npm run build
 
