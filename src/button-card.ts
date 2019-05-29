@@ -467,6 +467,7 @@ class ButtonCard extends LitElement {
       aspectRatio.display = 'inline';
     }
     this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
+    this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(state, false));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
