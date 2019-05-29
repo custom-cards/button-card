@@ -274,14 +274,18 @@ See [styling](#styling) for a complete example.
 
 #### Light entity color variable
 
-If a light entity is assigned to the button, then the CSS variable `--button-card-light-color` will contain the current light color so that you can use it in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
+If a light entity is assigned to the button, then:
+* the CSS variable `--button-card-light-color` will contain the current light color
+* the CSS variable `--button-card-light-color-no-temperature` will contain the current light without the temperature
+
+You can use them both in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
 
 ![css-var](examples/color-variable.gif)
 
 ```yaml
 styles:
   name:
-    color: var(--button-card-light-color)
+    - color: var(--button-card-light-color)
   card:
     - -webkit-box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
     - box-shadow: 0px 0px 9px 3px var(--button-card-light-color)
