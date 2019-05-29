@@ -1598,6 +1598,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         r = l;}return this.config.aspect_ratio ? (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute") : a.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), s = Object.assign({}, s, o), $`
       <div id="aspect-ratio" style=${ct(a)}>
         <ha-card
+          id="card"
           class=${mt(c)}
           style=${ct(r)}
           @ha-click="${this._handleTap}"
@@ -1679,7 +1680,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Ot(this, this.hass, e, !1, !0);
   }_handleLock(t) {
     t.stopPropagation();const e = this.shadowRoot.getElementById("overlay"),
-          n = this.shadowRoot.firstElementChild;e.style.setProperty("pointer-events", "none");const i = document.createElement("paper-ripple"),
+          n = this.shadowRoot.getElementById("card");e.style.setProperty("pointer-events", "none");const i = document.createElement("paper-ripple"),
           r = this.shadowRoot.getElementById("lock");if (r) {
       n.appendChild(i);const t = document.createAttribute("icon");t.value = "mdi:lock-open-outline", r.attributes.setNamedItem(t), r.classList.add("fadeOut");
     }window.setTimeout(() => {
