@@ -1486,7 +1486,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       if (e.has("config") || n) return !0;if (t.config.entity) {
         const n = e.get("hass");return !n || n.states[t.config.entity] !== t.hass.states[t.config.entity];
       }return !1;
-    }(this, t, !!(this.config.show_label && (n && n.label_template || this.config.label_template) || this.config.state && this.config.state.find(t => "template" === t.operator)));
+    }(this, t, !!(n && (this.config.show_label && n.label_template || this.config.show_entity_picture && n.entity_picture_template || this.config.show_name && n.name_template) || this.config.show_label && this.config.label_template || this.config.show_name && this.config.name_template || this.config.show_entity_picture && this.config.entity_picture_template || this.config.state && this.config.state.find(t => "template" === t.operator)));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
       if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
