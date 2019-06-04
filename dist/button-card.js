@@ -1679,7 +1679,9 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_handleDblTap(t) {
     if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Ot(this, this.hass, e, !1, !0);
   }_handleLock(t) {
-    t.stopPropagation();const e = this.shadowRoot.getElementById("overlay"),
+    if (t.stopPropagation(), this.config.unlock_users) {
+      if (!this.hass.user.name) return;if (this.config.unlock_users.indexOf(this.hass.user.name) < 0) return;
+    }const e = this.shadowRoot.getElementById("overlay"),
           n = this.shadowRoot.getElementById("card");e.style.setProperty("pointer-events", "none");const i = document.createElement("paper-ripple"),
           r = this.shadowRoot.getElementById("lock");if (r) {
       n.appendChild(i);const t = document.createAttribute("icon");t.value = "mdi:lock-open-outline", r.attributes.setNamedItem(t), r.classList.add("fadeOut");

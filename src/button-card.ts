@@ -674,6 +674,10 @@ class ButtonCard extends LitElement {
 
   private _handleLock(ev): void {
     ev.stopPropagation();
+    if (this.config!.unlock_users) {
+      if (!this.hass!.user.name) return;
+      if (this.config!.unlock_users.indexOf(this.hass!.user.name) < 0) return;
+    }
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
     const haCard = this.shadowRoot!.getElementById('card') as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
