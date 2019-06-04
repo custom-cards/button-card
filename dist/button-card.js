@@ -1,7 +1,7 @@
 function t(t, e, n, i) {
   var r,
       s = arguments.length,
-      o = s < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) o = Reflect.decorate(t, e, n, i);else for (var a = t.length - 1; a >= 0; a--) (r = t[a]) && (o = (s < 3 ? r(o) : s > 3 ? r(e, n, o) : r(e, n)) || o);return s > 3 && o && Object.defineProperty(e, n, o), o;
+      a = s < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(t, e, n, i);else for (var o = t.length - 1; o >= 0; o--) (r = t[o]) && (a = (s < 3 ? r(a) : s > 3 ? r(e, n, a) : r(e, n)) || a);return s > 3 && a && Object.defineProperty(e, n, a), a;
   /**
    * @license
    * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -26,8 +26,8 @@ function t(t, e, n, i) {
     const e = i.nextSibling;t.removeChild(i), i = e;
   }
 },
-      o = {},
       a = {},
+      o = {},
       l = `{{lit-${String(Math.random()).slice(2)}}}`,
       c = `\x3c!--${l}--\x3e`,
       h = new RegExp(`${l}|${c}`),
@@ -36,22 +36,22 @@ function t(t, e, n, i) {
     this.parts = [], this.element = e;let n = -1,
         i = 0;const r = [],
           s = e => {
-      const o = e.content,
-            a = document.createTreeWalker(o, 133, null, !1);let c = 0;for (; a.nextNode();) {
-        n++;const e = a.currentNode;if (1 === e.nodeType) {
+      const a = e.content,
+            o = document.createTreeWalker(a, 133, null, !1);let c = 0;for (; o.nextNode();) {
+        n++;const e = o.currentNode;if (1 === e.nodeType) {
           if (e.hasAttributes()) {
             const r = e.attributes;let s = 0;for (let t = 0; t < r.length; t++) r[t].value.indexOf(l) >= 0 && s++;for (; s-- > 0;) {
               const r = t.strings[i],
                     s = m.exec(r)[2],
-                    o = s.toLowerCase() + d,
-                    a = e.getAttribute(o).split(h);this.parts.push({ type: "attribute", index: n, name: s, strings: a }), e.removeAttribute(o), i += a.length - 1;
+                    a = s.toLowerCase() + d,
+                    o = e.getAttribute(a).split(h);this.parts.push({ type: "attribute", index: n, name: s, strings: o }), e.removeAttribute(a), i += o.length - 1;
             }
           }"TEMPLATE" === e.tagName && s(e);
         } else if (3 === e.nodeType) {
           const t = e.data;if (t.indexOf(l) >= 0) {
             const s = e.parentNode,
-                  o = t.split(h),
-                  a = o.length - 1;for (let t = 0; t < a; t++) s.insertBefore("" === o[t] ? f() : document.createTextNode(o[t]), e), this.parts.push({ type: "node", index: ++n });"" === o[a] ? (s.insertBefore(f(), e), r.push(e)) : e.data = o[a], i += a;
+                  a = t.split(h),
+                  o = a.length - 1;for (let t = 0; t < o; t++) s.insertBefore("" === a[t] ? f() : document.createTextNode(a[t]), e), this.parts.push({ type: "node", index: ++n });"" === a[o] ? (s.insertBefore(f(), e), r.push(e)) : e.data = a[o], i += o;
           }
         } else if (8 === e.nodeType) if (e.data === l) {
           const t = e.parentNode;null !== e.previousSibling && n !== c || (n++, t.insertBefore(f(), e)), c = n, this.parts.push({ type: "node", index: n }), null === e.nextSibling ? e.data = "" : (r.push(e), n--), i++;
@@ -86,13 +86,13 @@ class g {
     const t = r ? this.template.element.content.cloneNode(!0) : document.importNode(this.template.element.content, !0),
           e = this.template.parts;let n = 0,
         i = 0;const s = t => {
-      const r = document.createTreeWalker(t, 133, null, !1);let o = r.nextNode();for (; n < e.length && null !== o;) {
+      const r = document.createTreeWalker(t, 133, null, !1);let a = r.nextNode();for (; n < e.length && null !== a;) {
         const t = e[n];if (p(t)) {
           if (i === t.index) {
             if ("node" === t.type) {
-              const t = this.processor.handleTextExpression(this.options);t.insertAfterNode(o.previousSibling), this._parts.push(t);
-            } else this._parts.push(...this.processor.handleAttributeExpressions(o, t.name, t.strings, this.options));n++;
-          } else i++, "TEMPLATE" === o.nodeName && s(o.content), o = r.nextNode();
+              const t = this.processor.handleTextExpression(this.options);t.insertAfterNode(a.previousSibling), this._parts.push(t);
+            } else this._parts.push(...this.processor.handleAttributeExpressions(a, t.name, t.strings, this.options));n++;
+          } else i++, "TEMPLATE" === a.nodeName && s(a.content), a = r.nextNode();
         } else this._parts.push(void 0), n++;
       }
     };return s(t), r && (document.adoptNode(t), customElements.upgrade(t)), t;
@@ -153,11 +153,11 @@ class g {
   constructor(t) {
     this.value = void 0, this.committer = t;
   }setValue(t) {
-    t === o || y(t) && t === this.value || (this.value = t, i(t) || (this.committer.dirty = !0));
+    t === a || y(t) && t === this.value || (this.value = t, i(t) || (this.committer.dirty = !0));
   }commit() {
     for (; i(this.value);) {
-      const t = this.value;this.value = o, t(this);
-    }this.value !== o && this.committer.commit();
+      const t = this.value;this.value = a, t(this);
+    }this.value !== a && this.committer.commit();
   }
 }class w {
   constructor(t) {
@@ -174,8 +174,8 @@ class g {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = o, t(this);
-    }const t = this._pendingValue;t !== o && (y(t) ? t !== this.value && this._commitText(t) : t instanceof b ? this._commitTemplateResult(t) : t instanceof Node ? this._commitNode(t) : Array.isArray(t) || t[Symbol.iterator] ? this._commitIterable(t) : t === a ? (this.value = a, this.clear()) : this._commitText(t));
+      const t = this._pendingValue;this._pendingValue = a, t(this);
+    }const t = this._pendingValue;t !== a && (y(t) ? t !== this.value && this._commitText(t) : t instanceof b ? this._commitTemplateResult(t) : t instanceof Node ? this._commitNode(t) : Array.isArray(t) || t[Symbol.iterator] ? this._commitIterable(t) : t === o ? (this.value = o, this.clear()) : this._commitText(t));
   }_insert(t) {
     this.endNode.parentNode.insertBefore(t, this.endNode);
   }_commitNode(t) {
@@ -200,8 +200,8 @@ class g {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = o, t(this);
-    }if (this._pendingValue === o) return;const t = !!this._pendingValue;this.value !== t && (t ? this.element.setAttribute(this.name, "") : this.element.removeAttribute(this.name)), this.value = t, this._pendingValue = o;
+      const t = this._pendingValue;this._pendingValue = a, t(this);
+    }if (this._pendingValue === a) return;const t = !!this._pendingValue;this.value !== t && (t ? this.element.setAttribute(this.name, "") : this.element.removeAttribute(this.name)), this.value = t, this._pendingValue = a;
   }
 }class x extends v {
   constructor(t, e, n) {
@@ -217,22 +217,22 @@ class g {
   const t = { get capture() {
       return M = !0, !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}class E {
+} catch (t) {}class C {
   constructor(t, e, n) {
     this.value = void 0, this._pendingValue = void 0, this.element = t, this.eventName = e, this.eventContext = n, this._boundHandleEvent = t => this.handleEvent(t);
   }setValue(t) {
     this._pendingValue = t;
   }commit() {
     for (; i(this._pendingValue);) {
-      const t = this._pendingValue;this._pendingValue = o, t(this);
-    }if (this._pendingValue === o) return;const t = this._pendingValue,
+      const t = this._pendingValue;this._pendingValue = a, t(this);
+    }if (this._pendingValue === a) return;const t = this._pendingValue,
           e = this.value,
           n = null == t || null != e && (t.capture !== e.capture || t.once !== e.once || t.passive !== e.passive),
-          r = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), r && (this._options = C(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = o;
+          r = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), r && (this._options = E(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = a;
   }handleEvent(t) {
     "function" == typeof this.value ? this.value.call(this.eventContext || this.element, t) : this.value.handleEvent(t);
   }
-}const C = t => t && (M ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
+}const E = t => t && (M ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -247,7 +247,7 @@ class g {
  * http://polymer.github.io/PATENTS.txt
  */const P = new class {
   handleAttributeExpressions(t, e, n, i) {
-    const r = e[0];return "." === r ? new x(t, e.slice(1), n).parts : "@" === r ? [new E(t, e.slice(1), i.eventContext)] : "?" === r ? [new S(t, e.slice(1), n)] : new v(t, e, n).parts;
+    const r = e[0];return "." === r ? new x(t, e.slice(1), n).parts : "@" === r ? [new C(t, e.slice(1), i.eventContext)] : "?" === r ? [new S(t, e.slice(1), n)] : new v(t, e, n).parts;
   }handleTextExpression(t) {
     return new w(t);
   }
@@ -294,8 +294,8 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const $ = (t, ...e) => new b(t, e, "html", P),
-      R = 133;
+(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const R = (t, ...e) => new b(t, e, "html", P),
+      $ = 133;
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -310,16 +310,16 @@ class g {
  * http://polymer.github.io/PATENTS.txt
  */function H(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, R, null, !1);let s = D(i),
-      o = i[s],
-      a = -1,
+        r = document.createTreeWalker(n, $, null, !1);let s = O(i),
+      a = i[s],
+      o = -1,
       l = 0;const c = [];let h = null;for (; r.nextNode();) {
-    a++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== o && o.index === a;) o.index = null !== h ? -1 : o.index - l, o = i[s = D(i, s)];
+    o++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[s = O(i, s)];
   }c.forEach(t => t.parentNode.removeChild(t));
-}const O = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, R, null, !1);for (; n.nextNode();) e++;return e;
+}const D = t => {
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, $, null, !1);for (; n.nextNode();) e++;return e;
 },
-      D = (t, e = -1) => {
+      O = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
     const e = t[n];if (p(e)) return n;
   }return -1;
@@ -342,13 +342,13 @@ const L = (t, e) => `${t}--${e}`;let V = !0;void 0 === window.ShadyCSS ? V = !1 
     const n = e.getTemplateElement();V && window.ShadyCSS.prepareTemplateDom(n, t), r = new u(e, n), i.keyString.set(s, r);
   }return i.stringsArray.set(e.strings, r), r;
 },
-      F = ["html", "svg"],
-      I = new Set(),
+      I = ["html", "svg"],
+      F = new Set(),
       Y = (t, e, n) => {
-  I.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const r = document.createElement("style");for (let t = 0; t < i.length; t++) {
+  F.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const r = document.createElement("style");for (let t = 0; t < i.length; t++) {
     const e = i[t];e.parentNode.removeChild(e), r.textContent += e.textContent;
   }if ((t => {
-    F.forEach(e => {
+    I.forEach(e => {
       const n = T.get(L(e, t));void 0 !== n && n.keyString.forEach(t => {
         const { element: { content: e } } = t,
               n = new Set();Array.from(e.querySelectorAll("style")).forEach(t => {
@@ -357,12 +357,12 @@ const L = (t, e) => `${t}--${e}`;let V = !0;void 0 === window.ShadyCSS ? V = !1 
       });
     });
   })(n), function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, R, null, !1);let o = D(r),
-        a = 0,
-        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (a = O(e), n.parentNode.insertBefore(e, n)); -1 !== o && r[o].index === l;) {
-      if (a > 0) {
-        for (; -1 !== o;) r[o].index += a, o = D(r, o);return;
-      }o = D(r, o);
+    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, $, null, !1);let a = O(r),
+        o = 0,
+        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = D(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
+      if (o > 0) {
+        for (; -1 !== a;) r[a].index += o, a = O(r, a);return;
+      }a = O(r, a);
     }
   }(e, r, e.element.content.firstChild), window.ShadyCSS.prepareTemplateStyles(e.element, n), window.ShadyCSS.nativeShadow) {
     const n = e.element.content.querySelector("style");t.insertBefore(n.cloneNode(!0), t.firstChild);
@@ -559,7 +559,7 @@ found at http://polymer.github.io/PATENTS.txt
   for (let i = 0, r = e.length; i < r; i++) {
     const r = e[i];Array.isArray(r) ? t(r, n) : n.push(r);
   }return n;
-}(t);class ot extends K {
+}(t);class at extends K {
   static finalize() {
     super.finalize(), this._styles = this.hasOwnProperty(JSCompiler_renameProperty("styles", this)) ? this._getUniqueStyles() : this._styles || [];
   }static _getUniqueStyles() {
@@ -580,16 +580,16 @@ found at http://polymer.github.io/PATENTS.txt
       const e = document.createElement("style");e.textContent = t.cssText, this.renderRoot.appendChild(e);
     }));
   }render() {}
-}ot.finalized = !0, ot.render = (t, e, n) => {
+}at.finalized = !0, at.render = (t, e, n) => {
   const i = n.scopeName,
         r = N.has(e),
-        o = e instanceof ShadowRoot && V && t instanceof b,
-        a = o && !I.has(i),
-        l = a ? document.createDocumentFragment() : e;if (((t, e, n) => {
+        a = e instanceof ShadowRoot && V && t instanceof b,
+        o = a && !F.has(i),
+        l = o ? document.createDocumentFragment() : e;if (((t, e, n) => {
     let i = N.get(e);void 0 === i && (s(e, e.firstChild), N.set(e, i = new w(Object.assign({ templateFactory: A }, n))), i.appendInto(e)), i.setValue(t), i.commit();
-  })(t, l, Object.assign({ templateFactory: j(i) }, n)), a) {
+  })(t, l, Object.assign({ templateFactory: j(i) }, n)), o) {
     const t = N.get(l);N.delete(l), t.value instanceof g && Y(l, t.value.template, i), s(e, e.firstChild), e.appendChild(l), N.set(e, t);
-  }!r && o && window.ShadyCSS.styleElement(e.host);
+  }!r && a && window.ShadyCSS.styleElement(e.host);
 };
 /**
  * @license
@@ -604,11 +604,11 @@ found at http://polymer.github.io/PATENTS.txt
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-const at = new WeakMap(),
+const ot = new WeakMap(),
       lt = new WeakMap(),
       ct = n(t => e => {
   if (!(e instanceof _) || e instanceof k || "style" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `styleMap` directive must be used in the style attribute and must be the only part in the attribute.");lt.has(e) || (e.committer.element.style.cssText = e.committer.strings.join(" "), lt.set(e, !0));const n = e.committer.element.style,
-        i = at.get(e);for (const e in i) e in t || (-1 === e.indexOf("-") ? n[e] = null : n.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? n[e] = t[e] : n.setProperty(e, t[e]);at.set(e, t);
+        i = ot.get(e);for (const e in i) e in t || (-1 === e.indexOf("-") ? n[e] = null : n.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? n[e] = t[e] : n.setProperty(e, t[e]);ot.set(e, t);
 }),
       ht = new WeakMap(),
       dt = n(t => e => {
@@ -654,8 +654,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   for (t = String(t), e = e || 2; t.length < e;) t = "0" + t;return t;
 }var kt = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     Mt = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    Et = wt(Mt, 3),
-    Ct = wt(kt, 3);gt.i18n = { dayNamesShort: Ct, dayNames: kt, monthNamesShort: Et, monthNames: Mt, amPm: ["am", "pm"], DoFn: function (t) {
+    Ct = wt(Mt, 3),
+    Et = wt(kt, 3);gt.i18n = { dayNamesShort: Et, dayNames: kt, monthNamesShort: Ct, monthNames: Mt, amPm: ["am", "pm"], DoFn: function (t) {
     return t + ["th", "st", "nd", "rd"][t % 10 > 3 ? 0 : (t - t % 10 != 10) * t % 10];
   } };var Pt = { D: function (t) {
     return t.getDate();
@@ -739,7 +739,9 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }], ZZ: ["[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z", function (t, e) {
     var n,
         i = (e + "").match(/([+-]|\d\d)/gi);i && (n = 60 * i[1] + parseInt(i[2], 10), t.timezoneOffset = "+" === i[0] ? n : -n);
-  }] };At.dd = At.d, At.dddd = At.ddd, At.DD = At.D, At.mm = At.m, At.hh = At.H = At.HH = At.h, At.MM = At.M, At.ss = At.s, At.A = At.a, gt.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, gt.format = function (t, e, n) {
+  }] };function Tt(t) {
+  var e = t.split(":").map(Number);return 3600 * e[0] + 60 * e[1] + e[2];
+}At.dd = At.d, At.dddd = At.ddd, At.DD = At.D, At.mm = At.m, At.hh = At.H = At.HH = At.h, At.MM = At.M, At.ss = At.s, At.A = At.a, gt.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, gt.format = function (t, e, n) {
   var i = n || gt.i18n;if ("number" == typeof t && (t = new Date(t)), "[object Date]" !== Object.prototype.toString.call(t) || isNaN(t.getTime())) throw new Error("Invalid Date in fecha.format");e = gt.masks[e] || e || gt.masks.default;var r = [];return (e = (e = e.replace(vt, function (t, e) {
     return r.push(e), "@@@";
   })).replace(bt, function (e) {
@@ -750,15 +752,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
 }, gt.parse = function (t, e, n) {
   var i = n || gt.i18n;if ("string" != typeof e) throw new Error("Invalid format in fecha.parse");if (e = gt.masks[e] || e, t.length > 1e3) return null;var r = {},
       s = [],
-      o = [];e = e.replace(vt, function (t, e) {
-    return o.push(e), "@@@";
-  });var a,
-      l = (a = e, a.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
+      a = [];e = e.replace(vt, function (t, e) {
+    return a.push(e), "@@@";
+  });var o,
+      l = (o = e, o.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
     if (At[t]) {
       var e = At[t];return s.push(e[1]), "(" + e[0] + ")";
     }return t;
   });l = l.replace(/@@@/g, function () {
-    return o.shift();
+    return a.shift();
   });var c = t.match(new RegExp(l, "i"));if (!c) return null;for (var h = 1; h < c.length; h++) s[h - 1](r, c[h], i);var d,
       u = new Date();return !0 === r.isPm && null != r.hour && 12 != +r.hour ? r.hour = +r.hour + 12 : !1 === r.isPm && 12 == +r.hour && (r.hour = 0), null != r.timezoneOffset ? (r.minute = +(r.minute || 0) - +r.timezoneOffset, d = new Date(Date.UTC(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0))) : d = new Date(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0), d;
 };(function () {
@@ -779,21 +781,23 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   } catch (t) {
     return "RangeError" === t.name;
   }
-}();var Tt = "hass:bookmark",
-    Nt = ["closed", "locked", "off"],
-    $t = function (t, e, n, i) {
+}();var Nt = function (t) {
+  return t < 10 ? "0" + t : t;
+};var Rt = "hass:bookmark",
+    $t = ["closed", "locked", "off"],
+    Ht = function (t, e, n, i) {
   i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
 },
-    Rt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ht = function (t, e) {
-  $t(t, "haptic", e);
+    Dt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ot = function (t, e) {
+  Ht(t, "haptic", e);
 },
-    Ot = function (t, e, n, i, r) {
+    Lt = function (t, e, n, i, r) {
   var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && ($t(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ht(t, s.haptic));break;case "navigate":
+      (n.entity || n.camera_image) && (Ht(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ot(t, s.haptic));break;case "navigate":
       s.navigation_path && (function (t, e, n) {
-        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), $t(window, "location-changed", { replace: n });
-      }(0, s.navigation_path), s.haptic && Ht(t, s.haptic));break;case "url":
-      s.url && window.open(s.url), s.haptic && Ht(t, s.haptic);break;case "toggle":
+        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Ht(window, "location-changed", { replace: n });
+      }(0, s.navigation_path), s.haptic && Ot(t, s.haptic));break;case "url":
+      s.url && window.open(s.url), s.haptic && Ot(t, s.haptic);break;case "toggle":
       n.entity && (function (t, e) {
         (function (t, e, n) {
           void 0 === n && (n = !0);var i,
@@ -804,22 +808,22 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               i = n ? "unlock" : "lock";break;case "cover":
               i = n ? "open_cover" : "close_cover";break;default:
               i = n ? "turn_on" : "turn_off";}t.callService(s, i, { entity_id: e });
-        })(t, e, Nt.includes(t.states[e].state));
-      }(e, n.entity), s.haptic && Ht(t, s.haptic));break;case "call-service":
-      if (!s.service) return;var o = s.service.split(".", 2),
-          a = o[0],
-          l = o[1],
-          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(a, l, c), s.haptic && Ht(t, s.haptic);}
+        })(t, e, $t.includes(t.states[e].state));
+      }(e, n.entity), s.haptic && Ot(t, s.haptic));break;case "call-service":
+      if (!s.service) return;var a = s.service.split(".", 2),
+          o = a[0],
+          l = a[1],
+          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, c), s.haptic && Ot(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var Dt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
-    Lt = function (t) {
+} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var Vt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+    jt = function (t) {
   function e() {
     t.call(this), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
   }return t && (e.__proto__ = t), (e.prototype = Object.create(t && t.prototype)).constructor = e, e.prototype.connectedCallback = function () {
-    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: Dt ? "100px" : "50px", height: Dt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
+    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: Vt ? "100px" : "50px", height: Vt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
       document.addEventListener(e, function () {
         clearTimeout(t.timer), t.stopAnimation(), t.timer = void 0;
       }, { passive: !0 });
@@ -850,11 +854,11 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, e.prototype.stopAnimation = function () {
     this.ripple.holdDown = !1, this.style.display = "none";
   }, e;
-}(HTMLElement);customElements.get("long-press-custom-card-helpers") || customElements.define("long-press-custom-card-helpers", Lt);const Vt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;customElements.define("long-press-button-card", class extends HTMLElement {
+}(HTMLElement);customElements.get("long-press-custom-card-helpers") || customElements.define("long-press-custom-card-helpers", jt);const It = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;customElements.define("long-press-button-card", class extends HTMLElement {
   constructor() {
     super(), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
   }connectedCallback() {
-    Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: Vt ? "100px" : "50px", height: Vt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(t => {
+    Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: It ? "100px" : "50px", height: It ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(t => {
       document.addEventListener(t, () => {
         clearTimeout(this.timer), this.stopAnimation(), this.timer = void 0;
       }, { passive: !0 });
@@ -879,91 +883,91 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }stopAnimation() {
     this.ripple.holdDown = !1, this.style.display = "none";
   }
-});const jt = t => {
+});const Ft = t => {
   const e = (() => {
     const t = document.body;if (t.querySelector("long-press-button-card")) return t.querySelector("long-press-button-card");const e = document.createElement("long-press-button-card");return t.appendChild(e), e;
   })();e && e.bind(t);
 },
-      Ft = n(() => t => {
-  jt(t.committer.element);
-});function It(t, e) {
+      Yt = n(() => t => {
+  Ft(t.committer.element);
+});function zt(t, e) {
   (function (t) {
     return "string" == typeof t && -1 !== t.indexOf(".") && 1 === parseFloat(t);
   })(t) && (t = "100%");var n = function (t) {
     return "string" == typeof t && -1 !== t.indexOf("%");
   }(t);return t = 360 === e ? t : Math.min(e, Math.max(0, parseFloat(t))), n && (t = parseInt(String(t * e), 10) / 100), Math.abs(t - e) < 1e-6 ? 1 : t = 360 === e ? (t < 0 ? t % e + e : t % e) / parseFloat(String(e)) : t % e / parseFloat(String(e));
-}function Yt(t) {
-  return Math.min(1, Math.max(0, t));
-}function zt(t) {
-  return t = parseFloat(t), (isNaN(t) || t < 0 || t > 1) && (t = 1), t;
 }function qt(t) {
-  return t <= 1 ? 100 * Number(t) + "%" : t;
+  return Math.min(1, Math.max(0, t));
 }function Ut(t) {
+  return t = parseFloat(t), (isNaN(t) || t < 0 || t > 1) && (t = 1), t;
+}function Bt(t) {
+  return t <= 1 ? 100 * Number(t) + "%" : t;
+}function Wt(t) {
   return 1 === t.length ? "0" + t : String(t);
-}function Bt(t, e, n) {
-  t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
+}function Gt(t, e, n) {
+  t = zt(t, 255), e = zt(e, 255), n = zt(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
-      o = 0,
-      a = (i + r) / 2;if (i === r) o = 0, s = 0;else {
-    var l = i - r;switch (o = a > .5 ? l / (2 - i - r) : l / (i + r), i) {case t:
+      a = 0,
+      o = (i + r) / 2;if (i === r) a = 0, s = 0;else {
+    var l = i - r;switch (a = o > .5 ? l / (2 - i - r) : l / (i + r), i) {case t:
         s = (e - n) / l + (e < n ? 6 : 0);break;case e:
         s = (n - t) / l + 2;break;case n:
         s = (t - e) / l + 4;}s /= 6;
-  }return { h: s, s: o, l: a };
-}function Wt(t, e, n) {
-  t = It(t, 255), e = It(e, 255), n = It(n, 255);var i = Math.max(t, e, n),
+  }return { h: s, s: a, l: o };
+}function Jt(t, e, n) {
+  t = zt(t, 255), e = zt(e, 255), n = zt(n, 255);var i = Math.max(t, e, n),
       r = Math.min(t, e, n),
       s = 0,
-      o = i,
-      a = i - r,
-      l = 0 === i ? 0 : a / i;if (i === r) s = 0;else {
+      a = i,
+      o = i - r,
+      l = 0 === i ? 0 : o / i;if (i === r) s = 0;else {
     switch (i) {case t:
-        s = (e - n) / a + (e < n ? 6 : 0);break;case e:
-        s = (n - t) / a + 2;break;case n:
-        s = (t - e) / a + 4;}s /= 6;
-  }return { h: s, s: l, v: o };
-}function Gt(t, e, n, i) {
-  var r = [Ut(Math.round(t).toString(16)), Ut(Math.round(e).toString(16)), Ut(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
-}function Jt(t) {
-  return Zt(t) / 255;
-}function Zt(t) {
+        s = (e - n) / o + (e < n ? 6 : 0);break;case e:
+        s = (n - t) / o + 2;break;case n:
+        s = (t - e) / o + 4;}s /= 6;
+  }return { h: s, s: l, v: a };
+}function Zt(t, e, n, i) {
+  var r = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
+}function Xt(t) {
+  return Kt(t) / 255;
+}function Kt(t) {
   return parseInt(t, 16);
-}var Xt = { aliceblue: "#f0f8ff", antiquewhite: "#faebd7", aqua: "#00ffff", aquamarine: "#7fffd4", azure: "#f0ffff", beige: "#f5f5dc", bisque: "#ffe4c4", black: "#000000", blanchedalmond: "#ffebcd", blue: "#0000ff", blueviolet: "#8a2be2", brown: "#a52a2a", burlywood: "#deb887", cadetblue: "#5f9ea0", chartreuse: "#7fff00", chocolate: "#d2691e", coral: "#ff7f50", cornflowerblue: "#6495ed", cornsilk: "#fff8dc", crimson: "#dc143c", cyan: "#00ffff", darkblue: "#00008b", darkcyan: "#008b8b", darkgoldenrod: "#b8860b", darkgray: "#a9a9a9", darkgreen: "#006400", darkgrey: "#a9a9a9", darkkhaki: "#bdb76b", darkmagenta: "#8b008b", darkolivegreen: "#556b2f", darkorange: "#ff8c00", darkorchid: "#9932cc", darkred: "#8b0000", darksalmon: "#e9967a", darkseagreen: "#8fbc8f", darkslateblue: "#483d8b", darkslategray: "#2f4f4f", darkslategrey: "#2f4f4f", darkturquoise: "#00ced1", darkviolet: "#9400d3", deeppink: "#ff1493", deepskyblue: "#00bfff", dimgray: "#696969", dimgrey: "#696969", dodgerblue: "#1e90ff", firebrick: "#b22222", floralwhite: "#fffaf0", forestgreen: "#228b22", fuchsia: "#ff00ff", gainsboro: "#dcdcdc", ghostwhite: "#f8f8ff", gold: "#ffd700", goldenrod: "#daa520", gray: "#808080", green: "#008000", greenyellow: "#adff2f", grey: "#808080", honeydew: "#f0fff0", hotpink: "#ff69b4", indianred: "#cd5c5c", indigo: "#4b0082", ivory: "#fffff0", khaki: "#f0e68c", lavender: "#e6e6fa", lavenderblush: "#fff0f5", lawngreen: "#7cfc00", lemonchiffon: "#fffacd", lightblue: "#add8e6", lightcoral: "#f08080", lightcyan: "#e0ffff", lightgoldenrodyellow: "#fafad2", lightgray: "#d3d3d3", lightgreen: "#90ee90", lightgrey: "#d3d3d3", lightpink: "#ffb6c1", lightsalmon: "#ffa07a", lightseagreen: "#20b2aa", lightskyblue: "#87cefa", lightslategray: "#778899", lightslategrey: "#778899", lightsteelblue: "#b0c4de", lightyellow: "#ffffe0", lime: "#00ff00", limegreen: "#32cd32", linen: "#faf0e6", magenta: "#ff00ff", maroon: "#800000", mediumaquamarine: "#66cdaa", mediumblue: "#0000cd", mediumorchid: "#ba55d3", mediumpurple: "#9370db", mediumseagreen: "#3cb371", mediumslateblue: "#7b68ee", mediumspringgreen: "#00fa9a", mediumturquoise: "#48d1cc", mediumvioletred: "#c71585", midnightblue: "#191970", mintcream: "#f5fffa", mistyrose: "#ffe4e1", moccasin: "#ffe4b5", navajowhite: "#ffdead", navy: "#000080", oldlace: "#fdf5e6", olive: "#808000", olivedrab: "#6b8e23", orange: "#ffa500", orangered: "#ff4500", orchid: "#da70d6", palegoldenrod: "#eee8aa", palegreen: "#98fb98", paleturquoise: "#afeeee", palevioletred: "#db7093", papayawhip: "#ffefd5", peachpuff: "#ffdab9", peru: "#cd853f", pink: "#ffc0cb", plum: "#dda0dd", powderblue: "#b0e0e6", purple: "#800080", rebeccapurple: "#663399", red: "#ff0000", rosybrown: "#bc8f8f", royalblue: "#4169e1", saddlebrown: "#8b4513", salmon: "#fa8072", sandybrown: "#f4a460", seagreen: "#2e8b57", seashell: "#fff5ee", sienna: "#a0522d", silver: "#c0c0c0", skyblue: "#87ceeb", slateblue: "#6a5acd", slategray: "#708090", slategrey: "#708090", snow: "#fffafa", springgreen: "#00ff7f", steelblue: "#4682b4", tan: "#d2b48c", teal: "#008080", thistle: "#d8bfd8", tomato: "#ff6347", turquoise: "#40e0d0", violet: "#ee82ee", wheat: "#f5deb3", white: "#ffffff", whitesmoke: "#f5f5f5", yellow: "#ffff00", yellowgreen: "#9acd32" };function Kt(t) {
+}var Qt = { aliceblue: "#f0f8ff", antiquewhite: "#faebd7", aqua: "#00ffff", aquamarine: "#7fffd4", azure: "#f0ffff", beige: "#f5f5dc", bisque: "#ffe4c4", black: "#000000", blanchedalmond: "#ffebcd", blue: "#0000ff", blueviolet: "#8a2be2", brown: "#a52a2a", burlywood: "#deb887", cadetblue: "#5f9ea0", chartreuse: "#7fff00", chocolate: "#d2691e", coral: "#ff7f50", cornflowerblue: "#6495ed", cornsilk: "#fff8dc", crimson: "#dc143c", cyan: "#00ffff", darkblue: "#00008b", darkcyan: "#008b8b", darkgoldenrod: "#b8860b", darkgray: "#a9a9a9", darkgreen: "#006400", darkgrey: "#a9a9a9", darkkhaki: "#bdb76b", darkmagenta: "#8b008b", darkolivegreen: "#556b2f", darkorange: "#ff8c00", darkorchid: "#9932cc", darkred: "#8b0000", darksalmon: "#e9967a", darkseagreen: "#8fbc8f", darkslateblue: "#483d8b", darkslategray: "#2f4f4f", darkslategrey: "#2f4f4f", darkturquoise: "#00ced1", darkviolet: "#9400d3", deeppink: "#ff1493", deepskyblue: "#00bfff", dimgray: "#696969", dimgrey: "#696969", dodgerblue: "#1e90ff", firebrick: "#b22222", floralwhite: "#fffaf0", forestgreen: "#228b22", fuchsia: "#ff00ff", gainsboro: "#dcdcdc", ghostwhite: "#f8f8ff", gold: "#ffd700", goldenrod: "#daa520", gray: "#808080", green: "#008000", greenyellow: "#adff2f", grey: "#808080", honeydew: "#f0fff0", hotpink: "#ff69b4", indianred: "#cd5c5c", indigo: "#4b0082", ivory: "#fffff0", khaki: "#f0e68c", lavender: "#e6e6fa", lavenderblush: "#fff0f5", lawngreen: "#7cfc00", lemonchiffon: "#fffacd", lightblue: "#add8e6", lightcoral: "#f08080", lightcyan: "#e0ffff", lightgoldenrodyellow: "#fafad2", lightgray: "#d3d3d3", lightgreen: "#90ee90", lightgrey: "#d3d3d3", lightpink: "#ffb6c1", lightsalmon: "#ffa07a", lightseagreen: "#20b2aa", lightskyblue: "#87cefa", lightslategray: "#778899", lightslategrey: "#778899", lightsteelblue: "#b0c4de", lightyellow: "#ffffe0", lime: "#00ff00", limegreen: "#32cd32", linen: "#faf0e6", magenta: "#ff00ff", maroon: "#800000", mediumaquamarine: "#66cdaa", mediumblue: "#0000cd", mediumorchid: "#ba55d3", mediumpurple: "#9370db", mediumseagreen: "#3cb371", mediumslateblue: "#7b68ee", mediumspringgreen: "#00fa9a", mediumturquoise: "#48d1cc", mediumvioletred: "#c71585", midnightblue: "#191970", mintcream: "#f5fffa", mistyrose: "#ffe4e1", moccasin: "#ffe4b5", navajowhite: "#ffdead", navy: "#000080", oldlace: "#fdf5e6", olive: "#808000", olivedrab: "#6b8e23", orange: "#ffa500", orangered: "#ff4500", orchid: "#da70d6", palegoldenrod: "#eee8aa", palegreen: "#98fb98", paleturquoise: "#afeeee", palevioletred: "#db7093", papayawhip: "#ffefd5", peachpuff: "#ffdab9", peru: "#cd853f", pink: "#ffc0cb", plum: "#dda0dd", powderblue: "#b0e0e6", purple: "#800080", rebeccapurple: "#663399", red: "#ff0000", rosybrown: "#bc8f8f", royalblue: "#4169e1", saddlebrown: "#8b4513", salmon: "#fa8072", sandybrown: "#f4a460", seagreen: "#2e8b57", seashell: "#fff5ee", sienna: "#a0522d", silver: "#c0c0c0", skyblue: "#87ceeb", slateblue: "#6a5acd", slategray: "#708090", slategrey: "#708090", snow: "#fffafa", springgreen: "#00ff7f", steelblue: "#4682b4", tan: "#d2b48c", teal: "#008080", thistle: "#d8bfd8", tomato: "#ff6347", turquoise: "#40e0d0", violet: "#ee82ee", wheat: "#f5deb3", white: "#ffffff", whitesmoke: "#f5f5f5", yellow: "#ffff00", yellowgreen: "#9acd32" };function te(t) {
   var e,
       n,
       i,
       r = { r: 0, g: 0, b: 0 },
       s = 1,
-      o = null,
       a = null,
+      o = null,
       l = null,
       c = !1,
       h = !1;return "string" == typeof t && (t = function (t) {
-    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Xt[t]) t = Xt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = ne.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = ne.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = ne.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = ne.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = ne.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = ne.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = ne.hex8.exec(t)) return { r: Zt(n[1]), g: Zt(n[2]), b: Zt(n[3]), a: Jt(n[4]), format: e ? "name" : "hex8" };if (n = ne.hex6.exec(t)) return { r: Zt(n[1]), g: Zt(n[2]), b: Zt(n[3]), format: e ? "name" : "hex" };if (n = ne.hex4.exec(t)) return { r: Zt(n[1] + n[1]), g: Zt(n[2] + n[2]), b: Zt(n[3] + n[3]), a: Jt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = ne.hex3.exec(t)) return { r: Zt(n[1] + n[1]), g: Zt(n[2] + n[2]), b: Zt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
-  }(t)), "object" == typeof t && (ie(t.r) && ie(t.g) && ie(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * It(e, 255), g: 255 * It(n, 255), b: 255 * It(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : ie(t.h) && ie(t.s) && ie(t.v) ? (o = qt(t.s), a = qt(t.v), r = function (t, e, n) {
-    t = 6 * It(t, 360), e = It(e, 100), n = It(n, 100);var i = Math.floor(t),
+    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Qt[t]) t = Qt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = re.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = re.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = re.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = re.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = re.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = re.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = re.hex8.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), a: Xt(n[4]), format: e ? "name" : "hex8" };if (n = re.hex6.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), format: e ? "name" : "hex" };if (n = re.hex4.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), a: Xt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = re.hex3.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
+  }(t)), "object" == typeof t && (se(t.r) && se(t.g) && se(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * zt(e, 255), g: 255 * zt(n, 255), b: 255 * zt(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : se(t.h) && se(t.s) && se(t.v) ? (a = Bt(t.s), o = Bt(t.v), r = function (t, e, n) {
+    t = 6 * zt(t, 360), e = zt(e, 100), n = zt(n, 100);var i = Math.floor(t),
         r = t - i,
         s = n * (1 - e),
-        o = n * (1 - r * e),
-        a = n * (1 - (1 - r) * e),
-        l = i % 6;return { r: 255 * [n, o, s, s, a, n][l], g: 255 * [a, n, n, o, s, s][l], b: 255 * [s, s, a, n, n, o][l] };
-  }(t.h, o, a), c = !0, h = "hsv") : ie(t.h) && ie(t.s) && ie(t.l) && (o = qt(t.s), l = qt(t.l), r = function (t, e, n) {
-    var i, r, s;function o(t, e, n) {
+        a = n * (1 - r * e),
+        o = n * (1 - (1 - r) * e),
+        l = i % 6;return { r: 255 * [n, a, s, s, o, n][l], g: 255 * [o, n, n, a, s, s][l], b: 255 * [s, s, o, n, n, a][l] };
+  }(t.h, a, o), c = !0, h = "hsv") : se(t.h) && se(t.s) && se(t.l) && (a = Bt(t.s), l = Bt(t.l), r = function (t, e, n) {
+    var i, r, s;function a(t, e, n) {
       return n < 0 && (n += 1), n > 1 && (n -= 1), n < 1 / 6 ? t + 6 * n * (e - t) : n < .5 ? e : n < 2 / 3 ? t + (e - t) * (2 / 3 - n) * 6 : t;
-    }if (t = It(t, 360), e = It(e, 100), n = It(n, 100), 0 === e) r = n, s = n, i = n;else {
-      var a = n < .5 ? n * (1 + e) : n + e - n * e,
-          l = 2 * n - a;i = o(l, a, t + 1 / 3), r = o(l, a, t), s = o(l, a, t - 1 / 3);
+    }if (t = zt(t, 360), e = zt(e, 100), n = zt(n, 100), 0 === e) r = n, s = n, i = n;else {
+      var o = n < .5 ? n * (1 + e) : n + e - n * e,
+          l = 2 * n - o;i = a(l, o, t + 1 / 3), r = a(l, o, t), s = a(l, o, t - 1 / 3);
     }return { r: 255 * i, g: 255 * r, b: 255 * s };
-  }(t.h, o, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = zt(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
-}var Qt = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
-    te = "[\\s|\\(]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")\\s*\\)?",
-    ee = "[\\s|\\(]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")[,|\\s]+(" + Qt + ")\\s*\\)?",
-    ne = { CSS_UNIT: new RegExp(Qt), rgb: new RegExp("rgb" + te), rgba: new RegExp("rgba" + ee), hsl: new RegExp("hsl" + te), hsla: new RegExp("hsla" + ee), hsv: new RegExp("hsv" + te), hsva: new RegExp("hsva" + ee), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function ie(t) {
-  return Boolean(ne.CSS_UNIT.exec(String(t)));
-}var re = function () {
+  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = Ut(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
+}var ee = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
+    ne = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
+    ie = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
+    re = { CSS_UNIT: new RegExp(ee), rgb: new RegExp("rgb" + ne), rgba: new RegExp("rgba" + ie), hsl: new RegExp("hsl" + ne), hsla: new RegExp("hsla" + ie), hsv: new RegExp("hsv" + ne), hsva: new RegExp("hsva" + ie), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function se(t) {
+  return Boolean(re.CSS_UNIT.exec(String(t)));
+}var ae = function () {
   function t(e, n) {
-    if (void 0 === e && (e = ""), void 0 === n && (n = {}), e instanceof t) return e;this.originalInput = e;var i = Kt(e);this.originalInput = e, this.r = i.r, this.g = i.g, this.b = i.b, this.a = i.a, this.roundA = Math.round(100 * this.a) / 100, this.format = n.format || i.format, this.gradientType = n.gradientType, this.r < 1 && (this.r = Math.round(this.r)), this.g < 1 && (this.g = Math.round(this.g)), this.b < 1 && (this.b = Math.round(this.b)), this.isValid = i.ok;
+    if (void 0 === e && (e = ""), void 0 === n && (n = {}), e instanceof t) return e;this.originalInput = e;var i = te(e);this.originalInput = e, this.r = i.r, this.g = i.g, this.b = i.b, this.a = i.a, this.roundA = Math.round(100 * this.a) / 100, this.format = n.format || i.format, this.gradientType = n.gradientType, this.r < 1 && (this.r = Math.round(this.r)), this.g < 1 && (this.g = Math.round(this.g)), this.b < 1 && (this.b = Math.round(this.b)), this.isValid = i.ok;
   }return t.prototype.isDark = function () {
     return this.getBrightness() < 128;
   }, t.prototype.isLight = function () {
@@ -978,29 +982,29 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.getAlpha = function () {
     return this.a;
   }, t.prototype.setAlpha = function (t) {
-    return this.a = zt(t), this.roundA = Math.round(100 * this.a) / 100, this;
+    return this.a = Ut(t), this.roundA = Math.round(100 * this.a) / 100, this;
   }, t.prototype.toHsv = function () {
-    var t = Wt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, v: t.v, a: this.a };
+    var t = Jt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, v: t.v, a: this.a };
   }, t.prototype.toHsvString = function () {
-    var t = Wt(this.r, this.g, this.b),
+    var t = Jt(this.r, this.g, this.b),
         e = Math.round(360 * t.h),
         n = Math.round(100 * t.s),
         i = Math.round(100 * t.v);return 1 === this.a ? "hsv(" + e + ", " + n + "%, " + i + "%)" : "hsva(" + e + ", " + n + "%, " + i + "%, " + this.roundA + ")";
   }, t.prototype.toHsl = function () {
-    var t = Bt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, l: t.l, a: this.a };
+    var t = Gt(this.r, this.g, this.b);return { h: 360 * t.h, s: t.s, l: t.l, a: this.a };
   }, t.prototype.toHslString = function () {
-    var t = Bt(this.r, this.g, this.b),
+    var t = Gt(this.r, this.g, this.b),
         e = Math.round(360 * t.h),
         n = Math.round(100 * t.s),
         i = Math.round(100 * t.l);return 1 === this.a ? "hsl(" + e + ", " + n + "%, " + i + "%)" : "hsla(" + e + ", " + n + "%, " + i + "%, " + this.roundA + ")";
   }, t.prototype.toHex = function (t) {
-    return void 0 === t && (t = !1), Gt(this.r, this.g, this.b, t);
+    return void 0 === t && (t = !1), Zt(this.r, this.g, this.b, t);
   }, t.prototype.toHexString = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex(t);
   }, t.prototype.toHex8 = function (t) {
     return void 0 === t && (t = !1), function (t, e, n, i, r) {
       var s,
-          o = [Ut(Math.round(t).toString(16)), Ut(Math.round(e).toString(16)), Ut(Math.round(n).toString(16)), Ut((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && o[0].charAt(0) === o[0].charAt(1) && o[1].charAt(0) === o[1].charAt(1) && o[2].charAt(0) === o[2].charAt(1) && o[3].charAt(0) === o[3].charAt(1) ? o[0].charAt(0) + o[1].charAt(0) + o[2].charAt(0) + o[3].charAt(0) : o.join("");
+          a = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16)), Wt((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
     }(this.r, this.g, this.b, this.a, t);
   }, t.prototype.toHex8String = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex8(t);
@@ -1012,15 +1016,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         n = Math.round(this.b);return 1 === this.a ? "rgb(" + t + ", " + e + ", " + n + ")" : "rgba(" + t + ", " + e + ", " + n + ", " + this.roundA + ")";
   }, t.prototype.toPercentageRgb = function () {
     var t = function (t) {
-      return Math.round(100 * It(t, 255)) + "%";
+      return Math.round(100 * zt(t, 255)) + "%";
     };return { r: t(this.r), g: t(this.g), b: t(this.b), a: this.a };
   }, t.prototype.toPercentageRgbString = function () {
     var t = function (t) {
-      return Math.round(100 * It(t, 255));
+      return Math.round(100 * zt(t, 255));
     };return 1 === this.a ? "rgb(" + t(this.r) + "%, " + t(this.g) + "%, " + t(this.b) + "%)" : "rgba(" + t(this.r) + "%, " + t(this.g) + "%, " + t(this.b) + "%, " + this.roundA + ")";
   }, t.prototype.toName = function () {
-    if (0 === this.a) return "transparent";if (this.a < 1) return !1;for (var t = "#" + Gt(this.r, this.g, this.b, !1), e = 0, n = Object.keys(Xt); e < n.length; e++) {
-      var i = n[e];if (Xt[i] === t) return i;
+    if (0 === this.a) return "transparent";if (this.a < 1) return !1;for (var t = "#" + Zt(this.r, this.g, this.b, !1), e = 0, n = Object.keys(Qt); e < n.length; e++) {
+      var i = n[e];if (Qt[i] === t) return i;
     }return !1;
   }, t.prototype.toString = function (t) {
     var e = Boolean(t);t = t || this.format;var n = !1,
@@ -1028,19 +1032,19 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.clone = function () {
     return new t(this.toString());
   }, t.prototype.lighten = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.l += e / 100, n.l = Yt(n.l), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.l += e / 100, n.l = qt(n.l), new t(n);
   }, t.prototype.brighten = function (e) {
     void 0 === e && (e = 10);var n = this.toRgb();return n.r = Math.max(0, Math.min(255, n.r - Math.round(-e / 100 * 255))), n.g = Math.max(0, Math.min(255, n.g - Math.round(-e / 100 * 255))), n.b = Math.max(0, Math.min(255, n.b - Math.round(-e / 100 * 255))), new t(n);
   }, t.prototype.darken = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.l -= e / 100, n.l = Yt(n.l), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.l -= e / 100, n.l = qt(n.l), new t(n);
   }, t.prototype.tint = function (t) {
     return void 0 === t && (t = 10), this.mix("white", t);
   }, t.prototype.shade = function (t) {
     return void 0 === t && (t = 10), this.mix("black", t);
   }, t.prototype.desaturate = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.s -= e / 100, n.s = Yt(n.s), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.s -= e / 100, n.s = qt(n.s), new t(n);
   }, t.prototype.saturate = function (e) {
-    void 0 === e && (e = 10);var n = this.toHsl();return n.s += e / 100, n.s = Yt(n.s), new t(n);
+    void 0 === e && (e = 10);var n = this.toHsl();return n.s += e / 100, n.s = qt(n.s), new t(n);
   }, t.prototype.greyscale = function () {
     return this.desaturate(100);
   }, t.prototype.spin = function (e) {
@@ -1057,7 +1061,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.complement = function () {
     var e = this.toHsl();return e.h = (e.h + 180) % 360, new t(e);
   }, t.prototype.monochromatic = function (e) {
-    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, r = n.s, s = n.v, o = [], a = 1 / e; e--;) o.push(new t({ h: i, s: r, v: s })), s = (s + a) % 1;return o;
+    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, r = n.s, s = n.v, a = [], o = 1 / e; e--;) a.push(new t({ h: i, s: r, v: s })), s = (s + o) % 1;return a;
   }, t.prototype.splitcomplement = function () {
     var e = this.toHsl(),
         n = e.h;return [this, new t({ h: (n + 72) % 360, s: e.s, l: e.l }), new t({ h: (n + 216) % 360, s: e.s, l: e.l })];
@@ -1066,32 +1070,32 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.tetrad = function () {
     return this.polyad(4);
   }, t.prototype.polyad = function (e) {
-    for (var n = this.toHsl(), i = n.h, r = [this], s = 360 / e, o = 1; o < e; o++) r.push(new t({ h: (i + o * s) % 360, s: n.s, l: n.l }));return r;
+    for (var n = this.toHsl(), i = n.h, r = [this], s = 360 / e, a = 1; a < e; a++) r.push(new t({ h: (i + a * s) % 360, s: n.s, l: n.l }));return r;
   }, t.prototype.equals = function (e) {
     return this.toRgbString() === new t(e).toRgbString();
   }, t;
-}();function se(t, e) {
-  return void 0 === t && (t = ""), void 0 === e && (e = {}), new re(t, e);
-}function oe(t) {
+}();function oe(t, e) {
+  return void 0 === t && (t = ""), void 0 === e && (e = {}), new ae(t, e);
+}function le(t) {
   return t.substr(0, t.indexOf("."));
-}function ae(t) {
+}function ce(t) {
   return "var" === t.substring(0, 3) ? window.getComputedStyle(document.documentElement).getPropertyValue(t.substring(4).slice(0, -1)).trim() : t;
-}function le(t, e) {
-  const n = new re(ae(t));if (n.isValid) {
+}function he(t, e) {
+  const n = new ae(ce(t));if (n.isValid) {
     const t = n.mix("black", 100 - e).toString();if (t) return t;
   }return t;
-}function ce(...t) {
+}function de(...t) {
   const e = t => t && "object" == typeof t;return t.reduce((t, n) => (Object.keys(n).forEach(i => {
     const r = t[i],
-          s = n[i];Array.isArray(r) && Array.isArray(s) ? t[i] = r.concat(...s) : e(r) && e(s) ? t[i] = ce(r, s) : t[i] = s;
+          s = n[i];Array.isArray(r) && Array.isArray(s) ? t[i] = r.concat(...s) : e(r) && e(s) ? t[i] = de(r, s) : t[i] = s;
   }), t), {});
-}function he(t, e) {
+}function ue(t, e) {
   let n = [];return t && t.forEach(t => {
     let i = t;e && e.forEach(e => {
-      e.id && t.id && e.id == t.id && (i = ce(i, e));
+      e.id && t.id && e.id == t.id && (i = de(i, e));
     }), n.push(i);
   }), e && (n = n.concat(e.filter(e => !t || !t.find(t => !(!t.id || !e.id) && t.id == e.id)))), n;
-}const de = ((t, ...e) => {
+}const pe = ((t, ...e) => {
   const n = e.reduce((e, n, i) => e + (t => {
     if (t instanceof rt) return t.cssText;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${t}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`);
   })(n) + t[i + 1], t[0]);return new rt(n, it);
@@ -1475,18 +1479,47 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       height: 100%;
     }
   }
-`;let ue = class extends ot {
-  static get styles() {
-    return de;
+`;let fe = class extends at {
+  disconnectedCallback() {
+    super.disconnectedCallback(), this._clearInterval();
+  }connectedCallback() {
+    if (super.connectedCallback(), this.config && this.config.entity && "timer" === le(this.config.entity)) {
+      const t = this.hass.states[this.config.entity];this._startInterval(t);
+    }
+  }static get styles() {
+    return pe;
   }render() {
-    return this.config && this.hass ? this._cardHtml() : $``;
+    return this.config && this.hass ? this._cardHtml() : R``;
   }shouldUpdate(t) {
     const e = this.config.entity ? this.hass.states[this.config.entity] : void 0,
-          n = this._getMatchingConfigState(e);return function (t, e, n) {
+          n = this._getMatchingConfigState(e),
+          i = !!(n && (this.config.show_label && n.label_template || this.config.show_entity_picture && n.entity_picture_template || this.config.show_name && n.name_template) || this.config.show_label && this.config.label_template || this.config.show_name && this.config.name_template || this.config.show_entity_picture && this.config.entity_picture_template || this.config.state && this.config.state.find(t => "template" === t.operator) || t.has("_timeRemaining"));return function (t, e, n) {
       if (e.has("config") || n) return !0;if (t.config.entity) {
         const n = e.get("hass");return !n || n.states[t.config.entity] !== t.hass.states[t.config.entity];
       }return !1;
-    }(this, t, !!(n && (this.config.show_label && n.label_template || this.config.show_entity_picture && n.entity_picture_template || this.config.show_name && n.name_template) || this.config.show_label && this.config.label_template || this.config.show_name && this.config.name_template || this.config.show_entity_picture && this.config.entity_picture_template || this.config.state && this.config.state.find(t => "template" === t.operator)));
+    }(this, t, i);
+  }updated(t) {
+    if (super.updated(t), this.config && this.config.entity && "timer" === le(this.config.entity) && t.has("hass")) {
+      const e = this.hass.states[this.config.entity],
+            n = t.get("hass");(n ? n.states[this.config.entity] : void 0) !== e ? this._startInterval(e) : e || this._clearInterval();
+    }
+  }_clearInterval() {
+    this._interval && (window.clearInterval(this._interval), this._interval = void 0);
+  }_startInterval(t) {
+    this._clearInterval(), this._calculateRemaining(t), "active" === t.state && (this._interval = window.setInterval(() => this._calculateRemaining(t), 1e3));
+  }_calculateRemaining(t) {
+    this._timeRemaining = function (t) {
+      var e = Tt(t.attributes.remaining);if ("active" === t.state) {
+        var n = new Date().getTime(),
+            i = new Date(t.last_changed).getTime();e = Math.max(e - (n - i) / 1e3, 0);
+      }return e;
+    }(t);
+  }_computeTimeDisplay(t) {
+    if (t) return function (t) {
+      var e = Math.floor(t / 3600),
+          n = Math.floor(t % 3600 / 60),
+          i = Math.floor(t % 3600 % 60);return e > 0 ? e + ":" + Nt(n) + ":" + Nt(i) : n > 0 ? n + ":" + Nt(i) : i > 0 ? "" + i : null;
+    }(this._timeRemaining || Tt(t.attributes.duration));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
       if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
@@ -1509,18 +1542,18 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         return this.config.color_off;default:
         return this.config.default_color;}
   }_getColorForLightEntity(t, e) {
-    let n = this.config.default_color;return t && (t.attributes.rgb_color ? (n = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (n = le(n, (t.attributes.brightness + 245) / 5))) : e && t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (n = function (t, e, n) {
-      const i = new re("rgb(255, 160, 0)"),
-            r = new re("rgb(166, 209, 255)"),
-            s = new re("white"),
-            o = (t - e) / (n - e) * 100;return o < 50 ? se(r).mix(s, 2 * o).toRgbString() : se(s).mix(i, 2 * (o - 50)).toRgbString();
-    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (n = le(n, (t.attributes.brightness + 245) / 5))) : n = t.attributes.brightness ? le(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), n;
+    let n = this.config.default_color;return t && (t.attributes.rgb_color ? (n = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (n = he(n, (t.attributes.brightness + 245) / 5))) : e && t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (n = function (t, e, n) {
+      const i = new ae("rgb(255, 160, 0)"),
+            r = new ae("rgb(166, 209, 255)"),
+            s = new ae("white"),
+            a = (t - e) / (n - e) * 100;return a < 50 ? oe(r).mix(s, 2 * a).toRgbString() : oe(s).mix(i, 2 * (a - 50)).toRgbString();
+    }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (n = he(n, (t.attributes.brightness + 245) / 5))) : n = t.attributes.brightness ? he(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), n;
   }_buildCssColorAttribute(t, e) {
     let n,
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i || "auto-no-temperature" == i ? this._getColorForLightEntity(t, "auto-no-temperature" !== i) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in Rt) return Rt[t];switch (t) {case "alarm_control_panel":
+      if (t in Dt) return Dt[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":
@@ -1536,8 +1569,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               return "hass:sleep";case "initializing":
               return "hass:timer-sand";default:
               return "hass:z-wave";}default:
-          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Tt;}
-    }(oe(t.entity_id), t.state)), n;
+          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Rt;}
+    }(le(t.entity_id), t.state)), n;
   }_buildEntityPicture(t, e) {
     if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n, i;return (i = e && e.entity_picture_template ? e.entity_picture_template : this.config.entity_picture_template) ? this._evalTemplate(t, i) : (e && e.entity_picture ? n = e.entity_picture : this.config.entity_picture ? n = this.config.entity_picture : t && (n = t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0), n);
   }_buildStyleGeneric(t, e) {
@@ -1549,14 +1582,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_buildStateString(t) {
     let e;if (this.config.show_state && t && t.state) {
       const n = ((t, e) => {
-        let n;const i = oe(e.entity_id);return "binary_sensor" === i ? (e.attributes.device_class && (n = t(`state.${i}.${e.attributes.device_class}.${e.state}`)), n || (n = t(`state.${i}.default.${e.state}`))) : n = e.attributes.unit_of_measurement && !["unknown", "unavailable"].includes(e.state) ? e.state : "zwave" === i ? ["initializing", "dead"].includes(e.state) ? t(`state.zwave.query_stage.${e.state}`, "query_stage", e.attributes.query_stage) : t(`state.zwave.default.${e.state}`) : t(`state.${i}.${e.state}`), n || (n = t(`state.default.${e.state}`) || t(`component.${i}.state.${e.state}`) || e.state), n;
+        let n;const i = le(e.entity_id);return "binary_sensor" === i ? (e.attributes.device_class && (n = t(`state.${i}.${e.attributes.device_class}.${e.state}`)), n || (n = t(`state.${i}.default.${e.state}`))) : n = e.attributes.unit_of_measurement && !["unknown", "unavailable"].includes(e.state) ? e.state : "zwave" === i ? ["initializing", "dead"].includes(e.state) ? t(`state.zwave.query_stage.${e.state}`, "query_stage", e.attributes.query_stage) : t(`state.zwave.default.${e.state}`) : t(`state.${i}.${e.state}`), n || (n = t(`state.default.${e.state}`) || t(`component.${i}.state.${e.state}`) || e.state), n;
       })(this.hass.localize, t),
-            i = this._buildUnits(t);e = i ? `${t.state} ${i}` : n;
+            i = this._buildUnits(t);i ? e = `${t.state} ${i}` : "timer" === le(t.entity_id) ? "idle" === t.state || 0 === this._timeRemaining ? e = n : (e = this._computeTimeDisplay(t), "paused" === t.state && (e += ` (${n})`)) : e = n;
     }return e;
   }_buildUnits(t) {
     let e;return t && this.config.show_units && (e = t.attributes && t.attributes.unit_of_measurement && !this.config.units ? t.attributes.unit_of_measurement : this.config.units ? this.config.units : void 0), e;
   }_buildLastChanged(t, e) {
-    return this.config.show_last_changed && t ? $`
+    return this.config.show_last_changed && t ? R`
         <ha-relative-time
           id="label"
           class="ellipsis"
@@ -1568,14 +1601,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     if (!this.config.show_label) return;let n, i;return (i = e && e.label_template ? e.label_template : this.config.label_template) ? this._evalTemplate(t, i) : n = e && e.label ? e.label : this.config.label;
   }_isClickable(t) {
     let e = !0;if ("toggle" === this.config.tap_action.action && "none" === this.config.hold_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.hold_action.action && "none" === this.config.tap_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.dbltap_action.action && "none" === this.config.tap_action.action && "none" === this.config.hold_action.action) {
-      if (t) switch (oe(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
+      if (t) switch (le(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
           e = !1;break;default:
           e = !0;} else e = !1;
     } else e = "none" != this.config.tap_action.action || "none" != this.config.hold_action.action || "none" != this.config.dbltap_action.action;return e;
   }_rotate(t) {
     return !(!t || !t.spin);
   }_blankCardColoredHtml(t) {
-    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return $`
+    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return R`
       <ha-card class="disabled" style=${ct(e)}>
         <div></div>
       </ha-card>
@@ -1586,17 +1619,17 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           n = this._buildCssColorAttribute(t, e);let i = n,
         r = {},
         s = {},
-        o = {};const a = this._buildStyleGeneric(e, "lock"),
+        a = {};const o = this._buildStyleGeneric(e, "lock"),
           l = this._buildStyleGeneric(e, "card"),
           c = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (l.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
         return this._blankCardColoredHtml(l);case "card":case "label-card":
         {
           const t = function (t) {
-            const e = new re(ae(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
+            const e = new ae(ce(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
           }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, l), i = "inherit";break;
         }default:
-        r = l;}return this.config.aspect_ratio ? (o["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute") : o.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), this.style.setProperty("--button-card-light-color-no-temperature", this._getColorForLightEntity(t, !1)), s = Object.assign({}, s, a), $`
-      <div id="aspect-ratio" style=${ct(o)}>
+        r = l;}return this.config.aspect_ratio ? (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute") : a.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), this.style.setProperty("--button-card-light-color-no-temperature", this._getColorForLightEntity(t, !1)), s = Object.assign({}, s, o), R`
+      <div id="aspect-ratio" style=${ct(a)}>
         <ha-card
           id="card"
           class=${mt(c)}
@@ -1606,21 +1639,21 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           @ha-dblclick=${this._handleDblTap}
           .hasDblClick=${"none" !== this.config.dbltap_action.action}
           .repeat=${ut(this.config.hold_action.repeat)}
-          .longpress=${Ft()}
+          .longpress=${Yt()}
           .config="${this.config}"
         >
           ${this._getLock(s)}
           ${this._buttonContent(t, e, i)}
-          ${this.config.lock ? "" : $`<mwc-ripple id="ripple"></mwc-ripple>`}
+          ${this.config.lock ? "" : R`<mwc-ripple id="ripple"></mwc-ripple>`}
         </ha-card>
       </div>
       `;
   }_getLock(t) {
-    return this.config.lock ? $`
+    return this.config.lock ? R`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
-      ` : $``;
+      ` : R``;
   }_buttonContent(t, e, n) {
     const i = this._buildName(t, e),
           r = this._buildStateString(t),
@@ -1630,19 +1663,19 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         return this._gridHtml(t, e, this.config.layout, n, s, void 0);default:
         return this._gridHtml(t, e, this.config.layout, n, i, r);}
   }_gridHtml(t, e, n, i, r, s) {
-    const o = this._getIconHtml(t, e, i),
-          a = [n],
+    const a = this._getIconHtml(t, e, i),
+          o = [n],
           l = this._buildLabel(t, e),
           c = this._buildStyleGeneric(e, "name"),
           h = this._buildStyleGeneric(e, "state"),
           d = this._buildStyleGeneric(e, "label"),
           u = this._buildLastChanged(t, d),
-          p = this._buildStyleGeneric(e, "grid");return o || a.push("no-icon"), r || a.push("no-name"), s || a.push("no-state"), l || u || a.push("no-label"), $`
-      <div id="container" class=${a.join(" ")} style=${ct(p)}>
-        ${o || ""}
-        ${r ? $`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
-        ${s ? $`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
-        ${l && !u ? $`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
+          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), R`
+      <div id="container" class=${o.join(" ")} style=${ct(p)}>
+        ${a || ""}
+        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
+        ${s ? R`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
+        ${l && !u ? R`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
         ${u || ""}
       </div>
     `;
@@ -1650,15 +1683,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     const i = this._buildIcon(t, e),
           r = this._buildEntityPicture(t, e),
           s = this._buildStyleGeneric(e, "entity_picture"),
-          o = this._buildStyleGeneric(e, "icon"),
-          a = this._buildStyleGeneric(e, "img_cell"),
+          a = this._buildStyleGeneric(e, "icon"),
+          o = this._buildStyleGeneric(e, "img_cell"),
           l = this._buildStyleGeneric(e, "card"),
-          c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, o),
-          h = Object.assign({}, c, s);return i || r ? $`
-        <div id="img-cell" style=${ct(a)}>
-          ${i && !r ? $`<ha-icon style=${ct(c)}
+          c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, a),
+          h = Object.assign({}, c, s);return i || r ? R`
+        <div id="img-cell" style=${ct(o)}>
+          ${i && !r ? R`<ha-icon style=${ct(c)}
             .icon="${i}" id="icon" ?rotating=${this._rotate(e)}></ha-icon>` : ""}
-          ${r ? $`<img src="${r}" style=${ct(h)}
+          ${r ? R`<img src="${r}" style=${ct(h)}
             id="icon" ?rotating=${this._rotate(e)} />` : ""}
         </div>
       ` : void 0;
@@ -1669,15 +1702,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       }return null;
     }();let n = Object.assign({}, t),
         i = n.template,
-        r = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = ce(e.config.button_card_templates[i], n), r = he(e.config.button_card_templates[i].state, r), i = e.config.button_card_templates[i].template;n.state = r, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";
+        r = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = de(e.config.button_card_templates[i], n), r = ue(e.config.button_card_templates[i].state, r), i = e.config.button_card_templates[i].template;n.state = r, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";
   }getCardSize() {
     return 3;
   }_handleTap(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Ot(this, this.hass, e, !1, !1);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !1, !1);
   }_handleHold(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Ot(this, this.hass, e, !0, !1);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !0, !1);
   }_handleDblTap(t) {
-    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Ot(this, this.hass, e, !1, !0);
+    if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Lt(this, this.hass, e, !1, !0);
   }_handleLock(t) {
     if (t.stopPropagation(), this.config.unlock_users) {
       if (!this.hass.user.name) return;if (this.config.unlock_users.indexOf(this.hass.user.name) < 0) return;
@@ -1691,8 +1724,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       }
     }, 5e3);
   }
-};t([et()], ue.prototype, "hass", void 0), t([et()], ue.prototype, "config", void 0), ue = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
+};t([et()], fe.prototype, "hass", void 0), t([et()], fe.prototype, "config", void 0), t([et()], fe.prototype, "_timeRemaining", void 0), fe = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
   const { kind: n, elements: i } = e;return { kind: n, elements: i, finisher(e) {
       window.customElements.define(t, e);
     } };
-})(t, e))("button-card")], ue);
+})(t, e))("button-card")], fe);
