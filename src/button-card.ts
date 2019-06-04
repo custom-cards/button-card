@@ -61,10 +61,15 @@ class ButtonCard extends LitElement {
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     const configState = this._getMatchingConfigState(state);
-    const forceUpdate = (this.config!.show_label
-      && (configState
-        && configState.label_template
-        || this.config!.label_template)
+    const forceUpdate = (
+      configState && (
+        this.config!.show_label && configState.label_template
+        || this.config!.show_entity_picture && configState.entity_picture_template
+        || this.config!.show_name && configState.name_template
+      )
+      || this.config!.show_label && this.config!.label_template
+      || this.config!.show_name && this.config!.name_template
+      || this.config!.show_entity_picture && this.config!.entity_picture_template
     )
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
