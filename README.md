@@ -109,6 +109,7 @@ Lovelace Button card for your entities.
 | `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
 | `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
 | `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
+| `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 
 ### Action
