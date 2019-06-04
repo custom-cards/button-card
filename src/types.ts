@@ -12,6 +12,7 @@ export interface ButtonCardConfig {
   size: string;
   aspect_ratio?: string;
   lock: boolean;
+  unlock_users?: string[];
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   dbltap_action?: ActionConfig;
