@@ -1673,7 +1673,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), R`
       <div id="container" class=${o.join(" ")} style=${ct(p)}>
         ${a || ""}
-        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${r}</div>` : ""}
+        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${dt(r)}</div>` : ""}
         ${s ? R`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
         ${l && !u ? R`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
         ${u || ""}
