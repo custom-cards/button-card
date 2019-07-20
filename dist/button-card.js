@@ -1,7 +1,7 @@
 function t(t, e, n, i) {
-  var r,
-      s = arguments.length,
-      a = s < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(t, e, n, i);else for (var o = t.length - 1; o >= 0; o--) (r = t[o]) && (a = (s < 3 ? r(a) : s > 3 ? r(e, n, a) : r(e, n)) || a);return s > 3 && a && Object.defineProperty(e, n, a), a;
+  var s,
+      r = arguments.length,
+      a = r < 3 ? e : null === i ? i = Object.getOwnPropertyDescriptor(e, n) : i;if ("object" == typeof Reflect && "function" == typeof Reflect.decorate) a = Reflect.decorate(t, e, n, i);else for (var o = t.length - 1; o >= 0; o--) (s = t[o]) && (a = (r < 3 ? s(a) : r > 3 ? s(e, n, a) : s(e, n)) || a);return r > 3 && a && Object.defineProperty(e, n, a), a;
   /**
    * @license
    * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -20,8 +20,8 @@ function t(t, e, n, i) {
   const i = t(...n);return e.set(i, !0), i;
 },
       i = t => "function" == typeof t && e.has(t),
-      r = void 0 !== window.customElements && void 0 !== window.customElements.polyfillWrapFlushCallback,
-      s = (t, e, n = null) => {
+      s = void 0 !== window.customElements && void 0 !== window.customElements.polyfillWrapFlushCallback,
+      r = (t, e, n = null) => {
   let i = e;for (; i !== n;) {
     const e = i.nextSibling;t.removeChild(i), i = e;
   }
@@ -34,32 +34,32 @@ function t(t, e, n, i) {
       d = "$lit$";class u {
   constructor(t, e) {
     this.parts = [], this.element = e;let n = -1,
-        i = 0;const r = [],
-          s = e => {
+        i = 0;const s = [],
+          r = e => {
       const a = e.content,
             o = document.createTreeWalker(a, 133, null, !1);let c = 0;for (; o.nextNode();) {
         n++;const e = o.currentNode;if (1 === e.nodeType) {
           if (e.hasAttributes()) {
-            const r = e.attributes;let s = 0;for (let t = 0; t < r.length; t++) r[t].value.indexOf(l) >= 0 && s++;for (; s-- > 0;) {
-              const r = t.strings[i],
-                    s = m.exec(r)[2],
-                    a = s.toLowerCase() + d,
-                    o = e.getAttribute(a).split(h);this.parts.push({ type: "attribute", index: n, name: s, strings: o }), e.removeAttribute(a), i += o.length - 1;
+            const s = e.attributes;let r = 0;for (let t = 0; t < s.length; t++) s[t].value.indexOf(l) >= 0 && r++;for (; r-- > 0;) {
+              const s = t.strings[i],
+                    r = m.exec(s)[2],
+                    a = r.toLowerCase() + d,
+                    o = e.getAttribute(a).split(h);this.parts.push({ type: "attribute", index: n, name: r, strings: o }), e.removeAttribute(a), i += o.length - 1;
             }
-          }"TEMPLATE" === e.tagName && s(e);
+          }"TEMPLATE" === e.tagName && r(e);
         } else if (3 === e.nodeType) {
           const t = e.data;if (t.indexOf(l) >= 0) {
-            const s = e.parentNode,
+            const r = e.parentNode,
                   a = t.split(h),
-                  o = a.length - 1;for (let t = 0; t < o; t++) s.insertBefore("" === a[t] ? f() : document.createTextNode(a[t]), e), this.parts.push({ type: "node", index: ++n });"" === a[o] ? (s.insertBefore(f(), e), r.push(e)) : e.data = a[o], i += o;
+                  o = a.length - 1;for (let t = 0; t < o; t++) r.insertBefore("" === a[t] ? f() : document.createTextNode(a[t]), e), this.parts.push({ type: "node", index: ++n });"" === a[o] ? (r.insertBefore(f(), e), s.push(e)) : e.data = a[o], i += o;
           }
         } else if (8 === e.nodeType) if (e.data === l) {
-          const t = e.parentNode;null !== e.previousSibling && n !== c || (n++, t.insertBefore(f(), e)), c = n, this.parts.push({ type: "node", index: n }), null === e.nextSibling ? e.data = "" : (r.push(e), n--), i++;
+          const t = e.parentNode;null !== e.previousSibling && n !== c || (n++, t.insertBefore(f(), e)), c = n, this.parts.push({ type: "node", index: n }), null === e.nextSibling ? e.data = "" : (s.push(e), n--), i++;
         } else {
           let t = -1;for (; -1 !== (t = e.data.indexOf(l, t + 1));) this.parts.push({ type: "node", index: -1 });
         }
       }
-    };s(e);for (const t of r) t.parentNode.removeChild(t);
+    };r(e);for (const t of s) t.parentNode.removeChild(t);
   }
 }const p = t => -1 !== t.index,
       f = () => document.createComment(""),
@@ -83,19 +83,19 @@ class g {
   }update(t) {
     let e = 0;for (const n of this._parts) void 0 !== n && n.setValue(t[e]), e++;for (const t of this._parts) void 0 !== t && t.commit();
   }_clone() {
-    const t = r ? this.template.element.content.cloneNode(!0) : document.importNode(this.template.element.content, !0),
+    const t = s ? this.template.element.content.cloneNode(!0) : document.importNode(this.template.element.content, !0),
           e = this.template.parts;let n = 0,
-        i = 0;const s = t => {
-      const r = document.createTreeWalker(t, 133, null, !1);let a = r.nextNode();for (; n < e.length && null !== a;) {
+        i = 0;const r = t => {
+      const s = document.createTreeWalker(t, 133, null, !1);let a = s.nextNode();for (; n < e.length && null !== a;) {
         const t = e[n];if (p(t)) {
           if (i === t.index) {
             if ("node" === t.type) {
               const t = this.processor.handleTextExpression(this.options);t.insertAfterNode(a.previousSibling), this._parts.push(t);
             } else this._parts.push(...this.processor.handleAttributeExpressions(a, t.name, t.strings, this.options));n++;
-          } else i++, "TEMPLATE" === a.nodeName && s(a.content), a = r.nextNode();
+          } else i++, "TEMPLATE" === a.nodeName && r(a.content), a = s.nextNode();
         } else this._parts.push(void 0), n++;
       }
-    };return s(t), r && (document.adoptNode(t), customElements.upgrade(t)), t;
+    };return r(t), s && (document.adoptNode(t), customElements.upgrade(t)), t;
   }
 }
 /**
@@ -189,9 +189,9 @@ class g {
     }
   }_commitIterable(t) {
     Array.isArray(this.value) || (this.value = [], this.clear());const e = this.value;let n,
-        i = 0;for (const r of t) void 0 === (n = e[i]) && (n = new w(this.options), e.push(n), 0 === i ? n.appendIntoPart(this) : n.insertAfterPart(e[i - 1])), n.setValue(r), n.commit(), i++;i < e.length && (e.length = i, this.clear(n && n.endNode));
+        i = 0;for (const s of t) void 0 === (n = e[i]) && (n = new w(this.options), e.push(n), 0 === i ? n.appendIntoPart(this) : n.insertAfterPart(e[i - 1])), n.setValue(s), n.commit(), i++;i < e.length && (e.length = i, this.clear(n && n.endNode));
   }clear(t = this.startNode) {
-    s(this.startNode.parentNode, t.nextSibling, this.endNode);
+    r(this.startNode.parentNode, t.nextSibling, this.endNode);
   }
 }class S {
   constructor(t, e, n) {
@@ -228,7 +228,7 @@ class g {
     }if (this._pendingValue === a) return;const t = this._pendingValue,
           e = this.value,
           n = null == t || null != e && (t.capture !== e.capture || t.once !== e.once || t.passive !== e.passive),
-          r = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), r && (this._options = E(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = a;
+          s = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this._boundHandleEvent, this._options), s && (this._options = E(t), this.element.addEventListener(this.eventName, this._boundHandleEvent, this._options)), this.value = t, this._pendingValue = a;
   }handleEvent(t) {
     "function" == typeof this.value ? this.value.call(this.eventContext || this.element, t) : this.value.handleEvent(t);
   }
@@ -245,9 +245,9 @@ class g {
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
- */const P = new class {
+ */const T = new class {
   handleAttributeExpressions(t, e, n, i) {
-    const r = e[0];return "." === r ? new x(t, e.slice(1), n).parts : "@" === r ? [new C(t, e.slice(1), i.eventContext)] : "?" === r ? [new S(t, e.slice(1), n)] : new v(t, e, n).parts;
+    const s = e[0];return "." === s ? new x(t, e.slice(1), n).parts : "@" === s ? [new C(t, e.slice(1), i.eventContext)] : "?" === s ? [new S(t, e.slice(1), n)] : new v(t, e, n).parts;
   }handleTextExpression(t) {
     return new w(t);
   }
@@ -265,8 +265,8 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */function A(t) {
-  let e = T.get(t.type);void 0 === e && (e = { stringsArray: new WeakMap(), keyString: new Map() }, T.set(t.type, e));let n = e.stringsArray.get(t.strings);if (void 0 !== n) return n;const i = t.strings.join(l);return void 0 === (n = e.keyString.get(i)) && (n = new u(t, t.getTemplateElement()), e.keyString.set(i, n)), e.stringsArray.set(t.strings, n), n;
-}const T = new Map(),
+  let e = P.get(t.type);void 0 === e && (e = { stringsArray: new WeakMap(), keyString: new Map() }, P.set(t.type, e));let n = e.stringsArray.get(t.strings);if (void 0 !== n) return n;const i = t.strings.join(l);return void 0 === (n = e.keyString.get(i)) && (n = new u(t, t.getTemplateElement()), e.keyString.set(i, n)), e.stringsArray.set(t.strings, n), n;
+}const P = new Map(),
       N = new WeakMap();
 /**
  * @license
@@ -294,8 +294,8 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const R = (t, ...e) => new b(t, e, "html", P),
-      $ = 133;
+(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");const O = (t, ...e) => new b(t, e, "html", T),
+      R = 133;
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -308,18 +308,18 @@ class g {
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
- */function H(t, e) {
+ */function $(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, $, null, !1);let s = O(i),
-      a = i[s],
+        s = document.createTreeWalker(n, R, null, !1);let r = D(i),
+      a = i[r],
       o = -1,
-      l = 0;const c = [];let h = null;for (; r.nextNode();) {
-    o++;const t = r.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[s = O(i, s)];
+      l = 0;const c = [];let h = null;for (; s.nextNode();) {
+    o++;const t = s.currentNode;for (t.previousSibling === h && (h = null), e.has(t) && (c.push(t), null === h && (h = t)), null !== h && l++; void 0 !== a && a.index === o;) a.index = null !== h ? -1 : a.index - l, a = i[r = D(i, r)];
   }c.forEach(t => t.parentNode.removeChild(t));
-}const D = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, $, null, !1);for (; n.nextNode();) e++;return e;
+}const H = t => {
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, R, null, !1);for (; n.nextNode();) e++;return e;
 },
-      O = (t, e = -1) => {
+      D = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
     const e = t[n];if (p(e)) return n;
   }return -1;
@@ -337,37 +337,37 @@ class g {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-const L = (t, e) => `${t}--${e}`;let V = !0;void 0 === window.ShadyCSS ? V = !1 : void 0 === window.ShadyCSS.prepareTemplateDom && (console.warn("Incompatible ShadyCSS version detected.Please update to at least @webcomponents/webcomponentsjs@2.0.2 and@webcomponents/shadycss@1.3.1."), V = !1);const j = t => e => {
-  const n = L(e.type, t);let i = T.get(n);void 0 === i && (i = { stringsArray: new WeakMap(), keyString: new Map() }, T.set(n, i));let r = i.stringsArray.get(e.strings);if (void 0 !== r) return r;const s = e.strings.join(l);if (void 0 === (r = i.keyString.get(s))) {
-    const n = e.getTemplateElement();V && window.ShadyCSS.prepareTemplateDom(n, t), r = new u(e, n), i.keyString.set(s, r);
-  }return i.stringsArray.set(e.strings, r), r;
+const L = (t, e) => `${t}--${e}`;let j = !0;void 0 === window.ShadyCSS ? j = !1 : void 0 === window.ShadyCSS.prepareTemplateDom && (console.warn("Incompatible ShadyCSS version detected.Please update to at least @webcomponents/webcomponentsjs@2.0.2 and@webcomponents/shadycss@1.3.1."), j = !1);const V = t => e => {
+  const n = L(e.type, t);let i = P.get(n);void 0 === i && (i = { stringsArray: new WeakMap(), keyString: new Map() }, P.set(n, i));let s = i.stringsArray.get(e.strings);if (void 0 !== s) return s;const r = e.strings.join(l);if (void 0 === (s = i.keyString.get(r))) {
+    const n = e.getTemplateElement();j && window.ShadyCSS.prepareTemplateDom(n, t), s = new u(e, n), i.keyString.set(r, s);
+  }return i.stringsArray.set(e.strings, s), s;
 },
       I = ["html", "svg"],
       F = new Set(),
       Y = (t, e, n) => {
-  F.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const r = document.createElement("style");for (let t = 0; t < i.length; t++) {
-    const e = i[t];e.parentNode.removeChild(e), r.textContent += e.textContent;
+  F.add(n);const i = t.querySelectorAll("style");if (0 === i.length) return void window.ShadyCSS.prepareTemplateStyles(e.element, n);const s = document.createElement("style");for (let t = 0; t < i.length; t++) {
+    const e = i[t];e.parentNode.removeChild(e), s.textContent += e.textContent;
   }if ((t => {
     I.forEach(e => {
-      const n = T.get(L(e, t));void 0 !== n && n.keyString.forEach(t => {
+      const n = P.get(L(e, t));void 0 !== n && n.keyString.forEach(t => {
         const { element: { content: e } } = t,
               n = new Set();Array.from(e.querySelectorAll("style")).forEach(t => {
           n.add(t);
-        }), H(t, n);
+        }), $(t, n);
       });
     });
   })(n), function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, $, null, !1);let a = O(r),
+    const { element: { content: i }, parts: s } = t;if (null == n) return void i.appendChild(e);const r = document.createTreeWalker(i, R, null, !1);let a = D(s),
         o = 0,
-        l = -1;for (; s.nextNode();) for (l++, s.currentNode === n && (o = D(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === l;) {
+        l = -1;for (; r.nextNode();) for (l++, r.currentNode === n && (o = H(e), n.parentNode.insertBefore(e, n)); -1 !== a && s[a].index === l;) {
       if (o > 0) {
-        for (; -1 !== a;) r[a].index += o, a = O(r, a);return;
-      }a = O(r, a);
+        for (; -1 !== a;) s[a].index += o, a = D(s, a);return;
+      }a = D(s, a);
     }
-  }(e, r, e.element.content.firstChild), window.ShadyCSS.prepareTemplateStyles(e.element, n), window.ShadyCSS.nativeShadow) {
+  }(e, s, e.element.content.firstChild), window.ShadyCSS.prepareTemplateStyles(e.element, n), window.ShadyCSS.nativeShadow) {
     const n = e.element.content.querySelector("style");t.insertBefore(n.cloneNode(!0), t.firstChild);
   } else {
-    e.element.content.insertBefore(r, e.element.content.firstChild);const t = new Set();t.add(r), H(e, t);
+    e.element.content.insertBefore(s, e.element.content.firstChild);const t = new Set();t.add(s), $(e, t);
   }
 };
 /**
@@ -429,7 +429,7 @@ window.JSCompiler_renameProperty = (t, e) => t;const z = { toAttribute(t, e) {
   }static _propertyValueFromAttribute(t, e) {
     const n = e.type,
           i = e.converter || z,
-          r = "function" == typeof i ? i : i.fromAttribute;return r ? r(t, n) : t;
+          s = "function" == typeof i ? i : i.fromAttribute;return s ? s(t, n) : t;
   }static _propertyValueToAttribute(t, e) {
     if (void 0 === e.reflect) return;const n = e.type,
           i = e.converter;return (i && i.toAttribute || z.toAttribute)(t, n);
@@ -449,8 +449,8 @@ window.JSCompiler_renameProperty = (t, e) => t;const z = { toAttribute(t, e) {
     e !== n && this._attributeToProperty(t, n);
   }_propertyToAttribute(t, e, n = U) {
     const i = this.constructor,
-          r = i._attributeNameForProperty(t, n);if (void 0 !== r) {
-      const t = i._propertyValueToAttribute(e, n);if (void 0 === t) return;this._updateState = this._updateState | J, null == t ? this.removeAttribute(r) : this.setAttribute(r, t), this._updateState = this._updateState & ~J;
+          s = i._attributeNameForProperty(t, n);if (void 0 !== s) {
+      const t = i._propertyValueToAttribute(e, n);if (void 0 === t) return;this._updateState = this._updateState | J, null == t ? this.removeAttribute(s) : this.setAttribute(s, t), this._updateState = this._updateState & ~J;
     }
   }_attributeToProperty(t, e) {
     if (this._updateState & J) return;const n = this.constructor,
@@ -460,7 +460,7 @@ window.JSCompiler_renameProperty = (t, e) => t;const z = { toAttribute(t, e) {
   }_requestUpdate(t, e) {
     let n = !0;if (void 0 !== t) {
       const i = this.constructor,
-            r = i._classProperties.get(t) || U;i._valueHasChanged(this[t], e, r.hasChanged) ? (this._changedProperties.has(t) || this._changedProperties.set(t, e), !0 !== r.reflect || this._updateState & Z || (void 0 === this._reflectingProperties && (this._reflectingProperties = new Map()), this._reflectingProperties.set(t, r))) : n = !1;
+            s = i._classProperties.get(t) || U;i._valueHasChanged(this[t], e, s.hasChanged) ? (this._changedProperties.has(t) || this._changedProperties.set(t, e), !0 !== s.reflect || this._updateState & Z || (void 0 === this._reflectingProperties && (this._reflectingProperties = new Map()), this._reflectingProperties.set(t, s))) : n = !1;
     }!this._hasRequestedUpdate && n && this._enqueueUpdate();
   }requestUpdate(t, e) {
     return this._requestUpdate(t, e), this.updateComplete;
@@ -533,7 +533,7 @@ found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
 part of the polymer project is also subject to an additional IP rights grant
 found at http://polymer.github.io/PATENTS.txt
 */const nt = "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype,
-      it = Symbol();class rt {
+      it = Symbol();class st {
   constructor(t, e) {
     if (e !== it) throw new Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText = t;
   }get styleSheet() {
@@ -555,9 +555,9 @@ found at http://polymer.github.io/PATENTS.txt
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litElementVersions || (window.litElementVersions = [])).push("2.0.1");const st = t => t.flat ? t.flat(1 / 0) : function t(e, n = []) {
-  for (let i = 0, r = e.length; i < r; i++) {
-    const r = e[i];Array.isArray(r) ? t(r, n) : n.push(r);
+(window.litElementVersions || (window.litElementVersions = [])).push("2.0.1");const rt = t => t.flat ? t.flat(1 / 0) : function t(e, n = []) {
+  for (let i = 0, s = e.length; i < s; i++) {
+    const s = e[i];Array.isArray(s) ? t(s, n) : n.push(s);
   }return n;
 }(t);class at extends K {
   static finalize() {
@@ -565,7 +565,7 @@ found at http://polymer.github.io/PATENTS.txt
   }static _getUniqueStyles() {
     const t = this.styles,
           e = [];if (Array.isArray(t)) {
-      st(t).reduceRight((t, e) => (t.add(e), t), new Set()).forEach(t => e.unshift(t));
+      rt(t).reduceRight((t, e) => (t.add(e), t), new Set()).forEach(t => e.unshift(t));
     } else t && e.push(t);return e;
   }initialize() {
     super.initialize(), this.renderRoot = this.createRenderRoot(), window.ShadowRoot && this.renderRoot instanceof window.ShadowRoot && this.adoptStyles();
@@ -582,14 +582,14 @@ found at http://polymer.github.io/PATENTS.txt
   }render() {}
 }at.finalized = !0, at.render = (t, e, n) => {
   const i = n.scopeName,
-        r = N.has(e),
-        a = e instanceof ShadowRoot && V && t instanceof b,
+        s = N.has(e),
+        a = e instanceof ShadowRoot && j && t instanceof b,
         o = a && !F.has(i),
         l = o ? document.createDocumentFragment() : e;if (((t, e, n) => {
-    let i = N.get(e);void 0 === i && (s(e, e.firstChild), N.set(e, i = new w(Object.assign({ templateFactory: A }, n))), i.appendInto(e)), i.setValue(t), i.commit();
-  })(t, l, Object.assign({ templateFactory: j(i) }, n)), o) {
-    const t = N.get(l);N.delete(l), t.value instanceof g && Y(l, t.value.template, i), s(e, e.firstChild), e.appendChild(l), N.set(e, t);
-  }!r && a && window.ShadyCSS.styleElement(e.host);
+    let i = N.get(e);void 0 === i && (r(e, e.firstChild), N.set(e, i = new w(Object.assign({ templateFactory: A }, n))), i.appendInto(e)), i.setValue(t), i.commit();
+  })(t, l, Object.assign({ templateFactory: V(i) }, n)), o) {
+    const t = N.get(l);N.delete(l), t.value instanceof g && Y(l, t.value.template, i), r(e, e.firstChild), e.appendChild(l), N.set(e, t);
+  }!s && a && window.ShadyCSS.styleElement(e.host);
 };
 /**
  * @license
@@ -612,7 +612,7 @@ const ot = new WeakMap(),
 }),
       ht = new WeakMap(),
       dt = n(t => e => {
-  if (!(e instanceof w)) throw new Error("unsafeHTML can only be used in text bindings");const n = ht.get(e);if (void 0 !== n && y(t) && t === n.value && e.value === n.fragment) return;const i = document.createElement("template");i.innerHTML = t;const r = document.importNode(i.content, !0);e.setValue(r), ht.set(e, { value: t, fragment: r });
+  if (!(e instanceof w)) throw new Error("unsafeHTML can only be used in text bindings");const n = ht.get(e);if (void 0 !== n && y(t) && t === n.value && e.value === n.fragment) return;const i = document.createElement("template");i.innerHTML = t;const s = document.importNode(i.content, !0);e.setValue(s), ht.set(e, { value: t, fragment: s });
 }),
       ut = n(t => e => {
   if (void 0 === t && e instanceof _) {
@@ -645,10 +645,10 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     yt = "[^\\s]+",
     vt = /\[([^]*?)\]/gm,
     _t = function () {};function wt(t, e) {
-  for (var n = [], i = 0, r = t.length; i < r; i++) n.push(t[i].substr(0, e));return n;
+  for (var n = [], i = 0, s = t.length; i < s; i++) n.push(t[i].substr(0, e));return n;
 }function St(t) {
   return function (e, n, i) {
-    var r = i[t].indexOf(n.charAt(0).toUpperCase() + n.substr(1).toLowerCase());~r && (e.month = r);
+    var s = i[t].indexOf(n.charAt(0).toUpperCase() + n.substr(1).toLowerCase());~s && (e.month = s);
   };
 }function xt(t, e) {
   for (t = String(t), e = e || 2; t.length < e;) t = "0" + t;return t;
@@ -657,7 +657,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     Ct = wt(Mt, 3),
     Et = wt(kt, 3);gt.i18n = { dayNamesShort: Et, dayNames: kt, monthNamesShort: Ct, monthNames: Mt, amPm: ["am", "pm"], DoFn: function (t) {
     return t + ["th", "st", "nd", "rd"][t % 10 > 3 ? 0 : (t - t % 10 != 10) * t % 10];
-  } };var Pt = { D: function (t) {
+  } };var Tt = { D: function (t) {
     return t.getDate();
   }, DD: function (t) {
     return xt(t.getDate());
@@ -739,30 +739,30 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }], ZZ: ["[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z", function (t, e) {
     var n,
         i = (e + "").match(/([+-]|\d\d)/gi);i && (n = 60 * i[1] + parseInt(i[2], 10), t.timezoneOffset = "+" === i[0] ? n : -n);
-  }] };function Tt(t) {
+  }] };function Pt(t) {
   var e = t.split(":").map(Number);return 3600 * e[0] + 60 * e[1] + e[2];
 }At.dd = At.d, At.dddd = At.ddd, At.DD = At.D, At.mm = At.m, At.hh = At.H = At.HH = At.h, At.MM = At.M, At.ss = At.s, At.A = At.a, gt.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, gt.format = function (t, e, n) {
-  var i = n || gt.i18n;if ("number" == typeof t && (t = new Date(t)), "[object Date]" !== Object.prototype.toString.call(t) || isNaN(t.getTime())) throw new Error("Invalid Date in fecha.format");e = gt.masks[e] || e || gt.masks.default;var r = [];return (e = (e = e.replace(vt, function (t, e) {
-    return r.push(e), "@@@";
+  var i = n || gt.i18n;if ("number" == typeof t && (t = new Date(t)), "[object Date]" !== Object.prototype.toString.call(t) || isNaN(t.getTime())) throw new Error("Invalid Date in fecha.format");e = gt.masks[e] || e || gt.masks.default;var s = [];return (e = (e = e.replace(vt, function (t, e) {
+    return s.push(e), "@@@";
   })).replace(bt, function (e) {
-    return e in Pt ? Pt[e](t, i) : e.slice(1, e.length - 1);
+    return e in Tt ? Tt[e](t, i) : e.slice(1, e.length - 1);
   })).replace(/@@@/g, function () {
-    return r.shift();
+    return s.shift();
   });
 }, gt.parse = function (t, e, n) {
-  var i = n || gt.i18n;if ("string" != typeof e) throw new Error("Invalid format in fecha.parse");if (e = gt.masks[e] || e, t.length > 1e3) return null;var r = {},
-      s = [],
+  var i = n || gt.i18n;if ("string" != typeof e) throw new Error("Invalid format in fecha.parse");if (e = gt.masks[e] || e, t.length > 1e3) return null;var s = {},
+      r = [],
       a = [];e = e.replace(vt, function (t, e) {
     return a.push(e), "@@@";
   });var o,
       l = (o = e, o.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
     if (At[t]) {
-      var e = At[t];return s.push(e[1]), "(" + e[0] + ")";
+      var e = At[t];return r.push(e[1]), "(" + e[0] + ")";
     }return t;
   });l = l.replace(/@@@/g, function () {
     return a.shift();
-  });var c = t.match(new RegExp(l, "i"));if (!c) return null;for (var h = 1; h < c.length; h++) s[h - 1](r, c[h], i);var d,
-      u = new Date();return !0 === r.isPm && null != r.hour && 12 != +r.hour ? r.hour = +r.hour + 12 : !1 === r.isPm && 12 == +r.hour && (r.hour = 0), null != r.timezoneOffset ? (r.minute = +(r.minute || 0) - +r.timezoneOffset, d = new Date(Date.UTC(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0))) : d = new Date(r.year || u.getFullYear(), r.month || 0, r.day || 1, r.hour || 0, r.minute || 0, r.second || 0, r.millisecond || 0), d;
+  });var c = t.match(new RegExp(l, "i"));if (!c) return null;for (var h = 1; h < c.length; h++) r[h - 1](s, c[h], i);var d,
+      u = new Date();return !0 === s.isPm && null != s.hour && 12 != +s.hour ? s.hour = +s.hour + 12 : !1 === s.isPm && 12 == +s.hour && (s.hour = 0), null != s.timezoneOffset ? (s.minute = +(s.minute || 0) - +s.timezoneOffset, d = new Date(Date.UTC(s.year || u.getFullYear(), s.month || 0, s.day || 1, s.hour || 0, s.minute || 0, s.second || 0, s.millisecond || 0))) : d = new Date(s.year || u.getFullYear(), s.month || 0, s.day || 1, s.hour || 0, s.minute || 0, s.second || 0, s.millisecond || 0), d;
 };(function () {
   try {
     new Date().toLocaleDateString("i");
@@ -783,47 +783,47 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }
 }();var Nt = function (t) {
   return t < 10 ? "0" + t : t;
-};var Rt = "hass:bookmark",
-    $t = ["closed", "locked", "off"],
-    Ht = function (t, e, n, i) {
-  i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
+};var Ot = "hass:bookmark",
+    Rt = ["closed", "locked", "off"],
+    $t = function (t, e, n, i) {
+  i = i || {}, n = null == n ? {} : n;var s = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return s.detail = n, t.dispatchEvent(s), s;
 },
-    Dt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Ot = function (t, e) {
-  Ht(t, "haptic", e);
+    Ht = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Dt = function (t, e) {
+  $t(t, "haptic", e);
 },
-    Lt = function (t, e, n, i, r) {
-  var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && (Ht(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Ot(t, s.haptic));break;case "navigate":
-      s.navigation_path && (function (t, e, n) {
-        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Ht(window, "location-changed", { replace: n });
-      }(0, s.navigation_path), s.haptic && Ot(t, s.haptic));break;case "url":
-      s.url && window.open(s.url), s.haptic && Ot(t, s.haptic);break;case "toggle":
+    Lt = function (t, e, n, i, s) {
+  var r;switch (s && n.dbltap_action ? r = n.dbltap_action : i && n.hold_action ? r = n.hold_action : !i && n.tap_action && (r = n.tap_action), r || (r = { action: "more-info" }), r.action) {case "more-info":
+      (n.entity || n.camera_image) && ($t(t, "hass-more-info", { entityId: r.entity ? r.entity : n.entity ? n.entity : n.camera_image }), r.haptic && Dt(t, r.haptic));break;case "navigate":
+      r.navigation_path && (function (t, e, n) {
+        void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), $t(window, "location-changed", { replace: n });
+      }(0, r.navigation_path), r.haptic && Dt(t, r.haptic));break;case "url":
+      r.url && window.open(r.url), r.haptic && Dt(t, r.haptic);break;case "toggle":
       n.entity && (function (t, e) {
         (function (t, e, n) {
           void 0 === n && (n = !0);var i,
-              r = function (t) {
+              s = function (t) {
             return t.substr(0, t.indexOf("."));
           }(e),
-              s = "group" === r ? "homeassistant" : r;switch (r) {case "lock":
+              r = "group" === s ? "homeassistant" : s;switch (s) {case "lock":
               i = n ? "unlock" : "lock";break;case "cover":
               i = n ? "open_cover" : "close_cover";break;default:
-              i = n ? "turn_on" : "turn_off";}t.callService(s, i, { entity_id: e });
-        })(t, e, $t.includes(t.states[e].state));
-      }(e, n.entity), s.haptic && Ot(t, s.haptic));break;case "call-service":
-      if (!s.service) return;var a = s.service.split(".", 2),
+              i = n ? "turn_on" : "turn_off";}t.callService(r, i, { entity_id: e });
+        })(t, e, Rt.includes(t.states[e].state));
+      }(e, n.entity), r.haptic && Dt(t, r.haptic));break;case "call-service":
+      if (!r.service) return;var a = r.service.split(".", 2),
           o = a[0],
           l = a[1],
-          c = Object.assign({}, s.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, c), s.haptic && Ot(t, s.haptic);}
+          c = Object.assign({}, r.service_data);"entity" === c.entity_id && (c.entity_id = n.entity), e.callService(o, l, c), r.haptic && Dt(t, r.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var Vt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
-    jt = function (t) {
+} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var jt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+    Vt = function (t) {
   function e() {
     t.call(this), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
   }return t && (e.__proto__ = t), (e.prototype = Object.create(t && t.prototype)).constructor = e, e.prototype.connectedCallback = function () {
-    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: Vt ? "100px" : "50px", height: Vt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
+    var t = this;Object.assign(this.style, { borderRadius: "50%", position: "absolute", width: jt ? "100px" : "50px", height: jt ? "100px" : "50px", transform: "translate(-50%, -50%)", pointerEvents: "none" }), this.appendChild(this.ripple), this.ripple.style.color = "#03a9f4", this.ripple.style.color = "var(--primary-color)", ["touchcancel", "mouseout", "mouseup", "touchmove", "mousewheel", "wheel", "scroll"].forEach(function (e) {
       document.addEventListener(e, function () {
         clearTimeout(t.timer), t.stopAnimation(), t.timer = void 0;
       }, { passive: !0 });
@@ -833,8 +833,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       t.longPress = !0, t.addEventListener("contextmenu", function (t) {
         var e = t || window.event;return e.preventDefault && e.preventDefault(), e.stopPropagation && e.stopPropagation(), e.cancelBubble = !0, e.returnValue = !1, !1;
       });var n = function (n) {
-        var i, r;e.cooldownStart || (e.held = !1, n.touches ? (i = n.touches[0].pageX, r = n.touches[0].pageY) : (i = n.pageX, r = n.pageY), e.timer = window.setTimeout(function () {
-          e.startAnimation(i, r), e.held = !0, t.repeat && !t.isRepeating && (t.isRepeating = !0, e.repeatTimeout = setInterval(function () {
+        var i, s;e.cooldownStart || (e.held = !1, n.touches ? (i = n.touches[0].pageX, s = n.touches[0].pageY) : (i = n.pageX, s = n.pageY), e.timer = window.setTimeout(function () {
+          e.startAnimation(i, s), e.held = !0, t.repeat && !t.isRepeating && (t.isRepeating = !0, e.repeatTimeout = setInterval(function () {
             t.dispatchEvent(new Event("ha-hold"));
           }, t.repeat));
         }, e.holdTime), e.cooldownStart = !0, window.setTimeout(function () {
@@ -854,7 +854,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, e.prototype.stopAnimation = function () {
     this.ripple.holdDown = !1, this.style.display = "none";
   }, e;
-}(HTMLElement);customElements.get("long-press-custom-card-helpers") || customElements.define("long-press-custom-card-helpers", jt);const It = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;customElements.define("long-press-button-card", class extends HTMLElement {
+}(HTMLElement);customElements.get("long-press-custom-card-helpers") || customElements.define("long-press-custom-card-helpers", Vt);const It = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;customElements.define("long-press-button-card", class extends HTMLElement {
   constructor() {
     super(), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
   }connectedCallback() {
@@ -906,29 +906,29 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   return 1 === t.length ? "0" + t : String(t);
 }function Gt(t, e, n) {
   t = zt(t, 255), e = zt(e, 255), n = zt(n, 255);var i = Math.max(t, e, n),
-      r = Math.min(t, e, n),
-      s = 0,
+      s = Math.min(t, e, n),
+      r = 0,
       a = 0,
-      o = (i + r) / 2;if (i === r) a = 0, s = 0;else {
-    var l = i - r;switch (a = o > .5 ? l / (2 - i - r) : l / (i + r), i) {case t:
-        s = (e - n) / l + (e < n ? 6 : 0);break;case e:
-        s = (n - t) / l + 2;break;case n:
-        s = (t - e) / l + 4;}s /= 6;
-  }return { h: s, s: a, l: o };
+      o = (i + s) / 2;if (i === s) a = 0, r = 0;else {
+    var l = i - s;switch (a = o > .5 ? l / (2 - i - s) : l / (i + s), i) {case t:
+        r = (e - n) / l + (e < n ? 6 : 0);break;case e:
+        r = (n - t) / l + 2;break;case n:
+        r = (t - e) / l + 4;}r /= 6;
+  }return { h: r, s: a, l: o };
 }function Jt(t, e, n) {
   t = zt(t, 255), e = zt(e, 255), n = zt(n, 255);var i = Math.max(t, e, n),
-      r = Math.min(t, e, n),
-      s = 0,
+      s = Math.min(t, e, n),
+      r = 0,
       a = i,
-      o = i - r,
-      l = 0 === i ? 0 : o / i;if (i === r) s = 0;else {
+      o = i - s,
+      l = 0 === i ? 0 : o / i;if (i === s) r = 0;else {
     switch (i) {case t:
-        s = (e - n) / o + (e < n ? 6 : 0);break;case e:
-        s = (n - t) / o + 2;break;case n:
-        s = (t - e) / o + 4;}s /= 6;
-  }return { h: s, s: l, v: a };
+        r = (e - n) / o + (e < n ? 6 : 0);break;case e:
+        r = (n - t) / o + 2;break;case n:
+        r = (t - e) / o + 4;}r /= 6;
+  }return { h: r, s: l, v: a };
 }function Zt(t, e, n, i) {
-  var r = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16))];return i && r[0].charAt(0) === r[0].charAt(1) && r[1].charAt(0) === r[1].charAt(1) && r[2].charAt(0) === r[2].charAt(1) ? r[0].charAt(0) + r[1].charAt(0) + r[2].charAt(0) : r.join("");
+  var s = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16))];return i && s[0].charAt(0) === s[0].charAt(1) && s[1].charAt(0) === s[1].charAt(1) && s[2].charAt(0) === s[2].charAt(1) ? s[0].charAt(0) + s[1].charAt(0) + s[2].charAt(0) : s.join("");
 }function Xt(t) {
   return Kt(t) / 255;
 }function Kt(t) {
@@ -937,34 +937,34 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   var e,
       n,
       i,
-      r = { r: 0, g: 0, b: 0 },
-      s = 1,
+      s = { r: 0, g: 0, b: 0 },
+      r = 1,
       a = null,
       o = null,
       l = null,
       c = !1,
       h = !1;return "string" == typeof t && (t = function (t) {
-    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Qt[t]) t = Qt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = re.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = re.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = re.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = re.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = re.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = re.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = re.hex8.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), a: Xt(n[4]), format: e ? "name" : "hex8" };if (n = re.hex6.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), format: e ? "name" : "hex" };if (n = re.hex4.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), a: Xt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = re.hex3.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
-  }(t)), "object" == typeof t && (se(t.r) && se(t.g) && se(t.b) ? (e = t.r, n = t.g, i = t.b, r = { r: 255 * zt(e, 255), g: 255 * zt(n, 255), b: 255 * zt(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : se(t.h) && se(t.s) && se(t.v) ? (a = Bt(t.s), o = Bt(t.v), r = function (t, e, n) {
+    if (0 === (t = t.trim().toLowerCase()).length) return !1;var e = !1;if (Qt[t]) t = Qt[t], e = !0;else if ("transparent" === t) return { r: 0, g: 0, b: 0, a: 0, format: "name" };var n = se.rgb.exec(t);if (n) return { r: n[1], g: n[2], b: n[3] };if (n = se.rgba.exec(t)) return { r: n[1], g: n[2], b: n[3], a: n[4] };if (n = se.hsl.exec(t)) return { h: n[1], s: n[2], l: n[3] };if (n = se.hsla.exec(t)) return { h: n[1], s: n[2], l: n[3], a: n[4] };if (n = se.hsv.exec(t)) return { h: n[1], s: n[2], v: n[3] };if (n = se.hsva.exec(t)) return { h: n[1], s: n[2], v: n[3], a: n[4] };if (n = se.hex8.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), a: Xt(n[4]), format: e ? "name" : "hex8" };if (n = se.hex6.exec(t)) return { r: Kt(n[1]), g: Kt(n[2]), b: Kt(n[3]), format: e ? "name" : "hex" };if (n = se.hex4.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), a: Xt(n[4] + n[4]), format: e ? "name" : "hex8" };if (n = se.hex3.exec(t)) return { r: Kt(n[1] + n[1]), g: Kt(n[2] + n[2]), b: Kt(n[3] + n[3]), format: e ? "name" : "hex" };return !1;
+  }(t)), "object" == typeof t && (re(t.r) && re(t.g) && re(t.b) ? (e = t.r, n = t.g, i = t.b, s = { r: 255 * zt(e, 255), g: 255 * zt(n, 255), b: 255 * zt(i, 255) }, c = !0, h = "%" === String(t.r).substr(-1) ? "prgb" : "rgb") : re(t.h) && re(t.s) && re(t.v) ? (a = Bt(t.s), o = Bt(t.v), s = function (t, e, n) {
     t = 6 * zt(t, 360), e = zt(e, 100), n = zt(n, 100);var i = Math.floor(t),
-        r = t - i,
-        s = n * (1 - e),
-        a = n * (1 - r * e),
-        o = n * (1 - (1 - r) * e),
-        l = i % 6;return { r: 255 * [n, a, s, s, o, n][l], g: 255 * [o, n, n, a, s, s][l], b: 255 * [s, s, o, n, n, a][l] };
-  }(t.h, a, o), c = !0, h = "hsv") : se(t.h) && se(t.s) && se(t.l) && (a = Bt(t.s), l = Bt(t.l), r = function (t, e, n) {
-    var i, r, s;function a(t, e, n) {
+        s = t - i,
+        r = n * (1 - e),
+        a = n * (1 - s * e),
+        o = n * (1 - (1 - s) * e),
+        l = i % 6;return { r: 255 * [n, a, r, r, o, n][l], g: 255 * [o, n, n, a, r, r][l], b: 255 * [r, r, o, n, n, a][l] };
+  }(t.h, a, o), c = !0, h = "hsv") : re(t.h) && re(t.s) && re(t.l) && (a = Bt(t.s), l = Bt(t.l), s = function (t, e, n) {
+    var i, s, r;function a(t, e, n) {
       return n < 0 && (n += 1), n > 1 && (n -= 1), n < 1 / 6 ? t + 6 * n * (e - t) : n < .5 ? e : n < 2 / 3 ? t + (e - t) * (2 / 3 - n) * 6 : t;
-    }if (t = zt(t, 360), e = zt(e, 100), n = zt(n, 100), 0 === e) r = n, s = n, i = n;else {
+    }if (t = zt(t, 360), e = zt(e, 100), n = zt(n, 100), 0 === e) s = n, r = n, i = n;else {
       var o = n < .5 ? n * (1 + e) : n + e - n * e,
-          l = 2 * n - o;i = a(l, o, t + 1 / 3), r = a(l, o, t), s = a(l, o, t - 1 / 3);
-    }return { r: 255 * i, g: 255 * r, b: 255 * s };
-  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (s = t.a)), s = Ut(s), { ok: c, format: t.format || h, r: Math.min(255, Math.max(r.r, 0)), g: Math.min(255, Math.max(r.g, 0)), b: Math.min(255, Math.max(r.b, 0)), a: s };
+          l = 2 * n - o;i = a(l, o, t + 1 / 3), s = a(l, o, t), r = a(l, o, t - 1 / 3);
+    }return { r: 255 * i, g: 255 * s, b: 255 * r };
+  }(t.h, a, l), c = !0, h = "hsl"), Object.prototype.hasOwnProperty.call(t, "a") && (r = t.a)), r = Ut(r), { ok: c, format: t.format || h, r: Math.min(255, Math.max(s.r, 0)), g: Math.min(255, Math.max(s.g, 0)), b: Math.min(255, Math.max(s.b, 0)), a: r };
 }var ee = "(?:[-\\+]?\\d*\\.\\d+%?)|(?:[-\\+]?\\d+%?)",
     ne = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
     ie = "[\\s|\\(]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")[,|\\s]+(" + ee + ")\\s*\\)?",
-    re = { CSS_UNIT: new RegExp(ee), rgb: new RegExp("rgb" + ne), rgba: new RegExp("rgba" + ie), hsl: new RegExp("hsl" + ne), hsla: new RegExp("hsla" + ie), hsv: new RegExp("hsv" + ne), hsva: new RegExp("hsva" + ie), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function se(t) {
-  return Boolean(re.CSS_UNIT.exec(String(t)));
+    se = { CSS_UNIT: new RegExp(ee), rgb: new RegExp("rgb" + ne), rgba: new RegExp("rgba" + ie), hsl: new RegExp("hsl" + ne), hsla: new RegExp("hsla" + ie), hsv: new RegExp("hsv" + ne), hsva: new RegExp("hsva" + ie), hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/, hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/, hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/ };function re(t) {
+  return Boolean(se.CSS_UNIT.exec(String(t)));
 }var ae = function () {
   function t(e, n) {
     if (void 0 === e && (e = ""), void 0 === n && (n = {}), e instanceof t) return e;this.originalInput = e;var i = te(e);this.originalInput = e, this.r = i.r, this.g = i.g, this.b = i.b, this.a = i.a, this.roundA = Math.round(100 * this.a) / 100, this.format = n.format || i.format, this.gradientType = n.gradientType, this.r < 1 && (this.r = Math.round(this.r)), this.g < 1 && (this.g = Math.round(this.g)), this.b < 1 && (this.b = Math.round(this.b)), this.isValid = i.ok;
@@ -1002,9 +1002,9 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.toHexString = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex(t);
   }, t.prototype.toHex8 = function (t) {
-    return void 0 === t && (t = !1), function (t, e, n, i, r) {
-      var s,
-          a = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16)), Wt((s = i, Math.round(255 * parseFloat(s)).toString(16)))];return r && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
+    return void 0 === t && (t = !1), function (t, e, n, i, s) {
+      var r,
+          a = [Wt(Math.round(t).toString(16)), Wt(Math.round(e).toString(16)), Wt(Math.round(n).toString(16)), Wt((r = i, Math.round(255 * parseFloat(r)).toString(16)))];return s && a[0].charAt(0) === a[0].charAt(1) && a[1].charAt(0) === a[1].charAt(1) && a[2].charAt(0) === a[2].charAt(1) && a[3].charAt(0) === a[3].charAt(1) ? a[0].charAt(0) + a[1].charAt(0) + a[2].charAt(0) + a[3].charAt(0) : a.join("");
     }(this.r, this.g, this.b, this.a, t);
   }, t.prototype.toHex8String = function (t) {
     return void 0 === t && (t = !1), "#" + this.toHex8(t);
@@ -1052,16 +1052,16 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         i = (n.h + e) % 360;return n.h = i < 0 ? 360 + i : i, new t(n);
   }, t.prototype.mix = function (e, n) {
     void 0 === n && (n = 50);var i = this.toRgb(),
-        r = new t(e).toRgb(),
-        s = n / 100;return new t({ r: (r.r - i.r) * s + i.r, g: (r.g - i.g) * s + i.g, b: (r.b - i.b) * s + i.b, a: (r.a - i.a) * s + i.a });
+        s = new t(e).toRgb(),
+        r = n / 100;return new t({ r: (s.r - i.r) * r + i.r, g: (s.g - i.g) * r + i.g, b: (s.b - i.b) * r + i.b, a: (s.a - i.a) * r + i.a });
   }, t.prototype.analogous = function (e, n) {
     void 0 === e && (e = 6), void 0 === n && (n = 30);var i = this.toHsl(),
-        r = 360 / n,
-        s = [this];for (i.h = (i.h - (r * e >> 1) + 720) % 360; --e;) i.h = (i.h + r) % 360, s.push(new t(i));return s;
+        s = 360 / n,
+        r = [this];for (i.h = (i.h - (s * e >> 1) + 720) % 360; --e;) i.h = (i.h + s) % 360, r.push(new t(i));return r;
   }, t.prototype.complement = function () {
     var e = this.toHsl();return e.h = (e.h + 180) % 360, new t(e);
   }, t.prototype.monochromatic = function (e) {
-    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, r = n.s, s = n.v, a = [], o = 1 / e; e--;) a.push(new t({ h: i, s: r, v: s })), s = (s + o) % 1;return a;
+    void 0 === e && (e = 6);for (var n = this.toHsv(), i = n.h, s = n.s, r = n.v, a = [], o = 1 / e; e--;) a.push(new t({ h: i, s: s, v: r })), r = (r + o) % 1;return a;
   }, t.prototype.splitcomplement = function () {
     var e = this.toHsl(),
         n = e.h;return [this, new t({ h: (n + 72) % 360, s: e.s, l: e.l }), new t({ h: (n + 216) % 360, s: e.s, l: e.l })];
@@ -1070,7 +1070,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }, t.prototype.tetrad = function () {
     return this.polyad(4);
   }, t.prototype.polyad = function (e) {
-    for (var n = this.toHsl(), i = n.h, r = [this], s = 360 / e, a = 1; a < e; a++) r.push(new t({ h: (i + a * s) % 360, s: n.s, l: n.l }));return r;
+    for (var n = this.toHsl(), i = n.h, s = [this], r = 360 / e, a = 1; a < e; a++) s.push(new t({ h: (i + a * r) % 360, s: n.s, l: n.l }));return s;
   }, t.prototype.equals = function (e) {
     return this.toRgbString() === new t(e).toRgbString();
   }, t;
@@ -1086,8 +1086,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }return t;
 }function de(...t) {
   const e = t => t && "object" == typeof t;return t.reduce((t, n) => (Object.keys(n).forEach(i => {
-    const r = t[i],
-          s = n[i];Array.isArray(r) && Array.isArray(s) ? t[i] = r.concat(...s) : e(r) && e(s) ? t[i] = de(r, s) : t[i] = s;
+    const s = t[i],
+          r = n[i];Array.isArray(s) && Array.isArray(r) ? t[i] = s.concat(...r) : e(s) && e(r) ? t[i] = de(s, r) : t[i] = r;
   }), t), {});
 }function ue(t, e) {
   let n = [];return t && t.forEach(t => {
@@ -1097,8 +1097,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }), e && (n = n.concat(e.filter(e => !t || !t.find(t => !(!t.id || !e.id) && t.id == e.id)))), n;
 }const pe = ((t, ...e) => {
   const n = e.reduce((e, n, i) => e + (t => {
-    if (t instanceof rt) return t.cssText;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${t}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`);
-  })(n) + t[i + 1], t[0]);return new rt(n, it);
+    if (t instanceof st) return t.cssText;throw new Error(`Value passed to 'css' function must be a 'css' function result: ${t}. Use 'unsafeCSS' to pass non-literal values, but\n            take care to ensure page security.`);
+  })(n) + t[i + 1], t[0]);return new st(n, it);
 })`
   ha-card {
     cursor: pointer;
@@ -1489,15 +1489,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }static get styles() {
     return pe;
   }render() {
-    return this.config && this.hass ? this._cardHtml() : R``;
+    return this.config && this.hass ? this._cardHtml() : O``;
   }shouldUpdate(t) {
     const e = this.config.entity ? this.hass.states[this.config.entity] : void 0,
-          n = this._getMatchingConfigState(e),
-          i = !!(n && (this.config.show_label && n.label_template || this.config.show_entity_picture && n.entity_picture_template || this.config.show_name && n.name_template) || this.config.show_label && this.config.label_template || this.config.show_name && this.config.name_template || this.config.show_entity_picture && this.config.entity_picture_template || this.config.state && this.config.state.find(t => "template" === t.operator) || t.has("_timeRemaining"));return function (t, e, n) {
+          n = (this._getMatchingConfigState(e), !!(this._hasTemplate || this.config.state && this.config.state.find(t => "template" === t.operator) || t.has("_timeRemaining")));return function (t, e, n) {
       if (e.has("config") || n) return !0;if (t.config.entity) {
         const n = e.get("hass");return !n || n.states[t.config.entity] !== t.hass.states[t.config.entity];
       }return !1;
-    }(this, t, i);
+    }(this, t, n);
   }updated(t) {
     if (super.updated(t), this.config && this.config.entity && "timer" === le(this.config.entity) && t.has("hass")) {
       const e = this.hass.states[this.config.entity],
@@ -1509,7 +1508,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     this._clearInterval(), this._calculateRemaining(t), "active" === t.state && (this._interval = window.setInterval(() => this._calculateRemaining(t), 1e3));
   }_calculateRemaining(t) {
     this._timeRemaining = function (t) {
-      var e = Tt(t.attributes.remaining);if ("active" === t.state) {
+      var e = Pt(t.attributes.remaining);if ("active" === t.state) {
         var n = new Date().getTime(),
             i = new Date(t.last_changed).getTime();e = Math.max(e - (n - i) / 1e3, 0);
       }return e;
@@ -1519,7 +1518,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       var e = Math.floor(t / 3600),
           n = Math.floor(t % 3600 / 60),
           i = Math.floor(t % 3600 % 60);return e > 0 ? e + ":" + Nt(n) + ":" + Nt(i) : n > 0 ? n + ":" + Nt(i) : i > 0 ? "" + i : null;
-    }(this._timeRemaining || Tt(t.attributes.duration));
+    }(this._timeRemaining || Pt(t.attributes.duration));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
       if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
@@ -1536,6 +1535,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     });return !i && n ? n : i;
   }_evalTemplate(t, e) {
     return new Function("states", "entity", "user", "hass", `'use strict'; ${e}`).call(this, this.hass.states, t, this.hass.user, this.hass);
+  }_getTemplateOrString(t, e) {
+    if (!e) return;let n = e.trim();return "[[[" === n.substring(0, 3) && "]]]" === n.slice(-3) ? this._evalTemplate(t, n.slice(3, -3)) : e;
   }_getDefaultColorForState(t) {
     switch (t.state) {case "on":
         return this.config.color_on;case "off":
@@ -1544,16 +1545,16 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_getColorForLightEntity(t, e) {
     let n = this.config.default_color;return t && (t.attributes.rgb_color ? (n = `rgb(${t.attributes.rgb_color.join(",")})`, t.attributes.brightness && (n = he(n, (t.attributes.brightness + 245) / 5))) : e && t.attributes.color_temp && t.attributes.min_mireds && t.attributes.max_mireds ? (n = function (t, e, n) {
       const i = new ae("rgb(255, 160, 0)"),
-            r = new ae("rgb(166, 209, 255)"),
-            s = new ae("white"),
-            a = (t - e) / (n - e) * 100;return a < 50 ? oe(r).mix(s, 2 * a).toRgbString() : oe(s).mix(i, 2 * (a - 50)).toRgbString();
+            s = new ae("rgb(166, 209, 255)"),
+            r = new ae("white"),
+            a = (t - e) / (n - e) * 100;return a < 50 ? oe(s).mix(r, 2 * a).toRgbString() : oe(r).mix(i, 2 * (a - 50)).toRgbString();
     }(t.attributes.color_temp, t.attributes.min_mireds, t.attributes.max_mireds), t.attributes.brightness && (n = he(n, (t.attributes.brightness + 245) / 5))) : n = t.attributes.brightness ? he(this._getDefaultColorForState(t), (t.attributes.brightness + 245) / 5) : this._getDefaultColorForState(t)), n;
   }_buildCssColorAttribute(t, e) {
     let n,
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i || "auto-no-temperature" == i ? this._getColorForLightEntity(t, "auto-no-temperature" !== i) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in Dt) return Dt[t];switch (t) {case "alarm_control_panel":
+      if (t in Ht) return Ht[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":
@@ -1569,16 +1570,20 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
               return "hass:sleep";case "initializing":
               return "hass:timer-sand";default:
               return "hass:z-wave";}default:
-          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Rt;}
-    }(le(t.entity_id), t.state)), n;
+          return console.warn("Unable to find icon for domain " + t + " (" + e + ")"), Ot;}
+    }(le(t.entity_id), t.state)), this._getTemplateOrString(t, n);
   }_buildEntityPicture(t, e) {
-    if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n, i;return (i = e && e.entity_picture_template ? e.entity_picture_template : this.config.entity_picture_template) ? this._evalTemplate(t, i) : (e && e.entity_picture ? n = e.entity_picture : this.config.entity_picture ? n = this.config.entity_picture : t && (n = t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0), n);
+    if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n;return e && e.entity_picture ? n = e.entity_picture : this.config.entity_picture ? n = this.config.entity_picture : t && (n = t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0), this._getTemplateOrString(t, n);
   }_buildStyleGeneric(t, e) {
     let n = {};if (this.config.styles && this.config.styles[e] && (n = Object.assign(n, ...this.config.styles[e])), t && t.styles && t.styles[e]) {
       let i = {};i = Object.assign(i, ...t.styles[e]), n = Object.assign({}, n, i);
     }return n;
+  }_buildCustomStyleGeneric(t, e) {
+    let n = {};if (this.config.styles && this.config.styles.custom_fields && this.config.styles.custom_fields[e] && (n = Object.assign(n, ...this.config.styles.custom_fields[e])), t && t.styles && t.styles.custom_fields && t.styles.custom_fields[e]) {
+      let i = {};i = Object.assign(i, ...t.styles.custom_fields[e]), n = Object.assign({}, n, i);
+    }return n;
   }_buildName(t, e) {
-    if (!1 === this.config.show_name) return;let n, i;return (i = e && e.name_template ? e.name_template : this.config.name_template) ? this._evalTemplate(t, i) : (e && e.name ? n = e.name : this.config.name ? n = this.config.name : t && (n = t.attributes && t.attributes.friendly_name ? t.attributes.friendly_name : (r = t.entity_id).substr(r.indexOf(".") + 1)), n);var r;
+    if (!1 === this.config.show_name) return;let n;var i;return e && e.name ? n = e.name : this.config.name ? n = this.config.name : t && (n = t.attributes && t.attributes.friendly_name ? t.attributes.friendly_name : (i = t.entity_id).substr(i.indexOf(".") + 1)), this._getTemplateOrString(t, n);
   }_buildStateString(t) {
     let e;if (this.config.show_state && t && t.state) {
       const n = ((t, e) => {
@@ -1589,7 +1594,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_buildUnits(t) {
     let e;return t && this.config.show_units && (e = t.attributes && t.attributes.unit_of_measurement && !this.config.units ? t.attributes.unit_of_measurement : this.config.units ? this.config.units : void 0), e;
   }_buildLastChanged(t, e) {
-    return this.config.show_last_changed && t ? R`
+    return this.config.show_last_changed && t ? O`
         <ha-relative-time
           id="label"
           class="ellipsis"
@@ -1598,7 +1603,17 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           style=${ct(e)}
         ></ha-relative-time>` : void 0;
   }_buildLabel(t, e) {
-    if (!this.config.show_label) return;let n, i;return (i = e && e.label_template ? e.label_template : this.config.label_template) ? this._evalTemplate(t, i) : n = e && e.label ? e.label : this.config.label;
+    if (!this.config.show_label) return;let n;return n = e && e.label ? e.label : this.config.label, this._getTemplateOrString(t, n);
+  }_buildCustomFields(t, e) {
+    let n = O``,
+        i = {};return this.config.custom_fields && Object.keys(this.config.custom_fields).forEach(e => {
+      let n = this.config.custom_fields[e];i[e] = this._getTemplateOrString(t, n);
+    }), e && e.custom_fields && Object.keys(e.custom_fields).forEach(n => {
+      let s = e.custom_fields[n];i[n] = this._getTemplateOrString(t, s);
+    }), Object.keys(i).forEach(t => {
+      let s = this._buildCustomStyleGeneric(e, t);s.gridArea = t, n = O`${n}
+      <div id=${t} class="ellipsis" style=${ct(s)}>${dt(i[t])}</div>`;
+    }), n;
   }_isClickable(t) {
     let e = !0;if ("toggle" === this.config.tap_action.action && "none" === this.config.hold_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.hold_action.action && "none" === this.config.tap_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.dbltap_action.action && "none" === this.config.tap_action.action && "none" === this.config.hold_action.action) {
       if (t) switch (le(t.entity_id)) {case "sensor":case "binary_sensor":case "device_tracker":
@@ -1608,7 +1623,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
   }_rotate(t) {
     return !(!t || !t.spin);
   }_blankCardColoredHtml(t) {
-    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return R`
+    const e = Object.assign({ background: "none", "box-shadow": "none" }, t);return O`
       <ha-card class="disabled" style=${ct(e)}>
         <div></div>
       </ha-card>
@@ -1617,8 +1632,8 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
     const t = this.config.entity ? this.hass.states[this.config.entity] : void 0,
           e = this._getMatchingConfigState(t),
           n = this._buildCssColorAttribute(t, e);let i = n,
-        r = {},
         s = {},
+        r = {},
         a = {};const o = this._buildStyleGeneric(e, "lock"),
           l = this._buildStyleGeneric(e, "card"),
           c = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (l.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
@@ -1626,14 +1641,14 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
         {
           const t = function (t) {
             const e = new ae(ce(t));return e.isValid && e.getLuminance() > .5 ? "rgb(62, 62, 62)" : "rgb(234, 234, 234)";
-          }(n);r.color = t, s.color = t, r["background-color"] = n, r = Object.assign({}, r, l), i = "inherit";break;
+          }(n);s.color = t, r.color = t, s["background-color"] = n, s = Object.assign({}, s, l), i = "inherit";break;
         }default:
-        r = l;}return this.config.aspect_ratio ? (a["--aspect-ratio"] = this.config.aspect_ratio, r.position = "absolute") : a.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), this.style.setProperty("--button-card-light-color-no-temperature", this._getColorForLightEntity(t, !1)), s = Object.assign({}, s, o), R`
+        s = l;}return this.config.aspect_ratio ? (a["--aspect-ratio"] = this.config.aspect_ratio, s.position = "absolute") : a.display = "inline", this.style.setProperty("--button-card-light-color", this._getColorForLightEntity(t, !0)), this.style.setProperty("--button-card-light-color-no-temperature", this._getColorForLightEntity(t, !1)), r = Object.assign({}, r, o), O`
       <div id="aspect-ratio" style=${ct(a)}>
         <ha-card
           id="card"
           class=${mt(c)}
-          style=${ct(r)}
+          style=${ct(s)}
           @ha-click="${this._handleTap}"
           @ha-hold="${this._handleHold}"
           @ha-dblclick=${this._handleDblTap}
@@ -1642,27 +1657,27 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           .longpress=${Yt()}
           .config="${this.config}"
         >
-          ${this._getLock(s)}
+          ${this._getLock(r)}
           ${this._buttonContent(t, e, i)}
-          ${this.config.lock ? "" : R`<mwc-ripple id="ripple"></mwc-ripple>`}
+          ${this.config.lock ? "" : O`<mwc-ripple id="ripple"></mwc-ripple>`}
         </ha-card>
       </div>
       `;
   }_getLock(t) {
-    return this.config.lock ? R`
+    return this.config.lock ? O`
         <div id="overlay" style=${ct(t)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
-      ` : R``;
+      ` : O``;
   }_buttonContent(t, e, n) {
     const i = this._buildName(t, e),
-          r = this._buildStateString(t),
-          s = function (t, e) {
+          s = this._buildStateString(t),
+          r = function (t, e) {
       if (!t && !e) return;let n;return n = e ? t ? `${t}: ${e}` : e : t;
-    }(i, r);switch (this.config.layout) {case "icon_name_state":case "name_state":
-        return this._gridHtml(t, e, this.config.layout, n, s, void 0);default:
-        return this._gridHtml(t, e, this.config.layout, n, i, r);}
-  }_gridHtml(t, e, n, i, r, s) {
+    }(i, s);switch (this.config.layout) {case "icon_name_state":case "name_state":
+        return this._gridHtml(t, e, this.config.layout, n, r, void 0);default:
+        return this._gridHtml(t, e, this.config.layout, n, i, s);}
+  }_gridHtml(t, e, n, i, s, r) {
     const a = this._getIconHtml(t, e, i),
           o = [n],
           l = this._buildLabel(t, e),
@@ -1670,28 +1685,29 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
           h = this._buildStyleGeneric(e, "state"),
           d = this._buildStyleGeneric(e, "label"),
           u = this._buildLastChanged(t, d),
-          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), r || o.push("no-name"), s || o.push("no-state"), l || u || o.push("no-label"), R`
+          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), s || o.push("no-name"), r || o.push("no-state"), l || u || o.push("no-label"), O`
       <div id="container" class=${o.join(" ")} style=${ct(p)}>
         ${a || ""}
-        ${r ? R`<div id="name" class="ellipsis" style=${ct(c)}>${dt(r)}</div>` : ""}
-        ${s ? R`<div id="state" class="ellipsis" style=${ct(h)}>${s}</div>` : ""}
-        ${l && !u ? R`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
+        ${s ? O`<div id="name" class="ellipsis" style=${ct(c)}>${dt(s)}</div>` : ""}
+        ${r ? O`<div id="state" class="ellipsis" style=${ct(h)}>${r}</div>` : ""}
+        ${l && !u ? O`<div id="label" class="ellipsis" style=${ct(d)}>${dt(l)}</div>` : ""}
         ${u || ""}
+        ${this._buildCustomFields(t, e)}
       </div>
     `;
   }_getIconHtml(t, e, n) {
     const i = this._buildIcon(t, e),
-          r = this._buildEntityPicture(t, e),
-          s = this._buildStyleGeneric(e, "entity_picture"),
+          s = this._buildEntityPicture(t, e),
+          r = this._buildStyleGeneric(e, "entity_picture"),
           a = this._buildStyleGeneric(e, "icon"),
           o = this._buildStyleGeneric(e, "img_cell"),
           l = this._buildStyleGeneric(e, "card"),
           c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, a),
-          h = Object.assign({}, c, s);return i || r ? R`
+          h = Object.assign({}, c, r);return i || s ? O`
         <div id="img-cell" style=${ct(o)}>
-          ${i && !r ? R`<ha-icon style=${ct(c)}
+          ${i && !s ? O`<ha-icon style=${ct(c)}
             .icon="${i}" id="icon" ?rotating=${this._rotate(e)}></ha-icon>` : ""}
-          ${r ? R`<img src="${r}" style=${ct(h)}
+          ${s ? O`<img src="${s}" style=${ct(h)}
             id="icon" ?rotating=${this._rotate(e)} />` : ""}
         </div>
       ` : void 0;
@@ -1702,7 +1718,7 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       }return null;
     }();let n = Object.assign({}, t),
         i = n.template,
-        r = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = de(e.config.button_card_templates[i], n), r = ue(e.config.button_card_templates[i].state, r), i = e.config.button_card_templates[i].template;n.state = r, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";
+        s = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = de(e.config.button_card_templates[i], n), s = ue(e.config.button_card_templates[i].state, s), i = e.config.button_card_templates[i].template;n.state = s, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";let r = JSON.stringify(this.config);const a = new RegExp("\\[\\[\\[.*\\]\\]\\]", "gm");this._hasTemplate = !1, r.match(a) && (this._hasTemplate = !0);
   }getCardSize() {
     return 3;
   }_handleTap(t) {
@@ -1716,15 +1732,15 @@ window.navigator.userAgent.match("Trident") && (DOMTokenList.prototype.toggle = 
       if (!this.hass.user.name) return;if (this.config.unlock_users.indexOf(this.hass.user.name) < 0) return;
     }const e = this.shadowRoot.getElementById("overlay"),
           n = this.shadowRoot.getElementById("card");e.style.setProperty("pointer-events", "none");const i = document.createElement("paper-ripple"),
-          r = this.shadowRoot.getElementById("lock");if (r) {
-      n.appendChild(i);const t = document.createAttribute("icon");t.value = "mdi:lock-open-outline", r.attributes.setNamedItem(t), r.classList.add("fadeOut");
+          s = this.shadowRoot.getElementById("lock");if (s) {
+      n.appendChild(i);const t = document.createAttribute("icon");t.value = "mdi:lock-open-outline", s.attributes.setNamedItem(t), s.classList.add("fadeOut");
     }window.setTimeout(() => {
-      if (e.style.setProperty("pointer-events", ""), r) {
-        r.classList.remove("fadeOut");const t = document.createAttribute("icon");t.value = "mdi:lock-outline", r.attributes.setNamedItem(t), n.removeChild(i);
+      if (e.style.setProperty("pointer-events", ""), s) {
+        s.classList.remove("fadeOut");const t = document.createAttribute("icon");t.value = "mdi:lock-outline", s.attributes.setNamedItem(t), n.removeChild(i);
       }
     }, 5e3);
   }
-};t([et()], fe.prototype, "hass", void 0), t([et()], fe.prototype, "config", void 0), t([et()], fe.prototype, "_timeRemaining", void 0), fe = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
+};t([et()], fe.prototype, "hass", void 0), t([et()], fe.prototype, "config", void 0), t([et()], fe.prototype, "_timeRemaining", void 0), t([et()], fe.prototype, "_hasTemplate", void 0), fe = t([(t => e => "function" == typeof e ? ((t, e) => (window.customElements.define(t, e), e))(t, e) : ((t, e) => {
   const { kind: n, elements: i } = e;return { kind: n, elements: i, finisher(e) {
       window.customElements.define(t, e);
     } };
