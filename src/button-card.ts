@@ -477,8 +477,10 @@ class ButtonCard extends LitElement {
       })
     }
     Object.keys(fields).forEach((key) => {
-      let customStyle: StyleInfo = this._buildCustomStyleGeneric(configState, key);
-      customStyle.gridArea = key;
+      let customStyle: StyleInfo = {
+        ...this._buildCustomStyleGeneric(configState, key),
+        'grid-area': key,
+      }
       result = html`${result}
       <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
     })
@@ -550,9 +552,9 @@ class ButtonCard extends LitElement {
     const configState = this._getMatchingConfigState(state);
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
-    let cardStyle: StyleInfo = {};
-    let lockStyle: StyleInfo = {};
-    let aspectRatio: StyleInfo = {};
+    let cardStyle: any = {};
+    let lockStyle: any = {};
+    let aspectRatio: any = {};
     const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(configState, 'card');
     const classList: ClassInfo = {
