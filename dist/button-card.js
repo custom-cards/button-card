@@ -1574,14 +1574,18 @@ const ct = new WeakMap(),
     }(le(t.entity_id), t.state)), this._getTemplateOrString(t, n);
   }_buildEntityPicture(t, e) {
     if (!this.config.show_entity_picture || !t && !e && !this.config.entity_picture) return;let n;return e && e.entity_picture ? n = e.entity_picture : this.config.entity_picture ? n = this.config.entity_picture : t && (n = t.attributes && t.attributes.entity_picture ? t.attributes.entity_picture : void 0), this._getTemplateOrString(t, n);
-  }_buildStyleGeneric(t, e) {
-    let n = {};if (this.config.styles && this.config.styles[e] && (n = Object.assign(n, ...this.config.styles[e])), t && t.styles && t.styles[e]) {
-      let i = {};i = Object.assign(i, ...t.styles[e]), n = Object.assign({}, n, i);
-    }return n;
-  }_buildCustomStyleGeneric(t, e) {
-    let n = {};if (this.config.styles && this.config.styles.custom_fields && this.config.styles.custom_fields[e] && (n = Object.assign(n, ...this.config.styles.custom_fields[e])), t && t.styles && t.styles.custom_fields && t.styles.custom_fields[e]) {
-      let i = {};i = Object.assign(i, ...t.styles.custom_fields[e]), n = Object.assign({}, n, i);
-    }return n;
+  }_buildStyleGeneric(t, e, n) {
+    let i = {};if (this.config.styles && this.config.styles[n] && (i = Object.assign(i, ...this.config.styles[n])), e && e.styles && e.styles[n]) {
+      let t = {};t = Object.assign(t, ...e.styles[n]), i = Object.assign({}, i, t);
+    }return Object.keys(i).forEach(e => {
+      i[e] = this._getTemplateOrString(t, i[e]);
+    }), i;
+  }_buildCustomStyleGeneric(t, e, n) {
+    let i = {};if (this.config.styles && this.config.styles.custom_fields && this.config.styles.custom_fields[n] && (i = Object.assign(i, ...this.config.styles.custom_fields[n])), e && e.styles && e.styles.custom_fields && e.styles.custom_fields[n]) {
+      let t = {};t = Object.assign(t, ...e.styles.custom_fields[n]), i = Object.assign({}, i, t);
+    }return Object.keys(i).forEach(e => {
+      i[e] = this._getTemplateOrString(t, i[e]);
+    }), i;
   }_buildName(t, e) {
     if (!1 === this.config.show_name) return;let n;var i;return e && e.name ? n = e.name : this.config.name ? n = this.config.name : t && (n = t.attributes && t.attributes.friendly_name ? t.attributes.friendly_name : (i = t.entity_id).substr(i.indexOf(".") + 1)), this._getTemplateOrString(t, n);
   }_buildStateString(t) {
@@ -1610,9 +1614,11 @@ const ct = new WeakMap(),
       let n = this.config.custom_fields[e];i[e] = this._getTemplateOrString(t, n);
     }), e && e.custom_fields && Object.keys(e.custom_fields).forEach(n => {
       let s = e.custom_fields[n];i[n] = this._getTemplateOrString(t, s);
-    }), Object.keys(i).forEach(t => {
-      let s = Object.assign({}, this._buildCustomStyleGeneric(e, t), { "grid-area": t });n = $`${n}
-      <div id=${t} class="ellipsis" style=${ht(s)}>${ut(i[t])}</div>`;
+    }), Object.keys(i).forEach(s => {
+      if (null != i[s]) {
+        let r = Object.assign({}, this._buildCustomStyleGeneric(t, e, s), { "grid-area": s });n = $`${n}
+        <div id=${s} class="ellipsis" style=${ht(r)}>${ut(i[s])}</div>`;
+      }
     }), n;
   }_isClickable(t) {
     let e = !0;if ("toggle" === this.config.tap_action.action && "none" === this.config.hold_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.hold_action.action && "none" === this.config.tap_action.action && "none" === this.config.dbltap_action.action || "toggle" === this.config.dbltap_action.action && "none" === this.config.tap_action.action && "none" === this.config.hold_action.action) {
@@ -1634,8 +1640,8 @@ const ct = new WeakMap(),
           n = this._buildCssColorAttribute(t, e);let i = n,
         s = {},
         r = {},
-        a = {};const o = this._buildStyleGeneric(e, "lock"),
-          l = this._buildStyleGeneric(e, "card"),
+        a = {};const o = this._buildStyleGeneric(t, e, "lock"),
+          l = this._buildStyleGeneric(t, e, "card"),
           c = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (l.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
         return this._blankCardColoredHtml(l);case "card":case "label-card":
         {
@@ -1681,11 +1687,11 @@ const ct = new WeakMap(),
     const a = this._getIconHtml(t, e, i),
           o = [n],
           l = this._buildLabel(t, e),
-          c = this._buildStyleGeneric(e, "name"),
-          h = this._buildStyleGeneric(e, "state"),
-          d = this._buildStyleGeneric(e, "label"),
+          c = this._buildStyleGeneric(t, e, "name"),
+          h = this._buildStyleGeneric(t, e, "state"),
+          d = this._buildStyleGeneric(t, e, "label"),
           u = this._buildLastChanged(t, d),
-          p = this._buildStyleGeneric(e, "grid");return a || o.push("no-icon"), s || o.push("no-name"), r || o.push("no-state"), l || u || o.push("no-label"), $`
+          p = this._buildStyleGeneric(t, e, "grid");return a || o.push("no-icon"), s || o.push("no-name"), r || o.push("no-state"), l || u || o.push("no-label"), $`
       <div id="container" class=${o.join(" ")} style=${ht(p)}>
         ${a || ""}
         ${s ? $`<div id="name" class="ellipsis" style=${ht(c)}>${ut(s)}</div>` : ""}
@@ -1698,10 +1704,10 @@ const ct = new WeakMap(),
   }_getIconHtml(t, e, n) {
     const i = this._buildIcon(t, e),
           s = this._buildEntityPicture(t, e),
-          r = this._buildStyleGeneric(e, "entity_picture"),
-          a = this._buildStyleGeneric(e, "icon"),
-          o = this._buildStyleGeneric(e, "img_cell"),
-          l = this._buildStyleGeneric(e, "card"),
+          r = this._buildStyleGeneric(t, e, "entity_picture"),
+          a = this._buildStyleGeneric(t, e, "icon"),
+          o = this._buildStyleGeneric(t, e, "img_cell"),
+          l = this._buildStyleGeneric(t, e, "card"),
           c = Object.assign({ color: n, width: this.config.size, position: this.config.aspect_ratio || l.height ? "absolute" : "relative" }, a),
           h = Object.assign({}, c, r);return i || s ? $`
         <div id="img-cell" style=${ht(o)}>

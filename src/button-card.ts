@@ -331,10 +331,11 @@ class ButtonCard extends LitElement {
   }
 
   private _buildStyleGeneric(
+    state: HassEntity | undefined,
     configState: StateConfig | undefined,
     styleType: string,
   ): StyleInfo {
-    let style: StyleInfo = {};
+    let style: any = {};
     if (this.config!.styles && this.config!.styles[styleType]) {
       style = Object.assign(style, ...this.config!.styles[styleType]);
     }
@@ -346,14 +347,18 @@ class ButtonCard extends LitElement {
         ...configStateStyle,
       };
     }
+    Object.keys(style).forEach((key) => {
+      style[key] = this._getTemplateOrString(state, style[key]);
+    })
     return style;
   }
 
   private _buildCustomStyleGeneric(
+    state: HassEntity | undefined,
     configState: StateConfig | undefined,
     styleType: string,
   ): StyleInfo {
-    let style: StyleInfo = {};
+    let style: any = {};
     if (this.config!.styles && this.config!.styles.custom_fields && this.config!.styles.custom_fields[styleType]) {
       style = Object.assign(style, ...this.config!.styles.custom_fields[styleType]);
     }
@@ -365,6 +370,9 @@ class ButtonCard extends LitElement {
         ...configStateStyle,
       };
     }
+    Object.keys(style).forEach((key) => {
+      style[key] = this._getTemplateOrString(state, style[key]);
+    })
     return style;
   }
 
@@ -477,12 +485,14 @@ class ButtonCard extends LitElement {
       })
     }
     Object.keys(fields).forEach((key) => {
-      let customStyle: StyleInfo = {
-        ...this._buildCustomStyleGeneric(configState, key),
-        'grid-area': key,
+      if (fields[key] != undefined) {
+        let customStyle: StyleInfo = {
+          ...this._buildCustomStyleGeneric(state, configState, key),
+          'grid-area': key,
+        }
+        result = html`${result}
+        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
       }
-      result = html`${result}
-      <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
     })
     return result;
   }
@@ -555,8 +565,8 @@ class ButtonCard extends LitElement {
     let cardStyle: any = {};
     let lockStyle: any = {};
     let aspectRatio: any = {};
-    const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
-    const configCardStyle = this._buildStyleGeneric(configState, 'card');
+    const lockStyleFromConfig = this._buildStyleGeneric(state, configState, 'lock');
+    const configCardStyle = this._buildStyleGeneric(state, configState, 'card');
     const classList: ClassInfo = {
       'button-card-main': true,
       disabled: !this._isClickable(state),
@@ -656,11 +666,11 @@ class ButtonCard extends LitElement {
     const iconTemplate = this._getIconHtml(state, configState, color);
     const itemClass: string[] = [containerClass];
     const label = this._buildLabel(state, configState);
-    const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
-    const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
-    const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
+    const nameStyleFromConfig = this._buildStyleGeneric(state, configState, 'name');
+    const stateStyleFromConfig = this._buildStyleGeneric(state, configState, 'state');
+    const labelStyleFromConfig = this._buildStyleGeneric(state, configState, 'label');
     const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
-    const gridStyleFromConfig = this._buildStyleGeneric(configState, 'grid');
+    const gridStyleFromConfig = this._buildStyleGeneric(state, configState, 'grid');
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
@@ -685,10 +695,10 @@ class ButtonCard extends LitElement {
   ): TemplateResult | undefined {
     const icon = this._buildIcon(state, configState);
     const entityPicture = this._buildEntityPicture(state, configState);
-    const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
-    const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
-    const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
-    const haCardStyleFromConfig = this._buildStyleGeneric(configState, 'card');
+    const entityPictureStyleFromConfig = this._buildStyleGeneric(state, configState, 'entity_picture');
+    const haIconStyleFromConfig = this._buildStyleGeneric(state, configState, 'icon');
+    const imgCellStyleFromConfig = this._buildStyleGeneric(state, configState, 'img_cell');
+    const haCardStyleFromConfig = this._buildStyleGeneric(state, configState, 'card');
 
     const haIconStyle: StyleInfo = {
       color,
