@@ -777,6 +777,21 @@ class ButtonCard extends LitElement {
     return 3;
   }
 
+  private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
+    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
+    let configDuplicate = JSON.parse(JSON.stringify(config));
+    Object.keys(configDuplicate![action]).forEach((key) => {
+      if (key === 'service_data') {
+        Object.keys(configDuplicate![action].service_data).forEach((sdKey) => {
+          configDuplicate![action].service_data[sdKey] = this._getTemplateOrString(state, configDuplicate![action].service_data[sdKey])
+        })
+      } else {
+        configDuplicate![action][key] = this._getTemplateOrString(state, configDuplicate![action][key])
+      }
+    })
+    return configDuplicate;
+  }
+
   private _handleTap(ev): void {
     /* eslint no-alert: 0 */
     if (this.config!.confirmation
@@ -784,7 +799,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false, false);
+    handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
   private _handleHold(ev): void {
@@ -794,7 +809,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, true, false);
+    handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
@@ -804,7 +819,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false, true);
+    handleClick(this, this.hass!, this._evalActions(config, 'dbltap_action'), false, true);
   }
 
   private _handleLock(ev): void {
