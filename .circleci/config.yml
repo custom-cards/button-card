@@ -17,7 +17,7 @@ jobs:
       - restore_cache:
           keys:
             - deps-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
-      - run: npm install
+      - run: npm install && npm audit fix
 
       - save_cache:
           paths:
