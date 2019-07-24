@@ -1536,7 +1536,7 @@ const lt = new WeakMap(),
   }_evalTemplate(t, e) {
     return new Function("states", "entity", "user", "hass", `'use strict'; ${e}`).call(this, this.hass.states, t, this.hass.user, this.hass);
   }_getTemplateOrString(t, e) {
-    if (!e) return;let n = e.trim();return "[[[" === n.substring(0, 3) && "]]]" === n.slice(-3) ? this._evalTemplate(t, n.slice(3, -3)) : e;
+    if (!e) return;const n = e.trim();return "[[[" === n.substring(0, 3) && "]]]" === n.slice(-3) ? this._evalTemplate(t, n.slice(3, -3)) : e;
   }_getDefaultColorForState(t) {
     switch (t.state) {case "on":
         return this.config.color_on;case "off":
@@ -1609,14 +1609,13 @@ const lt = new WeakMap(),
   }_buildLabel(t, e) {
     if (!this.config.show_label) return;let n;return n = e && e.label ? e.label : this.config.label, this._getTemplateOrString(t, n);
   }_buildCustomFields(t, e) {
-    let n = $``,
-        i = {};return this.config.custom_fields && Object.keys(this.config.custom_fields).forEach(e => {
-      let n = this.config.custom_fields[e];i[e] = this._getTemplateOrString(t, n);
+    let n = $``;const i = {};return this.config.custom_fields && Object.keys(this.config.custom_fields).forEach(e => {
+      const n = this.config.custom_fields[e];i[e] = this._getTemplateOrString(t, n);
     }), e && e.custom_fields && Object.keys(e.custom_fields).forEach(n => {
-      let s = e.custom_fields[n];i[n] = this._getTemplateOrString(t, s);
+      const s = e.custom_fields[n];i[n] = this._getTemplateOrString(t, s);
     }), Object.keys(i).forEach(s => {
       if (null != i[s]) {
-        let r = Object.assign({}, this._buildCustomStyleGeneric(t, e, s), { "grid-area": s });n = $`${n}
+        const r = Object.assign({}, this._buildCustomStyleGeneric(t, e, s), { "grid-area": s });n = $`${n}
         <div id=${s} class="ellipsis" style=${ht(r)}>${ut(i[s])}</div>`;
       }
     }), n;
@@ -1639,8 +1638,8 @@ const lt = new WeakMap(),
           e = this._getMatchingConfigState(t),
           n = this._buildCssColorAttribute(t, e);let i = n,
         s = {},
-        r = {},
-        a = {};const o = this._buildStyleGeneric(t, e, "lock"),
+        r = {};const a = {},
+          o = this._buildStyleGeneric(t, e, "lock"),
           c = this._buildStyleGeneric(t, e, "card"),
           l = { "button-card-main": !0, disabled: !this._isClickable(t) };switch (c.width && (this.style.setProperty("flex", "0 0 auto"), this.style.setProperty("max-width", "fit-content")), this.config.color_type) {case "blank-card":
         return this._blankCardColoredHtml(c);case "card":case "label-card":
@@ -1724,11 +1723,13 @@ const lt = new WeakMap(),
       }return null;
     }();let n = Object.assign({}, t),
         i = n.template,
-        s = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = de(e.config.button_card_templates[i], n), s = ue(e.config.button_card_templates[i].state, s), i = e.config.button_card_templates[i].template;n.state = s, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";let r = JSON.stringify(this.config);const a = new RegExp("\\[\\[\\[.*\\]\\]\\]", "gm");this._hasTemplate = !1, r.match(a) && (this._hasTemplate = !0);
+        s = t.state;for (; i && e.config.button_card_templates && e.config.button_card_templates[i];) n = de(e.config.button_card_templates[i], n), s = ue(e.config.button_card_templates[i].state, s), i = e.config.button_card_templates[i].template;n.state = s, this.config = Object.assign({ tap_action: { action: "toggle" }, hold_action: { action: "none" }, dbltap_action: { action: "none" }, layout: "vertical", size: "40%", color_type: "icon", show_name: !0, show_state: !1, show_icon: !0, show_units: !0, show_label: !1, show_entity_picture: !1 }, n), this.config.default_color = "var(--primary-text-color)", "icon" !== this.config.color_type ? this.config.color_off = "var(--paper-card-background-color)" : this.config.color_off = "var(--paper-item-icon-color)", this.config.color_on = "var(--paper-item-icon-active-color)";const r = JSON.stringify(this.config),
+          a = new RegExp("\\[\\[\\[.*\\]\\]\\]", "gm");this._hasTemplate = !!r.match(a);
   }getCardSize() {
     return 3;
   }_evalActions(t, e) {
-    const n = this.config.entity ? this.hass.states[this.config.entity] : void 0;let i = JSON.parse(JSON.stringify(t));return Object.keys(i[e]).forEach(t => {
+    const n = this.config.entity ? this.hass.states[this.config.entity] : void 0,
+          i = JSON.parse(JSON.stringify(t));return Object.keys(i[e]).forEach(t => {
       "service_data" === t ? Object.keys(i[e].service_data).forEach(t => {
         i[e].service_data[t] = this._getTemplateOrString(n, i[e].service_data[t]);
       }) : i[e][t] = this._getTemplateOrString(n, i[e][t]);

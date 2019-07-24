@@ -1,6 +1,6 @@
 import { HassEntity } from 'home-assistant-js-websocket';
-import { computeDomain } from './helpers';
 import { LocalizeFunc } from 'custom-card-helpers';
+import { computeDomain } from './helpers';
 
 export default (
   localize: LocalizeFunc,
