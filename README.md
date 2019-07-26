@@ -177,7 +177,8 @@ Multiple values are possible, see the image below for examples:
 
 ### Templates
 
-The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brakets: `[[[ javascript function here ]]]`
+The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brakets:
+`[[[ javascript function here ]]]`
 
 Don't forget to quote if it's on one line:
 ```yaml
@@ -373,7 +374,7 @@ Some examples:
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon).
 This is an advanced feature which leverages (if you require it) the CSS Grid.
 
-Each custom element supports it's own styling config:
+Each custom field supports its own styling config, the name needs to match between both objects needs to match:
 ```yaml
 - type: custom:button-card
   [...]
@@ -388,7 +389,9 @@ Each custom element supports it's own styling config:
 
 Examples are better than a long text, so here you go:
 * Placing an element wherever you want (that means bypassing the grid). Set the grid to `position: relative` and set the element to `position: absolute`
+
   ![custom_fields_1](examples/custom_fields_1.gif)
+
   ```yaml
     - type: custom:button-card
       icon: mdi:lightbulb
@@ -417,7 +420,8 @@ Examples are better than a long text, so here you go:
         notification: >
           [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
   ```
-* Or you can use the grid. Each element will have it's name positioned as the `grid-area` (Thanks @iantrich @lbdab and @jimz011 for the inspiration):
+* Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
+
   ![custom_fields_2](examples/custom_fields_2.png)
 
   ```yaml
@@ -1176,7 +1180,8 @@ Example with `template`:
 
 ## Credits
 
-- [ciotlosm](https://github.com/ciotlosm) for the readme template and the awesome examples
+- [ciotlosm](https://github.com/ciotlosm) for the readme template and some awesome examples
+- [iantrich](https://github.com/iantrich), [LbDab](https://github.com/lbdab) and [jimz011](https://github.com/jimz011) for the inspiration and the awesome templates and cards you've created.
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg?style=for-the-badge
 [commits]: https://github.com/custom-cards/button-card/commits/master
