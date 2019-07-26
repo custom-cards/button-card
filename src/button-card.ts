@@ -10,14 +10,10 @@ import {
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { ifDefined } from 'lit-html/directives/if-defined';
-import { classMap, ClassInfo } from 'lit-html/directives/class-map.js';
+import { classMap, ClassInfo } from 'lit-html/directives/class-map';
 import {
   HassEntity,
 } from 'home-assistant-js-websocket';
-import {
-  ButtonCardConfig,
-  StateConfig,
-} from './types';
 import {
   domainIcon,
   HomeAssistant,
@@ -25,10 +21,14 @@ import {
   getLovelace,
   timerTimeRemaining,
   secondsToDuration,
-  durationToSeconds
+  durationToSeconds,
   // Still not working...
   // longPress,
 } from 'custom-card-helpers';
+import {
+  ButtonCardConfig,
+  StateConfig,
+} from './types';
 import { longPress } from './long-press';
 import {
   computeDomain,
@@ -52,6 +52,8 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
+  @property() private _hasTemplate?: boolean;
+
   private _interval?: number;
 
   public disconnectedCallback(): void {
@@ -62,9 +64,9 @@ class ButtonCard extends LitElement {
   public connectedCallback(): void {
     super.connectedCallback();
     if (
-      this.config &&
-      this.config.entity &&
-      computeDomain(this.config.entity) === 'timer'
+      this.config
+      && this.config.entity
+      && computeDomain(this.config.entity) === 'timer'
     ) {
       const stateObj = this.hass!.states[this.config.entity];
       this._startInterval(stateObj);
@@ -85,16 +87,7 @@ class ButtonCard extends LitElement {
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     const configState = this._getMatchingConfigState(state);
-    const forceUpdate = (
-      configState && (
-        this.config!.show_label && configState.label_template
-        || this.config!.show_entity_picture && configState.entity_picture_template
-        || this.config!.show_name && configState.name_template
-      )
-      || this.config!.show_label && this.config!.label_template
-      || this.config!.show_name && this.config!.name_template
-      || this.config!.show_entity_picture && this.config!.entity_picture_template
-    )
+    const forceUpdate = this._hasTemplate
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
       || changedProps.has('_timeRemaining')
@@ -106,10 +99,10 @@ class ButtonCard extends LitElement {
     super.updated(changedProps);
 
     if (
-      this.config &&
-      this.config.entity &&
-      computeDomain(this.config.entity) === 'timer' &&
-      changedProps.has('hass')
+      this.config
+      && this.config.entity
+      && computeDomain(this.config.entity) === 'timer'
+      && changedProps.has('hass')
     ) {
       const stateObj = this.hass!.states[this.config.entity];
       const oldHass = changedProps.get('hass') as this['hass'];
@@ -139,7 +132,7 @@ class ButtonCard extends LitElement {
     if (stateObj.state === 'active') {
       this._interval = window.setInterval(
         () => this._calculateRemaining(stateObj),
-        1000
+        1000,
       );
     }
   }
@@ -154,7 +147,7 @@ class ButtonCard extends LitElement {
     }
 
     return secondsToDuration(
-      this._timeRemaining || durationToSeconds(stateObj.attributes['duration'])
+      this._timeRemaining || durationToSeconds(stateObj.attributes.duration),
     );
   }
 
@@ -174,24 +167,25 @@ class ButtonCard extends LitElement {
         switch (elt.operator) {
           case '==':
             /* eslint eqeqeq: 0 */
-            return (state && state.state == elt.value);
+            return (state && state.state == this._getTemplateOrString(state, elt.value));
           case '<=':
-            return (state && state.state <= elt.value);
+            return (state && state.state <= this._getTemplateOrString(state, elt.value));
           case '<':
-            return (state && state.state < elt.value);
+            return (state && state.state < this._getTemplateOrString(state, elt.value));
           case '>=':
-            return (state && state.state >= elt.value);
+            return (state && state.state >= this._getTemplateOrString(state, elt.value));
           case '>':
-            return (state && state.state > elt.value);
+            return (state && state.state > this._getTemplateOrString(state, elt.value));
           case '!=':
-            return (state && state.state != elt.value);
+            return (state && state.state != this._getTemplateOrString(state, elt.value));
           case 'regex': {
             /* eslint no-unneeded-ternary: 0 */
-            const matches = state && state.state.match(elt.value) ? true : false;
+            const matches = state
+              && state.state.match(this._getTemplateOrString(state, elt.value)) ? true : false;
             return matches;
           }
           case 'template': {
-            return this._evalTemplate(state, elt.value);
+            return this._getTemplateOrString(state, elt.value);
           }
           case 'default':
             def = elt;
@@ -200,7 +194,7 @@ class ButtonCard extends LitElement {
             return false;
         }
       } else {
-        return state && (elt.value == state.state);
+        return state && (this._getTemplateOrString(state, elt.value) == state.state);
       }
     });
     if (!retval && def) {
@@ -210,9 +204,27 @@ class ButtonCard extends LitElement {
   }
 
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
+    /* eslint no-new-func: 0 */
     return new Function('states', 'entity', 'user', 'hass',
       `'use strict'; ${func}`)
       .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+  }
+
+  private _getTemplateOrString(
+    state: HassEntity | undefined,
+    value: any | undefined,
+  ): any | undefined {
+    if (!value) return undefined;
+    if (typeof value === 'number') return value;
+    const trimmed = value.trim();
+    if (
+      trimmed.substring(0, 3) === '[[['
+      && trimmed.slice(-3) === ']]]'
+    ) {
+      return this._evalTemplate(state, trimmed.slice(3, -3));
+    } else {
+      return value;
+    }
   }
 
   private _getDefaultColorForState(state: HassEntity): string {
@@ -300,7 +312,7 @@ class ButtonCard extends LitElement {
         ? state.attributes.icon
         : domainIcon(computeDomain(state.entity_id), state.state);
     }
-    return icon;
+    return this._getTemplateOrString(state, icon);
   }
 
   private _buildEntityPicture(
@@ -311,33 +323,24 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let entityPicture: string | undefined;
-    let matchingEntityPictureTemplate: string | undefined;
 
-    if (configState && configState.entity_picture_template) {
-      matchingEntityPictureTemplate = configState.entity_picture_template;
-    } else {
-      matchingEntityPictureTemplate = this.config!.entity_picture_template;
+    if (configState && configState.entity_picture) {
+      entityPicture = configState.entity_picture;
+    } else if (this.config!.entity_picture) {
+      entityPicture = this.config!.entity_picture;
+    } else if (state) {
+      entityPicture = state.attributes && state.attributes.entity_picture
+        ? state.attributes.entity_picture : undefined;
     }
-    if (!matchingEntityPictureTemplate) {
-      if (configState && configState.entity_picture) {
-        entityPicture = configState.entity_picture;
-      } else if (this.config!.entity_picture) {
-        entityPicture = this.config!.entity_picture;
-      } else if (state) {
-        entityPicture = state.attributes && state.attributes.entity_picture
-          ? state.attributes.entity_picture : undefined;
-      }
-      return entityPicture;
-    }
-
-    return this._evalTemplate(state, matchingEntityPictureTemplate);
+    return this._getTemplateOrString(state, entityPicture);
   }
 
   private _buildStyleGeneric(
+    state: HassEntity | undefined,
     configState: StateConfig | undefined,
     styleType: string,
   ): StyleInfo {
-    let style: StyleInfo = {};
+    let style: any = {};
     if (this.config!.styles && this.config!.styles[styleType]) {
       style = Object.assign(style, ...this.config!.styles[styleType]);
     }
@@ -349,6 +352,41 @@ class ButtonCard extends LitElement {
         ...configStateStyle,
       };
     }
+    Object.keys(style).forEach((key) => {
+      style[key] = this._getTemplateOrString(state, style[key]);
+    });
+    return style;
+  }
+
+  private _buildCustomStyleGeneric(
+    state: HassEntity | undefined,
+    configState: StateConfig | undefined,
+    styleType: string,
+  ): StyleInfo {
+    let style: any = {};
+    if (this.config!.styles
+      && this.config!.styles.custom_fields
+      && this.config!.styles.custom_fields[styleType]
+    ) {
+      style = Object.assign(style, ...this.config!.styles.custom_fields[styleType]);
+    }
+    if (configState && configState.styles
+      && configState.styles.custom_fields
+      && configState.styles.custom_fields[styleType]
+    ) {
+      let configStateStyle: StyleInfo = {};
+      configStateStyle = Object.assign(
+        configStateStyle,
+        ...configState.styles.custom_fields[styleType],
+      );
+      style = {
+        ...style,
+        ...configStateStyle,
+      };
+    }
+    Object.keys(style).forEach((key) => {
+      style[key] = this._getTemplateOrString(state, style[key]);
+    });
     return style;
   }
 
@@ -359,26 +397,17 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let name: string | undefined;
-    let matchingNameTemplate: string | undefined;
 
-    if (configState && configState.name_template) {
-      matchingNameTemplate = configState.name_template;
-    } else {
-      matchingNameTemplate = this.config!.name_template;
-    }
-    if (!matchingNameTemplate) {
-      if (configState && configState.name) {
-        name = configState.name;
-      } else if (this.config!.name) {
-        name = this.config!.name;
-      } else if (state) {
-        name = state.attributes && state.attributes.friendly_name
-          ? state.attributes.friendly_name : computeEntity(state.entity_id);
-      }
-      return name;
+    if (configState && configState.name) {
+      name = configState.name;
+    } else if (this.config!.name) {
+      name = this.config!.name;
+    } else if (state) {
+      name = state.attributes && state.attributes.friendly_name
+        ? state.attributes.friendly_name : computeEntity(state.entity_id);
     }
 
-    return this._evalTemplate(state, matchingNameTemplate);
+    return this._getTemplateOrString(state, name);
   }
 
   private _buildStateString(state: HassEntity | undefined): string | undefined {
@@ -394,7 +423,7 @@ class ButtonCard extends LitElement {
         } else {
           stateString = this._computeTimeDisplay(state);
           if (state.state === 'paused') {
-            stateString += ` (${localizedState})`
+            stateString += ` (${localizedState})`;
           }
         }
       } else {
@@ -422,8 +451,8 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined,
     style: StyleInfo,
   ): TemplateResult | undefined {
-    return this.config!.show_last_changed && state ?
-      html`
+    return this.config!.show_last_changed && state
+      ? html`
         <ha-relative-time
           id="label"
           class="ellipsis"
@@ -441,23 +470,45 @@ class ButtonCard extends LitElement {
       return undefined;
     }
     let label: string | undefined;
-    let matchingLabelTemplate: string | undefined;
 
-    if (configState && configState.label_template) {
-      matchingLabelTemplate = configState.label_template;
+    if (configState && configState.label) {
+      label = configState.label;
     } else {
-      matchingLabelTemplate = this.config!.label_template;
-    }
-    if (!matchingLabelTemplate) {
-      if (configState && configState.label) {
-        label = configState.label;
-      } else {
-        label = this.config!.label;
-      }
-      return label;
+      label = this.config!.label;
     }
 
-    return this._evalTemplate(state, matchingLabelTemplate);
+    return this._getTemplateOrString(state, label);
+  }
+
+  private _buildCustomFields(
+    state: HassEntity | undefined,
+    configState: StateConfig | undefined,
+  ): TemplateResult {
+    let result = html``;
+    const fields: any = {};
+    if (this.config!.custom_fields) {
+      Object.keys(this.config!.custom_fields).forEach((key) => {
+        const value = this.config!.custom_fields![key];
+        fields[key] = this._getTemplateOrString(state, value);
+      });
+    }
+    if (configState && configState.custom_fields) {
+      Object.keys(configState.custom_fields).forEach((key) => {
+        const value = configState!.custom_fields![key];
+        fields[key] = this._getTemplateOrString(state, value);
+      });
+    }
+    Object.keys(fields).forEach((key) => {
+      if (fields[key] != undefined) {
+        const customStyle: StyleInfo = {
+          ...this._buildCustomStyleGeneric(state, configState, key),
+          'grid-area': key,
+        };
+        result = html`${result}
+        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
+      }
+    });
+    return result;
   }
 
   private _isClickable(state: HassEntity | undefined): boolean {
@@ -525,15 +576,15 @@ class ButtonCard extends LitElement {
     const configState = this._getMatchingConfigState(state);
     const color = this._buildCssColorAttribute(state, configState);
     let buttonColor = color;
-    let cardStyle: StyleInfo = {};
-    let lockStyle: StyleInfo = {};
-    let aspectRatio: StyleInfo = {};
-    const lockStyleFromConfig = this._buildStyleGeneric(configState, 'lock');
-    const configCardStyle = this._buildStyleGeneric(configState, 'card');
+    let cardStyle: any = {};
+    let lockStyle: any = {};
+    const aspectRatio: any = {};
+    const lockStyleFromConfig = this._buildStyleGeneric(state, configState, 'lock');
+    const configCardStyle = this._buildStyleGeneric(state, configState, 'card');
     const classList: ClassInfo = {
       'button-card-main': true,
       disabled: !this._isClickable(state),
-    }
+    };
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
       this.style.setProperty('max-width', 'fit-content');
@@ -629,11 +680,11 @@ class ButtonCard extends LitElement {
     const iconTemplate = this._getIconHtml(state, configState, color);
     const itemClass: string[] = [containerClass];
     const label = this._buildLabel(state, configState);
-    const nameStyleFromConfig = this._buildStyleGeneric(configState, 'name');
-    const stateStyleFromConfig = this._buildStyleGeneric(configState, 'state');
-    const labelStyleFromConfig = this._buildStyleGeneric(configState, 'label');
+    const nameStyleFromConfig = this._buildStyleGeneric(state, configState, 'name');
+    const stateStyleFromConfig = this._buildStyleGeneric(state, configState, 'state');
+    const labelStyleFromConfig = this._buildStyleGeneric(state, configState, 'label');
     const lastChangedTemplate = this._buildLastChanged(state, labelStyleFromConfig);
-    const gridStyleFromConfig = this._buildStyleGeneric(configState, 'grid');
+    const gridStyleFromConfig = this._buildStyleGeneric(state, configState, 'grid');
     if (!iconTemplate) itemClass.push('no-icon');
     if (!name) itemClass.push('no-name');
     if (!stateString) itemClass.push('no-state');
@@ -646,6 +697,7 @@ class ButtonCard extends LitElement {
         ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
         ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
         ${lastChangedTemplate ? lastChangedTemplate : ''}
+        ${this._buildCustomFields(state, configState)}
       </div>
     `;
   }
@@ -657,10 +709,10 @@ class ButtonCard extends LitElement {
   ): TemplateResult | undefined {
     const icon = this._buildIcon(state, configState);
     const entityPicture = this._buildEntityPicture(state, configState);
-    const entityPictureStyleFromConfig = this._buildStyleGeneric(configState, 'entity_picture');
-    const haIconStyleFromConfig = this._buildStyleGeneric(configState, 'icon');
-    const imgCellStyleFromConfig = this._buildStyleGeneric(configState, 'img_cell');
-    const haCardStyleFromConfig = this._buildStyleGeneric(configState, 'card');
+    const entityPictureStyleFromConfig = this._buildStyleGeneric(state, configState, 'entity_picture');
+    const haIconStyleFromConfig = this._buildStyleGeneric(state, configState, 'icon');
+    const imgCellStyleFromConfig = this._buildStyleGeneric(state, configState, 'img_cell');
+    const haCardStyleFromConfig = this._buildStyleGeneric(state, configState, 'card');
 
     const haIconStyle: StyleInfo = {
       color,
@@ -698,7 +750,10 @@ class ButtonCard extends LitElement {
     let mergedStateConfig: StateConfig[] | undefined = config.state;
     while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
       template = mergeDeep(ll.config.button_card_templates[tplName], template);
-      mergedStateConfig = mergeStatesById((ll.config.button_card_templates[tplName] as ButtonCardConfig).state, mergedStateConfig);
+      mergedStateConfig = mergeStatesById(
+        (ll.config.button_card_templates[tplName] as ButtonCardConfig).state,
+        mergedStateConfig,
+      );
       tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
     }
     template.state = mergedStateConfig;
@@ -724,12 +779,35 @@ class ButtonCard extends LitElement {
       this.config!.color_off = 'var(--paper-item-icon-color)';
     }
     this.config!.color_on = 'var(--paper-item-icon-active-color)';
+
+    const jsonConfig = JSON.stringify(this.config);
+    const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'gm');
+    this._hasTemplate = jsonConfig.match(rxp) ? true : false;
   }
 
   // The height of your card. Home Assistant uses this to automatically
   // distribute all cards over the available columns.
   public getCardSize(): number {
     return 3;
+  }
+
+  private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
+    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
+    const configDuplicate = JSON.parse(JSON.stringify(config));
+    Object.keys(configDuplicate![action]).forEach((key) => {
+      if (key === 'service_data') {
+        Object.keys(configDuplicate![action].service_data).forEach((sdKey) => {
+          configDuplicate![action].service_data[sdKey] = this._getTemplateOrString(
+            state, configDuplicate![action].service_data[sdKey],
+          );
+        });
+      } else {
+        configDuplicate![action][key] = this._getTemplateOrString(
+          state, configDuplicate![action][key],
+        );
+      }
+    });
+    return configDuplicate;
   }
 
   private _handleTap(ev): void {
@@ -739,7 +817,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false, false);
+    handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
   private _handleHold(ev): void {
@@ -749,7 +827,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, true, false);
+    handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
@@ -759,7 +837,7 @@ class ButtonCard extends LitElement {
       return;
     }
     const config = ev.target.config;
-    handleClick(this, this.hass!, config, false, true);
+    handleClick(this, this.hass!, this._evalActions(config, 'dbltap_action'), false, true);
   }
 
   private _handleLock(ev): void {

@@ -5,7 +5,6 @@ export interface ButtonCardConfig {
   type: string;
   entity?: string;
   name?: string;
-  name_template?: string;
   icon?: string;
   color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
   color?: 'auto' | 'auto-no-temperature' | string;
@@ -24,19 +23,17 @@ export interface ButtonCardConfig {
   show_last_changed?: boolean;
   show_label?: boolean;
   label?: string;
-  label_template?: string;
   entity_picture?: string;
-  entity_picture_template?: string;
   units?: string;
   state?: StateConfig[];
   styles?: StylesConfig;
   confirmation?: string;
   layout: Layout;
   entity_picture_style?: CssStyleConfig[];
-
   default_color: string;
   color_on: string;
   color_off: string;
+  custom_fields?: CustomFields;
 }
 
 export type Layout = 'vertical'
@@ -53,16 +50,14 @@ export interface StateConfig {
   operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'template' | 'default';
   value?: any;
   name?: string;
-  name_template?: string;
   icon?: string;
   color?: 'auto' | 'auto-no-temperature' | string;
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
-  entity_picture_template?: string;
   styles?: StylesConfig;
   spin?: boolean;
   label?: string;
-  label_template?: string;
+  custom_fields?: CustomFields;
 }
 
 export interface StylesConfig {
@@ -75,8 +70,17 @@ export interface StylesConfig {
   grid?: CssStyleConfig[];
   img_cell?: CssStyleConfig[];
   lock?: CssStyleConfig[];
+  custom_fields?: CustomStyleConfig;
+}
+
+export interface CustomStyleConfig {
+  [key: string]: CssStyleConfig[];
 }
 
 export interface CssStyleConfig {
+  [key: string]: any;
+}
+
+export interface CustomFields {
   [key: string]: any;
 }

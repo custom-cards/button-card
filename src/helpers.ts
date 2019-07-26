@@ -139,13 +139,20 @@ export function mergeStatesById(
         fromStates.forEach((fromState) => {
           if (fromState.id && intoState.id && fromState.id == intoState.id)
             localState = mergeDeep(localState, fromState);
-        })
+        });
       }
       resultStateConfigs.push(localState);
     });
   }
   if (fromStates) {
-    resultStateConfigs = resultStateConfigs.concat(fromStates.filter(x => !intoStates ? true : !intoStates.find(y => y.id && x.id ? y.id == x.id : false)));
+    /* eslint eqeqeq: 0 no-confusing-arrow: 0 */
+    resultStateConfigs = resultStateConfigs.concat(
+      fromStates.filter(
+        x => !intoStates
+          ? true
+          : !intoStates.find(y => y.id && x.id ? y.id == x.id : false),
+      ),
+    );
   }
   return resultStateConfigs;
 }
