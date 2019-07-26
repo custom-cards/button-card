@@ -105,6 +105,7 @@ class LongPress extends HTMLElement implements LongPress {
     });
 
     const clickStart = (ev: Event) => {
+      ev.stopPropagation();
       if (this.cooldownStart) {
         return;
       }
@@ -134,6 +135,7 @@ class LongPress extends HTMLElement implements LongPress {
     };
 
     const clickEnd = (ev: Event) => {
+      ev.stopPropagation();
       if (
         this.cooldownEnd
         || (['touchend', 'touchcancel'].includes(ev.type)
