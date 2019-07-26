@@ -27,6 +27,7 @@ Lovelace Button card for your entities.
     - [Easy styling options](#easy-styling-options)
     - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
+  - [Custom Fields](#custom-fields)
   - [Configuration Templates](#configuration-templates)
     - [General](#general)
     - [Merging state by id](#merging-state-by-id)
@@ -78,85 +79,83 @@ Lovelace Button card for your entities.
 
 ### Main Options
 
-| Name           | Type        | Default      | Supported options                                | Description                                                                                                                                                                                                                                                                                                                                   |
+| Name | Type | Default | Supported options | Description |
 | -------------- | ----------- | ------------ | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type`         | string      | **Required** | `custom:button-card`                             | Type of the card                                                                                                                                                                                                                                                                                                                              |
+| `type` | string | **Required** | `custom:button-card` | Type of the card |
 | `template` | string | optional | any valid template from `button_card_templates` | See [configuration template](#Configuration-Templates) |
-| `entity`       | string      | optional | `switch.ac`                                      | entity_id                                                                                                                                                                                                                                                                                                                                     |
-| `icon`         | string      | optional     | `mdi:air-conditioner`                            | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`                                                                                                                                                                                                     |
-| `color_type`   | string      | `icon`       | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples).          |
+| `entity` | string | optional | `switch.ac` | entity_id |
+| `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#templates) |
+| `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
 | `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-active-color)`, for `on` it will be `var(--paper-item-icon-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
-| `size`  | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel |
+| `size` | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel |
 | `aspect_ratio` | string | optional | `1/1`, `2/1`, `1/1.5`, ... | See [here](#aspect-ratio) for an example. Aspect ratio of the card. `1/1` being a square. This will auto adapt to your screen size |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `dbltap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
-| `name`         | string      | optional     | `Air conditioner`                                | Define an optional text to show below the icon                                                                                                                                                                                                                                                                                                |
-| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
-| `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
-| `show_name`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property                                                                                                                                                                                                |
-| `name_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `name` |
-| `show_state`   | boolean     | `false`      | `true` \| `false`                                | Show the state on the card. defaults to false if not set                                                                                                                                                                                                                                                                                      |
-| `show_icon`    | boolean     | `true`       | `true` \| `false`                                | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass                                                                                                                                                                                                                                            |
+| `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#templates) |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
+| `show_name` | boolean | `true` | `true` \| `false` | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property |
+| `show_state` | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set |
+| `show_icon` | boolean | `true` | `true` \| `false` | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass |
 | `show_units` | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
-| `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label`/`label_template` |
+| `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label` |
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
-| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state |
-| `entity_picture_template` | string | optional | | See [templates](#templates). Any javascript code which returns a path to a file or a url as a string. Overrides `entity_picture` |
+| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
-| `styles`        | object list | optional     | | See [styles](#styles)  |
-| `state`        | object list | optional     | See [State](#State)                              | State to use for the color, icon and style of the button. Multiple states can be defined                                                                                                                                                                                                                                                      |
-| `confirmation` | string     | optional      | Free-form text                               | Show a confirmation popup on tap with defined text                                                                                                                                                                                                                                                                                                            |
+| `styles` | object list | optional | | See [styles](#styles) |
+| `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
+| `confirmation` | string | optional | Free-form text | Show a confirmation popup on tap with defined text |
 | `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
 | `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
+| `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
 
 ### Action
 
-| Name              | Type   | Default  | Supported options                                                | Description                                                                                              |
+All the fields support templates, see [templates](#templates).
+
+| Name | Type | Default | Supported options | Description |
 | ----------------- | ------ | -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `action`          | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url` | Action to perform                                                                                        |
+| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url` | Action to perform |
 | `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
-| `navigation_path` | string | none     | Eg: `/lovelace/0/`                                               | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate                                |
-| `url`             | string | none     | Eg: `https://www.google.fr`                                      | URL to open on click when action is `url`. The URL will open in a new tab                                |
-| `service`         | string | none     | Any service                                                      | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service`           |
-| `service_data`    | object | none     | Any service data                                                 | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
+| `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
+| `url` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
+| `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
+| `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
 
 ### State
 
-| Name       | Type          | Default                                     | Supported options                                                                                                                                                          | Description                                                                                   |
+| Name | Type | Default | Supported options | Description |
 | ---------- | ------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `operator` | string        | `==`                                        | See [Available Operators](#Available-operators)                                                                                                                            | The operator used to compare the current state against the `value`                            |
-| `value`    | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string                                                                                          | The value which will be compared against the current state of the entity                      |
-| `name`     | string        | optional                                    | Any string, `'Alert'`, `'My little switch is on'`, ...                                                                                                                     | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name |
-| `name_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `name` |
-| `icon`     | string        | optional                                    | `mdi:battery`                                                                                                                                                              | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false` |
-| `color`    | string        | `var(--primary-text-color)`                 | Any color, eg: `rgb(28, 128, 199)` or `blue`                                                                                                                               | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`)       |
-| `styles`    | string        | optional | | See [styles](#styles) |
-| `spin`     | boolean       | `false`                                     | `true` \| `false`                                                                                                                                                          | Should the icon spin for this state?                                                          |
-| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image |
-| `entity_picture_template` | string | optional | | See [templates](#templates). Any javascript code which returns a path to a file or a url as a string. Overrides `entity_picture` |
-| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. |
-| `label_template` | string | optional | | See [templates](#templates). Any javascript code which returns a string. Overrides `label` |
+| `operator` | string | `==` | See [Available Operators](#Available-operators) | The operator used to compare the current state against the `value` |
+| `value` | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity |
+| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name. Supports templates, see [templates](#templates) |
+| `icon` | string | optional | `mdi:battery` | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#templates) |
+| `color` | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
+| `styles` | string | optional | | See [styles](#styles) |
+| `spin` | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
+| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. Supports templates, see [templates](#templates) |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
 
 ### Available operators
 
 The order of your elements in the `state` object matters. The first one which is `true` will match.
+The `value` field for all operators except `regex` support templating, see [templates](#templates)
 
-| Operator  | `value` example | Description                                                                                              |
+| Operator | `value` example | Description |
 | :-------: | --------------- | -------------------------------------------------------------------------------------------------------- |
-|    `<`    | `5`             | Current state is inferior to `value`                                                                     |
-|   `<=`    | `4`             | Current state is inferior or equal to `value`                                                            |
-|   `==`    | `42` or `'on'`  | **This is the default if no operator is specified.** Current state is equal (`==` javascript) to `value` |
-|   `>=`    | `32`            | Current state is superior or equal to `value`                                                            |
-|    `>`    | `12`            | Current state is superior to `value`                                                                     |
-|   `!=`    | `'normal'`      | Current state is not equal (`!=` javascript) to `value`                                                  |
-|  `regex`  | `'^norm.*$'`    | `value` regex applied to current state does match                                                        |
+| `<` | `5` | Current state is inferior to `value` |
+| `<=` | `4` | Current state is inferior or equal to `value` |
+| `==` | `42` or `'on'` | **This is the default if no operator is specified.** Current state is equal (`==` javascript) to `value` |
+| `>=` | `32` | Current state is superior or equal to `value` |
+| `>` | `12` | Current state is superior to `value` |
+| `!=` | `'normal'` | Current state is not equal (`!=` javascript) to `value` |
+| `regex` | `'^norm.*$'` | `value` regex applied to current state does match |
 | `template` | | See [templates](#templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
-| `default` | N/A             | If nothing matches, this is used                                                                         |
+| `default` | N/A | If nothing matches, this is used |
 
 ### Layout
 
@@ -178,22 +177,30 @@ Multiple values are possible, see the image below for examples:
 
 ### Templates
 
-`label_template`, `name_template`, `entity_picture_template` supports templating as well as `value` for `state` when `operator: template`
-* `label_template`: It will be interpreted as javascript code and the code should return a string.
-  `label_template` supports inline HTML, so you can do stuff like:
-  ```yaml
-  label_template: >
-    return 'Connection: '
-    + (states['switch.connection'].state === 'on'
-        ? '<span style="color: #00FF00;">enabled</span>'
-        : '<span style="color: #FF0000;">disabled</span>')
-    + ' / '
-    + (states['binary_sensor.status'].state === 'on' ? 'connected' : 'disconnected')
-  ```
-  ![label-template-example](examples/label_template.png)
-* `name_template`: It will be interpreted as javascript code and the code should return a string.
-* `entity_picture_template`: It will be interpreted as javascript code and the code should return a path to a file or a url as a string.
-* `value` for `state` when `operator: template`: It will be interpreted as javascript code and the code should return a boolean (`true` or `false`)
+The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brakets: `[[[ javascript function here ]]]`
+
+Don't forget to quote if it's on one line:
+```yaml
+name: '[[[ if (entity.state > 42) return "Above 42"; else return "Below 42" ]]]'
+name: >
+  [[[
+    if (entity.state > 42)
+      return "Above 42;
+    else
+      return "Below 42;
+  ]]]
+```
+
+Those are the configuration fields which support templating:
+* `name` (Supports also HTML rendering): This needs to return a string
+* `label` (Supports also HTML rendering): This needs to return a string
+* `entity_picture`: This needs to return a path to a file or a url as a string.
+* `icon`: This needs to return a string in the format `mdi:icon`
+* All the styles in the style object: This needs to return a string
+* All the value of the state object, appart when the operator is `regex`
+  * `operator: template`: The function for `value` needs to return a boolean
+  * Else: The function for `value` needs to return a string or a number
+* All the `custom_fields` (Support also HTML rendering)
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
@@ -201,22 +208,11 @@ Inside the javascript code, you'll have access to those variables:
 * `user`: The user object (equivalent to `hass.user`)
 * `hass`: The complete `hass` object
 
-The value shouldn't be enclosed in quotes:
-```yaml
-label_template: >
-  return states['light.mylight'].attributes.brightness
-```
-or
-```yaml
-state:
-  - operator: template
-    value: >
-      return states['input_select.light_mode'].state === 'night_mode'
-```
-
-See [here](#templates-support) for some examples.
+See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
 ### Styles
+
+All the styles entries, support Templating, see [here](#custom-fields) for some examples.
 
 #### Easy styling options
 
@@ -370,6 +366,146 @@ Some examples:
             - filter: opacity(50%)
           icon:
             - filter: grayscale(100%)
+  ```
+
+### Custom Fields
+
+Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon).
+This is an advanced feature which leverages (if you require it) the CSS Grid.
+
+Each custom element supports it's own styling config:
+```yaml
+- type: custom:button-card
+  [...]
+  custom_element:
+    test_element: My test element
+  styles:
+    custom_fields:
+      test_element:
+        - color: red
+        - font-size: 13px
+```
+
+Examples are better than a long text, so here you go:
+* Placing an element wherever you want (that means bypassing the grid). Set the grid to `position: relative` and set the element to `position: absolute`
+  ![custom_fields_1](examples/custom_fields_1.gif)
+  ```yaml
+    - type: custom:button-card
+      icon: mdi:lightbulb
+      aspect_ratio: 1/1
+      name: Nb lights on
+      styles:
+        grid:
+          - position: relative
+        custom_fields:
+          notification:
+            - background-color: >
+                [[[
+                  if (states['input_number.test'].state == 0)
+                    return "green";
+                  return "red";
+                ]]]
+            - border-radius: 50%
+            - position: absolute
+            - left: 60%
+            - top: 10%
+            - height: 20px
+            - width: 20px
+            - font-size: 8px
+            - line-height: 20px
+      custom_fields:
+        notification: >
+          [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
+  ```
+* Or you can use the grid. Each element will have it's name positioned as the `grid-area` (Thanks @iantrich @lbdab and @jimz011 for the inspiration):
+  ![custom_fields_2](examples/custom_fields_2.png)
+
+  ```yaml
+    - type: custom:button-card
+      entity: 'sensor.raspi_temp'
+      icon: 'mdi:raspberry-pi'
+      aspect_ratio: 1/1
+      name: HassOS
+      styles:
+        card:
+          - background-color: '#000044'
+          - border-radius: 10%
+          - padding: 10%
+          - color: ivory
+          - font-size: 10px
+          - text-shadow: 0px 0px 5px black
+          - text-transform: capitalize
+        grid:
+          - grid-template-areas: '"i temp" "n n" "cpu cpu" "ram ram" "sd sd"'
+          - grid-template-columns: 1fr 1fr
+          - grid-template-rows: 1fr min-content min-content min-content min-content
+        name:
+          - font-weight: bold
+          - font-size: 13px
+          - color: white
+          - align-self: middle
+          - justify-self: start
+          - padding-bottom: 4px
+        img_cell:
+          - justify-content: start
+          - align-items: start
+          - margin: none
+        icon:
+          - color: >
+              [[[
+                if (entity.state < 60) return 'lime';
+                if (entity.state >= 60 && entity.state < 80) return 'orange';
+                else return 'red';
+              ]]]
+          - width: 70%
+          - margin-top: -10%
+        custom_fields:
+          temp:
+            - align-self: start
+            - justify-self: end
+          cpu:
+            - padding-bottom: 2px
+            - align-self: middle
+            - justify-self: start
+            - --text-color-sensor: '[[[ if (states["sensor.raspi_cpu"].state > 80) return "red"; ]]]'
+          ram:
+            - padding-bottom: 2px
+            - align-self: middle
+            - justify-self: start
+            - --text-color-sensor: '[[[ if (states["sensor.raspi_ram"].state > 80) return "red"; ]]]'
+          sd:
+            - align-self: middle
+            - justify-self: start
+            - --text-color-sensor: '[[[ if (states["sensor.raspi_sd"].state > 80) return "red"; ]]]'
+      custom_fields:
+        temp: >
+          [[[
+            return `<ha-icon
+              icon="mdi:thermometer"
+              style="width: 12px; height: 12px; color: yellow;">
+              </ha-icon><span>${entity.state}°C</span>`
+          ]]]
+        cpu: >
+          [[[
+            return `<ha-icon
+              icon="mdi:server"
+              style="width: 12px; height: 12px; color: deepskyblue;">
+              </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
+          ]]]
+        ram: >
+          [[[
+            return `<ha-icon
+              icon="mdi:memory"
+              style="width: 12px; height: 12px; color: deepskyblue;">
+              </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
+          ]]]
+        sd: >
+          [[[
+            return `<ha-icon
+              icon="mdi:harddisk"
+              style="width: 12px; height: 12px; color: deepskyblue;">
+              </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
+          ]]]
   ```
 
 ### Configuration Templates
@@ -843,9 +979,11 @@ If you specify a width for the card, it has to be in `px`. All the cards without
 - type: "custom:button-card"
   color_type: icon
   entity: light.test_light
-  label_template: >
-    var bri = states['light.test_light'].attributes.brightness;
-    return 'Brightness: ' + (bri ? bri : '0') + '%';
+  label: >
+    [[[
+      var bri = states['light.test_light'].attributes.brightness;
+      return 'Brightness: ' + (bri ? bri : '0') + '%';
+    ]]]
   show_label: true
   size: 15%
   styles:
@@ -855,8 +993,10 @@ If you specify a width for the card, it has to be in `px`. All the cards without
   color_type: icon
   entity: light.test_light
   layout: icon_label
-  label_template: >
-    return 'Other State: ' + states['switch.skylight'].state;
+  label: >
+    [[[
+      return 'Other State: ' + states['switch.skylight'].state;
+    ]]]
   show_label: true
   show_name: false
   styles:
@@ -878,8 +1018,10 @@ Example with `template`:
   state:
     - operator: template
       value: >
-        return states['light.test_light'].attributes
-        && (states['light.test_light'].attributes.brightness <= 100)
+        [[[
+          return states['light.test_light'].attributes
+          && (states['light.test_light'].attributes.brightness <= 100)
+        ]]]
       icon: mdi:alert
     - operator: default
       icon: mdi:lightbulb
@@ -890,7 +1032,7 @@ Example with `template`:
   state:
     - operator: template
       value: >
-        return states['input_select.light_mode'].state === 'night_mode'
+        [[[ return states['input_select.light_mode'].state === 'night_mode' ]]]
       icon: mdi:weather-night
       label: Night Mode
     - operator: default
@@ -906,9 +1048,11 @@ Example with `template`:
 - type: "custom:button-card"
   color_type: icon
   entity: light.test_light
-  label_template: >
-    var bri = states['light.test_light'].attributes.brightness;
-    return 'Brightness: ' + (bri ? bri : '0') + '%';
+  label: >
+    [[[
+      var bri = states['light.test_light'].attributes.brightness;
+      return 'Brightness: ' + (bri ? bri : '0') + '%';
+    ]]]
   show_label: true
   show_state: true
   size: 10%
@@ -945,8 +1089,8 @@ Example with `template`:
   color_type: icon
   entity: light.test_light
   layout: icon_label
-  label_template: >
-    return 'Other State: ' + states['switch.skylight'].state;
+  label: >
+    [[[ return 'Other State: ' + states['switch.skylight'].state; ]]]
   show_label: true
   show_name: false
   size: 100%
