@@ -214,6 +214,7 @@ class ButtonCard extends LitElement {
     value: any | undefined,
   ): any | undefined {
     if (!value) return undefined;
+    if (typeof value === 'number') return value;
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
