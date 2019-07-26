@@ -1521,15 +1521,15 @@ const lt = new WeakMap(),
     }(this._timeRemaining || Nt(t.attributes.duration));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
-      if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
-          return t && t.state == e.value;case "<=":
-          return t && t.state <= e.value;case "<":
-          return t && t.state < e.value;case ">=":
-          return t && t.state >= e.value;case ">":
-          return t && t.state > e.value;case "!=":
-          return t && t.state != e.value;case "regex":
-          return !(!t || !t.state.match(e.value));case "template":
-          return this._evalTemplate(t, e.value);case "default":
+      if (!e.operator) return t && this._getTemplateOrString(t, e.value) == t.state;switch (e.operator) {case "==":
+          return t && t.state == this._getTemplateOrString(t, e.value);case "<=":
+          return t && t.state <= this._getTemplateOrString(t, e.value);case "<":
+          return t && t.state < this._getTemplateOrString(t, e.value);case ">=":
+          return t && t.state >= this._getTemplateOrString(t, e.value);case ">":
+          return t && t.state > this._getTemplateOrString(t, e.value);case "!=":
+          return t && t.state != this._getTemplateOrString(t, e.value);case "regex":
+          return !(!t || !t.state.match(this._getTemplateOrString(t, e.value)));case "template":
+          return this._getTemplateOrString(t, e.value);case "default":
           return n = e, !1;default:
           return !1;}
     });return !i && n ? n : i;

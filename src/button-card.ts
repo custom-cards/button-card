@@ -167,24 +167,25 @@ class ButtonCard extends LitElement {
         switch (elt.operator) {
           case '==':
             /* eslint eqeqeq: 0 */
-            return (state && state.state == elt.value);
+            return (state && state.state == this._getTemplateOrString(state, elt.value));
           case '<=':
-            return (state && state.state <= elt.value);
+            return (state && state.state <= this._getTemplateOrString(state, elt.value));
           case '<':
-            return (state && state.state < elt.value);
+            return (state && state.state < this._getTemplateOrString(state, elt.value));
           case '>=':
-            return (state && state.state >= elt.value);
+            return (state && state.state >= this._getTemplateOrString(state, elt.value));
           case '>':
-            return (state && state.state > elt.value);
+            return (state && state.state > this._getTemplateOrString(state, elt.value));
           case '!=':
-            return (state && state.state != elt.value);
+            return (state && state.state != this._getTemplateOrString(state, elt.value));
           case 'regex': {
             /* eslint no-unneeded-ternary: 0 */
-            const matches = state && state.state.match(elt.value) ? true : false;
+            const matches = state
+              && state.state.match(this._getTemplateOrString(state, elt.value)) ? true : false;
             return matches;
           }
           case 'template': {
-            return this._evalTemplate(state, elt.value);
+            return this._getTemplateOrString(state, elt.value);
           }
           case 'default':
             def = elt;
@@ -193,7 +194,7 @@ class ButtonCard extends LitElement {
             return false;
         }
       } else {
-        return state && (elt.value == state.state);
+        return state && (this._getTemplateOrString(state, elt.value) == state.state);
       }
     });
     if (!retval && def) {
