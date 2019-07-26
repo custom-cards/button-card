@@ -239,11 +239,11 @@ class b {
     }if (this.__pendingValue === a) return;const t = this.__pendingValue,
           e = this.value,
           n = null == t || null != e && (t.capture !== e.capture || t.once !== e.once || t.passive !== e.passive),
-          s = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options), s && (this.__options = N(t), this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)), this.value = t, this.__pendingValue = a;
+          s = null != t && (null == e || n);n && this.element.removeEventListener(this.eventName, this.__boundHandleEvent, this.__options), s && (this.__options = P(t), this.element.addEventListener(this.eventName, this.__boundHandleEvent, this.__options)), this.value = t, this.__pendingValue = a;
   }handleEvent(t) {
     "function" == typeof this.value ? this.value.call(this.eventContext || this.element, t) : this.value.handleEvent(t);
   }
-}const N = t => t && (C ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
+}const P = t => t && (C ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -256,7 +256,7 @@ class b {
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
- */const A = new class {
+ */const N = new class {
   handleAttributeExpressions(t, e, n, i) {
     const s = e[0];return "." === s ? new M(t, e.slice(1), n).parts : "@" === s ? [new T(t, e.slice(1), i.eventContext)] : "?" === s ? [new k(t, e.slice(1), n)] : new w(t, e, n).parts;
   }handleTextExpression(t) {
@@ -275,7 +275,7 @@ class b {
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
- */function P(t) {
+ */function A(t) {
   let e = O.get(t.type);void 0 === e && (e = { stringsArray: new WeakMap(), keyString: new Map() }, O.set(t.type, e));let n = e.stringsArray.get(t.strings);if (void 0 !== n) return n;const i = t.strings.join(c);return void 0 === (n = e.keyString.get(i)) && (n = new u(t, t.getTemplateElement()), e.keyString.set(i, n)), e.stringsArray.set(t.strings, n), n;
 }const O = new Map(),
       R = new WeakMap();
@@ -305,7 +305,7 @@ class b {
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.1.1");const $ = (t, ...e) => new _(t, e, "html", A),
+(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.1.1");const $ = (t, ...e) => new _(t, e, "html", N),
       H = 133;
 /**
  * @license
@@ -597,7 +597,7 @@ found at http://polymer.github.io/PATENTS.txt
         a = I && 11 === e.nodeType && !!e.host,
         o = a && !z.has(i),
         c = o ? document.createDocumentFragment() : e;if (((t, e, n) => {
-    let i = R.get(e);void 0 === i && (r(e, e.firstChild), R.set(e, i = new x(Object.assign({ templateFactory: P }, n))), i.appendInto(e)), i.setValue(t), i.commit();
+    let i = R.get(e);void 0 === i && (r(e, e.firstChild), R.set(e, i = new x(Object.assign({ templateFactory: A }, n))), i.appendInto(e)), i.setValue(t), i.commit();
   })(t, c, Object.assign({ templateFactory: F(i) }, n)), o) {
     const t = R.get(c);R.delete(c);const n = t.value instanceof b ? t.value.template : void 0;q(i, c, n), r(e, e.firstChild), e.appendChild(c), R.set(e, t);
   }!s && a && window.ShadyCSS.styleElement(e.host);
@@ -712,7 +712,7 @@ const lt = new WeakMap(),
   }, ZZ: function (t) {
     var e = t.getTimezoneOffset();return (e > 0 ? "-" : "+") + xt(100 * Math.floor(Math.abs(e) / 60) + Math.abs(e) % 60, 4);
   } },
-    Nt = { D: ["\\d\\d?", function (t, e) {
+    Pt = { D: ["\\d\\d?", function (t, e) {
     t.day = e;
   }], Do: ["\\d\\d?" + _t, function (t, e) {
     t.day = parseInt(e, 10);
@@ -739,9 +739,9 @@ const lt = new WeakMap(),
   }], ZZ: ["[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z", function (t, e) {
     var n,
         i = (e + "").match(/([+-]|\d\d)/gi);i && (n = 60 * i[1] + parseInt(i[2], 10), t.timezoneOffset = "+" === i[0] ? n : -n);
-  }] };function At(t) {
+  }] };function Nt(t) {
   var e = t.split(":").map(Number);return 3600 * e[0] + 60 * e[1] + e[2];
-}Nt.dd = Nt.d, Nt.dddd = Nt.ddd, Nt.DD = Nt.D, Nt.mm = Nt.m, Nt.hh = Nt.H = Nt.HH = Nt.h, Nt.MM = Nt.M, Nt.ss = Nt.s, Nt.A = Nt.a, gt.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, gt.format = function (t, e, n) {
+}Pt.dd = Pt.d, Pt.dddd = Pt.ddd, Pt.DD = Pt.D, Pt.mm = Pt.m, Pt.hh = Pt.H = Pt.HH = Pt.h, Pt.MM = Pt.M, Pt.ss = Pt.s, Pt.A = Pt.a, gt.masks = { default: "ddd MMM DD YYYY HH:mm:ss", shortDate: "M/D/YY", mediumDate: "MMM D, YYYY", longDate: "MMMM D, YYYY", fullDate: "dddd, MMMM D, YYYY", shortTime: "HH:mm", mediumTime: "HH:mm:ss", longTime: "HH:mm:ss.SSS" }, gt.format = function (t, e, n) {
   var i = n || gt.i18n;if ("number" == typeof t && (t = new Date(t)), "[object Date]" !== Object.prototype.toString.call(t) || isNaN(t.getTime())) throw new Error("Invalid Date in fecha.format");e = gt.masks[e] || e || gt.masks.default;var s = [];return (e = (e = e.replace(yt, function (t, e) {
     return s.push(e), "@@@";
   })).replace(bt, function (e) {
@@ -756,8 +756,8 @@ const lt = new WeakMap(),
     return a.push(e), "@@@";
   });var o,
       c = (o = e, o.replace(/[|\\{()[^$+*?.-]/g, "\\$&")).replace(bt, function (t) {
-    if (Nt[t]) {
-      var e = Nt[t];return r.push(e[1]), "(" + e[0] + ")";
+    if (Pt[t]) {
+      var e = Pt[t];return r.push(e[1]), "(" + e[0] + ")";
     }return t;
   });c = c.replace(/@@@/g, function () {
     return a.shift();
@@ -781,7 +781,7 @@ const lt = new WeakMap(),
   } catch (t) {
     return "RangeError" === t.name;
   }
-}();var Pt = function (t) {
+}();var At = function (t) {
   return t < 10 ? "0" + t : t;
 };var Ot = "hass:bookmark",
     Rt = ["closed", "locked", "off"],
@@ -867,14 +867,14 @@ const lt = new WeakMap(),
     if (t.longPress) return;t.longPress = !0, t.addEventListener("contextmenu", t => {
       const e = t || window.event;return e.preventDefault && e.preventDefault(), e.stopPropagation && e.stopPropagation(), e.cancelBubble = !0, e.returnValue = !1, !1;
     });const e = e => {
-      if (this.cooldownStart) return;let n, i;this.held = !1, e.touches ? (n = e.touches[0].pageX, i = e.touches[0].pageY) : (n = e.pageX, i = e.pageY), this.timer = window.setTimeout(() => {
+      if (e.stopPropagation(), this.cooldownStart) return;let n, i;this.held = !1, e.touches ? (n = e.touches[0].pageX, i = e.touches[0].pageY) : (n = e.pageX, i = e.pageY), this.timer = window.setTimeout(() => {
         this.startAnimation(n, i), this.held = !0, t.repeat && !t.isRepeating && (t.isRepeating = !0, this.repeatTimeout = setInterval(() => {
           t.dispatchEvent(new Event("ha-hold"));
         }, t.repeat));
       }, this.holdTime), this.cooldownStart = !0, window.setTimeout(() => this.cooldownStart = !1, 100);
     },
           n = e => {
-      this.cooldownEnd || ["touchend", "touchcancel"].includes(e.type) && void 0 === this.timer ? t.isRepeating && this.repeatTimeout && (clearInterval(this.repeatTimeout), t.isRepeating = !1) : (clearTimeout(this.timer), t.isRepeating && this.repeatTimeout && clearInterval(this.repeatTimeout), t.isRepeating = !1, this.stopAnimation(), this.timer = void 0, this.held ? t.repeat || t.dispatchEvent(new Event("ha-hold")) : t.hasDblClick ? 0 === this.nbClicks ? (this.nbClicks += 1, this.dblClickTimeout = window.setTimeout(() => {
+      e.stopPropagation(), this.cooldownEnd || ["touchend", "touchcancel"].includes(e.type) && void 0 === this.timer ? t.isRepeating && this.repeatTimeout && (clearInterval(this.repeatTimeout), t.isRepeating = !1) : (clearTimeout(this.timer), t.isRepeating && this.repeatTimeout && clearInterval(this.repeatTimeout), t.isRepeating = !1, this.stopAnimation(), this.timer = void 0, this.held ? t.repeat || t.dispatchEvent(new Event("ha-hold")) : t.hasDblClick ? 0 === this.nbClicks ? (this.nbClicks += 1, this.dblClickTimeout = window.setTimeout(() => {
         1 === this.nbClicks && (this.nbClicks = 0, t.dispatchEvent(new Event("ha-click")));
       }, 250)) : (this.nbClicks = 0, clearTimeout(this.dblClickTimeout), t.dispatchEvent(new Event("ha-dblclick"))) : t.dispatchEvent(new Event("ha-click")), this.cooldownEnd = !0, window.setTimeout(() => this.cooldownEnd = !1, 100));
     };t.addEventListener("touchstart", e, { passive: !0 }), t.addEventListener("touchend", n), t.addEventListener("touchcancel", n), t.addEventListener("mousedown", e, { passive: !0 }), t.addEventListener("click", n);
@@ -1508,7 +1508,7 @@ const lt = new WeakMap(),
     this._clearInterval(), this._calculateRemaining(t), "active" === t.state && (this._interval = window.setInterval(() => this._calculateRemaining(t), 1e3));
   }_calculateRemaining(t) {
     this._timeRemaining = function (t) {
-      var e = At(t.attributes.remaining);if ("active" === t.state) {
+      var e = Nt(t.attributes.remaining);if ("active" === t.state) {
         var n = new Date().getTime(),
             i = new Date(t.last_changed).getTime();e = Math.max(e - (n - i) / 1e3, 0);
       }return e;
@@ -1517,8 +1517,8 @@ const lt = new WeakMap(),
     if (t) return function (t) {
       var e = Math.floor(t / 3600),
           n = Math.floor(t % 3600 / 60),
-          i = Math.floor(t % 3600 % 60);return e > 0 ? e + ":" + Pt(n) + ":" + Pt(i) : n > 0 ? n + ":" + Pt(i) : i > 0 ? "" + i : null;
-    }(this._timeRemaining || At(t.attributes.duration));
+          i = Math.floor(t % 3600 % 60);return e > 0 ? e + ":" + At(n) + ":" + At(i) : n > 0 ? n + ":" + At(i) : i > 0 ? "" + i : null;
+    }(this._timeRemaining || Nt(t.attributes.duration));
   }_getMatchingConfigState(t) {
     if (!this.config.state) return;const e = this.config.state.find(t => "template" === t.operator);if (!t && !e) return;let n;const i = this.config.state.find(e => {
       if (!e.operator) return t && e.value == t.state;switch (e.operator) {case "==":
