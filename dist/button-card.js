@@ -1536,7 +1536,7 @@ const lt = new WeakMap(),
   }_evalTemplate(t, e) {
     return new Function("states", "entity", "user", "hass", `'use strict'; ${e}`).call(this, this.hass.states, t, this.hass.user, this.hass);
   }_getTemplateOrString(t, e) {
-    if (!e) return;if ("number" == typeof e) return e;const n = e.trim();return "[[[" === n.substring(0, 3) && "]]]" === n.slice(-3) ? this._evalTemplate(t, n.slice(3, -3)) : e;
+    if ("number" == typeof e) return e;if (!e) return;const n = e.trim();return "[[[" === n.substring(0, 3) && "]]]" === n.slice(-3) ? this._evalTemplate(t, n.slice(3, -3)) : e;
   }_getDefaultColorForState(t) {
     switch (t.state) {case "on":
         return this.config.color_on;case "off":

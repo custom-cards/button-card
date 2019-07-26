@@ -214,8 +214,8 @@ class ButtonCard extends LitElement {
     state: HassEntity | undefined,
     value: any | undefined,
   ): any | undefined {
-    if (!value) return undefined;
     if (typeof value === 'number') return value;
+    if (!value) return undefined;
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
