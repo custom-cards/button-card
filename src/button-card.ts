@@ -167,25 +167,25 @@ class ButtonCard extends LitElement {
         switch (elt.operator) {
           case '==':
             /* eslint eqeqeq: 0 */
-            return (state && state.state == this._getTemplateOrString(state, elt.value));
+            return (state && state.state == this._getTemplateOrValue(state, elt.value));
           case '<=':
-            return (state && state.state <= this._getTemplateOrString(state, elt.value));
+            return (state && state.state <= this._getTemplateOrValue(state, elt.value));
           case '<':
-            return (state && state.state < this._getTemplateOrString(state, elt.value));
+            return (state && state.state < this._getTemplateOrValue(state, elt.value));
           case '>=':
-            return (state && state.state >= this._getTemplateOrString(state, elt.value));
+            return (state && state.state >= this._getTemplateOrValue(state, elt.value));
           case '>':
-            return (state && state.state > this._getTemplateOrString(state, elt.value));
+            return (state && state.state > this._getTemplateOrValue(state, elt.value));
           case '!=':
-            return (state && state.state != this._getTemplateOrString(state, elt.value));
+            return (state && state.state != this._getTemplateOrValue(state, elt.value));
           case 'regex': {
             /* eslint no-unneeded-ternary: 0 */
             const matches = state
-              && state.state.match(this._getTemplateOrString(state, elt.value)) ? true : false;
+              && state.state.match(this._getTemplateOrValue(state, elt.value)) ? true : false;
             return matches;
           }
           case 'template': {
-            return this._getTemplateOrString(state, elt.value);
+            return this._getTemplateOrValue(state, elt.value);
           }
           case 'default':
             def = elt;
@@ -194,7 +194,7 @@ class ButtonCard extends LitElement {
             return false;
         }
       } else {
-        return state && (this._getTemplateOrString(state, elt.value) == state.state);
+        return state && (this._getTemplateOrValue(state, elt.value) == state.state);
       }
     });
     if (!retval && def) {
@@ -210,12 +210,12 @@ class ButtonCard extends LitElement {
       .call(this, this.hass!.states, state, this.hass!.user, this.hass);
   }
 
-  private _getTemplateOrString(
+  private _getTemplateOrValue(
     state: HassEntity | undefined,
     value: any | undefined,
   ): any | undefined {
-    if (!value) return undefined;
     if (typeof value === 'number') return value;
+    if (!value) return undefined;
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
@@ -312,7 +312,7 @@ class ButtonCard extends LitElement {
         ? state.attributes.icon
         : domainIcon(computeDomain(state.entity_id), state.state);
     }
-    return this._getTemplateOrString(state, icon);
+    return this._getTemplateOrValue(state, icon);
   }
 
   private _buildEntityPicture(
@@ -332,7 +332,7 @@ class ButtonCard extends LitElement {
       entityPicture = state.attributes && state.attributes.entity_picture
         ? state.attributes.entity_picture : undefined;
     }
-    return this._getTemplateOrString(state, entityPicture);
+    return this._getTemplateOrValue(state, entityPicture);
   }
 
   private _buildStyleGeneric(
@@ -353,7 +353,7 @@ class ButtonCard extends LitElement {
       };
     }
     Object.keys(style).forEach((key) => {
-      style[key] = this._getTemplateOrString(state, style[key]);
+      style[key] = this._getTemplateOrValue(state, style[key]);
     });
     return style;
   }
@@ -385,7 +385,7 @@ class ButtonCard extends LitElement {
       };
     }
     Object.keys(style).forEach((key) => {
-      style[key] = this._getTemplateOrString(state, style[key]);
+      style[key] = this._getTemplateOrValue(state, style[key]);
     });
     return style;
   }
@@ -407,7 +407,7 @@ class ButtonCard extends LitElement {
         ? state.attributes.friendly_name : computeEntity(state.entity_id);
     }
 
-    return this._getTemplateOrString(state, name);
+    return this._getTemplateOrValue(state, name);
   }
 
   private _buildStateString(state: HassEntity | undefined): string | undefined {
@@ -477,7 +477,7 @@ class ButtonCard extends LitElement {
       label = this.config!.label;
     }
 
-    return this._getTemplateOrString(state, label);
+    return this._getTemplateOrValue(state, label);
   }
 
   private _buildCustomFields(
@@ -489,13 +489,13 @@ class ButtonCard extends LitElement {
     if (this.config!.custom_fields) {
       Object.keys(this.config!.custom_fields).forEach((key) => {
         const value = this.config!.custom_fields![key];
-        fields[key] = this._getTemplateOrString(state, value);
+        fields[key] = this._getTemplateOrValue(state, value);
       });
     }
     if (configState && configState.custom_fields) {
       Object.keys(configState.custom_fields).forEach((key) => {
         const value = configState!.custom_fields![key];
-        fields[key] = this._getTemplateOrString(state, value);
+        fields[key] = this._getTemplateOrValue(state, value);
       });
     }
     Object.keys(fields).forEach((key) => {
@@ -794,19 +794,18 @@ class ButtonCard extends LitElement {
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
     const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     const configDuplicate = JSON.parse(JSON.stringify(config));
-    Object.keys(configDuplicate![action]).forEach((key) => {
-      if (key === 'service_data') {
-        Object.keys(configDuplicate![action].service_data).forEach((sdKey) => {
-          configDuplicate![action].service_data[sdKey] = this._getTemplateOrString(
-            state, configDuplicate![action].service_data[sdKey],
-          );
-        });
-      } else {
-        configDuplicate![action][key] = this._getTemplateOrString(
-          state, configDuplicate![action][key],
-        );
-      }
-    });
+    /* eslint no-param-reassign: 0 */
+    const __evalObject = (configEval: any): any => {
+      Object.keys(configEval).forEach((key) => {
+        if (typeof configEval[key] === 'object') {
+          configEval[key] = __evalObject(configEval[key]);
+        } else {
+          configEval[key] = this._getTemplateOrValue(state, configEval[key]);
+        }
+      });
+      return configEval;
+    };
+    configDuplicate[action] = __evalObject(configDuplicate[action]);
     return configDuplicate;
   }
 
