@@ -202,6 +202,7 @@ Those are the configuration fields which support templating:
   * `operator: template`: The function for `value` needs to return a boolean
   * Else: The function for `value` needs to return a string or a number
 * All the `custom_fields` (Support also HTML rendering)
+* All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
@@ -231,6 +232,7 @@ The `style` object members are:
 * `state`: styles for the state
 * `label`: styles for the label
 * `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
+* `custom_fields`: styles for each of your custom field. See [Custom Fields](#custom-fields)
 
 ```yaml
 - type: custom:button-card
@@ -378,7 +380,7 @@ Each custom field supports its own styling config, the name needs to match betwe
 ```yaml
 - type: custom:button-card
   [...]
-  custom_element:
+  custom_fields:
     test_element: My test element
   styles:
     custom_fields:
