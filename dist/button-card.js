@@ -1730,9 +1730,9 @@ const ct = new WeakMap(),
   }_evalActions(t, e) {
     const n = this.config.entity ? this.hass.states[this.config.entity] : void 0,
           i = JSON.parse(JSON.stringify(t)),
-          s = t => (Object.keys(t).forEach(e => {
+          s = t => t ? (Object.keys(t).forEach(e => {
       "object" == typeof t[e] ? t[e] = s(t[e]) : t[e] = this._getTemplateOrValue(n, t[e]);
-    }), t);return i[e] = s(i[e]), i;
+    }), t) : t;return i[e] = s(i[e]), i;
   }_handleTap(t) {
     if (this.config.confirmation && !window.confirm(this.config.confirmation)) return;const e = t.target.config;Dt(this, this.hass, this._evalActions(e, "tap_action"), !1, !1);
   }_handleHold(t) {
