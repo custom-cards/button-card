@@ -215,7 +215,7 @@ class ButtonCard extends LitElement {
     value: any | undefined,
   ): any | undefined {
     if (['number', 'boolean'].includes(typeof value)) return value;
-    if (!value) return undefined;
+    if (!value) return value;
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
@@ -796,6 +796,9 @@ class ButtonCard extends LitElement {
     const configDuplicate = JSON.parse(JSON.stringify(config));
     /* eslint no-param-reassign: 0 */
     const __evalObject = (configEval: any): any => {
+      if (!configEval) {
+        return configEval;
+      }
       Object.keys(configEval).forEach((key) => {
         if (typeof configEval[key] === 'object') {
           configEval[key] = __evalObject(configEval[key]);
