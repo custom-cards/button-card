@@ -306,7 +306,7 @@ class b {
  * http://polymer.github.io/PATENTS.txt
  */
 (window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.1.1");const R = (t, ...e) => new v(t, e, "html", T),
-      L = 133;
+      V = 133;
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -319,16 +319,16 @@ class b {
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
- */function V(t, e) {
+ */function L(t, e) {
   const { element: { content: n }, parts: i } = t,
-        r = document.createTreeWalker(n, L, null, !1);let s = j(i),
+        r = document.createTreeWalker(n, V, null, !1);let s = j(i),
       a = i[s],
       o = -1,
       c = 0;const l = [];let u = null;for (; r.nextNode();) {
     o++;const t = r.currentNode;for (t.previousSibling === u && (u = null), e.has(t) && (l.push(t), null === u && (u = t)), null !== u && c++; void 0 !== a && a.index === o;) a.index = null !== u ? -1 : a.index - c, a = i[s = j(i, s)];
   }l.forEach(t => t.parentNode.removeChild(t));
 }const B = t => {
-  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, L, null, !1);for (; n.nextNode();) e++;return e;
+  let e = 11 === t.nodeType ? 0 : 1;const n = document.createTreeWalker(t, V, null, !1);for (; n.nextNode();) e++;return e;
 },
       j = (t, e = -1) => {
   for (let n = e + 1; n < t.length; n++) {
@@ -366,11 +366,11 @@ const $ = (t, e) => `${t}--${e}`;let H = !0;void 0 === window.ShadyCSS ? H = !1 
         const { element: { content: e } } = t,
               n = new Set();Array.from(e.querySelectorAll("style")).forEach(t => {
           n.add(t);
-        }), V(t, n);
+        }), L(t, n);
       });
     });
   })(t);const o = i.content;n ? function (t, e, n = null) {
-    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, L, null, !1);let a = j(r),
+    const { element: { content: i }, parts: r } = t;if (null == n) return void i.appendChild(e);const s = document.createTreeWalker(i, V, null, !1);let a = j(r),
         o = 0,
         c = -1;for (; s.nextNode();) for (c++, s.currentNode === n && (o = B(e), n.parentNode.insertBefore(e, n)); -1 !== a && r[a].index === c;) {
       if (o > 0) {
@@ -378,7 +378,7 @@ const $ = (t, e) => `${t}--${e}`;let H = !0;void 0 === window.ShadyCSS ? H = !1 
       }a = j(r, a);
     }
   }(n, a, o.firstChild) : o.insertBefore(a, o.firstChild), window.ShadyCSS.prepareTemplateStyles(i, t);const c = o.querySelector("style");if (window.ShadyCSS.nativeShadow && null !== c) e.insertBefore(c.cloneNode(!0), e.firstChild);else if (n) {
-    o.insertBefore(a, o.firstChild);const t = new Set();t.add(a), V(n, t);
+    o.insertBefore(a, o.firstChild);const t = new Set();t.add(a), L(n, t);
   }
 };
 /**
@@ -788,16 +788,16 @@ const lt = new WeakMap(),
     Rt = function (t, e, n, i) {
   i = i || {}, n = null == n ? {} : n;var r = new Event(e, { bubbles: void 0 === i.bubbles || i.bubbles, cancelable: Boolean(i.cancelable), composed: void 0 === i.composed || i.composed });return r.detail = n, t.dispatchEvent(r), r;
 },
-    Lt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Vt = function (t, e) {
+    Vt = { alert: "hass:alert", automation: "hass:playlist-play", calendar: "hass:calendar", camera: "hass:video", climate: "hass:thermostat", configurator: "hass:settings", conversation: "hass:text-to-speech", device_tracker: "hass:account", fan: "hass:fan", group: "hass:google-circles-communities", history_graph: "hass:chart-line", homeassistant: "hass:home-assistant", homekit: "hass:home-automation", image_processing: "hass:image-filter-frames", input_boolean: "hass:drawing", input_datetime: "hass:calendar-clock", input_number: "hass:ray-vertex", input_select: "hass:format-list-bulleted", input_text: "hass:textbox", light: "hass:lightbulb", mailbox: "hass:mailbox", notify: "hass:comment-alert", person: "hass:account", plant: "hass:flower", proximity: "hass:apple-safari", remote: "hass:remote", scene: "hass:google-pages", script: "hass:file-document", sensor: "hass:eye", simple_alarm: "hass:bell", sun: "hass:white-balance-sunny", switch: "hass:flash", timer: "hass:timer", updater: "hass:cloud-upload", vacuum: "hass:robot-vacuum", water_heater: "hass:thermometer", weblink: "hass:open-in-new" };var Lt = function (t, e) {
   Rt(t, "haptic", e);
 },
     Bt = function (t, e, n, i, r) {
   var s;switch (r && n.dbltap_action ? s = n.dbltap_action : i && n.hold_action ? s = n.hold_action : !i && n.tap_action && (s = n.tap_action), s || (s = { action: "more-info" }), s.action) {case "more-info":
-      (n.entity || n.camera_image) && (Rt(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Vt(t, s.haptic));break;case "navigate":
+      (n.entity || n.camera_image) && (Rt(t, "hass-more-info", { entityId: s.entity ? s.entity : n.entity ? n.entity : n.camera_image }), s.haptic && Lt(t, s.haptic));break;case "navigate":
       s.navigation_path && (function (t, e, n) {
         void 0 === n && (n = !1), n ? history.replaceState(null, "", e) : history.pushState(null, "", e), Rt(window, "location-changed", { replace: n });
-      }(0, s.navigation_path), s.haptic && Vt(t, s.haptic));break;case "url":
-      s.url && window.open(s.url), s.haptic && Vt(t, s.haptic);break;case "toggle":
+      }(0, s.navigation_path), s.haptic && Lt(t, s.haptic));break;case "url":
+      s.url && window.open(s.url), s.haptic && Lt(t, s.haptic);break;case "toggle":
       n.entity && (function (t, e) {
         (function (t, e, n) {
           void 0 === n && (n = !0);var i,
@@ -809,11 +809,11 @@ const lt = new WeakMap(),
               i = n ? "open_cover" : "close_cover";break;default:
               i = n ? "turn_on" : "turn_off";}t.callService(s, i, { entity_id: e });
         })(t, e, Ft.includes(t.states[e].state));
-      }(e, n.entity), s.haptic && Vt(t, s.haptic));break;case "call-service":
+      }(e, n.entity), s.haptic && Lt(t, s.haptic));break;case "call-service":
       if (!s.service) return;var a = s.service.split(".", 2),
           o = a[0],
           c = a[1],
-          l = Object.assign({}, s.service_data);"entity" === l.entity_id && (l.entity_id = n.entity), e.callService(o, c, l), s.haptic && Vt(t, s.haptic);}
+          l = Object.assign({}, s.service_data);"entity" === l.entity_id && (l.entity_id = n.entity), e.callService(o, c, l), s.haptic && Lt(t, s.haptic);}
 };String(Math.random()).slice(2);try {
   const t = { get capture() {
       return !1;
@@ -1342,7 +1342,10 @@ const lt = new WeakMap(),
         1 === this.nbClicks && (this.nbClicks = 0, t.dispatchEvent(new Event("ha-click")));
       }, 250)) : (this.nbClicks = 0, clearTimeout(this.dblClickTimeout), t.dispatchEvent(new Event("ha-dblclick"))) : t.dispatchEvent(new Event("ha-click")), this.cooldownEnd = !0, window.setTimeout(() => this.cooldownEnd = !1, 100));
     },
-          i = zt(window.navigator.userAgent).satisfies({ mobile: { safari: ">=13" } });t.addEventListener("touchstart", e, { passive: !0 }), t.addEventListener("touchend", n), t.addEventListener("touchcancel", n), i || (t.addEventListener("mousedown", e, { passive: !0 }), t.addEventListener("click", n));
+          i = zt(window.navigator.userAgent),
+          r = i.satisfies({ mobile: { safari: ">=13" } }),
+          s = new RegExp("^13\\..*", "gm"),
+          a = "iOS" === i.getOSName() && !!i.getOSVersion().match(s);t.addEventListener("touchstart", e, { passive: !0 }), t.addEventListener("touchend", n), t.addEventListener("touchcancel", n), r || a || (t.addEventListener("mousedown", e, { passive: !0 }), t.addEventListener("click", n));
   }startAnimation(t, e) {
     Object.assign(this.style, { left: `${t}px`, top: `${e}px`, display: null }), this.ripple.holdDown = !0, this.ripple.simulatedRipple();
   }stopAnimation() {
@@ -2019,7 +2022,7 @@ const lt = new WeakMap(),
         i = "";return e && e.color ? i = e.color : "auto" !== this.config.color && t && "off" === t.state ? i = this.config.color_off : this.config.color && (i = this.config.color), n = "auto" == i || "auto-no-temperature" == i ? this._getColorForLightEntity(t, "auto-no-temperature" !== i) : i || (t ? this._getDefaultColorForState(t) : this.config.default_color);
   }_buildIcon(t, e) {
     if (!this.config.show_icon) return;let n;return e && e.icon ? n = e.icon : this.config.icon ? n = this.config.icon : t && t.attributes && (n = t.attributes.icon ? t.attributes.icon : function (t, e) {
-      if (t in Lt) return Lt[t];switch (t) {case "alarm_control_panel":
+      if (t in Vt) return Vt[t];switch (t) {case "alarm_control_panel":
           switch (e) {case "armed_home":
               return "hass:bell-plus";case "armed_night":
               return "hass:bell-sleep";case "disarmed":

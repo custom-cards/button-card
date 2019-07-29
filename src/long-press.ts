@@ -186,10 +186,12 @@ class LongPress extends HTMLElement implements LongPress {
         safari: '>=13',
       },
     });
+    const ios13 = new RegExp('^13\\..*', 'gm');
+    const isCrazyBrowser2 = br.getOSName() === 'iOS' && (br.getOSVersion().match(ios13) ? true : false);
     element.addEventListener('touchstart', clickStart, { passive: true });
     element.addEventListener('touchend', clickEnd);
     element.addEventListener('touchcancel', clickEnd);
-    if (!isCrazyBrowser) {
+    if (!isCrazyBrowser && !isCrazyBrowser2) {
       element.addEventListener('mousedown', clickStart, { passive: true });
       element.addEventListener('click', clickEnd);
     }
