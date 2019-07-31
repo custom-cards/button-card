@@ -218,15 +218,15 @@ class b {
   constructor(t, e, n) {
     super(t, e, n), this.single = 2 === n.length && "" === n[0] && "" === n[1];
   }_createPart() {
-    return new P(this);
+    return new A(this);
   }_getValue() {
     return this.single ? this.parts[0].value : super._getValue();
   }commit() {
     this.dirty && (this.dirty = !1, this.element[this.name] = this._getValue());
   }
-}class P extends S {}let A = !1;try {
+}class A extends S {}let P = !1;try {
   const t = { get capture() {
-      return A = !0, !1;
+      return P = !0, !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
 } catch (t) {}class E {
   constructor(t, e, n) {
@@ -243,7 +243,7 @@ class b {
   }handleEvent(t) {
     "function" == typeof this.value ? this.value.call(this.eventContext || this.element, t) : this.value.handleEvent(t);
   }
-}const O = t => t && (A ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
+}const O = t => t && (P ? { capture: t.capture, passive: t.passive, once: t.once } : t.capture);
 /**
  * @license
  * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -617,7 +617,7 @@ found at http://polymer.github.io/PATENTS.txt
  */
 const lt = new WeakMap(),
       ut = n(t => e => {
-  if (!(e instanceof S) || e instanceof P || "style" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `styleMap` directive must be used in the style attribute and must be the only part in the attribute.");const { committer: n } = e,
+  if (!(e instanceof S) || e instanceof A || "style" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `styleMap` directive must be used in the style attribute and must be the only part in the attribute.");const { committer: n } = e,
         { style: i } = n.element;lt.has(e) || (i.cssText = n.strings.join(" "));const r = lt.get(e);for (const e in r) e in t || (-1 === e.indexOf("-") ? i[e] = null : i.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? i[e] = t[e] : i.setProperty(e, t[e]);lt.set(e, t);
 }),
       dt = new WeakMap(),
@@ -633,7 +633,7 @@ const lt = new WeakMap(),
 }),
       pt = new WeakMap(),
       mt = n(t => e => {
-  if (!(e instanceof S) || e instanceof P || "class" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `classMap` directive must be used in the `class` attribute and must be the only part in the attribute.");const { committer: n } = e,
+  if (!(e instanceof S) || e instanceof A || "class" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `classMap` directive must be used in the `class` attribute and must be the only part in the attribute.");const { committer: n } = e,
         { element: i } = n;pt.has(e) || (i.className = n.strings.join(" "));const { classList: r } = i,
         s = pt.get(e);for (const e in s) e in t || r.remove(e);for (const e in t) {
     const n = t[e];if (!s || n !== s[e]) {
@@ -654,8 +654,8 @@ const lt = new WeakMap(),
   for (t = String(t), e = e || 2; t.length < e;) t = "0" + t;return t;
 }var xt = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     kt = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    Pt = wt(kt, 3),
-    At = wt(xt, 3);gt.i18n = { dayNamesShort: At, dayNames: xt, monthNamesShort: Pt, monthNames: kt, amPm: ["am", "pm"], DoFn: function (t) {
+    At = wt(kt, 3),
+    Pt = wt(xt, 3);gt.i18n = { dayNamesShort: Pt, dayNames: xt, monthNamesShort: At, monthNames: kt, amPm: ["am", "pm"], DoFn: function (t) {
     return t + ["th", "st", "nd", "rd"][t % 10 > 3 ? 0 : (t - t % 10 != 10) * t % 10];
   } };var Et = { D: function (t) {
     return t.getDate();
@@ -1331,14 +1331,14 @@ const lt = new WeakMap(),
     if (t.longPress) return;t.longPress = !0, t.addEventListener("contextmenu", t => {
       const e = t || window.event;return e.preventDefault && e.preventDefault(), e.stopPropagation && e.stopPropagation(), e.cancelBubble = !0, e.returnValue = !1, !1;
     });const e = e => {
-      if (e.stopPropagation(), this.cooldownStart) return;let n, i;this.held = !1, e.touches ? (n = e.touches[0].pageX, i = e.touches[0].pageY) : (n = e.pageX, i = e.pageY), this.timer = window.setTimeout(() => {
+      if (this.cooldownStart) return;let n, i;this.held = !1, e.touches ? (n = e.touches[0].pageX, i = e.touches[0].pageY) : (n = e.pageX, i = e.pageY), this.timer = window.setTimeout(() => {
         this.startAnimation(n, i), this.held = !0, t.repeat && !t.isRepeating && (t.isRepeating = !0, this.repeatTimeout = setInterval(() => {
           t.dispatchEvent(new Event("ha-hold"));
         }, t.repeat));
       }, this.holdTime), this.cooldownStart = !0, window.setTimeout(() => this.cooldownStart = !1, 100);
     },
           n = e => {
-      e.stopPropagation(), this.cooldownEnd || ["touchend", "touchcancel"].includes(e.type) && void 0 === this.timer ? t.isRepeating && this.repeatTimeout && (clearInterval(this.repeatTimeout), t.isRepeating = !1) : (clearTimeout(this.timer), t.isRepeating && this.repeatTimeout && clearInterval(this.repeatTimeout), t.isRepeating = !1, this.stopAnimation(), this.timer = void 0, this.held ? t.repeat || t.dispatchEvent(new Event("ha-hold")) : t.hasDblClick ? 0 === this.nbClicks ? (this.nbClicks += 1, this.dblClickTimeout = window.setTimeout(() => {
+      this.cooldownEnd || ["touchend", "touchcancel"].includes(e.type) && void 0 === this.timer ? t.isRepeating && this.repeatTimeout && (clearInterval(this.repeatTimeout), t.isRepeating = !1) : (clearTimeout(this.timer), t.isRepeating && this.repeatTimeout && clearInterval(this.repeatTimeout), t.isRepeating = !1, this.stopAnimation(), this.timer = void 0, this.held ? t.repeat || t.dispatchEvent(new Event("ha-hold")) : t.hasDblClick ? 0 === this.nbClicks ? (this.nbClicks += 1, this.dblClickTimeout = window.setTimeout(() => {
         1 === this.nbClicks && (this.nbClicks = 0, t.dispatchEvent(new Event("ha-click")));
       }, 250)) : (this.nbClicks = 0, clearTimeout(this.dblClickTimeout), t.dispatchEvent(new Event("ha-dblclick"))) : t.dispatchEvent(new Event("ha-click")), this.cooldownEnd = !0, window.setTimeout(() => this.cooldownEnd = !1, 100));
     },
