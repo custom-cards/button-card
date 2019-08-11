@@ -1947,7 +1947,7 @@ const lt = new WeakMap(),
       height: 100%;
     }
   }
-`;let ve = class extends ct {
+`;console.info("%c  BUTTON-CARD  \n%c Version 2.1.0 ", "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray");let ve = class extends ct {
   disconnectedCallback() {
     super.disconnectedCallback(), this._clearInterval();
   }connectedCallback() {
@@ -2077,14 +2077,35 @@ const lt = new WeakMap(),
   }_buildLabel(t, e) {
     if (!this.config.show_label) return;let n;return n = e && e.label ? e.label : this.config.label, this._getTemplateOrValue(t, n);
   }_buildCustomFields(t, e) {
-    let n = R``;const i = {};return this.config.custom_fields && Object.keys(this.config.custom_fields).forEach(e => {
-      const n = this.config.custom_fields[e];i[e] = this._getTemplateOrValue(t, n);
+    let n = R``;const i = {},
+          r = {};return this.config.custom_fields && Object.keys(this.config.custom_fields).forEach(e => {
+      const n = this.config.custom_fields[e];n.card ? r[e] = n.card : i[e] = this._getTemplateOrValue(t, n);
     }), e && e.custom_fields && Object.keys(e.custom_fields).forEach(n => {
-      const r = e.custom_fields[n];i[n] = this._getTemplateOrValue(t, r);
+      const s = e.custom_fields[n];s.card ? r[n] = s.card : i[n] = this._getTemplateOrValue(t, s);
     }), Object.keys(i).forEach(r => {
       if (null != i[r]) {
         const s = Object.assign({}, this._buildCustomStyleGeneric(t, e, r), { "grid-area": r });n = R`${n}
         <div id=${r} class="ellipsis" style=${ut(s)}>${ht(i[r])}</div>`;
+      }
+    }), Object.keys(r).forEach(i => {
+      if (null != r[i]) {
+        const s = Object.assign({}, this._buildCustomStyleGeneric(t, e, i), { "grid-area": i });n = R`${n}
+        <div id=${i} class="ellipsis" style=${ut(s)}>${((t, e) => {
+          const n = (t, e) => i("hui-error-card", { type: "error", error: t, config: e }),
+                i = (t, i) => {
+            const r = window.document.createElement(t);try {
+              r.setConfig(i), r.hass = e;
+            } catch (e) {
+              return console.error(t, e), n(e.message, i);
+            }return r;
+          };if (!t || "object" != typeof t || !t.type) return n("No type defined", t);let r = t.type;if (t.error) {
+            const e = t.error;return delete t.error, n(e, t);
+          }if (r = r.startsWith("custom:") ? r.substr("custom:".length) : `hui-${r}-card`, customElements.get(r)) return i(r, t);const s = n(`Custom element doesn't exist: ${t.type}.`, t);s.style.display = "None";const a = setTimeout(() => {
+            s.style.display = "";
+          }, 2e3);return customElements.whenDefined(t.type).then(() => {
+            clearTimeout(a), Rt(s, "ll-rebuild", {}, s);
+          }), s;
+        })(r[i], this.hass)}</div>`;
       }
     }), n;
   }_isClickable(t) {

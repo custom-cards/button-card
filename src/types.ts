@@ -6,7 +6,7 @@ export interface ButtonCardConfig {
   entity?: string;
   name?: string;
   icon?: string;
-  color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
+  color_type: 'icon' | 'card' | 'label-card' | 'blank-card';
   color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
   aspect_ratio?: string;

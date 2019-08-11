@@ -25,6 +25,8 @@ import {
   // Still not working...
   // longPress,
 } from 'custom-card-helpers';
+import { BUTTON_CARD_VERSION } from './version-const';
+import createThing from './create-thing';
 import {
   ButtonCardConfig,
   StateConfig,
@@ -43,6 +45,13 @@ import {
 } from './helpers';
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
+
+/* eslint no-console: 0 */
+console.info(
+  `%c  BUTTON-CARD  \n%c Version ${BUTTON_CARD_VERSION} `,
+  'color: orange; font-weight: bold; background: black',
+  'color: white; font-weight: bold; background: dimgray',
+);
 
 @customElement('button-card')
 class ButtonCard extends LitElement {
@@ -486,16 +495,25 @@ class ButtonCard extends LitElement {
   ): TemplateResult {
     let result = html``;
     const fields: any = {};
+    const cards: any = {};
     if (this.config!.custom_fields) {
       Object.keys(this.config!.custom_fields).forEach((key) => {
         const value = this.config!.custom_fields![key];
-        fields[key] = this._getTemplateOrValue(state, value);
+        if (!value.card) {
+          fields[key] = this._getTemplateOrValue(state, value);
+        } else {
+          cards[key] = value.card;
+        }
       });
     }
     if (configState && configState.custom_fields) {
       Object.keys(configState.custom_fields).forEach((key) => {
         const value = configState!.custom_fields![key];
-        fields[key] = this._getTemplateOrValue(state, value);
+        if (!value!.card) {
+          fields[key] = this._getTemplateOrValue(state, value);
+        } else {
+          cards[key] = value.card;
+        }
       });
     }
     Object.keys(fields).forEach((key) => {
@@ -506,6 +524,16 @@ class ButtonCard extends LitElement {
         };
         result = html`${result}
         <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
+      }
+    });
+    Object.keys(cards).forEach((key) => {
+      if (cards[key] != undefined) {
+        const customStyle: StyleInfo = {
+          ...this._buildCustomStyleGeneric(state, configState, key),
+          'grid-area': key,
+        };
+        result = html`${result}
+        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${createThing(cards[key], this.hass)}</div>`;
       }
     });
     return result;
