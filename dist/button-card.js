@@ -66,7 +66,7 @@ function t(t, e, n, i) {
           let e = -1;for (; -1 !== (e = t.data.indexOf(c, e + 1));) this.parts.push({ type: "node", index: -1 }), o++;
         }
       } else r.currentNode = i.pop();
-    }for (const t of n) t.parentNode.removeChild(t);
+    }for (const c of n) c.parentNode.removeChild(c);
   }
 }const f = (t, e) => {
   const n = t.length - e.length;return n >= 0 && t.slice(n) === e;
@@ -91,7 +91,7 @@ class b {
   constructor(t, e, n) {
     this.__parts = [], this.template = t, this.processor = e, this.options = n;
   }update(t) {
-    let e = 0;for (const n of this.__parts) void 0 !== n && n.setValue(t[e]), e++;for (const t of this.__parts) void 0 !== t && t.commit();
+    let e = 0;for (const n of this.__parts) void 0 !== n && n.setValue(t[e]), e++;for (const n of this.__parts) void 0 !== n && n.commit();
   }_clone() {
     const t = r ? this.template.element.content.cloneNode(!0) : document.importNode(this.template.element.content, !0),
           e = [],
@@ -146,7 +146,7 @@ class b {
  */const _ = t => null === t || !("object" == typeof t || "function" == typeof t),
       y = t => Array.isArray(t) || !(!t || !t[Symbol.iterator]);class w {
   constructor(t, e, n) {
-    this.dirty = !0, this.element = t, this.name = e, this.strings = n, this.parts = [];for (let t = 0; t < n.length - 1; t++) this.parts[t] = this._createPart();
+    this.dirty = !0, this.element = t, this.name = e, this.strings = n, this.parts = [];for (let i = 0; i < n.length - 1; i++) this.parts[i] = this._createPart();
   }_createPart() {
     return new S(this);
   }_getValue() {
@@ -228,7 +228,7 @@ class b {
   const t = { get capture() {
       return P = !0, !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}class E {
+} catch (_e) {}class E {
   constructor(t, e, n) {
     this.value = void 0, this.__pendingValue = void 0, this.element = t, this.eventName = e, this.eventContext = n, this.__boundHandleEvent = t => this.handleEvent(t);
   }setValue(t) {
@@ -358,8 +358,8 @@ const $ = (t, e) => `${t}--${e}`;let H = !0;void 0 === window.ShadyCSS ? H = !1 
       W = (t, e, n) => {
   z.add(t);const i = n ? n.element : document.createElement("template"),
         r = e.querySelectorAll("style"),
-        { length: s } = r;if (0 === s) return void window.ShadyCSS.prepareTemplateStyles(i, t);const a = document.createElement("style");for (let t = 0; t < s; t++) {
-    const e = r[t];e.parentNode.removeChild(e), a.textContent += e.textContent;
+        { length: s } = r;if (0 === s) return void window.ShadyCSS.prepareTemplateStyles(i, t);const a = document.createElement("style");for (let l = 0; l < s; l++) {
+    const t = r[l];t.parentNode.removeChild(t), a.textContent += t.textContent;
   }(t => {
     I.forEach(e => {
       const n = C.get($(e, t));void 0 !== n && n.keyString.forEach(t => {
@@ -480,10 +480,10 @@ window.JSCompiler_renameProperty = (t, e) => t;const Y = { toAttribute(t, e) {
       t = n, e = i;
     });try {
       await n;
-    } catch (t) {}this._hasConnected || (await new Promise(t => this._hasConnectedResolver = t));try {
+    } catch (i) {}this._hasConnected || (await new Promise(t => this._hasConnectedResolver = t));try {
       const t = this.performUpdate();null != t && (await t);
-    } catch (t) {
-      e(t);
+    } catch (i) {
+      e(i);
     }t(!this._hasRequestedUpdate);
   }get _hasConnected() {
     return this._updateState & Q;
@@ -494,8 +494,8 @@ window.JSCompiler_renameProperty = (t, e) => t;const Y = { toAttribute(t, e) {
   }performUpdate() {
     this._instanceProperties && this._applyInstanceProperties();let t = !1;const e = this._changedProperties;try {
       (t = this.shouldUpdate(e)) && this.update(e);
-    } catch (e) {
-      throw t = !1, e;
+    } catch (n) {
+      throw t = !1, n;
     } finally {
       this._markUpdated();
     }t && (this._updateState & J || (this._updateState = this._updateState | J, this.firstUpdated(e)), this.updated(e));
@@ -618,7 +618,7 @@ found at http://polymer.github.io/PATENTS.txt
 const lt = new WeakMap(),
       ut = n(t => e => {
   if (!(e instanceof S) || e instanceof A || "style" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `styleMap` directive must be used in the style attribute and must be the only part in the attribute.");const { committer: n } = e,
-        { style: i } = n.element;lt.has(e) || (i.cssText = n.strings.join(" "));const r = lt.get(e);for (const e in r) e in t || (-1 === e.indexOf("-") ? i[e] = null : i.removeProperty(e));for (const e in t) -1 === e.indexOf("-") ? i[e] = t[e] : i.setProperty(e, t[e]);lt.set(e, t);
+        { style: i } = n.element;lt.has(e) || (i.cssText = n.strings.join(" "));const r = lt.get(e);for (const s in r) s in t || (-1 === s.indexOf("-") ? i[s] = null : i.removeProperty(s));for (const s in t) -1 === s.indexOf("-") ? i[s] = t[s] : i.setProperty(s, t[s]);lt.set(e, t);
 }),
       dt = new WeakMap(),
       ht = n(t => e => {
@@ -635,9 +635,9 @@ const lt = new WeakMap(),
       mt = n(t => e => {
   if (!(e instanceof S) || e instanceof A || "class" !== e.committer.name || e.committer.parts.length > 1) throw new Error("The `classMap` directive must be used in the `class` attribute and must be the only part in the attribute.");const { committer: n } = e,
         { element: i } = n;pt.has(e) || (i.className = n.strings.join(" "));const { classList: r } = i,
-        s = pt.get(e);for (const e in s) e in t || r.remove(e);for (const e in t) {
-    const n = t[e];if (!s || n !== s[e]) {
-      r[n ? "add" : "remove"](e);
+        s = pt.get(e);for (const a in s) a in t || r.remove(a);for (const a in t) {
+    const e = t[a];if (!s || e !== s[a]) {
+      r[e ? "add" : "remove"](a);
     }
   }pt.set(e, t);
 });var gt = {},
@@ -818,7 +818,7 @@ const lt = new WeakMap(),
   const t = { get capture() {
       return !1;
     } };window.addEventListener("test", t, t), window.removeEventListener("test", t, t);
-} catch (t) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var jt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
+} catch (ye) {}(window.litHtmlVersions || (window.litHtmlVersions = [])).push("1.0.0");var jt = "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0,
     $t = function (t) {
   function e() {
     t.call(this), this.holdTime = 500, this.ripple = document.createElement("paper-ripple"), this.timer = void 0, this.held = !1, this.cooldownStart = !1, this.cooldownEnd = !1, this.nbClicks = 0;
