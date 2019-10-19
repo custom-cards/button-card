@@ -580,7 +580,7 @@ class ButtonCard extends LitElement {
     return clickable;
   }
 
-  private _rotate(configState: StateConfig | undefined): Boolean {
+  private _rotate(configState: StateConfig | undefined): boolean {
     return configState && configState.spin ? true : false;
   }
 
