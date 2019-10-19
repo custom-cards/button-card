@@ -22,8 +22,6 @@ import {
   timerTimeRemaining,
   secondsToDuration,
   durationToSeconds,
-  // Still not working...
-  // longPress,
 } from 'custom-card-helpers';
 import { BUTTON_CARD_VERSION } from './version-const';
 import createThing from './create-thing';
@@ -63,6 +61,8 @@ class ButtonCard extends LitElement {
 
   @property() private _hasTemplate?: boolean;
 
+  @property() private _stateObj: HassEntity | undefined;
+
   private _interval?: number;
 
   public disconnectedCallback(): void {
@@ -87,6 +87,7 @@ class ButtonCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
+    this._stateObj = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     if (!this.config || !this.hass) {
       return html``;
     }
@@ -94,8 +95,6 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
-    const configState = this._getMatchingConfigState(state);
     const forceUpdate = this._hasTemplate
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
@@ -544,13 +543,13 @@ class ButtonCard extends LitElement {
     if (
       this.config!.tap_action!.action === 'toggle'
       && this.config!.hold_action!.action === 'none'
-      && this.config!.dbltap_action!.action === 'none'
+      && this.config!.double_tap_action!.action === 'none'
 
       || this.config!.hold_action!.action === 'toggle'
       && this.config!.tap_action!.action === 'none'
-      && this.config!.dbltap_action!.action === 'none'
+      && this.config!.double_tap_action!.action === 'none'
 
-      || this.config!.dbltap_action!.action === 'toggle'
+      || this.config!.double_tap_action!.action === 'toggle'
       && this.config!.tap_action!.action === 'none'
       && this.config!.hold_action!.action === 'none'
     ) {
@@ -571,7 +570,7 @@ class ButtonCard extends LitElement {
     } else if (
       this.config!.tap_action!.action != 'none'
       || this.config!.hold_action!.action != 'none'
-      || this.config!.dbltap_action!.action != 'none'
+      || this.config!.double_tap_action!.action != 'none'
     ) {
       clickable = true;
     } else {
@@ -600,18 +599,17 @@ class ButtonCard extends LitElement {
   }
 
   private _cardHtml(): TemplateResult {
-    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
-    const configState = this._getMatchingConfigState(state);
-    const color = this._buildCssColorAttribute(state, configState);
+    const configState = this._getMatchingConfigState(this._stateObj);
+    const color = this._buildCssColorAttribute(this._stateObj, configState);
     let buttonColor = color;
     let cardStyle: any = {};
     let lockStyle: any = {};
     const aspectRatio: any = {};
-    const lockStyleFromConfig = this._buildStyleGeneric(state, configState, 'lock');
-    const configCardStyle = this._buildStyleGeneric(state, configState, 'card');
+    const lockStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'lock');
+    const configCardStyle = this._buildStyleGeneric(this._stateObj, configState, 'card');
     const classList: ClassInfo = {
       'button-card-main': true,
-      disabled: !this._isClickable(state),
+      disabled: !this._isClickable(this._stateObj),
     };
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
@@ -640,8 +638,8 @@ class ButtonCard extends LitElement {
     } else {
       aspectRatio.display = 'inline';
     }
-    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
-    this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(state, false));
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(this._stateObj, true));
+    this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(this._stateObj, false));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
@@ -653,13 +651,13 @@ class ButtonCard extends LitElement {
           @ha-click="${this._handleTap}"
           @ha-hold="${this._handleHold}"
           @ha-dblclick=${this._handleDblTap}
-          .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
+          .hasDblClick=${this.config!.double_tap_action!.action !== 'none'}
           .repeat=${ifDefined(this.config!.hold_action!.repeat)}
           .longpress=${longPress()}
           .config="${this.config}"
         >
           ${this._getLock(lockStyle)}
-          ${this._buttonContent(state, configState, buttonColor)}
+          ${this._buttonContent(this._stateObj, configState, buttonColor)}
           ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
         </ha-card>
       </div>
@@ -788,7 +786,7 @@ class ButtonCard extends LitElement {
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
-      dbltap_action: { action: 'none' },
+      double_tap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -840,34 +838,34 @@ class ButtonCard extends LitElement {
     return configDuplicate;
   }
 
-  private _handleTap(ev): void {
+  private _evalConfirmation(config: ButtonCardConfig): boolean {
     /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
+    const globalConfirm = this._getTemplateOrValue(this._stateObj, config.confirmation);
+    if (globalConfirm) {
+      return window.confirm(globalConfirm);
     }
+    return true;
+  }
+
+  private _handleTap(ev): void {
     const config = ev.target.config;
-    handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
+    if (this._evalConfirmation(config)) {
+      handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
+    }
   }
 
   private _handleHold(ev): void {
-    /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
-    }
     const config = ev.target.config;
-    handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
+    if (this._evalConfirmation(config)) {
+      handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
+    }
   }
 
   private _handleDblTap(ev): void {
-    /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
-    }
     const config = ev.target.config;
-    handleClick(this, this.hass!, this._evalActions(config, 'dbltap_action'), false, true);
+    if (this._evalConfirmation(config)) {
+      handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
+    }
   }
 
   private _handleLock(ev): void {

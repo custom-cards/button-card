@@ -1,5 +1,5 @@
 import { directive, PropertyPart } from 'lit-html';
-import * as Bowser from 'bowser';
+import Bowser from 'bowser';
 // See https://github.com/home-assistant/home-assistant-polymer/pull/2457
 // on how to undo mwc -> paper migration
 // import '@material/mwc-ripple';

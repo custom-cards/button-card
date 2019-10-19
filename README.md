@@ -1,4 +1,4 @@
-# Button Card <!-- omit in toc -->
+# Button Card by [@RomRider](https://github.com/RomRider) <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -33,7 +33,7 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-customupdater)
+  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
@@ -91,7 +91,7 @@ Lovelace Button card for your entities.
 | `aspect_ratio` | string | optional | `1/1`, `2/1`, `1/1.5`, ... | See [here](#aspect-ratio) for an example. Aspect ratio of the card. `1/1` being a square. This will auto adapt to your screen size |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
-| `dbltap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
+| `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
 | `show_name` | boolean | `true` | `true` \| `false` | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property |
@@ -105,7 +105,7 @@ Lovelace Button card for your entities.
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
-| `confirmation` | string | optional | Free-form text | Show a confirmation popup on tap with defined text |
+| `confirmation` | string | optional | Free-form text | Show a confirmation popup on tap with defined text. Supports templates, see [templates](#templates)|
 | `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
 | `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
@@ -120,7 +120,7 @@ All the fields support templates, see [templates](#templates).
 | `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url` | Action to perform |
 | `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
 | `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
-| `url` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
+| `url_path` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
 | `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
 | `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
@@ -627,29 +627,28 @@ state:
 1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/dist/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
-
-```yaml
-title: Home
-resources:
-  - url: /local/button-card.js
-    type: module
-```
+    ```yaml
+    title: Home
+    resources:
+      - url: /local/button-card.js
+        type: module
+    ```
 
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
-### Installation and tracking with `custom_updater`
+### Installation and tracking with `hacs`
 
-1. Make sure the [custom_updater](https://github.com/custom-components/custom_updater) component is installed and working.
-2. Configure Lovelace to load the card.
+1. Make sure the [HACS](https://github.com/custom-components/hacs) component is installed and working.
+2. Search for `button-card` and add it through HACS
+3. Add the configuration to your `ui-lovelace.yaml`
 
-```yaml
-resources:
-  - url: /customcards/github/custom-cards/button-card.js?track=true
-    type: module
-```
+    ```yaml
+    resources:
+      - url: /community_plugin/button-card/button-card.js
+        type: module
+    ```
 
-3. Run the service `custom_updater.check_all` or click the "CHECK" button if you use the [`tracker-card`](https://github.com/custom-cards/tracker-card).
-4. Refresh the website.
+4. Refresh home-assistant.
 
 ## Examples
 
