@@ -22,9 +22,9 @@ import {
   timerTimeRemaining,
   secondsToDuration,
   durationToSeconds,
+  createThing,
 } from 'custom-card-helpers';
 import { BUTTON_CARD_VERSION } from './version-const';
-import createThing from './create-thing';
 import {
   ButtonCardConfig,
   StateConfig,
@@ -531,8 +531,10 @@ class ButtonCard extends LitElement {
           ...this._buildCustomStyleGeneric(state, configState, key),
           'grid-area': key,
         };
-        result = html`${result}
-        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${createThing(cards[key], this.hass)}</div>`;
+        const thing = createThing(cards[key]);
+        thing.hass = this.hass;
+        result = html`${result};
+        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${thing}</div>`;
       }
     });
     return result;

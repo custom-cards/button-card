@@ -59,7 +59,7 @@
   "dependencies": {
     "@ctrl/tinycolor": "^2.5.4",
     "bowser": "^2.7.0",
-    "custom-card-helpers": "^1.2.6",
+    "custom-card-helpers": "^1.2.7",
     "home-assistant-js-websocket": "^3.4.0",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2"
