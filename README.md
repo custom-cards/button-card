@@ -109,7 +109,6 @@ Lovelace Button card for your entities.
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
 | `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
 | `lock` | object | optional | See [#lock-object] | Displays a lock on the button |
-| `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
 
