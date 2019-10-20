@@ -835,37 +835,25 @@ class ButtonCard extends LitElement {
       return configEval;
     };
     configDuplicate[action] = __evalObject(configDuplicate[action]);
-    return configDuplicate;
-  }
-
-  private _evalConfirmation(config: ButtonCardConfig): boolean {
-    /* eslint no-alert: 0 */
-    const globalConfirm = this._getTemplateOrValue(this._stateObj, config.confirmation);
-    if (globalConfirm) {
-      return window.confirm(globalConfirm);
+    if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
+      configDuplicate[action].confirmation = __evalObject(configDuplicate.confirmation);
     }
-    return true;
+    return configDuplicate;
   }
 
   private _handleTap(ev): void {
     const config = ev.target.config;
-    if (this._evalConfirmation(config)) {
-      handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
-    }
+    handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
   private _handleHold(ev): void {
     const config = ev.target.config;
-    if (this._evalConfirmation(config)) {
-      handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
-    }
+    handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
     const config = ev.target.config;
-    if (this._evalConfirmation(config)) {
-      handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
-    }
+    handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
   }
 
   private _handleLock(ev): void {

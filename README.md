@@ -19,6 +19,7 @@ Lovelace Button card for your entities.
 - [Configuration](#configuration)
   - [Main Options](#main-options)
   - [Action](#action)
+  - [Confirmation](#confirmation)
   - [State](#state)
   - [Available operators](#available-operators)
   - [Layout](#layout)
@@ -105,7 +106,7 @@ Lovelace Button card for your entities.
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
-| `confirmation` | string | optional | Free-form text | Show a confirmation popup on tap with defined text. Supports templates, see [templates](#templates)|
+| `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
 | `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
 | `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
@@ -125,6 +126,25 @@ All the fields support templates, see [templates](#templates).
 | `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
+| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+
+### Confirmation
+
+This will popup a dialog box before running the action.
+
+ Name | Type | Default | Supported options | Description |
+| --- | ---- | ------- | ----------------- | ----------- |
+| `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#templates) |
+| `exemptions` | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
+
+Example:
+```yaml
+confirmation:
+  text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?` ]]]'
+  exemptions:
+    - user: befc8496799848bda1824f2a8111e30a
+```
+
 
 ### State
 
