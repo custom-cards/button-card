@@ -249,6 +249,9 @@ Those are the configuration fields which support templating:
   * Else: The function for `value` needs to return a string or a number
 * All the `custom_fields` (Support also HTML rendering)
 * All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
+* Everything field in `*_action`
+* The confirmation text (`confirmation.text`)
+* The lock being enabled or not (`lock.enabled`)
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
