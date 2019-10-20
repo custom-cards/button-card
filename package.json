@@ -13,7 +13,7 @@
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/button-card.ts",
     "watch": "rollup -c rollup.debug.config.js --watch",
-    "version": "./hooks/bump-version.sh"
+    "update-version": "./hooks/bump-version.sh"
   },
   "repository": {
     "type": "git",
