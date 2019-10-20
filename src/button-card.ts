@@ -533,8 +533,8 @@ class ButtonCard extends LitElement {
         };
         const thing = createThing(cards[key]);
         thing.hass = this.hass;
-        result = html`${result};
-        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${thing}</div>`;
+        result = html`${result}
+        <div id=${key} class="ellipsis" @click=${this._stopPropagation} style=${styleMap(customStyle)}>${thing}</div>`;
       }
     });
     return result;
@@ -887,5 +887,10 @@ class ButtonCard extends LitElement {
         haCard.removeChild(paperRipple);
       }
     }, 5000);
+  }
+
+  private _stopPropagation(ev) {
+    ev.stopPropagation();
+    console.log('BRRRR');
   }
 }
