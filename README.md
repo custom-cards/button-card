@@ -20,6 +20,7 @@ Lovelace Button card for your entities.
   - [Main Options](#main-options)
   - [Action](#action)
   - [Confirmation](#confirmation)
+  - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
   - [Layout](#layout)
@@ -107,7 +108,7 @@ Lovelace Button card for your entities.
 | `styles` | object list | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
 | `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
-| `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
+| `lock` | object | optional | See [#lock-object] | Displays a lock on the button |
 | `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
@@ -132,7 +133,7 @@ All the fields support templates, see [templates](#templates).
 
 This will popup a dialog box before running the action.
 
- Name | Type | Default | Supported options | Description |
+| Name | Type | Default | Supported options | Description |
 | --- | ---- | ------- | ----------------- | ----------- |
 | `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#templates) |
 | `exemptions` | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
@@ -145,6 +146,32 @@ confirmation:
     - user: befc8496799848bda1824f2a8111e30a
 ```
 
+### Lock Object
+
+This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for `delay` seconds (5 by default).
+
+| Name | Type | Default | Supported options | Description |
+| --- | ---- | ------- | ----------------- | ----------- |
+| `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#templates) |
+| `duration` | number | `5` | any number | Duration of the unlocked state in seconds
+| `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
+
+Example:
+```yaml
+lock:
+  enabled: '[[[ return entity.state === 'on'; ]]]'
+  duration: 10
+  exemptions:
+    - username: test
+    - user: befc8496799848bda1824f2a8111e30a
+```
+
+If you want to lock the button for everyone and disable the unlocking possibility, set the exemptions object to `[]`:
+```yaml
+lock:
+  enabled: true
+  exemptions: []
+```
 
 ### State
 
@@ -1146,10 +1173,12 @@ Example with `template`:
   cards:
     - type: "custom:button-card"
       entity: switch.test
-      lock: true
+      lock:
+        enabled: true
     - type: "custom:button-card"
       color_type: card
-      lock: true
+      lock:
+        enabled: true
       color: black
       entity: switch.test
 ```

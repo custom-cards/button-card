@@ -10,8 +10,7 @@ export interface ButtonCardConfig {
   color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
   aspect_ratio?: string;
-  lock: boolean;
-  unlock_users?: string[];
+  lock: LockConfig;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
@@ -44,6 +43,20 @@ export type Layout = 'vertical'
   | 'icon_name_state2nd'
   | 'icon_state_name2nd'
   | 'icon_label';
+
+export interface LockConfig {
+  enabled?: boolean;
+  duration?: number;
+  exemptions?: (ExemptionUserConfig | ExemptionUsernameConfig)[];
+}
+
+export interface ExemptionUserConfig {
+  user: string;
+}
+
+export interface ExemptionUsernameConfig {
+  username: string;
+}
 
 export interface StateConfig {
   id?: string;

@@ -28,6 +28,8 @@ import { BUTTON_CARD_VERSION } from './version-const';
 import {
   ButtonCardConfig,
   StateConfig,
+  ExemptionUserConfig,
+  ExemptionUsernameConfig,
 } from './types';
 import { longPress } from './long-press';
 import {
@@ -534,7 +536,7 @@ class ButtonCard extends LitElement {
         const thing = createThing(cards[key]);
         thing.hass = this.hass;
         result = html`${result}
-        <div id=${key} class="ellipsis" @click=${this._stopPropagation} style=${styleMap(customStyle)}>${thing}</div>`;
+        <div id=${key} class="ellipsis" @click=${this._stopPropagation} @touchstart=${this._stopPropagation} style=${styleMap(customStyle)}>${thing}</div>`;
       }
     });
     return result;
@@ -658,23 +660,23 @@ class ButtonCard extends LitElement {
           .longpress=${longPress()}
           .config="${this.config}"
         >
-          ${this._getLock(lockStyle)}
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
-          ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
+          ${this._getLock(lockStyle)}
         </ha-card>
       </div>
       `;
   }
 
   private _getLock(lockStyle: StyleInfo): TemplateResult {
-    if (this.config!.lock) {
+    if (this.config!.lock
+      && this._getTemplateOrValue(this._stateObj, this.config!.lock.enabled)) {
       return html`
         <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       `;
     }
-    return html``;
+    return html`<mwc-ripple id="ripple"></mwc-ripple>`;
   }
 
   private _buttonContent(
@@ -800,6 +802,11 @@ class ButtonCard extends LitElement {
       show_entity_picture: false,
       ...template,
     };
+    this.config.lock = {
+      enabled: false,
+      duration: 5,
+      ...this.config.lock,
+    };
     this.config!.default_color = 'var(--primary-text-color)';
     if (this.config!.color_type !== 'icon') {
       this.config!.color_off = 'var(--paper-card-background-color)';
@@ -860,33 +867,49 @@ class ButtonCard extends LitElement {
 
   private _handleLock(ev): void {
     ev.stopPropagation();
-    if (this.config!.unlock_users) {
-      if (!this.hass!.user.name) return;
-      if (this.config!.unlock_users.indexOf(this.hass!.user.name) < 0) return;
+    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
+    if (!lock) return;
+    if (this.config!.lock!.exemptions) {
+      if (!this.hass!.user.name || !this.hass!.user.id) return;
+      let matched = false;
+      this.config!.lock!.exemptions.forEach((e) => {
+        if (!matched && (e as ExemptionUserConfig).user === this.hass!.user.id
+          || (e as ExemptionUsernameConfig).username === this.hass!.user.name) {
+          matched = true;
+        }
+      });
+      if (!matched) {
+        lock.classList.add('invalid');
+        window.setTimeout(() => {
+          if (lock) {
+            lock.classList.remove('invalid');
+          }
+        }, 3000);
+        return;
+      }
     }
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
     const haCard = this.shadowRoot!.getElementById('card') as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
     const paperRipple = document.createElement('paper-ripple');
 
-    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
     if (lock) {
       haCard.appendChild(paperRipple);
       const icon = document.createAttribute('icon');
       icon.value = 'mdi:lock-open-outline';
       lock.attributes.setNamedItem(icon);
-      lock.classList.add('fadeOut');
+      lock.classList.add('hidden');
     }
     window.setTimeout(() => {
       overlay.style.setProperty('pointer-events', '');
       if (lock) {
-        lock.classList.remove('fadeOut');
+        lock.classList.remove('hidden');
         const icon = document.createAttribute('icon');
         icon.value = 'mdi:lock-outline';
         lock.attributes.setNamedItem(icon);
         haCard.removeChild(paperRipple);
       }
-    }, 5000);
+    }, this.config!.lock!.duration! * 1000);
   }
 
   private _stopPropagation(ev) {
