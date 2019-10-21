@@ -23,6 +23,9 @@ export default {
       exclude: 'node_modules/**',
     }),
     terser({
+      mangle: {
+        safari10: true,
+      },
       output: {
         comments: function (node, comment) {
           var text = comment.value;

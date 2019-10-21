@@ -5,4 +5,5 @@ set -euo pipefail
 echo "Pre-Commit hooks running..."
 
 npm run build
-git add dist/button-card.js
+npm run update-version
+git add src/version-const.ts
