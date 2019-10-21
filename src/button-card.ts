@@ -671,7 +671,14 @@ class ButtonCard extends LitElement {
     if (this.config!.lock
       && this._getTemplateOrValue(this._stateObj, this.config!.lock.enabled)) {
       return html`
-        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
+        <div id="overlay" style=${styleMap(lockStyle)}
+          @ha-click=${ev => this._handleUnlockType(ev, 'tap')}
+          @ha-hold=${ev => this._handleUnlockType(ev, 'hold')}
+          @ha-dblclick=${ev => this._handleUnlockType(ev, 'double_tap')}
+          .hasDblClick=${this.config!.lock!.unlock === 'double_tap'}
+          .longpress=${longPress()}
+          .config="${this.config}"
+        >
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       `;
@@ -805,6 +812,7 @@ class ButtonCard extends LitElement {
     this.config.lock = {
       enabled: false,
       duration: 5,
+      unlock: 'tap',
       ...this.config.lock,
     };
     this.config!.default_color = 'var(--primary-text-color)';
@@ -863,6 +871,13 @@ class ButtonCard extends LitElement {
   private _handleDblTap(ev): void {
     const config = ev.target.config;
     handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
+  }
+
+  private _handleUnlockType(ev, type: string) {
+    const config = ev.target.config as ButtonCardConfig;
+    if (config.lock.unlock === type) {
+      this._handleLock(ev);
+    }
   }
 
   private _handleLock(ev): void {

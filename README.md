@@ -154,12 +154,14 @@ This will display a normal button with a lock symbol in the corner. Clicking the
 | `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#templates) |
 | `duration` | number | `5` | any number | Duration of the unlocked state in seconds
 | `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
+| `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
 
 Example:
 ```yaml
 lock:
   enabled: '[[[ return entity.state === 'on'; ]]]'
   duration: 10
+  unlock: hold
   exemptions:
     - username: test
     - user: befc8496799848bda1824f2a8111e30a

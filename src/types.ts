@@ -45,8 +45,9 @@ export type Layout = 'vertical'
   | 'icon_label';
 
 export interface LockConfig {
-  enabled?: boolean;
-  duration?: number;
+  enabled: boolean;
+  duration: number;
+  unlock: 'tap' | 'double_tap' | 'hold';
   exemptions?: (ExemptionUserConfig | ExemptionUsernameConfig)[];
 }
 
