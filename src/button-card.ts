@@ -22,12 +22,14 @@ import {
   timerTimeRemaining,
   secondsToDuration,
   durationToSeconds,
-  // Still not working...
-  // longPress,
+  createThing,
 } from 'custom-card-helpers';
+import { BUTTON_CARD_VERSION } from './version-const';
 import {
   ButtonCardConfig,
   StateConfig,
+  ExemptionUserConfig,
+  ExemptionUsernameConfig,
 } from './types';
 import { longPress } from './long-press';
 import {
@@ -44,6 +46,13 @@ import {
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
 
+/* eslint no-console: 0 */
+console.info(
+  `%c  BUTTON-CARD  \n%c Version ${BUTTON_CARD_VERSION} `,
+  'color: orange; font-weight: bold; background: black',
+  'color: white; font-weight: bold; background: dimgray',
+);
+
 @customElement('button-card')
 class ButtonCard extends LitElement {
   @property() public hass?: HomeAssistant;
@@ -53,6 +62,8 @@ class ButtonCard extends LitElement {
   @property() private _timeRemaining?: number;
 
   @property() private _hasTemplate?: boolean;
+
+  @property() private _stateObj: HassEntity | undefined;
 
   private _interval?: number;
 
@@ -78,6 +89,7 @@ class ButtonCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
+    this._stateObj = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     if (!this.config || !this.hass) {
       return html``;
     }
@@ -85,8 +97,6 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
-    const configState = this._getMatchingConfigState(state);
     const forceUpdate = this._hasTemplate
       || this.config!.state
       && this.config!.state.find(elt => elt.operator === 'template')
@@ -486,16 +496,25 @@ class ButtonCard extends LitElement {
   ): TemplateResult {
     let result = html``;
     const fields: any = {};
+    const cards: any = {};
     if (this.config!.custom_fields) {
       Object.keys(this.config!.custom_fields).forEach((key) => {
         const value = this.config!.custom_fields![key];
-        fields[key] = this._getTemplateOrValue(state, value);
+        if (!value.card) {
+          fields[key] = this._getTemplateOrValue(state, value);
+        } else {
+          cards[key] = value.card;
+        }
       });
     }
     if (configState && configState.custom_fields) {
       Object.keys(configState.custom_fields).forEach((key) => {
         const value = configState!.custom_fields![key];
-        fields[key] = this._getTemplateOrValue(state, value);
+        if (!value!.card) {
+          fields[key] = this._getTemplateOrValue(state, value);
+        } else {
+          cards[key] = value.card;
+        }
       });
     }
     Object.keys(fields).forEach((key) => {
@@ -508,6 +527,18 @@ class ButtonCard extends LitElement {
         <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
       }
     });
+    Object.keys(cards).forEach((key) => {
+      if (cards[key] != undefined) {
+        const customStyle: StyleInfo = {
+          ...this._buildCustomStyleGeneric(state, configState, key),
+          'grid-area': key,
+        };
+        const thing = createThing(cards[key]);
+        thing.hass = this.hass;
+        result = html`${result}
+        <div id=${key} class="ellipsis" @click=${this._stopPropagation} @touchstart=${this._stopPropagation} style=${styleMap(customStyle)}>${thing}</div>`;
+      }
+    });
     return result;
   }
 
@@ -516,13 +547,13 @@ class ButtonCard extends LitElement {
     if (
       this.config!.tap_action!.action === 'toggle'
       && this.config!.hold_action!.action === 'none'
-      && this.config!.dbltap_action!.action === 'none'
+      && this.config!.double_tap_action!.action === 'none'
 
       || this.config!.hold_action!.action === 'toggle'
       && this.config!.tap_action!.action === 'none'
-      && this.config!.dbltap_action!.action === 'none'
+      && this.config!.double_tap_action!.action === 'none'
 
-      || this.config!.dbltap_action!.action === 'toggle'
+      || this.config!.double_tap_action!.action === 'toggle'
       && this.config!.tap_action!.action === 'none'
       && this.config!.hold_action!.action === 'none'
     ) {
@@ -543,7 +574,7 @@ class ButtonCard extends LitElement {
     } else if (
       this.config!.tap_action!.action != 'none'
       || this.config!.hold_action!.action != 'none'
-      || this.config!.dbltap_action!.action != 'none'
+      || this.config!.double_tap_action!.action != 'none'
     ) {
       clickable = true;
     } else {
@@ -552,7 +583,7 @@ class ButtonCard extends LitElement {
     return clickable;
   }
 
-  private _rotate(configState: StateConfig | undefined): Boolean {
+  private _rotate(configState: StateConfig | undefined): boolean {
     return configState && configState.spin ? true : false;
   }
 
@@ -572,18 +603,17 @@ class ButtonCard extends LitElement {
   }
 
   private _cardHtml(): TemplateResult {
-    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
-    const configState = this._getMatchingConfigState(state);
-    const color = this._buildCssColorAttribute(state, configState);
+    const configState = this._getMatchingConfigState(this._stateObj);
+    const color = this._buildCssColorAttribute(this._stateObj, configState);
     let buttonColor = color;
     let cardStyle: any = {};
     let lockStyle: any = {};
     const aspectRatio: any = {};
-    const lockStyleFromConfig = this._buildStyleGeneric(state, configState, 'lock');
-    const configCardStyle = this._buildStyleGeneric(state, configState, 'card');
+    const lockStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'lock');
+    const configCardStyle = this._buildStyleGeneric(this._stateObj, configState, 'card');
     const classList: ClassInfo = {
       'button-card-main': true,
-      disabled: !this._isClickable(state),
+      disabled: !this._isClickable(this._stateObj),
     };
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
@@ -612,8 +642,8 @@ class ButtonCard extends LitElement {
     } else {
       aspectRatio.display = 'inline';
     }
-    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(state, true));
-    this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(state, false));
+    this.style.setProperty('--button-card-light-color', this._getColorForLightEntity(this._stateObj, true));
+    this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(this._stateObj, false));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
@@ -625,28 +655,35 @@ class ButtonCard extends LitElement {
           @ha-click="${this._handleTap}"
           @ha-hold="${this._handleHold}"
           @ha-dblclick=${this._handleDblTap}
-          .hasDblClick=${this.config!.dbltap_action!.action !== 'none'}
+          .hasDblClick=${this.config!.double_tap_action!.action !== 'none'}
           .repeat=${ifDefined(this.config!.hold_action!.repeat)}
           .longpress=${longPress()}
           .config="${this.config}"
         >
+          ${this._buttonContent(this._stateObj, configState, buttonColor)}
           ${this._getLock(lockStyle)}
-          ${this._buttonContent(state, configState, buttonColor)}
-          ${this.config!.lock ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
         </ha-card>
       </div>
       `;
   }
 
   private _getLock(lockStyle: StyleInfo): TemplateResult {
-    if (this.config!.lock) {
+    if (this.config!.lock
+      && this._getTemplateOrValue(this._stateObj, this.config!.lock.enabled)) {
       return html`
-        <div id="overlay" style=${styleMap(lockStyle)} @click=${this._handleLock} @touchstart=${this._handleLock}>
+        <div id="overlay" style=${styleMap(lockStyle)}
+          @ha-click=${ev => this._handleUnlockType(ev, 'tap')}
+          @ha-hold=${ev => this._handleUnlockType(ev, 'hold')}
+          @ha-dblclick=${ev => this._handleUnlockType(ev, 'double_tap')}
+          .hasDblClick=${this.config!.lock!.unlock === 'double_tap'}
+          .longpress=${longPress()}
+          .config="${this.config}"
+        >
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
         </div>
       `;
     }
-    return html``;
+    return html`<mwc-ripple id="ripple"></mwc-ripple>`;
   }
 
   private _buttonContent(
@@ -760,7 +797,7 @@ class ButtonCard extends LitElement {
     this.config = {
       tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
-      dbltap_action: { action: 'none' },
+      double_tap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -771,6 +808,12 @@ class ButtonCard extends LitElement {
       show_label: false,
       show_entity_picture: false,
       ...template,
+    };
+    this.config.lock = {
+      enabled: false,
+      duration: 5,
+      unlock: 'tap',
+      ...this.config.lock,
     };
     this.config!.default_color = 'var(--primary-text-color)';
     if (this.config!.color_type !== 'icon') {
@@ -809,67 +852,83 @@ class ButtonCard extends LitElement {
       return configEval;
     };
     configDuplicate[action] = __evalObject(configDuplicate[action]);
+    if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
+      configDuplicate[action].confirmation = __evalObject(configDuplicate.confirmation);
+    }
     return configDuplicate;
   }
 
   private _handleTap(ev): void {
-    /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
-    }
     const config = ev.target.config;
     handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
   private _handleHold(ev): void {
-    /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
-    }
     const config = ev.target.config;
     handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
-    /* eslint no-alert: 0 */
-    if (this.config!.confirmation
-      && !window.confirm(this.config!.confirmation)) {
-      return;
-    }
     const config = ev.target.config;
-    handleClick(this, this.hass!, this._evalActions(config, 'dbltap_action'), false, true);
+    handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
+  }
+
+  private _handleUnlockType(ev, type: string) {
+    const config = ev.target.config as ButtonCardConfig;
+    if (config.lock.unlock === type) {
+      this._handleLock(ev);
+    }
   }
 
   private _handleLock(ev): void {
     ev.stopPropagation();
-    if (this.config!.unlock_users) {
-      if (!this.hass!.user.name) return;
-      if (this.config!.unlock_users.indexOf(this.hass!.user.name) < 0) return;
+    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
+    if (!lock) return;
+    if (this.config!.lock!.exemptions) {
+      if (!this.hass!.user.name || !this.hass!.user.id) return;
+      let matched = false;
+      this.config!.lock!.exemptions.forEach((e) => {
+        if (!matched && (e as ExemptionUserConfig).user === this.hass!.user.id
+          || (e as ExemptionUsernameConfig).username === this.hass!.user.name) {
+          matched = true;
+        }
+      });
+      if (!matched) {
+        lock.classList.add('invalid');
+        window.setTimeout(() => {
+          if (lock) {
+            lock.classList.remove('invalid');
+          }
+        }, 3000);
+        return;
+      }
     }
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
     const haCard = this.shadowRoot!.getElementById('card') as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
     const paperRipple = document.createElement('paper-ripple');
 
-    const lock = this.shadowRoot!.getElementById('lock') as LitElement;
     if (lock) {
       haCard.appendChild(paperRipple);
       const icon = document.createAttribute('icon');
       icon.value = 'mdi:lock-open-outline';
       lock.attributes.setNamedItem(icon);
-      lock.classList.add('fadeOut');
+      lock.classList.add('hidden');
     }
     window.setTimeout(() => {
       overlay.style.setProperty('pointer-events', '');
       if (lock) {
-        lock.classList.remove('fadeOut');
+        lock.classList.remove('hidden');
         const icon = document.createAttribute('icon');
         icon.value = 'mdi:lock-outline';
         lock.attributes.setNamedItem(icon);
         haCard.removeChild(paperRipple);
       }
-    }, 5000);
+    }, this.config!.lock!.duration! * 1000);
+  }
+
+  private _stopPropagation(ev) {
+    ev.stopPropagation();
+    console.log('BRRRR');
   }
 }

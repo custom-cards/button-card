@@ -1,4 +1,4 @@
-# Button Card <!-- omit in toc -->
+# Button Card by [@RomRider](https://github.com/RomRider) <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
@@ -19,6 +19,8 @@ Lovelace Button card for your entities.
 - [Configuration](#configuration)
   - [Main Options](#main-options)
   - [Action](#action)
+  - [Confirmation](#confirmation)
+  - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
   - [Layout](#layout)
@@ -33,7 +35,7 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with `custom_updater`](#installation-and-tracking-with-customupdater)
+  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
@@ -86,12 +88,12 @@ Lovelace Button card for your entities.
 | `entity` | string | optional | `switch.ac` | entity_id |
 | `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
-| `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-active-color)`, for `on` it will be `var(--paper-item-icon-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
+| `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-color)`, for `on` it will be `var(--paper-item-icon-active-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
 | `size` | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel |
 | `aspect_ratio` | string | optional | `1/1`, `2/1`, `1/1.5`, ... | See [here](#aspect-ratio) for an example. Aspect ratio of the card. `1/1` being a square. This will auto adapt to your screen size |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
-| `dbltap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
+| `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
 | `show_name` | boolean | `true` | `true` \| `false` | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property |
@@ -105,9 +107,8 @@ Lovelace Button card for your entities.
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
-| `confirmation` | string | optional | Free-form text | Show a confirmation popup on tap with defined text |
-| `lock` | boolean | `false` | `true` \| `false` | See [lock](#lock). This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for five seconds |
-| `unlock_users` | string list | optional | A list of users | List of users allowed to unlock the button when `lock: true`. If not defined, everyone is allowed to unlock the button |
+| `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
+| `lock` | object | optional | See [#lock-object] | Displays a lock on the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
 
@@ -120,11 +121,58 @@ All the fields support templates, see [templates](#templates).
 | `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url` | Action to perform |
 | `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
 | `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
-| `url` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
+| `url_path` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
 | `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
 | `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `service_data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
+| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+
+### Confirmation
+
+This will popup a dialog box before running the action.
+
+| Name | Type | Default | Supported options | Description |
+| --- | ---- | ------- | ----------------- | ----------- |
+| `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#templates) |
+| `exemptions` | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
+
+Example:
+```yaml
+confirmation:
+  text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?` ]]]'
+  exemptions:
+    - user: befc8496799848bda1824f2a8111e30a
+```
+
+### Lock Object
+
+This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for `delay` seconds (5 by default).
+
+| Name | Type | Default | Supported options | Description |
+| --- | ---- | ------- | ----------------- | ----------- |
+| `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#templates) |
+| `duration` | number | `5` | any number | Duration of the unlocked state in seconds
+| `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
+| `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
+
+Example:
+```yaml
+lock:
+  enabled: '[[[ return entity.state === 'on'; ]]]'
+  duration: 10
+  unlock: hold
+  exemptions:
+    - username: test
+    - user: befc8496799848bda1824f2a8111e30a
+```
+
+If you want to lock the button for everyone and disable the unlocking possibility, set the exemptions object to `[]`:
+```yaml
+lock:
+  enabled: true
+  exemptions: []
+```
 
 ### State
 
@@ -203,6 +251,9 @@ Those are the configuration fields which support templating:
   * Else: The function for `value` needs to return a string or a number
 * All the `custom_fields` (Support also HTML rendering)
 * All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
+* Everything field in `*_action`
+* The confirmation text (`confirmation.text`)
+* The lock being enabled or not (`lock.enabled`)
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
@@ -376,6 +427,8 @@ Some examples:
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon).
 This is an advanced feature which leverages (if you require it) the CSS Grid.
 
+Custom fields also support embeded cards, see [exemple below](#custom_fields_card_example).
+
 Each custom field supports its own styling config, the name needs to match between both objects needs to match:
 ```yaml
 - type: custom:button-card
@@ -427,91 +480,124 @@ Examples are better than a long text, so here you go:
   ![custom_fields_2](examples/custom_fields_2.png)
 
   ```yaml
-    - type: custom:button-card
-      entity: 'sensor.raspi_temp'
-      icon: 'mdi:raspberry-pi'
-      aspect_ratio: 1/1
-      name: HassOS
-      styles:
-        card:
-          - background-color: '#000044'
-          - border-radius: 10%
-          - padding: 10%
-          - color: ivory
-          - font-size: 10px
-          - text-shadow: 0px 0px 5px black
-          - text-transform: capitalize
-        grid:
-          - grid-template-areas: '"i temp" "n n" "cpu cpu" "ram ram" "sd sd"'
-          - grid-template-columns: 1fr 1fr
-          - grid-template-rows: 1fr min-content min-content min-content min-content
-        name:
-          - font-weight: bold
-          - font-size: 13px
-          - color: white
+  - type: custom:button-card
+    entity: 'sensor.raspi_temp'
+    icon: 'mdi:raspberry-pi'
+    aspect_ratio: 1/1
+    name: HassOS
+    styles:
+      card:
+        - background-color: '#000044'
+        - border-radius: 10%
+        - padding: 10%
+        - color: ivory
+        - font-size: 10px
+        - text-shadow: 0px 0px 5px black
+        - text-transform: capitalize
+      grid:
+        - grid-template-areas: '"i temp" "n n" "cpu cpu" "ram ram" "sd sd"'
+        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: 1fr min-content min-content min-content min-content
+      name:
+        - font-weight: bold
+        - font-size: 13px
+        - color: white
+        - align-self: middle
+        - justify-self: start
+        - padding-bottom: 4px
+      img_cell:
+        - justify-content: start
+        - align-items: start
+        - margin: none
+      icon:
+        - color: >
+            [[[
+              if (entity.state < 60) return 'lime';
+              if (entity.state >= 60 && entity.state < 80) return 'orange';
+              else return 'red';
+            ]]]
+        - width: 70%
+        - margin-top: -10%
+      custom_fields:
+        temp:
+          - align-self: start
+          - justify-self: end
+        cpu:
+          - padding-bottom: 2px
           - align-self: middle
           - justify-self: start
-          - padding-bottom: 4px
-        img_cell:
-          - justify-content: start
-          - align-items: start
-          - margin: none
-        icon:
-          - color: >
-              [[[
-                if (entity.state < 60) return 'lime';
-                if (entity.state >= 60 && entity.state < 80) return 'orange';
-                else return 'red';
-              ]]]
-          - width: 70%
-          - margin-top: -10%
-        custom_fields:
-          temp:
-            - align-self: start
-            - justify-self: end
-          cpu:
-            - padding-bottom: 2px
-            - align-self: middle
-            - justify-self: start
-            - --text-color-sensor: '[[[ if (states["sensor.raspi_cpu"].state > 80) return "red"; ]]]'
-          ram:
-            - padding-bottom: 2px
-            - align-self: middle
-            - justify-self: start
-            - --text-color-sensor: '[[[ if (states["sensor.raspi_ram"].state > 80) return "red"; ]]]'
-          sd:
-            - align-self: middle
-            - justify-self: start
-            - --text-color-sensor: '[[[ if (states["sensor.raspi_sd"].state > 80) return "red"; ]]]'
+          - --text-color-sensor: '[[[ if (states["sensor.raspi_cpu"].state > 80) return "red"; ]]]'
+        ram:
+          - padding-bottom: 2px
+          - align-self: middle
+          - justify-self: start
+          - --text-color-sensor: '[[[ if (states["sensor.raspi_ram"].state > 80) return "red"; ]]]'
+        sd:
+          - align-self: middle
+          - justify-self: start
+          - --text-color-sensor: '[[[ if (states["sensor.raspi_sd"].state > 80) return "red"; ]]]'
+    custom_fields:
+      temp: >
+        [[[
+          return `<ha-icon
+            icon="mdi:thermometer"
+            style="width: 12px; height: 12px; color: yellow;">
+            </ha-icon><span>${entity.state}°C</span>`
+        ]]]
+      cpu: >
+        [[[
+          return `<ha-icon
+            icon="mdi:server"
+            style="width: 12px; height: 12px; color: deepskyblue;">
+            </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
+        ]]]
+      ram: >
+        [[[
+          return `<ha-icon
+            icon="mdi:memory"
+            style="width: 12px; height: 12px; color: deepskyblue;">
+            </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
+        ]]]
+      sd: >
+        [[[
+          return `<ha-icon
+            icon="mdi:harddisk"
+            style="width: 12px; height: 12px; color: deepskyblue;">
+            </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
+        ]]]
+  ```
+
+* <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card. This is what the `style` inside the embedded card is for):
+
+  ![custom_fields_3](examples/custom_fields_card.png)
+  ```yaml
+  - type: custom:button-card
+    aspect_ratio: 1/1
+    custom_fields:
+      graph:
+        card:
+          type: sensor
+          entity: sensor.sensor1
+          graph: line
+          style: |
+            ha-card {
+              box-shadow: none;
+            }
+    styles:
       custom_fields:
-        temp: >
-          [[[
-            return `<ha-icon
-              icon="mdi:thermometer"
-              style="width: 12px; height: 12px; color: yellow;">
-              </ha-icon><span>${entity.state}°C</span>`
-          ]]]
-        cpu: >
-          [[[
-            return `<ha-icon
-              icon="mdi:server"
-              style="width: 12px; height: 12px; color: deepskyblue;">
-              </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
-          ]]]
-        ram: >
-          [[[
-            return `<ha-icon
-              icon="mdi:memory"
-              style="width: 12px; height: 12px; color: deepskyblue;">
-              </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
-          ]]]
-        sd: >
-          [[[
-            return `<ha-icon
-              icon="mdi:harddisk"
-              style="width: 12px; height: 12px; color: deepskyblue;">
-              </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
-          ]]]
+        graph:
+          - filter: opacity(50%)
+          - overflow: unset
+      card:
+        - overflow: unset
+      grid:
+        - grid-template-areas: '"i" "n" "graph"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: 1fr min-content min-content
+
+    entity: light.test_light
+    hold_action:
+      action: more-info
   ```
 
 ### Configuration Templates
@@ -627,29 +713,28 @@ state:
 1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/dist/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
-
-```yaml
-title: Home
-resources:
-  - url: /local/button-card.js
-    type: module
-```
+    ```yaml
+    title: Home
+    resources:
+      - url: /local/button-card.js
+        type: module
+    ```
 
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
-### Installation and tracking with `custom_updater`
+### Installation and tracking with `hacs`
 
-1. Make sure the [custom_updater](https://github.com/custom-components/custom_updater) component is installed and working.
-2. Configure Lovelace to load the card.
+1. Make sure the [HACS](https://github.com/custom-components/hacs) component is installed and working.
+2. Search for `button-card` and add it through HACS
+3. Add the configuration to your `ui-lovelace.yaml`
 
-```yaml
-resources:
-  - url: /customcards/github/custom-cards/button-card.js?track=true
-    type: module
-```
+    ```yaml
+    resources:
+      - url: /community_plugin/button-card/button-card.js
+        type: module
+    ```
 
-3. Run the service `custom_updater.check_all` or click the "CHECK" button if you use the [`tracker-card`](https://github.com/custom-cards/tracker-card).
-4. Refresh the website.
+4. Refresh home-assistant.
 
 ## Examples
 
@@ -1127,10 +1212,12 @@ Example with `template`:
   cards:
     - type: "custom:button-card"
       entity: switch.test
-      lock: true
+      lock:
+        enabled: true
     - type: "custom:button-card"
       color_type: card
-      lock: true
+      lock:
+        enabled: true
       color: black
       entity: switch.test
 ```

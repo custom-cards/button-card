@@ -48,23 +48,19 @@ export const styles = css`
     display: flex;
   }
   #lock {
-    -webkit-animation-duration: 5s;
-    animation-duration: 5s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     margin: unset;
   }
-  @keyframes fadeOut{
-    0% {opacity: 0.5;}
-    20% {opacity: 0;}
-    80% {opacity: 0;}
-    100% {opacity: 0.5;}
+  .invalid {
+    animation: blink 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
   }
-  .fadeOut {
-    -webkit-animation-name: fadeOut;
-    animation-name: fadeOut;
+  .hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s linear;
   }
-  @keyframes blink{
+  @keyframes blink {
     0%{opacity:0;}
     50%{opacity:1;}
     100%{opacity:0;}

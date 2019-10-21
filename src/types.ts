@@ -6,15 +6,14 @@ export interface ButtonCardConfig {
   entity?: string;
   name?: string;
   icon?: string;
-  color_type: 'icon' | 'card' | 'label-card' | 'blank-card'
+  color_type: 'icon' | 'card' | 'label-card' | 'blank-card';
   color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
   aspect_ratio?: string;
-  lock: boolean;
-  unlock_users?: string[];
+  lock: LockConfig;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
-  dbltap_action?: ActionConfig;
+  double_tap_action?: ActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
@@ -44,6 +43,21 @@ export type Layout = 'vertical'
   | 'icon_name_state2nd'
   | 'icon_state_name2nd'
   | 'icon_label';
+
+export interface LockConfig {
+  enabled: boolean;
+  duration: number;
+  unlock: 'tap' | 'double_tap' | 'hold';
+  exemptions?: (ExemptionUserConfig | ExemptionUsernameConfig)[];
+}
+
+export interface ExemptionUserConfig {
+  user: string;
+}
+
+export interface ExemptionUsernameConfig {
+  username: string;
+}
 
 export interface StateConfig {
   id?: string;
