@@ -1,6 +1,6 @@
 {
   "name": "button-card",
-  "version": "2.0.5",
+  "version": "3.0.0",
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "pre-commit": [
