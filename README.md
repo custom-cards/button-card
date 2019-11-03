@@ -40,7 +40,7 @@ Lovelace Button card for your entities.
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [`tap_action` Navigate](#tapaction-navigate)
+    - [`tap_action` Navigate](#tap_action-navigate)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
