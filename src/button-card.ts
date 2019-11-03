@@ -929,6 +929,5 @@ class ButtonCard extends LitElement {
 
   private _stopPropagation(ev) {
     ev.stopPropagation();
-    console.log('BRRRR');
   }
 }
