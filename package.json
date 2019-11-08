@@ -13,7 +13,8 @@
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/button-card.ts",
     "watch": "rollup -c rollup.debug.config.js --watch",
-    "update-version": "./hooks/bump-version.sh"
+    "update-version": "./hooks/bump-version.sh",
+    "start": "rollup -c rollup.config.dev.js --watch"
   },
   "repository": {
     "type": "git",
@@ -36,11 +37,11 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-decorators": "^7.6.0",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
     "babel-cli": "^6.26.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "npm": "^6.12.0",
     "pre-commit": "^1.2.2",
@@ -49,18 +50,19 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^4.2.4",
-    "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-typescript2": "^0.20.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-typescript2": "^0.25.2",
     "ts-lit-plugin": "^1.1.9",
     "typescript": "^3.6.4",
-    "typescript-styled-plugin": "^0.14.0"
+    "typescript-styled-plugin": "^0.15.0"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^2.5.4",
     "bowser": "^2.7.0",
-    "custom-card-helpers": "^1.2.7",
-    "home-assistant-js-websocket": "^3.4.0",
+    "custom-card-helpers": "^1.3.9",
+    "home-assistant-js-websocket": "^4.4.0",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2"
   }
