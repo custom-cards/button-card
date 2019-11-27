@@ -127,6 +127,9 @@ class LongPress extends HTMLElement implements LongPress {
           this.repeatTimeout = setInterval(() => {
             element.dispatchEvent(new Event('ha-hold'));
           }, element.repeat);
+        }else{
+          // only fire onces when hold down is detected
+          element.dispatchEvent(new Event('ha-hold'));
         }
       }, this.holdTime);
 
@@ -155,7 +158,7 @@ class LongPress extends HTMLElement implements LongPress {
       this.timer = undefined;
       if (this.held) {
         if (!element.repeat) {
-          element.dispatchEvent(new Event('ha-hold'));
+          element.dispatchEvent(new Event('ha-released'));
         }
       } else if (element.hasDblClick) {
         if (this.nbClicks === 0) {
