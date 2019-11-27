@@ -654,7 +654,7 @@ class ButtonCard extends LitElement {
           style=${styleMap(cardStyle)}
           @ha-click="${this._handleTap}"
           @ha-hold="${this._handleHold}"
-          @ha-holdReleased="${this._handleHoldReleased}"
+          @ha-released="${this._handleHoldReleased}"
           @ha-dblclick=${this._handleDblTap}
           .hasDblClick=${this.config!.double_tap_action!.action !== 'none'}
           .repeat=${ifDefined(this.config!.hold_action!.repeat)}
