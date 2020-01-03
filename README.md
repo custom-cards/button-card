@@ -35,12 +35,12 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
+  - [Installation and tracking with hacs](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [`tap_action` Navigate](#tapaction-navigate)
+    - [tap_action Navigate](#tapaction-navigate)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
@@ -108,7 +108,7 @@ Lovelace Button card for your entities.
 | `styles` | object list | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
 | `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
-| `lock` | object | optional | See [#lock-object] | Displays a lock on the button |
+| `lock` | object | optional | See [Lock Object](#lock-object) | Displays a lock on the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
 
@@ -710,7 +710,7 @@ state:
 
 ### Manual Installation
 
-1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/dist/button-card.js)
+1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
     ```yaml
