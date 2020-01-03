@@ -35,12 +35,12 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
+  - [Installation and tracking with hacs](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [`tap_action` Navigate](#tapaction-navigate)
+    - [tap_action Navigate](#tapaction-navigate)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
@@ -710,7 +710,7 @@ state:
 
 ### Manual Installation
 
-1. Download the [button-card](https://raw.githubusercontent.com/custom-cards/button-card/master/dist/button-card.js)
+1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
     ```yaml
