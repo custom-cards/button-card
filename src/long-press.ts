@@ -1,5 +1,4 @@
 import { directive, PropertyPart } from 'lit-html';
-import Bowser from 'bowser';
 // See https://github.com/home-assistant/home-assistant-polymer/pull/2457
 // on how to undo mwc -> paper migration
 // import '@material/mwc-ripple';
@@ -178,18 +177,14 @@ class LongPress extends HTMLElement implements LongPress {
       window.setTimeout(() => (this.cooldownEnd = false), 100);
     };
 
-    const br = Bowser.getParser(window.navigator.userAgent);
-    const isCrazyBrowser = br.satisfies({
-      mobile: {
-        safari: '>=13',
-      },
-    });
-    const ios13 = new RegExp('^13\\..*', 'gm');
-    const isCrazyBrowser2 = br.getOSName() === 'iOS' && (br.getOSVersion().match(ios13) ? true : false);
     element.addEventListener('touchstart', clickStart, { passive: true });
     element.addEventListener('touchend', clickEnd);
     element.addEventListener('touchcancel', clickEnd);
-    if (!isCrazyBrowser && !isCrazyBrowser2) {
+    // avoid double click on iPad OS...
+    const isIpadOS = navigator.platform === 'MacIntel'
+      && navigator.maxTouchPoints > 1
+      && !window.MSStream;
+    if (!isIpadOS) {
       element.addEventListener('mousedown', clickStart, { passive: true });
       element.addEventListener('click', clickEnd);
     }
