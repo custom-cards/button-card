@@ -717,22 +717,24 @@ An exemple below:
 ```yaml
 button_card_templates:
   variable_test:
-    var_name: "var_value"
-    var_name2: "var_value2"
+    variables:
+      var_name: "var_value"
+      var_name2: "var_value2"
+    name: '[[[ return variables.var_name ]]]'
 
 [...]
 
 - type: custom:button-card
   template: variable_test
   entity: sensor.test
-  name: '[[[ return variables.var_name ]]]' # The name will be "var_value"
+  # name will be "var_value"
 
 - type: custom:button-card
   template: variable_test
   entity: sensor.test
   variables:
     var_name: "My local Value"
-  name: '[[[ return variables.var_name ]]]' # The name will be "My local Value"
+ # name will be "My local Value"
 ```
 
 ## Installation
