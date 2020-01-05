@@ -42,6 +42,7 @@ import {
   getLightColorBasedOnTemperature,
   mergeDeep,
   mergeStatesById,
+  getLovelaceCast,
 } from './helpers';
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
@@ -781,7 +782,7 @@ class ButtonCard extends LitElement {
       throw new Error('Invalid configuration');
     }
 
-    const ll = getLovelace();
+    const ll = getLovelace() || getLovelaceCast();
     let template: ButtonCardConfig = { ...config };
     let tplName: string | undefined = template.template;
     let mergedStateConfig: StateConfig[] | undefined = config.state;
