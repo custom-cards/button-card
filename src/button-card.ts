@@ -669,6 +669,7 @@ class ButtonCard extends LitElement {
           style=${styleMap(cardStyle)}
           @ha-click="${this._handleTap}"
           @ha-hold="${this._handleHold}"
+          @ha-released="${this._handleHoldReleased}"
           @ha-dblclick=${this._handleDblTap}
           .hasDblClick=${this.config!.double_tap_action!.action !== 'none'}
           .repeat=${ifDefined(this.config!.hold_action!.repeat)}
@@ -881,6 +882,11 @@ class ButtonCard extends LitElement {
   private _handleHold(ev): void {
     const config = ev.target.config;
     handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
+  }
+
+  private _handleHoldReleased(ev): void {
+    const config = ev.target.config;
+    handleClick(this, this.hass!, this._evalActions(config, 'hold_released_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
