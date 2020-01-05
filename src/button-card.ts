@@ -216,9 +216,9 @@ class ButtonCard extends LitElement {
 
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass',
+    return new Function('states', 'entity', 'user', 'hass', 'variables',
       `'use strict'; ${func}`)
-      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass, this.config!.variables);
   }
 
   private _objectEvalTemplate(
