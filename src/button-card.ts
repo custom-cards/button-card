@@ -221,12 +221,26 @@ class ButtonCard extends LitElement {
       .call(this, this.hass!.states, state, this.hass!.user, this.hass);
   }
 
+  private _objectEvalTemplate(
+    state: HassEntity | undefined,
+    obj: any | undefined,
+  ) {
+    const objClone = JSON.parse(JSON.stringify(obj));
+    return this._getTemplateOrValue(state, objClone);
+  }
+
   private _getTemplateOrValue(
     state: HassEntity | undefined,
     value: any | undefined,
   ): any | undefined {
     if (['number', 'boolean'].includes(typeof value)) return value;
     if (!value) return value;
+    if (['object'].includes(typeof value)) {
+      Object.keys(value).forEach((key) => {
+        value[key] = this._getTemplateOrValue(state, value[key]);
+      });
+      return value;
+    }
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
@@ -504,7 +518,7 @@ class ButtonCard extends LitElement {
         if (!value.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = value.card;
+          cards[key] = this._objectEvalTemplate(state, value.card);
         }
       });
     }
@@ -514,7 +528,7 @@ class ButtonCard extends LitElement {
         if (!value!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = value.card;
+          cards[key] = this._objectEvalTemplate(state, value.card);
         }
       });
     }
