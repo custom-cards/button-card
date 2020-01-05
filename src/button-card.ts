@@ -42,6 +42,7 @@ import {
   getLightColorBasedOnTemperature,
   mergeDeep,
   mergeStatesById,
+  getLovelaceCast,
 } from './helpers';
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
@@ -215,9 +216,17 @@ class ButtonCard extends LitElement {
 
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass',
+    return new Function('states', 'entity', 'user', 'hass', 'variables',
       `'use strict'; ${func}`)
-      .call(this, this.hass!.states, state, this.hass!.user, this.hass);
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass, this.config!.variables);
+  }
+
+  private _objectEvalTemplate(
+    state: HassEntity | undefined,
+    obj: any | undefined,
+  ) {
+    const objClone = JSON.parse(JSON.stringify(obj));
+    return this._getTemplateOrValue(state, objClone);
   }
 
   private _getTemplateOrValue(
@@ -226,6 +235,12 @@ class ButtonCard extends LitElement {
   ): any | undefined {
     if (['number', 'boolean'].includes(typeof value)) return value;
     if (!value) return value;
+    if (['object'].includes(typeof value)) {
+      Object.keys(value).forEach((key) => {
+        value[key] = this._getTemplateOrValue(state, value[key]);
+      });
+      return value;
+    }
     const trimmed = value.trim();
     if (
       trimmed.substring(0, 3) === '[[['
@@ -503,7 +518,7 @@ class ButtonCard extends LitElement {
         if (!value.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = value.card;
+          cards[key] = this._objectEvalTemplate(state, value.card);
         }
       });
     }
@@ -513,7 +528,7 @@ class ButtonCard extends LitElement {
         if (!value!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = value.card;
+          cards[key] = this._objectEvalTemplate(state, value.card);
         }
       });
     }
@@ -782,7 +797,7 @@ class ButtonCard extends LitElement {
       throw new Error('Invalid configuration');
     }
 
-    const ll = getLovelace();
+    const ll = getLovelace() || getLovelaceCast();
     let template: ButtonCardConfig = { ...config };
     let tplName: string | undefined = template.template;
     let mergedStateConfig: StateConfig[] | undefined = config.state;

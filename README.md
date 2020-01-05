@@ -33,6 +33,7 @@ Lovelace Button card for your entities.
   - [Configuration Templates](#configuration-templates)
     - [General](#general)
     - [Merging state by id](#merging-state-by-id)
+    - [Variables](#variables)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
   - [Installation and tracking with hacs](#installation-and-tracking-with-hacs)
@@ -111,6 +112,7 @@ Lovelace Button card for your entities.
 | `lock` | object | optional | See [Lock Object](#lock-object) | Displays a lock on the button |
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
+| `variables` | object | optional | See [Variables](#Variables) |
 
 ### Action
 
@@ -254,12 +256,14 @@ Those are the configuration fields which support templating:
 * Everything field in `*_action`
 * The confirmation text (`confirmation.text`)
 * The lock being enabled or not (`lock.enabled`)
+* all the `card` parameters in a `custom_field`
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
 * `states`: An object with all the states of all the entities (equivalent to `hass.states`)
 * `user`: The user object (equivalent to `hass.user`)
 * `hass`: The complete `hass` object
+* `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
@@ -704,6 +708,31 @@ state:
   - color: 'rgb(0,0,255)'
     operator: '<'
     value: 25
+```
+
+#### Variables
+
+You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
+An exemple below:
+```yaml
+button_card_templates:
+  variable_test:
+    var_name: "var_value"
+    var_name2: "var_value2"
+
+[...]
+
+- type: custom:button-card
+  template: variable_test
+  entity: sensor.test
+  name: '[[[ return variables.var_name ]]]' # The name will be "var_value"
+
+- type: custom:button-card
+  template: variable_test
+  entity: sensor.test
+  variables:
+    var_name: "My local Value"
+  name: '[[[ return variables.var_name ]]]' # The name will be "My local Value"
 ```
 
 ## Installation
