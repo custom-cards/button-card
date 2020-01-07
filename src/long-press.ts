@@ -184,7 +184,8 @@ class LongPress extends HTMLElement implements LongPress {
     const isIpadOS = navigator.platform === 'MacIntel'
       && navigator.maxTouchPoints > 1
       && !window.MSStream;
-    if (!isIpadOS) {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.platform);
+    if (!(isIpadOS || isIOS)) {
       element.addEventListener('mousedown', clickStart, { passive: true });
       element.addEventListener('click', clickEnd);
     }
