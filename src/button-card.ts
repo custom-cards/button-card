@@ -216,9 +216,10 @@ class ButtonCard extends LitElement {
 
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass', 'variables',
+    return new Function('states', 'entity', 'user', 'hass', 'variables', 'html',
       `'use strict'; ${func}`)
-      .call(this, this.hass!.states, state, this.hass!.user, this.hass, this.config!.variables);
+      .call(this, this.hass!.states, state, this.hass!.user, this.hass,
+        this.config!.variables, html);
   }
 
   private _objectEvalTemplate(
@@ -539,7 +540,12 @@ class ButtonCard extends LitElement {
           'grid-area': key,
         };
         result = html`${result}
-        <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${unsafeHTML(fields[key])}</div>`;
+        <div id=${key}
+          class="ellipsis"
+          style=${styleMap(customStyle)}
+        >
+          ${(fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
+        </div>`;
       }
     });
     Object.keys(cards).forEach((key) => {
@@ -551,7 +557,14 @@ class ButtonCard extends LitElement {
         const thing = createThing(cards[key]);
         thing.hass = this.hass;
         result = html`${result}
-        <div id=${key} class="ellipsis" @click=${this._stopPropagation} @touchstart=${this._stopPropagation} style=${styleMap(customStyle)}>${thing}</div>`;
+        <div id=${key}
+          class="ellipsis"
+          @click=${this._stopPropagation}
+          @touchstart=${this._stopPropagation}
+          style=${styleMap(customStyle)}
+        >
+          ${thing}
+        </div>`;
       }
     });
     return result;
@@ -745,9 +758,9 @@ class ButtonCard extends LitElement {
     return html`
       <div id="container" class=${itemClass.join(' ')} style=${styleMap(gridStyleFromConfig)}>
         ${iconTemplate ? iconTemplate : ''}
-        ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${unsafeHTML(name)}</div>` : ''}
+        ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${(name as any).type === 'html' ? name : unsafeHTML(name)}</div>` : ''}
         ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
-        ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${unsafeHTML(label)}</div>` : ''}
+        ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${(label as any).type === 'html' ? label : unsafeHTML(label)}</div>` : ''}
         ${lastChangedTemplate ? lastChangedTemplate : ''}
         ${this._buildCustomFields(state, configState)}
       </div>
