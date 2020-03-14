@@ -96,6 +96,7 @@ Lovelace Button card for your entities.
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#templates) |
+| `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
 | `show_name` | boolean | `true` | `true` \| `false` | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property |
 | `show_state` | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set |
@@ -244,15 +245,16 @@ name: >
 ```
 
 Those are the configuration fields which support templating:
-* `name` (Supports also HTML rendering): This needs to return a string
-* `label` (Supports also HTML rendering): This needs to return a string
+* `name` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+* `state_display` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+* `label` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
 * `entity_picture`: This needs to return a path to a file or a url as a string.
 * `icon`: This needs to return a string in the format `mdi:icon`
 * All the styles in the style object: This needs to return a string
 * All the value of the state object, appart when the operator is `regex`
   * `operator: template`: The function for `value` needs to return a boolean
   * Else: The function for `value` needs to return a string or a number
-* All the `custom_fields` (Support also HTML rendering)
+* All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
 * All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
 * Everything field in `*_action`
 * The confirmation text (`confirmation.text`)
