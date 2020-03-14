@@ -720,7 +720,10 @@ class ButtonCard extends LitElement {
     color: string,
   ): TemplateResult {
     const name = this._buildName(state, configState);
-    const stateString = this._buildStateString(state);
+    const stateDisplay = this.config!.show_state && this.config!.state_display
+      ? this._getTemplateOrValue(state, this.config!.state_display)
+      : undefined;
+    const stateString = stateDisplay ? stateDisplay : this._buildStateString(state);
     const nameStateString = buildNameStateConcat(name, stateString);
 
     switch (this.config!.layout) {
@@ -759,7 +762,7 @@ class ButtonCard extends LitElement {
       <div id="container" class=${itemClass.join(' ')} style=${styleMap(gridStyleFromConfig)}>
         ${iconTemplate ? iconTemplate : ''}
         ${name ? html`<div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>${(name as any).type === 'html' ? name : unsafeHTML(name)}</div>` : ''}
-        ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${stateString}</div>` : ''}
+        ${stateString ? html`<div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>${(stateString as any).type === 'html' ? stateString : unsafeHTML(stateString)}</div>` : ''}
         ${label && !lastChangedTemplate ? html`<div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>${(label as any).type === 'html' ? label : unsafeHTML(label)}</div>` : ''}
         ${lastChangedTemplate ? lastChangedTemplate : ''}
         ${this._buildCustomFields(state, configState)}

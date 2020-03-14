@@ -25,6 +25,7 @@ export interface ButtonCardConfig {
   label?: string;
   entity_picture?: string;
   units?: string;
+  state_display?: string;
   state?: StateConfig[];
   styles?: StylesConfig;
   confirmation?: string;
