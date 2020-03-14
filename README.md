@@ -36,12 +36,12 @@ Lovelace Button card for your entities.
     - [Variables](#variables)
 - [Installation](#installation)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with hacs](#installation-and-tracking-with-hacs)
+  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [tap_action Navigate](#tapaction-navigate)
+    - [`tap_action` Navigate](#tapaction-navigate)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
@@ -104,6 +104,7 @@ Lovelace Button card for your entities.
 | `show_label` | boolean | `false` | `true` \| `false` | Display or hide the `label` |
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
+| `show_live_stream` | boolean | `false` | `true` \| `false` | Display the camera stream (if the entity is a camera). Requires the `stream:` component to be enabled in home-assistant's config |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
@@ -761,7 +762,7 @@ button_card_templates:
 
     ```yaml
     resources:
-      - url: /community_plugin/button-card/button-card.js
+      - url: /hacsfiles/button-card/button-card.js
         type: module
     ```
 

@@ -21,6 +21,7 @@ export interface ButtonCardConfig {
   show_entity_picture?: boolean;
   show_last_changed?: boolean;
   show_label?: boolean;
+  show_live_stream?: boolean;
   label?: string;
   entity_picture?: string;
   units?: string;

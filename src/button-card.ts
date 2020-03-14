@@ -789,15 +789,33 @@ class ButtonCard extends LitElement {
       ...haIconStyle,
       ...entityPictureStyleFromConfig,
     };
+    const liveStream = this._buildLiveStream(entityPictureStyle);
 
     if (icon || entityPicture) {
       return html`
         <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
-          ${icon && !entityPicture ? html`<ha-icon style=${styleMap(haIconStyle)}
+          ${icon && !entityPicture && !liveStream ? html`<ha-icon style=${styleMap(haIconStyle)}
             .icon="${icon}" id="icon" ?rotating=${this._rotate(configState)}></ha-icon>` : ''}
-          ${entityPicture ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
+          ${liveStream ? liveStream : ''}
+          ${entityPicture && !liveStream ? html`<img src="${entityPicture}" style=${styleMap(entityPictureStyle)}
             id="icon" ?rotating=${this._rotate(configState)} />` : ''}
         </div>
+      `;
+    } else {
+      return undefined;
+    }
+  }
+
+  private _buildLiveStream(style: StyleInfo): TemplateResult | undefined {
+    if (this.config!.show_live_stream && this.config!.entity && computeDomain(this.config!.entity) === 'camera') {
+      return html`
+        <hui-image
+          .hass=${this.hass}
+          .cameraImage=${this.config!.entity}
+          .entity=${this.config!.entity}
+          cameraView='live'
+          style=${styleMap(style)}
+        ></hui-image>
       `;
     } else {
       return undefined;
@@ -835,6 +853,7 @@ class ButtonCard extends LitElement {
       show_units: true,
       show_label: false,
       show_entity_picture: false,
+      show_live_stream: false,
       ...template,
     };
     this.config.lock = {
