@@ -65,6 +65,8 @@ class ButtonCard extends LitElement {
 
   @property() private _stateObj: HassEntity | undefined;
 
+  @property() private _evaledVariables: any | undefined;
+
   private _interval?: number;
 
   public disconnectedCallback(): void {
@@ -90,6 +92,9 @@ class ButtonCard extends LitElement {
 
   protected render(): TemplateResult | void {
     this._stateObj = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
+    this._evaledVariables = this.config!.variables
+      ? this._objectEvalTemplate(this._stateObj, this.config!.variables)
+      : undefined;
     if (!this.config || !this.hass) {
       return html``;
     }
@@ -218,7 +223,7 @@ class ButtonCard extends LitElement {
     return new Function('states', 'entity', 'user', 'hass', 'variables', 'html',
       `'use strict'; ${func}`)
       .call(this, this.hass!.states, state, this.hass!.user, this.hass,
-        this.config!.variables, html);
+        this._evaledVariables, html);
   }
 
   private _objectEvalTemplate(
