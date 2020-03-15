@@ -9,7 +9,6 @@ import {
 } from 'lit-element';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
 import {
   HassEntity,
@@ -31,7 +30,7 @@ import {
   ExemptionUserConfig,
   ExemptionUsernameConfig,
 } from './types';
-import { longPress } from './long-press';
+import { actionHandler } from './action-handler';
 import {
   computeDomain,
   computeEntity,
@@ -675,22 +674,24 @@ class ButtonCard extends LitElement {
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     return html`
-      <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
-        <ha-card
-          id="card"
-          class=${classMap(classList)}
-          style=${styleMap(cardStyle)}
-          @ha-click="${this._handleTap}"
-          @ha-hold="${this._handleHold}"
-          @ha-dblclick=${this._handleDblTap}
-          .hasDblClick=${this.config!.double_tap_action!.action !== 'none'}
-          .repeat=${ifDefined(this.config!.hold_action!.repeat)}
-          .longpress=${longPress()}
-          .config="${this.config}"
-        >
-          ${this._buttonContent(this._stateObj, configState, buttonColor)}
-          ${this._getLock(lockStyle)}
-        </ha-card>
+      <div style="position: relative;">
+        <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
+          <ha-card
+            id="card"
+            class=${classMap(classList)}
+            style=${styleMap(cardStyle)}
+            @action=${this._handleAction}
+            .actionHandler=${actionHandler({
+      hasDoubleClick: this.config!.double_tap_action!.action !== 'none',
+      hasHold: this.config!.hold_action!.action !== 'none',
+      repeat: this.config!.hold_action!.repeat,
+    })}
+            .config="${this.config}"
+          >
+            ${this._buttonContent(this._stateObj, configState, buttonColor)}
+          </ha-card>
+        </div>
+        ${this._getLock(lockStyle)}
       </div>
       `;
   }
@@ -700,11 +701,11 @@ class ButtonCard extends LitElement {
       && this._getTemplateOrValue(this._stateObj, this.config!.lock.enabled)) {
       return html`
         <div id="overlay" style=${styleMap(lockStyle)}
-          @ha-click=${ev => this._handleUnlockType(ev, 'tap')}
-          @ha-hold=${ev => this._handleUnlockType(ev, 'hold')}
-          @ha-dblclick=${ev => this._handleUnlockType(ev, 'double_tap')}
-          .hasDblClick=${this.config!.lock!.unlock === 'double_tap'}
-          .longpress=${longPress()}
+          @action=${this._handleUnlockType}
+          .actionHandler=${actionHandler({
+        hasDoubleClick: this.config!.lock!.unlock === 'double_tap',
+        hasHold: this.config!.lock!.unlock === 'hold',
+      })}
           .config="${this.config}"
         >
           <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
@@ -908,30 +909,51 @@ class ButtonCard extends LitElement {
     return configDuplicate;
   }
 
+  private _handleAction(ev: any) {
+    if (ev.detail && ev.detail.action) {
+      switch (ev.detail.action) {
+        case 'tap':
+          this._handleTap(ev);
+          break;
+        case 'hold':
+          this._handleHold(ev);
+          break;
+        case 'double_tap':
+          this._handleDblTap(ev);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   private _handleTap(ev): void {
     const config = ev.target.config;
+    if (!config) return;
     handleClick(this, this.hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
   private _handleHold(ev): void {
     const config = ev.target.config;
+    if (!config) return;
     handleClick(this, this.hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
   private _handleDblTap(ev): void {
     const config = ev.target.config;
+    if (!config) return;
     handleClick(this, this.hass!, this._evalActions(config, 'double_tap_action'), false, true);
   }
 
-  private _handleUnlockType(ev, type: string) {
+  private _handleUnlockType(ev) {
     const config = ev.target.config as ButtonCardConfig;
-    if (config.lock.unlock === type) {
-      this._handleLock(ev);
+    if (!config) return;
+    if (config.lock.unlock === ev.detail.action) {
+      this._handleLock();
     }
   }
 
-  private _handleLock(ev): void {
-    ev.stopPropagation();
+  private _handleLock(): void {
     const lock = this.shadowRoot!.getElementById('lock') as LitElement;
     if (!lock) return;
     if (this.config!.lock!.exemptions) {
