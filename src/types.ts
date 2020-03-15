@@ -36,6 +36,7 @@ export interface ButtonCardConfig {
   color_off: string;
   custom_fields?: CustomFields;
   variables?: Variables;
+  extra_styles?: string;
 }
 
 export type Layout = 'vertical'

@@ -673,7 +673,10 @@ class ButtonCard extends LitElement {
     this.style.setProperty('--button-card-light-color-no-temperature', this._getColorForLightEntity(this._stateObj, false));
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
+    const extraStyles = document.createElement('style');
+    extraStyles.innerHTML = this.config!.extra_styles ? this._getTemplateOrValue(this._stateObj, this.config!.extra_styles) : '';
     return html`
+      ${extraStyles}
       <div style="position: relative;">
         <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
           <ha-card
