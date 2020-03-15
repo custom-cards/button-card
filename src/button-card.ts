@@ -14,7 +14,7 @@ import {
   HassEntity,
 } from 'home-assistant-js-websocket';
 import {
-  domainIcon,
+  stateIcon,
   HomeAssistant,
   handleClick,
   getLovelace,
@@ -332,10 +332,10 @@ class ButtonCard extends LitElement {
       icon = configState.icon;
     } else if (this.config!.icon) {
       icon = this.config!.icon;
-    } else if (state && state.attributes) {
-      icon = state.attributes.icon
-        ? state.attributes.icon
-        : domainIcon(computeDomain(state.entity_id), state.state);
+    } else {
+      if (!state)
+        return undefined;
+      icon = stateIcon(state);
     }
     return this._getTemplateOrValue(state, icon);
   }
