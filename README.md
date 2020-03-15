@@ -29,6 +29,7 @@ Lovelace Button card for your entities.
     - [Easy styling options](#easy-styling-options)
     - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
+    - [Injecting CSS with `extra_styles`](#injecting-css-with-extrastyles)
   - [Custom Fields](#custom-fields)
   - [Configuration Templates](#configuration-templates)
     - [General](#general)
@@ -109,6 +110,7 @@ Lovelace Button card for your entities.
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
+| `extra_styles` | string | optional | | See [styles](#styles) |
 | `state` | object list | optional | See [State](#State) | State to use for the color, icon and style of the button. Multiple states can be defined |
 | `confirmation` | object | optional | See [confirmation](#confirmation) | Display a confirmation popup |
 | `lock` | object | optional | See [Lock Object](#lock-object) | Displays a lock on the button |
@@ -256,6 +258,7 @@ Those are the configuration fields which support templating:
   * Else: The function for `value` needs to return a string or a number
 * All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
 * All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
+* The `extra_styles` field
 * Everything field in `*_action`
 * The confirmation text (`confirmation.text`)
 * The lock being enabled or not (`lock.enabled`)
@@ -428,6 +431,44 @@ Some examples:
           icon:
             - filter: grayscale(100%)
   ```
+
+#### Injecting CSS with `extra_styles`
+
+You can inject any CSS style you want using this config option. It is usefull if you want to inject CSS animations for example. This field supports [templates](#templates).
+
+An example is better than words:
+
+![change_background](examples/loop_background.gif)
+
+```yaml
+- type: custom:button-card
+  name: Change Background
+  aspect_ratio: 2/1
+  extra_styles: |
+    @keyframes bgswap1 {
+      0% {
+        background-image: url("/local/background1.jpg");
+      }
+      25% {
+        background-image: url("/local/background1.jpg");
+      }
+      50% {
+        background-image: url("/local/background2.jpg");
+      }
+      75% {
+        background-image: url("/local/background2.jpg");
+      }
+      100% {
+        background-image: url("/local/background1.jpg");
+      }
+    }
+  styles:
+    card:
+      - animation: bgswap1 10s linear infinite
+      - background-size: cover
+    name:
+      - color: white
+```
 
 ### Custom Fields
 
