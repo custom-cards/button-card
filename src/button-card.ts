@@ -543,7 +543,7 @@ class ButtonCard extends LitElement {
           class="ellipsis"
           style=${styleMap(customStyle)}
         >
-          ${(fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
+          ${fields[key] && (fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
         </div>`;
       }
     });
