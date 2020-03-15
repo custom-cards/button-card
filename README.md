@@ -263,6 +263,7 @@ Those are the configuration fields which support templating:
 * The confirmation text (`confirmation.text`)
 * The lock being enabled or not (`lock.enabled`)
 * all the `card` parameters in a `custom_field`
+* all the `variables`
 
 Inside the javascript code, you'll have access to those variables:
 * `entity`: The current entity object, if the entity is defined in the card
