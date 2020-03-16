@@ -682,7 +682,7 @@ class ButtonCard extends LitElement {
     extraStyles.innerHTML = this.config!.extra_styles ? this._getTemplateOrValue(this._stateObj, this.config!.extra_styles) : '';
     return html`
       ${extraStyles}
-      <div style="position: relative;">
+      <!-- <div id="outside"> -->
         <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
           <ha-card
             id="card"
@@ -697,10 +697,12 @@ class ButtonCard extends LitElement {
             .config="${this.config}"
           >
             ${this._buttonContent(this._stateObj, configState, buttonColor)}
+            ${this.config!.lock
+        && this._getTemplateOrValue(this._stateObj, this.config!.lock.enabled) ? '' : html`<mwc-ripple id="ripple"></mwc-ripple>`}
           </ha-card>
         </div>
         ${this._getLock(lockStyle)}
-      </div>
+      <!-- </div> -->
       `;
   }
 
@@ -720,7 +722,7 @@ class ButtonCard extends LitElement {
         </div>
       `;
     }
-    return html`<mwc-ripple id="ripple"></mwc-ripple>`;
+    return html``;
   }
 
   private _buttonContent(
