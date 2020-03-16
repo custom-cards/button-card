@@ -145,8 +145,8 @@ class ActionHandler extends HTMLElement implements ActionHandler {
         if (this.isRepeating && this.repeatTimeout) {
           clearInterval(this.repeatTimeout);
           this.isRepeating = false;
-          return;
         }
+        return;
       }
       clearTimeout(this.timer);
       if (this.isRepeating && this.repeatTimeout) {
