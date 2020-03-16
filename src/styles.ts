@@ -1,6 +1,9 @@
 import { css } from 'lit-element';
 
 export const styles = css`
+  :host {
+    position: relative;
+  }
   ha-card {
     cursor: pointer;
     overflow: hidden;
