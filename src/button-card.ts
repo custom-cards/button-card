@@ -22,6 +22,7 @@ import {
   secondsToDuration,
   durationToSeconds,
   createThing,
+  DOMAINS_TOGGLE,
 } from 'custom-card-helpers';
 import { BUTTON_CARD_VERSION } from './version-const';
 import {
@@ -855,7 +856,6 @@ class ButtonCard extends LitElement {
     }
     template.state = mergedStateConfig;
     this.config = {
-      tap_action: { action: 'toggle' },
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
       layout: 'vertical',
@@ -870,6 +870,17 @@ class ButtonCard extends LitElement {
       show_live_stream: false,
       ...template,
     };
+    if (this.config!.entity && DOMAINS_TOGGLE.has(computeDomain(this.config!.entity))) {
+      this.config = {
+        tap_action: { action: 'toggle' },
+        ...this.config,
+      };
+    } else {
+      this.config = {
+        tap_action: { action: 'more-info' },
+        ...this.config,
+      };
+    }
     this.config.lock = {
       enabled: false,
       duration: 5,

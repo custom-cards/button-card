@@ -3,6 +3,7 @@ import { css } from 'lit-element';
 export const styles = css`
   :host {
     position: relative;
+    display: block;
   }
   ha-card {
     cursor: pointer;
