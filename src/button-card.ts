@@ -22,6 +22,7 @@ import {
   secondsToDuration,
   durationToSeconds,
   createThing,
+  fireEvent,
   DOMAINS_TOGGLE,
 } from 'custom-card-helpers';
 import { BUTTON_CARD_VERSION } from './version-const';
@@ -46,6 +47,16 @@ import {
 } from './helpers';
 import { styles } from './styles';
 import myComputeStateDisplay from './compute_state_display';
+
+let helpers = (window as any).cardHelpers;
+const helperPromise = new Promise(async (resolve) => {
+  if (helpers) resolve();
+  if ((window as any).loadCardHelpers) {
+    helpers = await (window as any).loadCardHelpers();
+    (window as any).cardHelpers = helpers;
+    resolve();
+  }
+});
 
 /* eslint no-console: 0 */
 console.info(
@@ -85,6 +96,19 @@ class ButtonCard extends LitElement {
       const stateObj = this.hass!.states[this.config.entity];
       this._startInterval(stateObj);
     }
+  }
+
+  private _createCard(config: any): any {
+    if (helpers)
+      return helpers.createCardElement(config);
+    else {
+      const element = createThing(config);
+      helperPromise.then(() => {
+        fireEvent(element, 'll-rebuild', {});
+      });
+      return element;
+    }
+
   }
 
   static get styles(): CSSResult {
@@ -559,7 +583,7 @@ class ButtonCard extends LitElement {
           ...this._buildCustomStyleGeneric(state, configState, key),
           'grid-area': key,
         };
-        const thing = createThing(cards[key]);
+        const thing = this._createCard(cards[key]);
         thing.hass = this.hass;
         result = html`${result}
         <div id=${key}
