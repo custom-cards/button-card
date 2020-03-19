@@ -1,1 +1,1 @@
-export const BUTTON_CARD_VERSION = '3.2.2';
+export const BUTTON_CARD_VERSION = '3.2.3-0';
