@@ -13,8 +13,10 @@ export function computeEntity(entityId: string): string {
 
 export function getColorFromVariable(color: string): string {
   if (color.substring(0, 3) === 'var') {
-    return window.getComputedStyle(document.documentElement)
-      .getPropertyValue(color.substring(4).slice(0, -1)).trim();
+    return window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue(color.substring(4).slice(0, -1))
+      .trim();
   }
   return color;
 }
@@ -24,29 +26,27 @@ export function getFontColorBasedOnBackgroundColor(backgroundColor: string): str
   if (colorObj.isValid && colorObj.getLuminance() > 0.5) {
     return 'rgb(62, 62, 62)'; // bright colors - black font
   } else {
-    return 'rgb(234, 234, 234)';// dark colors - white font
+    return 'rgb(234, 234, 234)'; // dark colors - white font
   }
 }
 
-export function getLightColorBasedOnTemperature(
-  current: number,
-  min: number,
-  max: number,
-): string {
+export function getLightColorBasedOnTemperature(current: number, min: number, max: number): string {
   const high = new TinyColor('rgb(255, 160, 0)'); // orange-ish
   const low = new TinyColor('rgb(166, 209, 255)'); // blue-ish
   const middle = new TinyColor('white');
-  const mixAmount = (current - min) / (max - min) * 100;
+  const mixAmount = ((current - min) / (max - min)) * 100;
   if (mixAmount < 50) {
-    return tinycolor(low).mix(middle, mixAmount * 2).toRgbString();
+    return tinycolor(low)
+      .mix(middle, mixAmount * 2)
+      .toRgbString();
   } else {
-    return tinycolor(middle).mix(high, (mixAmount - 50) * 2).toRgbString();
+    return tinycolor(middle)
+      .mix(high, (mixAmount - 50) * 2)
+      .toRgbString();
   }
 }
 
-export function buildNameStateConcat(
-  name: string | undefined, stateString: string | undefined,
-): string | undefined {
+export function buildNameStateConcat(name: string | undefined, stateString: string | undefined): string | undefined {
   if (!name && !stateString) {
     return undefined;
   }
@@ -63,9 +63,7 @@ export function buildNameStateConcat(
   return nameStateString;
 }
 
-export function applyBrightnessToColor(
-  color: string, brightness: number,
-): string {
+export function applyBrightnessToColor(color: string, brightness: number): string {
   const colorObj = new TinyColor(getColorFromVariable(color));
   if (colorObj.isValid) {
     const validColor = colorObj.mix('black', 100 - brightness).toString();
@@ -75,10 +73,7 @@ export function applyBrightnessToColor(
 }
 
 // Check if config or Entity changed
-export function myHasConfigOrEntityChanged(
-  element: any,
-  changedProps: PropertyValues,
-): boolean {
+export function myHasConfigOrEntityChanged(element: any, changedProps: PropertyValues): boolean {
   if (changedProps.has('config')) {
     return true;
   }
@@ -87,10 +82,8 @@ export function myHasConfigOrEntityChanged(
     const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
     if (oldHass) {
       return (
-        oldHass.states[element.config!.entity]
-        !== element.hass!.states[element.config!.entity]
-        || oldHass.states[element.config!.entity].attributes
-        !== element.hass!.states[element.config!.entity].attributes
+        oldHass.states[element.config!.entity] !== element.hass!.states[element.config!.entity] ||
+        oldHass.states[element.config!.entity].attributes !== element.hass!.states[element.config!.entity].attributes
       );
     }
     return true;
@@ -100,17 +93,17 @@ export function myHasConfigOrEntityChanged(
 }
 
 /**
-* Performs a deep merge of objects and returns new object. Does not modify
-* objects (immutable) and merges arrays via concatenation and filtering.
-*
-* @param {...object} objects - Objects to merge
-* @returns {object} New object with merged key/values
-*/
+ * Performs a deep merge of objects and returns new object. Does not modify
+ * objects (immutable) and merges arrays via concatenation and filtering.
+ *
+ * @param {...object} objects - Objects to merge
+ * @returns {object} New object with merged key/values
+ */
 export function mergeDeep(...objects: any): any {
   const isObject = (obj: any) => obj && typeof obj === 'object';
 
   return objects.reduce((prev: any, obj: any) => {
-    Object.keys(obj).forEach((key) => {
+    Object.keys(obj).forEach(key => {
       const pVal = prev[key];
       const oVal = obj[key];
 
@@ -134,10 +127,10 @@ export function mergeStatesById(
 ): StateConfig[] {
   let resultStateConfigs: StateConfig[] = [];
   if (intoStates) {
-    intoStates.forEach((intoState) => {
+    intoStates.forEach(intoState => {
       let localState = intoState;
       if (fromStates) {
-        fromStates.forEach((fromState) => {
+        fromStates.forEach(fromState => {
           if (fromState.id && intoState.id && fromState.id == intoState.id)
             localState = mergeDeep(localState, fromState);
         });
@@ -148,17 +141,13 @@ export function mergeStatesById(
   if (fromStates) {
     /* eslint eqeqeq: 0 no-confusing-arrow: 0 */
     resultStateConfigs = resultStateConfigs.concat(
-      fromStates.filter(
-        x => !intoStates
-          ? true
-          : !intoStates.find(y => y.id && x.id ? y.id == x.id : false),
-      ),
+      fromStates.filter(x => (!intoStates ? true : !intoStates.find(y => (y.id && x.id ? y.id == x.id : false)))),
     );
   }
   return resultStateConfigs;
 }
 
-export function getLovelaceCast() {
+export function getLovelaceCast(): any {
   let root: any = document.querySelector('hc-main');
   root = root && root.shadowRoot;
   root = root && root.querySelector('hc-lovelace');

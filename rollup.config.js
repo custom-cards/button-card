@@ -2,9 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-import {
-  terser
-} from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import serve from 'rollup-plugin-serve';
 import json from '@rollup/plugin-json';
 
@@ -21,25 +19,30 @@ const serveopts = {
 };
 
 const plugins = [
-    nodeResolve({}),
-    commonjs(),
-    typescript(),
-    json(),
-    babel({
-      exclude: 'node_modules/**',
-    }),
-    dev && serve(serveopts),
-    !dev && terser({
+  nodeResolve({}),
+  commonjs(),
+  typescript(),
+  json(),
+  babel({
+    exclude: 'node_modules/**',
+  }),
+  dev && serve(serveopts),
+  !dev &&
+    terser({
       mangle: {
         safari10: true,
-      }), ];
-
-    export default [{
-      input: 'src/button-card.ts',
-      output: {
-        dir: './dist',
-        format: 'es',
-        sourcemap: dev ? true : false,
       },
-      plugins: [...plugins],
-    }, ];
+    }),
+];
+
+export default [
+  {
+    input: 'src/button-card.ts',
+    output: {
+      dir: './dist',
+      format: 'es',
+      sourcemap: dev ? true : false,
+    },
+    plugins: [...plugins],
+  },
+];

@@ -4,9 +4,7 @@ import { directive, PropertyPart } from 'lit-html';
 import { Ripple } from '@material/mwc-ripple';
 import { myFireEvent } from './my-fire-event';
 
-const isTouch = 'ontouchstart' in window ||
-  navigator.maxTouchPoints > 0 ||
-  navigator.msMaxTouchPoints > 0;
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 
 interface ActionHandler extends HTMLElement {
   holdTime: number;
@@ -25,7 +23,7 @@ declare global {
 interface ActionHandlerOptions {
   hasHold?: boolean;
   hasDoubleClick?: boolean;
-  repeat?: Number;
+  repeat?: number;
 }
 
 interface ActionHandlerDetail {
@@ -45,14 +43,14 @@ class ActionHandler extends HTMLElement implements ActionHandler {
 
   private repeatTimeout: NodeJS.Timeout | undefined;
 
-  private isRepeating: boolean = false;
+  private isRepeating = false;
 
   constructor() {
     super();
     this.ripple = document.createElement('mwc-ripple');
   }
 
-  public connectedCallback() {
+  public connectedCallback(): void {
     Object.assign(this.style, {
       position: 'absolute',
       width: isTouch ? '100px' : '50px',
@@ -64,15 +62,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     this.appendChild(this.ripple);
     this.ripple.primary = true;
 
-    [
-      'touchcancel',
-      'mouseout',
-      'mouseup',
-      'touchmove',
-      'mousewheel',
-      'wheel',
-      'scroll',
-    ].forEach((ev) => {
+    ['touchcancel', 'mouseout', 'mouseup', 'touchmove', 'mousewheel', 'wheel', 'scroll'].forEach(ev => {
       document.addEventListener(
         ev,
         () => {
@@ -80,12 +70,12 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           this.stopAnimation();
           this.timer = undefined;
         },
-        { passive: true }
+        { passive: true },
       );
     });
   }
 
-  public bind(element: ActionHandlerElement, options) {
+  public bind(element: ActionHandlerElement, options): void {
     if (element.actionHandler) {
       return;
     }
@@ -104,7 +94,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       return false;
     });
 
-    const start = (ev: Event) => {
+    const start = (ev: Event): void => {
       this.held = false;
       let x;
       let y;
@@ -123,25 +113,23 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           this.isRepeating = true;
           this.repeatTimeout = setInterval(() => {
             myFireEvent(element, 'action', { action: 'hold' });
-          }, options.repeat)
+          }, options.repeat);
         }
       }, this.holdTime);
     };
 
-    const handleEnter = (ev: KeyboardEvent) => {
+    const handleEnter = (ev: KeyboardEvent): void => {
       if (ev.keyCode !== 13) {
         return;
       }
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       end(ev);
     };
 
-    const end = (ev: Event) => {
+    const end = (ev: Event): void => {
       // Prevent mouse event if touch event
       ev.preventDefault();
-      if (
-        ['touchend', 'touchcancel'].includes(ev.type) &&
-        this.timer === undefined
-      ) {
+      if (['touchend', 'touchcancel'].includes(ev.type) && this.timer === undefined) {
         if (this.isRepeating && this.repeatTimeout) {
           clearInterval(this.repeatTimeout);
           this.isRepeating = false;
@@ -160,10 +148,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           myFireEvent(element, 'action', { action: 'hold' });
         }
       } else if (options.hasDoubleClick) {
-        if (
-          (ev.type === 'click' && (ev as MouseEvent).detail < 2) ||
-          !this.dblClickTimeout
-        ) {
+        if ((ev.type === 'click' && (ev as MouseEvent).detail < 2) || !this.dblClickTimeout) {
           this.dblClickTimeout = window.setTimeout(() => {
             this.dblClickTimeout = undefined;
             myFireEvent(element, 'action', { action: 'tap' });
@@ -188,7 +173,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     element.addEventListener('keyup', handleEnter);
   }
 
-  private startAnimation(x: number, y: number) {
+  private startAnimation(x: number, y: number): void {
     Object.assign(this.style, {
       left: `${x}px`,
       top: `${y}px`,
@@ -199,7 +184,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     this.ripple.unbounded = true;
   }
 
-  private stopAnimation() {
+  private stopAnimation(): void {
     this.ripple.active = false;
     this.ripple.disabled = true;
     this.style.display = 'none';
@@ -220,10 +205,7 @@ const getActionHandler = (): ActionHandler => {
   return actionhandler as ActionHandler;
 };
 
-export const actionHandlerBind = (
-  element: ActionHandlerElement,
-  options: ActionHandlerOptions,
-) => {
+export const actionHandlerBind = (element: ActionHandlerElement, options: ActionHandlerOptions): void => {
   const actionhandler: ActionHandler = getActionHandler();
   if (!actionhandler) {
     return;
@@ -231,8 +213,6 @@ export const actionHandlerBind = (
   actionhandler.bind(element, options);
 };
 
-export const actionHandler = directive(
-  (options: ActionHandlerOptions = {}) => (part: PropertyPart) => {
-    actionHandlerBind(part.committer.element as ActionHandlerElement, options);
-  }
-);
+export const actionHandler = directive((options: ActionHandlerOptions = {}) => (part: PropertyPart): void => {
+  actionHandlerBind(part.committer.element as ActionHandlerElement, options);
+});

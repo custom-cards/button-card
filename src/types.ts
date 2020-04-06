@@ -39,7 +39,8 @@ export interface ButtonCardConfig {
   extra_styles?: string;
 }
 
-export type Layout = 'vertical'
+export type Layout =
+  | 'vertical'
   | 'icon_name_state'
   | 'name_state'
   | 'icon_name'
