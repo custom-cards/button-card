@@ -601,37 +601,13 @@ class ButtonCard extends LitElement {
 
   private _isClickable(state: HassEntity | undefined): boolean {
     let clickable = true;
+    const tap_action = this._getTemplateOrValue(state, this.config!.tap_action!.action);
+    const hold_action = this._getTemplateOrValue(state, this.config!.hold_action!.action);
+    const double_tap_action = this._getTemplateOrValue(state, this.config!.double_tap_action!.action);
     if (
-      this.config!.tap_action!.action === 'toggle'
-      && this.config!.hold_action!.action === 'none'
-      && this.config!.double_tap_action!.action === 'none'
-
-      || this.config!.hold_action!.action === 'toggle'
-      && this.config!.tap_action!.action === 'none'
-      && this.config!.double_tap_action!.action === 'none'
-
-      || this.config!.double_tap_action!.action === 'toggle'
-      && this.config!.tap_action!.action === 'none'
-      && this.config!.hold_action!.action === 'none'
-    ) {
-      if (state) {
-        switch (computeDomain(state.entity_id)) {
-          case 'sensor':
-          case 'binary_sensor':
-          case 'device_tracker':
-            clickable = false;
-            break;
-          default:
-            clickable = true;
-            break;
-        }
-      } else {
-        clickable = false;
-      }
-    } else if (
-      this.config!.tap_action!.action != 'none'
-      || this.config!.hold_action!.action != 'none'
-      || this.config!.double_tap_action!.action != 'none'
+      tap_action != 'none'
+      || hold_action != 'none'
+      || double_tap_action != 'none'
     ) {
       clickable = true;
     } else {
