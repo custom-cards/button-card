@@ -108,7 +108,6 @@ class ButtonCard extends LitElement {
       });
       return element;
     }
-
   }
 
   static get styles(): CSSResult {
@@ -128,11 +127,9 @@ class ButtonCard extends LitElement {
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     const forceUpdate = this._hasTemplate
-      || this.config!.state
-      && this.config!.state.find(elt => elt.operator === 'template')
       || changedProps.has('_timeRemaining')
       ? true : false;
-    return myHasConfigOrEntityChanged(this, changedProps, forceUpdate);
+    return forceUpdate || myHasConfigOrEntityChanged(this, changedProps);
   }
 
   protected updated(changedProps: PropertyValues) {
@@ -683,7 +680,6 @@ class ButtonCard extends LitElement {
     extraStyles.innerHTML = this.config!.extra_styles ? this._getTemplateOrValue(this._stateObj, this.config!.extra_styles) : '';
     return html`
       ${extraStyles}
-      <!-- <div id="outside"> -->
         <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
           <ha-card
             id="card"
@@ -703,8 +699,7 @@ class ButtonCard extends LitElement {
           </ha-card>
         </div>
         ${this._getLock(lockStyle)}
-      <!-- </div> -->
-      `;
+    `;
   }
 
   private _getLock(lockStyle: StyleInfo): TemplateResult {
@@ -907,7 +902,6 @@ class ButtonCard extends LitElement {
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
-    const state = this.config!.entity ? this.hass!.states[this.config!.entity] : undefined;
     const configDuplicate = JSON.parse(JSON.stringify(config));
     /* eslint no-param-reassign: 0 */
     const __evalObject = (configEval: any): any => {
@@ -918,7 +912,7 @@ class ButtonCard extends LitElement {
         if (typeof configEval[key] === 'object') {
           configEval[key] = __evalObject(configEval[key]);
         } else {
-          configEval[key] = this._getTemplateOrValue(state, configEval[key]);
+          configEval[key] = this._getTemplateOrValue(this._stateObj, configEval[key]);
         }
       });
       return configEval;
