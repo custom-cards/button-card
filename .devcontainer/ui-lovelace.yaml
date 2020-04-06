@@ -1,0 +1,5 @@
+resources:
+  - url: http://127.0.0.1:5000/button-card.js
+    type: module
+  - url: https://cdn.jsdelivr.net/gh/thomasloven/lovelace-card-mod@master/card-mod.js
+    type: module

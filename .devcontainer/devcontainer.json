@@ -1,0 +1,36 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+  "name": "Button Card Development",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+  "appPort": [
+    "5000:5000",
+    "9123:8123"
+  ],
+  "postCreateCommand": "npm install",
+  "runArgs": [
+    "-v",
+    "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
+  ],
+  "extensions": [
+    "github.vscode-pull-request-github",
+    "eamodio.gitlens",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bierner.lit-html",
+    "runem.lit-plugin",
+    "auchenberg.vscode-browser-preview",
+    "davidanson.vscode-markdownlint",
+    "redhat.vscode-yaml",
+    "msjsdiag.debugger-for-chrome",
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "editor.tabSize": 2,
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "files.trimTrailingWhitespace": true
+  }
+}

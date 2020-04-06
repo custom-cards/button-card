@@ -3,14 +3,38 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
+  "configurations": [{
       "type": "chrome",
       "request": "launch",
       "name": "Chrome Localhost",
       "url": "http://localhost:8123",
       "webRoot": "${workspaceFolder}/dist",
       "sourceMaps": true
+    },
+    {
+      "type": "browser-preview",
+      "request": "attach",
+      "name": "Browser Preview: Attach",
+      "webRoot": "${workspaceFolder}/dist",
+      "pathMapping": {
+        "http://127.0.0.1:5000/": "${workspaceFolder}/dist"
+      },
+      // "sourceMapPathOverrides": {
+      //   "http://127.0.0.1:5000": "${workspaceFolder}/dist"
+      // },
+    }, {
+      "type": "browser-preview",
+      "request": "launch",
+      "name": "Browser Preview: Launch",
+      "url": "http://localhost:9123",
+      "webRoot": "${workspaceFolder}/dist",
+      // "sourceMapPathOverrides": {
+      //   "http://127.0.0.1:5000": "${workspaceFolder}/dist"
+      // },
+      // "pathMapping": {
+      //   "http://127.0.0.1:5000": "${workspaceFolder}/dist"
+      // },
+      // "trace": true
     }
   ]
 }
