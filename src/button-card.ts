@@ -889,7 +889,11 @@ class ButtonCard extends LitElement {
     const entitiesRxp2 = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'm');
     const matched = jsonConfig.match(entitiesRxp);
     this._entities = [];
-    if (Array.isArray(this._config.triggers_update)) this._entities = [...this._config.triggers_update];
+    if (Array.isArray(this._config.triggers_update)) {
+      this._entities = [...this._config.triggers_update];
+    } else if (typeof this._config.triggers_update === 'string' && this._config.triggers_update !== 'all') {
+      this._entities.push(this._config.triggers_update);
+    }
     matched?.forEach(match => {
       const res = match.match(entitiesRxp2);
       if (res && !this._entities.includes(res[2])) this._entities.push(res[2]);
