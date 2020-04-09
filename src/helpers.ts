@@ -74,22 +74,18 @@ export function applyBrightnessToColor(color: string, brightness: number): strin
 
 // Check if config or Entity changed
 export function myHasConfigOrEntityChanged(element: any, changedProps: PropertyValues): boolean {
-  if (changedProps.has('config')) {
+  if (changedProps.has('_config')) {
     return true;
   }
 
-  if (element.config!.entity) {
-    const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
-    if (oldHass) {
-      return (
-        oldHass.states[element.config!.entity] !== element.hass!.states[element.config!.entity] ||
-        oldHass.states[element.config!.entity].attributes !== element.hass!.states[element.config!.entity].attributes
-      );
+  const oldHass = changedProps.get('_hass') as HomeAssistant | undefined;
+  if (oldHass) {
+    function hasChanged(elt: string): boolean {
+      return oldHass?.states[elt] !== element._hass!.states[elt];
     }
-    return true;
-  } else {
-    return false;
+    return element._entities.some(hasChanged);
   }
+  return false;
 }
 
 /**
