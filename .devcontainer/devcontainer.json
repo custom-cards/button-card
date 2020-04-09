@@ -3,14 +3,13 @@
   "name": "Button Card Development",
   "dockerFile": "Dockerfile",
   "context": "..",
-  "appPort": [
-    "5000:5000",
-    "9123:8123"
-  ],
+  "appPort": ["5000:5000", "9123:8123"],
   "postCreateCommand": "yarn install",
   "runArgs": [
     "-v",
-    "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
+    "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh", // This is added so you can push from inside the container
+    "-v",
+    "${localWorkspaceFolder}/.devcontainer/www:/config/www"
   ],
   "extensions": [
     "github.vscode-pull-request-github",
@@ -22,7 +21,7 @@
     "auchenberg.vscode-browser-preview",
     "davidanson.vscode-markdownlint",
     "redhat.vscode-yaml",
-    "msjsdiag.debugger-for-chrome",
+    "msjsdiag.debugger-for-chrome"
   ],
   "settings": {
     "files.eol": "\n",
