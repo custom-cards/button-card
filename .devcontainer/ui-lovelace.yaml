@@ -279,6 +279,62 @@ button_card_templates:
             - color: '#555B65'
   #      id: off-icon
 
+  test1:
+    #name: test1
+    template:
+      - test2
+      - test3
+    state:
+      - value: 42
+        icon: mdi:test
+      - value: 1
+        id: '1'
+        pouet: value1 - test1
+        test1: ok
+      - value: 2
+        id: '2'
+        pouet: value2 - test1
+        test1: ok
+  test2:
+    #name: test2
+    template: test4
+    state:
+      - value: 1
+        id: '1'
+        pouet: value1 - test2
+        test2: ok
+      - value: 2
+        id: '2'
+        pouet: value2 - test2
+        test2: ok
+      - value: test2
+        icon: mdi:test
+  test3:
+    name: test3
+    state:
+      - value: 1
+        id: '1'
+        pouet: value1 - test3
+        test3: ok
+      - value: 2
+        id: '2'
+        pouet: value2 - test3
+        test3: ok
+  test4:
+    name: test4
+    label: test4
+    state:
+      # - value: 1
+      #   id: '1'
+      #   pouet: value1 - test4
+      #   test4: ok
+      # - value: 2
+      #   id: '2'
+      #   pouet: value2 - test4
+      #   test4: ok
+      - value: test4
+        icon: mdi:test
+
 views:
 - title: Main
   cards:
@@ -2163,9 +2219,9 @@ views:
         action: more-info
         entity: switch.skylight
       color_type: card
-      styles:
-        card:
-          - background-color: black
+      # styles:
+      #   card:
+      #     - background-color: black
     - type: vertical-stack
       cards:
         - type: horizontal-stack
@@ -2313,15 +2369,17 @@ views:
             card:
               - box-sizing: border-box
               - border: '3px solid var(--button-card-light-color)'
-    - type: custom:button-card
-      entity: timer.laundry
-      show_state: true
-      tap_action:
-        action: call-service
-        service: timer.start
-        service_data:
-          entity_id: entity
-          duration: 60
+    - type: vertical-stack
+      cards:
+      - type: custom:button-card
+        entity: timer.laundry
+        show_state: true
+        tap_action:
+          action: call-service
+          service: timer.start
+          service_data:
+            entity_id: entity
+            duration: 60
     - type: entities
       entities:
         - timer.laundry
@@ -2595,6 +2653,7 @@ views:
   cards:
     - type: "custom:button-card"
       entity: switch.skylight
+      show_label: true
       name: '[[[ return states["switch.skylight"].entity_id ]]]'
       label: |
         [[[ return states['switch.test'] ]]]
@@ -2611,3 +2670,8 @@ views:
       #   color_type: blank-card
       # - type: custom:button-card
       #   color_type: blank-card
+
+- title: Test Config Templates
+  cards:
+    - type: "custom:button-card"
+      template: test1

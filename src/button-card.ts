@@ -826,24 +826,32 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _configFromLLTemplates(ll: any, config: any): ButtonCardConfig {
+    const tpl = config.template;
+    if (!tpl) return config;
+    let result: any = {};
+    let mergedStateConfig: StateConfig[] | undefined;
+    const tpls = tpl && Array.isArray(tpl) ? tpl : [tpl];
+    tpls?.forEach(template => {
+      if (!(ll.config.button_card_templates && ll.config.button_card_templates[template]))
+        throw new Error(`Button-card template '${template}' is missing!`);
+      const res = this._configFromLLTemplates(ll, ll.config.button_card_templates[template]);
+      result = mergeDeep(result, res);
+      mergedStateConfig = mergeStatesById(mergedStateConfig, res.state);
+    });
+    result = mergeDeep(result, config);
+    result.state = mergeStatesById(mergedStateConfig, config.state);
+    return result as ButtonCardConfig;
+  }
+
   public setConfig(config: ButtonCardConfig): void {
     if (!config) {
       throw new Error('Invalid configuration');
     }
 
     const ll = getLovelace() || getLovelaceCast();
-    let template: ButtonCardConfig = { ...config };
-    let tplName: string | undefined = template.template;
-    let mergedStateConfig: StateConfig[] | undefined = config.state;
-    while (tplName && ll.config.button_card_templates && ll.config.button_card_templates[tplName]) {
-      template = mergeDeep(ll.config.button_card_templates[tplName], template);
-      mergedStateConfig = mergeStatesById(
-        (ll.config.button_card_templates[tplName] as ButtonCardConfig).state,
-        mergedStateConfig,
-      );
-      tplName = (ll.config.button_card_templates[tplName] as ButtonCardConfig).template;
-    }
-    template.state = mergedStateConfig;
+    let template: ButtonCardConfig = JSON.parse(JSON.stringify(config));
+    template = this._configFromLLTemplates(ll, template);
     this._config = {
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },

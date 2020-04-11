@@ -1,7 +1,7 @@
 import { ActionConfig } from 'custom-card-helpers';
 
 export interface ButtonCardConfig {
-  template?: string;
+  template?: string | string[];
   triggers_update?: string[] | 'all';
   type: string;
   entity?: string;
