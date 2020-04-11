@@ -88,7 +88,7 @@ class ButtonCard extends LitElement {
 
   public connectedCallback(): void {
     super.connectedCallback();
-    if (this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
+    if (this._hass && this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
       const stateObj = this._hass!.states[this._config.entity];
       this._startInterval(stateObj);
     }
