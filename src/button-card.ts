@@ -632,10 +632,13 @@ class ButtonCard extends LitElement {
     );
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
-    const extraStyles = document.createElement('style');
-    extraStyles.innerHTML = this._config!.extra_styles
-      ? this._getTemplateOrValue(this._stateObj, this._config!.extra_styles)
-      : '';
+    const extraStyles = this._config!.extra_styles
+      ? html`
+          <style>
+            ${this._getTemplateOrValue(this._stateObj, this._config!.extra_styles)}
+          </style>
+        `
+      : html``;
     return html`
       ${extraStyles}
       <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
