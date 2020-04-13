@@ -903,10 +903,9 @@ views:
                 - filter: grayscale(100%)
                 - border-radius: 50%
             - value: 'on'
-              styles:
-                card:
               spin: true
               styles:
+                card:
                 entity_picture:
                 - border-radius: 50%
         - type: "custom:button-card"
