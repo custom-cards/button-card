@@ -30,6 +30,15 @@ decluttering_templates:
 
 
 button_card_templates:
+  test_action_template:
+    tap_action:
+      action: |
+        [[[
+          console.log("test")
+          console.log(variables);
+          return "none";
+        ]]]
+
   test_var:
     variables:
       test: "[[[ return 'pouet_template' ]]]"
@@ -2657,6 +2666,14 @@ views:
       name: '[[[ return states["switch.skylight"].entity_id ]]]'
       label: |
         [[[ return states['switch.test'] ]]]
+
+    - type: "custom:button-card"
+      template: test_action_template
+      variables:
+        test: more-info
+        test1: none
+      entity: switch.skylight
+
 
       # - type: picture-elements
       #   image: '/local/cast.jpg'
