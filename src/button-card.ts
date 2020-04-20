@@ -111,14 +111,28 @@ class ButtonCard extends LitElement {
 
   protected render(): TemplateResult | void {
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
-    this._cards = [];
-    this._evaledVariables = this._config!.variables
-      ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
-      : undefined;
-    if (!this._config || !this._hass) {
-      return html``;
+    try {
+      this._cards = [];
+      this._evaledVariables = this._config!.variables
+        ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
+        : undefined;
+      if (!this._config || !this._hass) {
+        return html``;
+      }
+      return this._cardHtml();
+    } catch (e) {
+      if (e.stack) console.error(e.stack);
+      else console.error(e);
+      const errorCard = document.createElement('hui-error-card') as LovelaceCard;
+      errorCard.setConfig({
+        type: 'error',
+        error: e.toString(),
+        origConfig: this._config,
+      });
+      return html`
+        ${errorCard}
+      `;
     }
-    return this._cardHtml();
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -226,15 +240,22 @@ class ButtonCard extends LitElement {
 
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
-    return new Function('states', 'entity', 'user', 'hass', 'variables', 'html', `'use strict'; ${func}`).call(
-      this,
-      this._hass!.states,
-      state,
-      this._hass!.user,
-      this._hass,
-      this._evaledVariables,
-      html,
-    );
+    try {
+      return new Function('states', 'entity', 'user', 'hass', 'variables', 'html', `'use strict'; ${func}`).call(
+        this,
+        this._hass!.states,
+        state,
+        this._hass!.user,
+        this._hass,
+        this._evaledVariables,
+        html,
+      );
+    } catch (e) {
+      const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
+      e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
+      e.name = 'ButtonCardJSTemplateError';
+      throw e;
+    }
   }
 
   private _objectEvalTemplate(state: HassEntity | undefined, obj: any | undefined): any {

@@ -2662,6 +2662,12 @@ views:
           test1: none
         entity: switch.skylight
 
+      - type: custom:button-card
+        name: >
+          [[[
+            return test.value
+          ]]]
+
         # - type: picture-elements
         #   image: '/local/cast.jpg'
         #   elements:
