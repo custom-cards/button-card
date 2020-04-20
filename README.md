@@ -372,6 +372,21 @@ You can see how the default layouts are constructed [here](./src/styles.ts#L152)
 
 To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
 
+For a quick overview on the grid-template-areas attribute, the following example should get you started:
+
+```yaml
+- grid-template-areas: '"i n s" "i n s" "i n l"'
+```
+If we take the value and orient it into rows and columns, you begin to see the end result.
+```
+"i n s"
+"i n s"
+"i n l"
+```
+The end product will results in the following grid layout
+
+![button card grid layout example with callouts](examples/button-card-grid-layout-example-with-callouts.png)
+
 Some examples:
 * label on top:
   ```yaml
