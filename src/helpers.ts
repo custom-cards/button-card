@@ -148,7 +148,7 @@ export function getLovelaceCast(): any {
   root = root && root.shadowRoot;
   root = root && root.querySelector('hc-lovelace');
   root = root && root.shadowRoot;
-  root = root && root.querySelector('hui-view');
+  root = root && (root.querySelector('hui-view') || root.querySelector('hui-panel-view'));
   if (root) {
     const ll = root.lovelace;
     ll.current_view = root.___curView;
