@@ -21,7 +21,8 @@
     "auchenberg.vscode-browser-preview",
     "davidanson.vscode-markdownlint",
     "redhat.vscode-yaml",
-    "msjsdiag.debugger-for-chrome"
+    "msjsdiag.debugger-for-chrome",
+    "yzhang.markdown-all-in-one"
   ],
   "settings": {
     "files.eol": "\n",
@@ -31,6 +32,7 @@
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "markdown.extension.toc.githubCompatibility": true
   }
 }
