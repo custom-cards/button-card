@@ -24,7 +24,8 @@ Lovelace Button card for your entities.
   - [State](#state)
   - [Available operators](#available-operators)
   - [Layout](#layout)
-  - [Templates](#templates)
+  - [`triggers_update`](#triggersupdate)
+  - [Javascript Templates](#javascript-templates)
   - [Styles](#styles)
     - [Easy styling options](#easy-styling-options)
     - [Light entity color variable](#light-entity-color-variable)
@@ -53,7 +54,6 @@ Lovelace Button card for your entities.
   - [Aspect Ratio](#aspect-ratio)
 - [Credits](#credits)
 
-
 ## Features
 
 - works with any toggleable entity
@@ -63,7 +63,7 @@ Lovelace Button card for your entities.
 - custom state definition with customizable color, icon and style (optional)
 - [custom size of the icon, width and height](#Play-with-width-height-and-icon-size) (optional)
 - [aspect ratio support](#aspect-ratio) (optional)
-- Support for [templates](#templates) in some fields
+- Support for [javascript templates](#javascript-templates) in some fields
 - custom icon (optional)
 - custom css style (optional)
 - multiple [layout](#Layout) support and [custom layout](#advanced-styling-options) support
@@ -88,7 +88,8 @@ Lovelace Button card for your entities.
 | `type` | string | **Required** | `custom:button-card` | Type of the card |
 | `template` | string | optional | any valid template from `button_card_templates` | See [configuration template](#Configuration-Templates) |
 | `entity` | string | optional | `switch.ac` | entity_id |
-| `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#templates) |
+| `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggersupdate) |
+| `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
 | `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-color)`, for `on` it will be `var(--paper-item-icon-active-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
 | `size` | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel |
@@ -96,9 +97,9 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
-| `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#templates) |
-| `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#templates) |
-| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
+| `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
+| `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
 | `show_name` | boolean | `true` | `true` \| `false` | Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the `name` property or in any state `name` property |
 | `show_state` | boolean | `false` | `true` \| `false` | Show the state on the card. defaults to false if not set |
 | `show_icon` | boolean | `true` | `true` \| `false` | Wether to show the icon or not. Unless redefined in `icon`, uses the default entity icon from hass |
@@ -107,7 +108,7 @@ Lovelace Button card for your entities.
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `show_live_stream` | boolean | `false` | `true` \| `false` | Display the camera stream (if the entity is a camera). Requires the `stream:` component to be enabled in home-assistant's config |
-| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#templates) |
+| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#javascript-templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional | | See [styles](#styles) |
 | `extra_styles` | string | optional | | See [styles](#styles) |
@@ -120,7 +121,7 @@ Lovelace Button card for your entities.
 
 ### Action
 
-All the fields support templates, see [templates](#templates).
+All the fields support templates, see [templates](#javascript-templates).
 
 | Name | Type | Default | Supported options | Description |
 | ----------------- | ------ | -------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -140,10 +141,11 @@ This will popup a dialog box before running the action.
 
 | Name | Type | Default | Supported options | Description |
 | --- | ---- | ------- | ----------------- | ----------- |
-| `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#templates) |
+| `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#javascript-templates) |
 | `exemptions` | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
 
 Example:
+
 ```yaml
 confirmation:
   text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?` ]]]'
@@ -157,12 +159,13 @@ This will display a normal button with a lock symbol in the corner. Clicking the
 
 | Name | Type | Default | Supported options | Description |
 | --- | ---- | ------- | ----------------- | ----------- |
-| `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#templates) |
+| `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#javascript-templates) |
 | `duration` | number | `5` | any number | Duration of the unlocked state in seconds
 | `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
 | `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
 
 Example:
+
 ```yaml
 lock:
   enabled: '[[[ return entity.state === 'on'; ]]]'
@@ -174,6 +177,7 @@ lock:
 ```
 
 If you want to lock the button for everyone and disable the unlocking possibility, set the exemptions object to `[]`:
+
 ```yaml
 lock:
   enabled: true
@@ -186,18 +190,18 @@ lock:
 | ---------- | ------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `operator` | string | `==` | See [Available Operators](#Available-operators) | The operator used to compare the current state against the `value` |
 | `value` | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity |
-| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name. Supports templates, see [templates](#templates) |
-| `icon` | string | optional | `mdi:battery` | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#templates) |
+| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name. Supports templates, see [templates](#javascript-templates) |
+| `icon` | string | optional | `mdi:battery` | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color` | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
 | `styles` | string | optional | | See [styles](#styles) |
 | `spin` | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
-| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. Supports templates, see [templates](#templates) |
-| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#templates) |
+| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. Supports templates, see [templates](#javascript-templates) |
+| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
 
 ### Available operators
 
 The order of your elements in the `state` object matters. The first one which is `true` will match.
-The `value` field for all operators except `regex` support templating, see [templates](#templates)
+The `value` field for all operators except `regex` support templating, see [templates](#javascript-templates)
 
 | Operator | `value` example | Description |
 | :-------: | --------------- | -------------------------------------------------------------------------------------------------------- |
@@ -208,7 +212,7 @@ The `value` field for all operators except `regex` support templating, see [temp
 | `>` | `12` | Current state is superior to `value` |
 | `!=` | `'normal'` | Current state is not equal (`!=` javascript) to `value` |
 | `regex` | `'^norm.*$'` | `value` regex applied to current state does match |
-| `template` | | See [templates](#templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
+| `template` | | See [templates](#javascript-templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
 | `default` | N/A | If nothing matches, this is used |
 
 ### Layout
@@ -218,23 +222,58 @@ This option enables you to modify the layout of the card.
 It is fully compatible with every `show_*` option. Make sure you set `show_state: true` if you want to show the state
 
 Multiple values are possible, see the image below for examples:
-* `vertical` (default value if nothing is provided): Everything is centered vertically on top of each other
-* `icon_name_state`: Everything is aligned horizontally, name and state are concatenated, label is centered below
-* `name_state`: Icon sits on top of name and state concatenated on one line, label below
-* `icon_name`: Icon and name are horizontally aligned, state and label are centered below
-* `icon_state`: Icon and state are horizontally aligned, name and label are centered below
-* `icon_label`: Icon and label are horizontally aligned, name and state are centered below
-* `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state, label below name and state
-* `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name, label below name and state
+
+- `vertical` (default value if nothing is provided): Everything is centered vertically on top of each other
+- `icon_name_state`: Everything is aligned horizontally, name and state are concatenated, label is centered below
+- `name_state`: Icon sits on top of name and state concatenated on one line, label below
+- `icon_name`: Icon and name are horizontally aligned, state and label are centered below
+- `icon_state`: Icon and state are horizontally aligned, name and label are centered below
+- `icon_label`: Icon and label are horizontally aligned, name and state are centered below
+- `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state, label below name and state
+- `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name, label below name and state
 
 ![layout_image](examples/layout.png)
 
-### Templates
+### `triggers_update`
+
+This field defines which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in custom_fields as they are always updated with the latest state. This is expected and fast!). This was introduced in 3.3.0 to reduce the load on the frontend.
+
+If you don't have javascript `[[[ ]]]` templates in your config, you don't need to do anything, else read further.
+
+By default, the card will update itself when the main entity in the configuration is updated. In any case, the card will parse your code and look for entities that it can match (**it only matches `states['ENTITY_ID']`**) so:
+
+```js
+return states['switch.myswitch'].state // will match switch.myswitch
+ // but
+ const test = switch.myswitch
+ return states[test].state // will not match anything
+```
+
+In this second case, you have 2 options:
+
+- Set the value of `triggers_update` to `all` (This was the behavior of button-card < 3.3.0)
+
+  ```yaml
+  triggers_update: all
+  ```
+
+- Set the value of `triggers_update` to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant  `* templates` integration (see [here](https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id) for example):
+
+  ```yaml
+  type: custom:button-card
+  entity: sensor.mysensor # No need to repeat this one in the triggers_update, it is added by default
+  triggers_update:
+    - switch.myswitch
+    - light.mylight
+  ```
+
+### Javascript Templates
 
 The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brakets:
 `[[[ javascript function here ]]]`
 
 Don't forget to quote if it's on one line:
+
 ```yaml
 name: '[[[ if (entity.state > 42) return "Above 42"; else return "Below 42" ]]]'
 name: >
@@ -247,30 +286,33 @@ name: >
 ```
 
 Those are the configuration fields which support templating:
-* `name` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-* `state_display` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-* `label` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-* `entity_picture`: This needs to return a path to a file or a url as a string.
-* `icon`: This needs to return a string in the format `mdi:icon`
-* All the styles in the style object: This needs to return a string
-* All the value of the state object, appart when the operator is `regex`
-  * `operator: template`: The function for `value` needs to return a boolean
-  * Else: The function for `value` needs to return a string or a number
-* All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-* All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
-* The `extra_styles` field
-* Everything field in `*_action`
-* The confirmation text (`confirmation.text`)
-* The lock being enabled or not (`lock.enabled`)
-* all the `card` parameters in a `custom_field`
-* all the `variables`
+
+- `name` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+- `state_display` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+- `label` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+- `entity_picture`: This needs to return a path to a file or a url as a string.
+- `icon`: This needs to return a string in the format `mdi:icon`
+- All the styles in the style object: This needs to return a string
+- All the value of the state object, appart when the operator is `regex`
+  - `operator: template`: The function for `value` needs to return a boolean
+  - Else: The function for `value` needs to return a string or a number
+- All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
+- All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
+- The `extra_styles` field
+- Everything field in `*_action`
+- The confirmation text (`confirmation.text`)
+- The lock being enabled or not (`lock.enabled`)
+- all the `card` parameters in a `custom_field`
+- all the `variables`
 
 Inside the javascript code, you'll have access to those variables:
-* `entity`: The current entity object, if the entity is defined in the card
-* `states`: An object with all the states of all the entities (equivalent to `hass.states`)
-* `user`: The user object (equivalent to `hass.user`)
-* `hass`: The complete `hass` object
-* `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
+
+- `this`: The button-card element itself (advanced stuff, don't mess with it)
+- `entity`: The current entity object, if the entity is defined in the card
+- `states`: An object with all the states of all the entities (equivalent to `hass.states`)
+- `user`: The user object (equivalent to `hass.user`)
+- `hass`: The complete `hass` object
+- `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
@@ -281,20 +323,22 @@ All the styles entries, support Templating, see [here](#custom-fields) for some 
 #### Easy styling options
 
 For each element in the card, styles can be defined in 2 places:
-* in the main part of the config
-* in each state
+
+- in the main part of the config
+- in each state
 
 Styles defined in each state are **additive** with the ones defined in the main part of the config. In the `state` part, just define the ones specific to your current state and keep the common ones in the main part of the config.
 
 The `style` object members are:
-* `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and it's content, unless redefined in elements below.
-* `icon`: styles for the icon
-* `entity_picture`: styles for the picture (if any)
-* `name`: styles for the name
-* `state`: styles for the state
-* `label`: styles for the label
-* `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
-* `custom_fields`: styles for each of your custom field. See [Custom Fields](#custom-fields)
+
+- `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and it's content, unless redefined in elements below.
+- `icon`: styles for the icon
+- `entity_picture`: styles for the picture (if any)
+- `name`: styles for the name
+- `state`: styles for the state
+- `label`: styles for the label
+- `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
+- `custom_fields`: styles for each of your custom field. See [Custom Fields](#custom-fields)
 
 ```yaml
 - type: custom:button-card
@@ -328,17 +372,19 @@ The `style` object members are:
         label:
           - yyyy: value
 ```
+
 This will render:
-* The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
-* Same for all the others.
+
+- The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
+- Same for all the others.
 
 See [styling](#styling) for a complete example.
 
 #### Light entity color variable
 
 If a light entity is assigned to the button, then:
-* the CSS variable `--button-card-light-color` will contain the current light color
-* the CSS variable `--button-card-light-color-no-temperature` will contain the current light without the temperature
+- the CSS variable `--button-card-light-color` will contain the current light color
+- the CSS variable `--button-card-light-color-no-temperature` will contain the current light without the temperature
 
 You can use them both in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
 
@@ -356,17 +402,20 @@ styles:
 #### ADVANCED styling options
 
 For advanced styling, there are 2 other options in the `styles` config object:
-* `grid`: mainly layout for the grid
-* `img_cell`: mainly how you position your icon in it's cell
+
+- `grid`: mainly layout for the grid
+- `img_cell`: mainly how you position your icon in it's cell
 
 This is how the button is constructed (HTML elements):
+
 ![elements in the button](examples/button-card-elements.png)
 
 The `grid` element uses CSS grids to design the layout of the card:
-* `img_cell` element is going to the `grid-area: i` by default
-* `name` element is going to the `grid-area: n` by default
-* `state` element is going to the `grid-area: s` by default
-* `label` element is going to the `grid-area: l` by default
+
+- `img_cell` element is going to the `grid-area: i` by default
+- `name` element is going to the `grid-area: n` by default
+- `state` element is going to the `grid-area: s` by default
+- `label` element is going to the `grid-area: l` by default
 
 You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [home-assitant's community forum][forum] for that.
 
@@ -377,18 +426,23 @@ For a quick overview on the grid-template-areas attribute, the following example
 ```yaml
 - grid-template-areas: '"i n s" "i n s" "i n l"'
 ```
+
 If we take the value and orient it into rows and columns, you begin to see the end result.
+
 ```
 "i n s"
 "i n s"
 "i n l"
 ```
+
 The end product will results in the following grid layout
 
 ![button card grid layout example with callouts](examples/button-card-grid-layout-example-with-callouts.png)
 
 Some examples:
-* label on top:
+
+- label on top:
+
   ```yaml
   styles:
     grid:
@@ -396,7 +450,9 @@ Some examples:
       - grid-template-rows: min-content 1fr min-content min-content
       - grid-template-columns: 1fr
   ```
-* icon on the right side (by overloading an existing layout):
+
+- icon on the right side (by overloading an existing layout):
+
   ```yaml
   - type: "custom:button-card"
     entity: sensor.sensor1
@@ -411,9 +467,10 @@ Some examples:
         - grid-template-columns: 1fr 40%
   ```
 
-* Apple Homekit-like buttons:
+- Apple Homekit-like buttons:
 
   ![apple-like-buttons](examples/apple_style.gif)
+
   ```yaml
   - type: custom:button-card
     entity: switch.skylight
@@ -450,7 +507,9 @@ Some examples:
 
 #### Injecting CSS with `extra_styles`
 
-You can inject any CSS style you want using this config option. It is usefull if you want to inject CSS animations for example. This field supports [templates](#templates).
+**Note**: `extra_styles` **MUST NOT** be used on the first button-card of the currend view, else it will be applied to all the cards in all Lovelace. **It is not possible to fix this behaviour.**
+
+You can inject any CSS style you want using this config option. It is usefull if you want to inject CSS animations for example. This field supports [templates](#javascript-templates).
 
 An example is better than words:
 
@@ -494,6 +553,7 @@ This is an advanced feature which leverages (if you require it) the CSS Grid.
 Custom fields also support embeded cards, see [exemple below](#custom_fields_card_example).
 
 Each custom field supports its own styling config, the name needs to match between both objects needs to match:
+
 ```yaml
 - type: custom:button-card
   [...]
@@ -507,7 +567,8 @@ Each custom field supports its own styling config, the name needs to match betwe
 ```
 
 Examples are better than a long text, so here you go:
-* Placing an element wherever you want (that means bypassing the grid). Set the grid to `position: relative` and set the element to `position: absolute`
+
+- Placing an element wherever you want (that means bypassing the grid). Set the grid to `position: relative` and set the element to `position: absolute`
 
   ![custom_fields_1](examples/custom_fields_1.gif)
 
@@ -539,7 +600,8 @@ Examples are better than a long text, so here you go:
         notification: >
           [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
   ```
-* Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
+
+- Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
 
   ![custom_fields_2](examples/custom_fields_2.png)
 
@@ -631,9 +693,10 @@ Examples are better than a long text, so here you go:
         ]]]
   ```
 
-* <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card. This is what the `style` inside the embedded card is for):
+- <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card. This is what the `style` inside the embedded card is for):
 
   ![custom_fields_3](examples/custom_fields_card.png)
+
   ```yaml
   - type: custom:button-card
     aspect_ratio: 1/1
@@ -668,12 +731,23 @@ Examples are better than a long text, so here you go:
 
 #### General
 
-* Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄
-* You can overload any parameter with a new one
-* You can merge states together **by `id`** when using templates. The states you want to merge have to have the same `id`. This `id` parameter is new and can be anything (string, number, ...). States without `id` will be appended to the state array. Styles embedded in a state are merged together as usual. See [here](#merging-state-by-id) for an example.
-* You can also inherit another template from within a template.
+- Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄
+- You can overload any parameter with a new one
+- You can merge states together **by `id`** when using templates. The states you want to merge have to have the same `id`. This `id` parameter is new and can be anything (string, number, ...). States without `id` will be appended to the state array. Styles embedded in a state are merged together as usual. See [here](#merging-state-by-id) for an example.
+- You can also inherit another template from within a template.
+- You can inherit multiple templates at once by making it an array. In this case, the templates will be merged together with the current configuration in the order they are defined. This happens recursively.
+
+  ```yaml
+  type: custom:button-card
+  template:
+    - template1
+    - template2
+  ```
+
+  The button templates will be applied in the order they are defined: `template2` will be merged with `template1` and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).
 
 In `ui-lovelace.yaml` (or in another file using `!import`)
+
 ```yaml
 button_card_templates:
   header:
@@ -703,6 +777,7 @@ button_card_templates:
 ```
 
 And then where you use button-card, you can apply this template, and/or overload it:
+
 ```yaml
 - type: custom:button-card
   template: header_red
@@ -712,6 +787,7 @@ And then where you use button-card, you can apply this template, and/or overload
 #### Merging state by id
 
 Example to merge state by `id`:
+
 ```yaml
 button_card_templates:
   sensor:
@@ -753,7 +829,9 @@ button_card_templates:
     entity: input_number.test
     show_entity_picture: true
 ```
+
 Will result in this state object for your button (styles, operator and color are overridden for the `id: my_id` as you can see):
+
 ```yaml
 state:
   - color: pink
@@ -774,6 +852,7 @@ state:
 
 You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
 An exemple below:
+
 ```yaml
 button_card_templates:
   variable_test:
@@ -804,6 +883,7 @@ button_card_templates:
 1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
+
     ```yaml
     title: Home
     resources:
@@ -1151,6 +1231,7 @@ If you specify a width for the card, it has to be in `px`. All the cards without
         card:
           - height: 300px
 ```
+
 ### Templates Support
 
 #### Playing with label templates
@@ -1191,6 +1272,7 @@ If you specify a width for the card, it has to be in `px`. All the cards without
 The javascript code inside `value` needs to return `true` of `false`.
 
 Example with `template`:
+
 ```yaml
 - type: "custom:button-card"
   color_type: icon
