@@ -2701,3 +2701,20 @@ views:
             }`
           ]]]
         name: Test
+      - type: 'custom:button-card'
+        entity: switch.skylight
+        show_label: true
+        show_icon: false
+        show_name: false
+        label: >
+          [[[
+            return states['switch.skylight'].state
+          ]]]
+        aspect_ratio: 16/10
+        tap_action:
+          action: none
+        styles:
+          card:
+            - color: '#DADADB'
+          label:
+            - font-size: 6em

@@ -13,6 +13,7 @@ export const styles = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    line-height: normal;
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
