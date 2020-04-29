@@ -1681,7 +1681,8 @@ views:
             cards:
               - type: 'custom:button-card'
                 entity: switch.skylight
-                lock: true
+                lock:
+                  enabled: true
                 styles:
                   lock:
                     - color: red
@@ -1689,7 +1690,8 @@ views:
                     - justify-content: flex-start
               - type: 'custom:button-card'
                 color_type: card
-                lock: true
+                lock:
+                  enabled: true
                 color: black
                 entity: switch.skylight
                 show_label: true

@@ -33,7 +33,7 @@ import {
   getLovelaceCast,
 } from './helpers';
 import { styles } from './styles';
-import myComputeStateDisplay from './compute_state_display';
+import { myComputeStateDisplay } from './compute_state_display';
 import * as pjson from '../package.json';
 
 let helpers = (window as any).cardHelpers;
@@ -449,7 +449,7 @@ class ButtonCard extends LitElement {
   private _buildStateString(state: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
     if (this._config!.show_state && state && state.state) {
-      const localizedState = myComputeStateDisplay(this._hass!.localize, state);
+      const localizedState = myComputeStateDisplay(this._hass!, this._hass!.localize, state, this._hass!.language);
       const units = this._buildUnits(state);
       if (units) {
         stateString = `${state.state} ${units}`;
