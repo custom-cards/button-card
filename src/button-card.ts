@@ -446,24 +446,30 @@ class ButtonCard extends LitElement {
     return this._getTemplateOrValue(state, name);
   }
 
-  private _buildStateString(state: HassEntity | undefined): string | undefined {
+  private _buildStateString(stateObj: HassEntity | undefined): string | undefined {
     let stateString: string | undefined;
-    if (this._config!.show_state && state && state.state) {
-      const localizedState = myComputeStateDisplay(this._hass!, this._hass!.localize, state, this._hass!.language);
-      const units = this._buildUnits(state);
+    if (this._config!.show_state && stateObj && stateObj.state) {
+      const units = this._buildUnits(stateObj);
       if (units) {
-        stateString = `${state.state} ${units}`;
-      } else if (computeDomain(state.entity_id) === 'timer') {
-        if (state.state === 'idle' || this._timeRemaining === 0) {
-          stateString = localizedState;
+        stateString = `${stateObj.state} ${units}`;
+      } else if (computeDomain(stateObj.entity_id) === 'timer') {
+        if (stateObj.state === 'idle' || this._timeRemaining === 0) {
+          stateString = myComputeStateDisplay(this._hass!, this._hass!.localize, stateObj, this._hass!.language);
         } else {
-          stateString = this._computeTimeDisplay(state);
-          if (state.state === 'paused') {
-            stateString += ` (${localizedState})`;
+          stateString = this._computeTimeDisplay(stateObj);
+          if (stateObj.state === 'paused') {
+            stateString += ` (${myComputeStateDisplay(
+              this._hass!,
+              this._hass!.localize,
+              stateObj,
+              this._hass!.language,
+            )})`;
           }
         }
+      } else if (!this._config?.show_units && computeDomain(stateObj.entity_id) === 'sensor') {
+        stateString = stateObj.state;
       } else {
-        stateString = localizedState;
+        stateString = myComputeStateDisplay(this._hass!, this._hass!.localize, stateObj, this._hass!.language);
       }
     }
     return stateString;
