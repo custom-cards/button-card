@@ -48,7 +48,7 @@ export const myComputeStateDisplay = (
   stateObj: HassEntity,
   language: string,
 ): string | undefined => {
-  if (!atLeastVersion(hass.connection.haVersion, 0, 109)) {
+  if (!atLeastVersion(hass.config.version, 0, 109)) {
     return legacyComputeStateDisplay(localize, stateObj);
   }
 
