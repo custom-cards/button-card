@@ -30,6 +30,7 @@ export const styles = css`
   ha-icon {
     display: inline-block;
     margin: auto;
+    --mdc-icon-size: 100%;
   }
   ha-card.button-card-main {
     padding: 4% 0px;
@@ -64,6 +65,7 @@ export const styles = css`
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     margin: unset;
+    width: 24px;
   }
   .invalid {
     animation: blink 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
