@@ -24,13 +24,13 @@ Lovelace Button card for your entities.
   - [State](#state)
   - [Available operators](#available-operators)
   - [Layout](#layout)
-  - [`triggers_update`](#triggersupdate)
+  - [`triggers_update`](#triggers_update)
   - [Javascript Templates](#javascript-templates)
   - [Styles](#styles)
     - [Easy styling options](#easy-styling-options)
     - [Light entity color variable](#light-entity-color-variable)
     - [ADVANCED styling options](#advanced-styling-options)
-    - [Injecting CSS with `extra_styles`](#injecting-css-with-extrastyles)
+    - [Injecting CSS with `extra_styles`](#injecting-css-with-extra_styles)
   - [Custom Fields](#custom-fields)
   - [Configuration Templates](#configuration-templates)
     - [General](#general)
@@ -43,7 +43,7 @@ Lovelace Button card for your entities.
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [`tap_action` Navigate](#tapaction-navigate)
+    - [`tap_action` Navigate](#tap_action-navigate)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
@@ -52,6 +52,7 @@ Lovelace Button card for your entities.
   - [Styling](#styling)
   - [Lock](#lock)
   - [Aspect Ratio](#aspect-ratio)
+  - [Changing the feedback color during a click](#changing-the-feedback-color-during-a-click)
 - [Credits](#credits)
 
 ## Features
@@ -1438,6 +1439,19 @@ Example with `template`:
           name: 1/1.5
           icon: mdi:lightbulb
           aspect_ratio: 1/1.5
+```
+
+### Changing the feedback color during a click
+
+For dark cards, it can be usefull to change the feedback color when clicking the button. The ripple effect uses a `mwc-ripple` element so you can style it with the CSS variables it supports.
+
+For example:
+
+```yaml
+styles:
+  card:
+    - --mdc-ripple-color: blue
+    - --mdc-ripple-press-opacity: 0.5
 ```
 
 ## Credits
