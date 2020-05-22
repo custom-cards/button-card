@@ -1,6 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { LitElement, html, customElement, property, TemplateResult, CSSResult, PropertyValues } from 'lit-element';
+import {
+  LitElement,
+  html,
+  customElement,
+  property,
+  TemplateResult,
+  CSSResult,
+  PropertyValues,
+  queryAsync,
+  eventOptions,
+} from 'lit-element';
+import { Ripple } from '@material/mwc-ripple';
+import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
@@ -60,6 +72,8 @@ class ButtonCard extends LitElement {
   @property() private _config?: ButtonCardConfig;
 
   @property() private _timeRemaining?: number;
+
+  @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 
   private _hasTemplate?: boolean;
 
@@ -674,6 +688,13 @@ class ButtonCard extends LitElement {
           class=${classMap(classList)}
           style=${styleMap(cardStyle)}
           @action=${this._handleAction}
+          @focus="${this.handleRippleFocus}"
+          @blur="${this.handleRippleBlur}"
+          @mousedown="${this.handleRippleActivate}"
+          @mouseup="${this.handleRippleDeactivate}"
+          @touchstart="${this.handleRippleActivate}"
+          @touchend="${this.handleRippleDeactivate}"
+          @touchcancel="${this.handleRippleDeactivate}"
           .actionHandler=${actionHandler({
             hasDoubleClick: this._config!.double_tap_action!.action !== 'none',
             hasHold: this._config!.hold_action!.action !== 'none',
@@ -682,11 +703,7 @@ class ButtonCard extends LitElement {
           .config="${this._config}"
         >
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
-          ${this._config!.lock && this._getTemplateOrValue(this._stateObj, this._config!.lock.enabled)
-            ? ''
-            : html`
-                <mwc-ripple id="ripple"></mwc-ripple>
-              `}
+          <mwc-ripple id="ripple"></mwc-ripple>
         </ha-card>
       </div>
       ${this._getLock(lockStyle)}
@@ -972,6 +989,29 @@ class ButtonCard extends LitElement {
     return configDuplicate;
   }
 
+  private _rippleHandlers: RippleHandlers = new RippleHandlers(() => {
+    // this._shouldRenderRipple = true;
+    return this._ripple;
+  });
+
+  // backward compatibility
+  @eventOptions({ passive: true })
+  private handleRippleActivate(evt?: Event): void {
+    this._ripple.then(r => r && r.startPress && this._rippleHandlers.startPress(evt));
+  }
+
+  private handleRippleDeactivate(): void {
+    this._ripple.then(r => r && r.endPress && this._rippleHandlers.endPress());
+  }
+
+  private handleRippleFocus(): void {
+    this._ripple.then(r => r && r.startFocus && this._rippleHandlers.startFocus());
+  }
+
+  private handleRippleBlur(): void {
+    this._ripple.then(r => r && r.endFocus && this._rippleHandlers.endFocus());
+  }
+
   private _handleAction(ev: any): void {
     if (ev.detail && ev.detail.action) {
       switch (ev.detail.action) {
@@ -1041,12 +1081,9 @@ class ButtonCard extends LitElement {
       }
     }
     const overlay = this.shadowRoot!.getElementById('overlay') as LitElement;
-    const haCard = this.shadowRoot!.getElementById('card') as LitElement;
     overlay.style.setProperty('pointer-events', 'none');
-    const paperRipple = document.createElement('paper-ripple');
 
     if (lock) {
-      haCard.appendChild(paperRipple);
       const icon = document.createAttribute('icon');
       icon.value = 'mdi:lock-open-outline';
       lock.attributes.setNamedItem(icon);
@@ -1059,7 +1096,6 @@ class ButtonCard extends LitElement {
         const icon = document.createAttribute('icon');
         icon.value = 'mdi:lock-outline';
         lock.attributes.setNamedItem(icon);
-        haCard.removeChild(paperRipple);
       }
     }, this._config!.lock!.duration! * 1000);
   }

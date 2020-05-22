@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "^2.6.1",
-    "@material/mwc-ripple": "^0.13.0",
+    "@material/mwc-ripple": "^0.15.0",
     "custom-card-helpers": "^1.5.0",
     "home-assistant-js-websocket": "^5.1.0",
     "lit-element": "^2.3.0",
