@@ -31,6 +31,8 @@ export const styles = css`
     display: inline-block;
     margin: auto;
     --mdc-icon-size: 100%;
+    --iron-icon-width: 100%;
+    --iron-icon-height: 100%;
   }
   ha-card.button-card-main {
     padding: 4% 0px;
