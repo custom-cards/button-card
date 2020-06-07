@@ -87,11 +87,16 @@ class ButtonCard extends LitElement {
 
   private _entities: string[] = [];
 
+  private _initial_setup_complete = false;
+
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
     for (const element of this._cards) {
       const el = element as any;
       el.hass = this._hass;
+    }
+    if (!this._initial_setup_complete) {
+      this._initConnected();
     }
   }
 
@@ -102,7 +107,17 @@ class ButtonCard extends LitElement {
 
   public connectedCallback(): void {
     super.connectedCallback();
-    if (this._hass && this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
+    if (!this._initial_setup_complete) {
+      this._initConnected();
+    }
+  }
+
+  private _initConnected(): void {
+    if (this.hass === undefined) return;
+    if (this._config === undefined) return;
+    if (!this.isConnected) return;
+    this._initial_setup_complete = true;
+    if (this._config.entity && computeDomain(this._config.entity) === 'timer') {
       const stateObj = this._hass!.states[this._config.entity];
       this._startInterval(stateObj);
     }
@@ -124,15 +139,13 @@ class ButtonCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
+    if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
       this._cards = [];
       this._evaledVariables = this._config!.variables
         ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
         : undefined;
-      if (!this._config || !this._hass) {
-        return html``;
-      }
       return this._cardHtml();
     } catch (e) {
       if (e.stack) console.error(e.stack);
@@ -958,6 +971,9 @@ class ButtonCard extends LitElement {
     if (this._config.entity && !this._entities.includes(this._config.entity)) this._entities.push(this._config.entity);
     const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'gm');
     this._hasTemplate = this._config.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
+    if (!this._initial_setup_complete) {
+      this._initConnected();
+    }
   }
 
   // The height of your card. Home Assistant uses this to automatically
