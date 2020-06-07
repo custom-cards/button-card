@@ -1,4 +1,4 @@
-import { ActionConfig } from 'custom-card-helpers';
+import { ActionConfig, LovelaceCardConfig, LovelaceCard } from 'custom-card-helpers';
 
 export interface ButtonCardConfig {
   template?: string | string[];
@@ -102,9 +102,21 @@ export interface CssStyleConfig {
 }
 
 export interface CustomFields {
-  [key: string]: any;
+  [key: string]: string | CustomFieldCard;
+}
+
+export interface CustomFieldCard {
+  card: LovelaceCardConfig;
 }
 
 export interface Variables {
   [key: string]: any;
+}
+
+export interface ButtonCardEmbeddedCards {
+  [key: string]: LovelaceCard;
+}
+
+export interface ButtonCardEmbeddedCardsConfig {
+  [key: string]: string | undefined;
 }

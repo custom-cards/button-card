@@ -30,7 +30,15 @@ import {
   DOMAINS_TOGGLE,
   LovelaceCard,
 } from 'custom-card-helpers';
-import { ButtonCardConfig, StateConfig, ExemptionUserConfig, ExemptionUsernameConfig } from './types';
+import {
+  ButtonCardConfig,
+  StateConfig,
+  ExemptionUserConfig,
+  ExemptionUsernameConfig,
+  CustomFieldCard,
+  ButtonCardEmbeddedCards,
+  ButtonCardEmbeddedCardsConfig,
+} from './types';
 import { actionHandler } from './action-handler';
 import {
   computeDomain,
@@ -83,7 +91,9 @@ class ButtonCard extends LitElement {
 
   private _interval?: number;
 
-  private _cards: LovelaceCard[] = [];
+  private _cards: ButtonCardEmbeddedCards = {};
+
+  private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
 
   private _entities: string[] = [];
 
@@ -91,10 +101,10 @@ class ButtonCard extends LitElement {
 
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
-    for (const element of this._cards) {
-      const el = element as any;
+    Object.keys(this._cards).forEach(element => {
+      const el = this._cards[element];
       el.hass = this._hass;
-    }
+    });
     if (!this._initial_setup_complete) {
       this._initConnected();
     }
@@ -142,7 +152,6 @@ class ButtonCard extends LitElement {
     if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._cards = [];
       this._evaledVariables = this._config!.variables
         ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
         : undefined;
@@ -552,20 +561,20 @@ class ButtonCard extends LitElement {
     if (this._config!.custom_fields) {
       Object.keys(this._config!.custom_fields).forEach(key => {
         const value = this._config!.custom_fields![key];
-        if (!value.card) {
+        if (!(value as CustomFieldCard).card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, value.card);
+          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
         }
       });
     }
     if (configState && configState.custom_fields) {
       Object.keys(configState.custom_fields).forEach(key => {
         const value = configState!.custom_fields![key];
-        if (!value!.card) {
+        if (!(value as CustomFieldCard)!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, value.card);
+          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
         }
       });
     }
@@ -589,8 +598,15 @@ class ButtonCard extends LitElement {
           ...this._buildCustomStyleGeneric(state, configState, key),
           'grid-area': key,
         };
-        const thing = this._createCard(cards[key]);
-        this._cards.push(thing);
+        let thing;
+        const stringConfig = JSON.stringify(cards[key]);
+        if (this._cardsConfig[key] !== stringConfig) {
+          thing = this._createCard(cards[key]);
+          this._cards[key] = thing;
+          this._cardsConfig[key] = stringConfig;
+        } else {
+          thing = this._cards[key];
+        }
         thing.hass = this._hass;
         result = html`
           ${result}
@@ -909,6 +925,8 @@ class ButtonCard extends LitElement {
       throw new Error('Invalid configuration');
     }
 
+    this._cards = {};
+    this._cardsConfig = {};
     const ll = getLovelace() || getLovelaceCast();
     let template: ButtonCardConfig = JSON.parse(JSON.stringify(config));
     template = this._configFromLLTemplates(ll, template);
