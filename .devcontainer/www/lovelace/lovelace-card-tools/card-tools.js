@@ -1,424 +1,714 @@
-customElements.define('card-tools',
-class {
-  static get CUSTOM_TYPE_PREFIX() { return "custom:"}
-  static get version() { return "0.4"}
-
-  static checkVersion(v) {
-    if (this.version < v) {
-      throw new Error(`Old version of card-tools found. Get the latest version of card-tools.js from https://github.com/thomasloven/lovelace-card-tools`);
+!(function(e) {
+  const t = {};
+  function r(n) {
+    if (t[n]) return t[n].exports;
+    const o = (t[n] = { i: n, l: !1, exports: {} });
+    return e[n].call(o.exports, o, o.exports, r), (o.l = !0), o.exports;
+  }
+  (r.m = e),
+    (r.c = t),
+    (r.d = function(e, t, n) {
+      r.o(e, t) || Object.defineProperty(e, t, { enumerable: !0, get: n });
+    }),
+    (r.r = function(e) {
+      'undefined' != typeof Symbol &&
+        Symbol.toStringTag &&
+        Object.defineProperty(e, Symbol.toStringTag, { value: 'Module' }),
+        Object.defineProperty(e, '__esModule', { value: !0 });
+    }),
+    (r.t = function(e, t) {
+      if ((1 & t && (e = r(e)), 8 & t)) return e;
+      if (4 & t && 'object' == typeof e && e && e.__esModule) return e;
+      const n = Object.create(null);
+      if ((r.r(n), Object.defineProperty(n, 'default', { enumerable: !0, value: e }), 2 & t && 'string' != typeof e))
+        for (const o in e)
+          r.d(
+            n,
+            o,
+            function(t) {
+              return e[t];
+            }.bind(null, o),
+          );
+      return n;
+    }),
+    (r.n = function(e) {
+      const t =
+        e && e.__esModule
+          ? function() {
+              return e.default;
+            }
+          : function() {
+              return e;
+            };
+      return r.d(t, 'a', t), t;
+    }),
+    (r.o = function(e, t) {
+      return Object.prototype.hasOwnProperty.call(e, t);
+    }),
+    (r.p = ''),
+    r((r.s = 4));
+})([
+  function(e, t, r) {
+    'use strict';
+    function n() {
+      return document.querySelector('hc-main')
+        ? document.querySelector('hc-main').hass
+        : document.querySelector('home-assistant')
+        ? document.querySelector('home-assistant').hass
+        : void 0;
     }
-  }
-
-  static deprecationWarning() {
-    if(window.cardTools_deprecationWarning) return;
-    console.warn("One or more of your lovelace plugins are using the functions cardTools.litElement(), cardTools.litHtml() or cardTools.hass(). Those are replaced with better alternatives and will be removed a some point in the future.")
-    console.warn("If you are a plugin developer, make sure you are using the new functions (see documentation).");
-    console.warn("If you are a plugin user, feel free to ignore this warning (or poke the developer of your plugins - not me though, I already know about this).")
-    console.warn("Best regards / thomasloven - " + (document.currentScript && document.currentScript.src));
-  window.cardTools_deprecationWarning = true;
-  }
-
-  static get LitElement() {
-    return Object.getPrototypeOf(customElements.get('home-assistant-main'));
-  }
-  static litElement() { // Backwards compatibility - deprecated
-    this.deprecationWarning();
-    return this.LitElement;
-  }
-
-  static get LitHtml() {
-    return this.LitElement.prototype.html;
-  }
-  static litHtml() { // Backwards compatibility - deprecated
-    this.deprecationWarning();
-    return this.LitHtml;
-  }
-
-  static get LitCSS() {
-    return this.LitElement.prototype.css;
-  }
-
-  static get hass() {
-    var hass = function() { // Backwards compatibility - deprecated
-      this.deprecationWarning();
-      return hass;
+    function o(e) {
+      return document.querySelector('hc-main')
+        ? document.querySelector('hc-main').provideHass(e)
+        : document.querySelector('home-assistant')
+        ? document.querySelector('home-assistant').provideHass(e)
+        : void 0;
     }
-    for (var k in document.querySelector('home-assistant').hass)
-      hass[k] = document.querySelector('home-assistant').hass[k];
-    hass.original = document.querySelector('home-assistant').hass;
-    return hass;
-  }
-
-  static fireEvent(ev, detail, entity=null) {
-    ev = new Event(ev, {
-      bubbles: true,
-      cancelable: false,
-      composed: true,
-    });
-    ev.detail = detail || {};
-    if(entity) {
-      entity.dispatchEvent(ev);
-    } else {
-      var root = document.querySelector("home-assistant");
-      root = root && root.shadowRoot;
-      root = root && root.querySelector("home-assistant-main");
-      root = root && root.shadowRoot;
-      root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
-      root = root && root.shadowRoot || root;
-      root = root && root.querySelector("ha-panel-lovelace");
-      root = root && root.shadowRoot;
-      root = root && root.querySelector("hui-root");
-      root = root && root.shadowRoot;
-      root = root && root.querySelector("ha-app-layout #view");
-      root = root && root.firstElementChild;
-      if (root) root.dispatchEvent(ev);
+    function s() {
+      let e,
+        t = document.querySelector('hc-main');
+      return t
+        ? (((e = t._lovelaceConfig).current_view = t._lovelacePath), e)
+        : (t =
+            (t =
+              (t =
+                (t =
+                  ((t =
+                    (t =
+                      (t =
+                        (t = (t = document.querySelector('home-assistant')) && t.shadowRoot) &&
+                        t.querySelector('home-assistant-main')) && t.shadowRoot) &&
+                    t.querySelector('app-drawer-layout partial-panel-resolver')) &&
+                    t.shadowRoot) ||
+                  t) && t.querySelector('ha-panel-lovelace')) && t.shadowRoot) && t.querySelector('hui-root'))
+        ? (((e = t.lovelace).current_view = t.___curView), e)
+        : null;
     }
-  }
-
-  static get lovelace() {
-    var root = document.querySelector("home-assistant");
-    root = root && root.shadowRoot;
-    root = root && root.querySelector("home-assistant-main");
-    root = root && root.shadowRoot;
-    root = root && root.querySelector("app-drawer-layout partial-panel-resolver");
-    root = root && root.shadowRoot || root;
-    root = root && root.querySelector("ha-panel-lovelace")
-    root = root && root.shadowRoot;
-    root = root && root.querySelector("hui-root")
-    if (root) {
-      var ll =  root.lovelace
-      ll.current_view = root.___curView;
-      return ll;
+    function a() {
+      let e = document.querySelector('hc-main');
+      return (e = e
+        ? ((e = (e = (e = e && e.shadowRoot) && e.querySelector('hc-lovelace')) && e.shadowRoot) &&
+            e.querySelector('hui-view')) ||
+          e.querySelector('hui-panel-view')
+        : (e =
+            (e =
+              (e =
+                (e =
+                  (e =
+                    (e =
+                      ((e =
+                        (e =
+                          (e =
+                            (e = (e = document.querySelector('home-assistant')) && e.shadowRoot) &&
+                            e.querySelector('home-assistant-main')) && e.shadowRoot) &&
+                        e.querySelector('app-drawer-layout partial-panel-resolver')) &&
+                        e.shadowRoot) ||
+                      e) && e.querySelector('ha-panel-lovelace')) && e.shadowRoot) && e.querySelector('hui-root')) &&
+              e.shadowRoot) && e.querySelector('ha-app-layout #view')) && e.firstElementChild);
     }
-    return null;
-  }
-
-  static createThing(thing, config) {
-    const _createThing = (tag, config) => {
-      const element = document.createElement(tag);
+    function i() {
+      if (customElements.get('hui-view')) return !0;
+      const e = document.createElement('partial-panel-resolver');
+      if (((e.hass = n()), !e.hass || !e.hass.panels)) return !1;
+      (e.route = { path: '/lovelace/' }), e._updateRoutes();
       try {
-        element.setConfig(config);
-      } catch (err) {
-        console.error(tag, err);
-        return _createError(err.message, config);
+        document.querySelector('home-assistant').appendChild(e);
+      } catch (e) {
+      } finally {
+        document.querySelector('home-assistant').removeChild(e);
       }
-      return element;
-    };
-
-    const _createError = (error, config) => {
-      return _createThing("hui-error-card", {
-        type: "error",
-        error,
-        config,
+      return !!customElements.get('hui-view');
+    }
+    r.d(t, 'a', function() {
+      return n;
+    }),
+      r.d(t, 'e', function() {
+        return o;
+      }),
+      r.d(t, 'c', function() {
+        return s;
+      }),
+      r.d(t, 'd', function() {
+        return a;
+      }),
+      r.d(t, 'b', function() {
+        return i;
       });
-    };
-
-    if(!config || typeof config !== "object" || !config.type)
-      return _createError(`No ${thing} type configured`, config);
-    let tag = config.type;
-    if(config.error) {
-      const err = config.error;
-      delete config.error;
-      return _createError(err, config);
-    }
-    if(tag.startsWith(this.CUSTOM_TYPE_PREFIX))
-      tag = tag.substr(this.CUSTOM_TYPE_PREFIX.length);
-    else
-      tag = `hui-${tag}-${thing}`;
-
-    if(customElements.get(tag))
-      return _createThing(tag, config);
-
-    // If element doesn't exist (yet) create an error
-    const element = _createError(
-      `Custom element doesn't exist: ${tag}.`,
-      config
-    );
-    element.style.display = "None";
-    const timer = setTimeout(() => {
-      element.style.display = "";
-    }, 2000);
-    // Remove error if element is defined later
-    customElements.whenDefined(tag).then(() => {
-      clearTimeout(timer);
-      this.fireEvent("ll-rebuild", {}, element);
+  },
+  function(e, t, r) {
+    'use strict';
+    r.d(t, 'a', function() {
+      return n;
     });
-
-    return element;
-  }
-
-  static createCard(config) {
-    return this.createThing("card", config);
-  }
-
-  static createElement(config) {
-    return this.createThing("element", config);
-  }
-
-  static createEntityRow(config) {
-    const SPECIAL_TYPES = new Set([
-      "call-service",
-      "divider",
-      "section",
-      "weblink",
-    ]);
-    const DEFAULT_ROWS = {
-      alert: "toggle",
-      automation: "toggle",
-      climate: "climate",
-      cover: "cover",
-      fan: "toggle",
-      group: "group",
-      input_boolean: "toggle",
-      input_number: "input-number",
-      input_select: "input-select",
-      input_text: "input-text",
-      light: "toggle",
-      media_player: "media-player",
-      lock: "lock",
-      scene: "scene",
-      script: "script",
-      sensor: "sensor",
-      timer: "timer",
-      switch: "toggle",
-      vacuum: "toggle",
-      water_heater: "climate",
-    };
-
-    if(!config || typeof config !== "object" || (!config.entity && !config.type)) {
-      Object.assign(config, {error: "Invalid config given"});
-      return this.createThing("", config);
-    }
-
-    const type = config.type || "default";
-    if(SPECIAL_TYPES.has(type) || type.startsWith(this.CUSTOM_TYPE_PREFIX))
-      return this.createThing("row", config);
-
-    const domain = config.entity.split(".", 1)[0];
-    Object.assign(config, {type: DEFAULT_ROWS[domain] || "text"});
-    return this.createThing("entity-row", config);
-  }
-
-  static get deviceID() {
-    const ID_STORAGE_KEY = 'lovelace-player-device-id';
-    if(window['fully'] && typeof fully.getDeviceId === "function")
-      return fully.getDeviceId();
-    if(!localStorage[ID_STORAGE_KEY])
-    {
-      const s4 = () => {
-        return Math.floor((1+Math.random())*100000).toString(16).substring(1);
+    const n = (function() {
+      if (window.fully && 'function' == typeof fully.getDeviceId) return fully.getDeviceId();
+      if (!localStorage['lovelace-player-device-id']) {
+        const e = () =>
+          Math.floor(1e5 * (1 + Math.random()))
+            .toString(16)
+            .substring(1);
+        localStorage['lovelace-player-device-id'] = `${e()}${e()}-${e()}${e()}`;
       }
-      localStorage[ID_STORAGE_KEY] = `${s4()}${s4()}-${s4()}${s4()}`;
+      return localStorage['lovelace-player-device-id'];
+    })();
+  },
+  function(module, __webpack_exports__, __webpack_require__) {
+    'use strict';
+    __webpack_require__.d(__webpack_exports__, 'a', function() {
+      return hasOldTemplate;
+    }),
+      __webpack_require__.d(__webpack_exports__, 'b', function() {
+        return parseOldTemplate;
+      });
+    const _hass_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0),
+      _deviceID_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1);
+    function hasOldTemplate(e) {
+      return /\[\[\s+.*\s+\]\]/.test(e);
     }
-    return localStorage[ID_STORAGE_KEY];
-  }
-
-  static moreInfo(entity) {
-    this.fireEvent("hass-more-info", {entityId: entity});
-  }
-
-  static longpress(element) {
-    customElements.whenDefined("long-press").then(() => {
-      const longpress = document.body.querySelector("long-press");
-      longpress.bind(element);
-    });
-    return element;
-  }
-
-  static hasTemplate(text) {
-    return /\[\[\s+.*\s+\]\]/.test(text);
-  }
-
-  static parseTemplateString(str, specialData = {}) {
-    if(typeof(str) !== "string") return text;
-    const FUNCTION = /^[a-zA-Z0-9_]+\(.*\)$/;
-    const EXPR = /([^=<>!]+)\s*(==|!=|<|>|<=|>=)\s*([^=<>!]+)/;
-    const SPECIAL = /^\{.+\}$/;
-    const STRING = /^"[^"]*"|'[^']*'$/;
-
-    if(typeof(specialData) === "string") specialData = {};
-    specialData = Object.assign({
-      user: this.hass.user.name,
-      browser: this.deviceID,
-      hash: location.hash.substr(1) || ' ',
-    }, specialData);
-
-    const _parse_function = (str) => {
-      let args = [str.substr(0, str.indexOf('(')).trim()]
-      str = str.substr(str.indexOf('(')+1);
-      while(str) {
-        let index = 0;
-        let parens = 0;
-        let quote = false;
-        while(str[index]) {
-          let c = str[index++];
-
-          if(c === quote && index > 1 && str[index-2] !== "\\")
-              quote = false;
-          else if(`"'`.includes(c))
-            quote = c;
-          if(quote) continue;
-
-          if(c === '(')
-            parens = parens + 1;
-          else if(c === ')') {
-            parens = parens - 1;
-            continue
+    function parseTemplateString(str, specialData = {}) {
+      if ('string' != typeof str) return text;
+      const FUNCTION = /^[a-zA-Z0-9_]+\(.*\)$/,
+        EXPR = /([^=<>!]+)\s*(==|!=|<|>|<=|>=)\s*([^=<>!]+)/,
+        SPECIAL = /^\{.+\}$/,
+        STRING = /^"[^"]*"|'[^']*'$/;
+      'string' == typeof specialData && (specialData = {}),
+        (specialData = Object.assign(
+          {
+            user: Object(_hass_js__WEBPACK_IMPORTED_MODULE_0__.a)().user.name,
+            browser: _deviceID_js__WEBPACK_IMPORTED_MODULE_1__.a,
+            hash: location.hash.substr(1) || ' ',
+          },
+          specialData,
+        ));
+      const _parse_function = e => {
+          const t = [e.substr(0, e.indexOf('(')).trim()];
+          for (e = e.substr(e.indexOf('(') + 1); e; ) {
+            let r = 0,
+              n = 0,
+              o = !1;
+            for (; e[r]; ) {
+              const t = e[r++];
+              if ((t === o && r > 1 && '\\' !== e[r - 2] ? (o = !1) : '"\''.includes(t) && (o = t), !o)) {
+                if ('(' === t) n += 1;
+                else if (')' === t) {
+                  n -= 1;
+                  continue;
+                }
+                if (!(n > 0) && ',)'.includes(t)) break;
+              }
+            }
+            t.push(e.substr(0, r - 1).trim()), (e = e.substr(r));
           }
-          if(parens > 0) continue;
-
-          if(",)".includes(c)) break;
-        }
-        args.push(str.substr(0, index-1).trim());
-        str = str.substr(index);
-      }
-      return args;
-    };
-
-    const _parse_special = (str) => {
-      str = str.substr(1, str.length - 2);
-      return specialData[str] || `{${str}}`;
-    };
-
-    const _parse_entity = (str) => {
-      str = str.split(".");
-      let v;
-      if(str[0].match(SPECIAL)) {
-        v = _parse_special(str.shift());
-        v = this.hass.states[v] || v;
-      } else {
-        v = this.hass.states[`${str.shift()}.${str.shift()}`];
-        if(!str.length) return v['state'];
-      }
-      str.forEach(item => v=v[item]);
-      return v;
-    }
-
-    const _eval_expr = (str) => {
-      str = EXPR.exec(str);
-      if(str === null) return false;
-      const lhs = this.parseTemplateString(str[1]);
-      const rhs = this.parseTemplateString(str[3]);
-      var expr = ''
-      if(!parseFloat(lhs))
-        expr = `"${lhs}" ${str[2]} "${rhs}"`;
-      else
-        expr = `${parseFloat(lhs)} ${str[2]} ${parseFloat(rhs)}`
-      return eval(expr);
-    }
-
-    const _eval_function = (args) => {
-      if(args[0] === "if") {
-        if(_eval_expr(args[1]))
-          return this.parseTemplateString(args[2]);
-        return this.parseTemplateString(args[3]);
+          return t;
+        },
+        _parse_special = e => ((e = e.substr(1, e.length - 2)), specialData[e] || `{${e}}`),
+        _parse_entity = e => {
+          let t;
+          if ((e = e.split('.'))[0].match(SPECIAL))
+            (t = _parse_special(e.shift())), (t = Object(_hass_js__WEBPACK_IMPORTED_MODULE_0__.a)().states[t] || t);
+          else if (
+            ((t = Object(_hass_js__WEBPACK_IMPORTED_MODULE_0__.a)().states[`${e.shift()}.${e.shift()}`]), !e.length)
+          )
+            return t.state;
+          return e.forEach(e => (t = t[e])), t;
+        },
+        _eval_expr = str => {
+          if (((str = EXPR.exec(str)), null === str)) return !1;
+          const lhs = parseTemplateString(str[1]),
+            rhs = parseTemplateString(str[3]);
+          let expr = '';
+          return (
+            (expr =
+              parseFloat(lhs) != lhs
+                ? `"${lhs}" ${str[2]} "${rhs}"`
+                : `${parseFloat(lhs)} ${str[2]} ${parseFloat(rhs)}`),
+            eval(expr)
+          );
+        },
+        _eval_function = e => {
+          if ('if' === e[0]) return _eval_expr(e[1]) ? parseTemplateString(e[2]) : parseTemplateString(e[3]);
+        };
+      try {
+        return (
+          (str = str.trim()),
+          str.match(STRING)
+            ? str.substr(1, str.length - 2)
+            : str.match(SPECIAL)
+            ? _parse_special(str)
+            : str.match(FUNCTION)
+            ? _eval_function(_parse_function(str))
+            : str.includes('.')
+            ? _parse_entity(str)
+            : str
+        );
+      } catch (e) {
+        return `[[ Template matching failed: ${str} ]]`;
       }
     }
-
-    try {
-      str = str.trim();
-      if(str.match(STRING))
-        return str.substr(1, str.length - 2);
-      if(str.match(SPECIAL))
-        return _parse_special(str);
-      if(str.match(FUNCTION))
-        return _eval_function(_parse_function(str));
-      if(str.includes("."))
-        return _parse_entity(str);
-      return str;
-    } catch (err) {
-      return `[[ Template matching failed: ${str} ]]`;
+    function parseOldTemplate(e, t = {}) {
+      if ('string' != typeof e) return e;
+      return (e = e.replace(/\[\[\s(.*?)\s\]\]/g, (e, r, n, o) => parseTemplateString(r, t)));
     }
-  }
-
-  static parseTemplate(text, data = {}) {
-    if(typeof(text) !== "string") return text;
-    // Note: .*? is javascript regex syntax for NON-greedy matching
-    var RE_template = /\[\[\s(.*?)\s\]\]/g;
-    text = text.replace(RE_template, (str, p1, offset, s) => this.parseTemplateString(p1, data));
-    return text;
-  }
-
-  static args(script=null) {
-    script = script || document.currentScript;
-    var url = script.src;
-    url = url.substr(url.indexOf("?")+1)
-    let args = {};
-    url.split("&").forEach((a) => {
-      if(a.indexOf("=")) {
-        let parts = a.split("=");
-        args[parts[0]] = parts[1]
-      } else {
-        args[a] = true;
+  },
+  function(e) {
+    e.exports = JSON.parse(
+      '{"name":"card-tools","private":true,"version":"2.1.2","description":"Lovelace Card Tools","scripts":{"build":"webpack","watch":"webpack --watch --mode=development"},"repository":{"type":"git","url":"github.com:thomasloven/card-tools"},"author":"Thomas Lovén","license":"MIT","devDependencies":{"webpack":"^4.43.0","webpack-cli":"^3.3.11"}}',
+    );
+  },
+  function(e, t, r) {
+    'use strict';
+    r.r(t);
+    const n = customElements.get('home-assistant-main')
+        ? Object.getPrototypeOf(customElements.get('home-assistant-main'))
+        : Object.getPrototypeOf(customElements.get('hui-view')),
+      o = n.prototype.html,
+      s = n.prototype.css;
+    const a = r(0);
+    function i(e, t, r = null) {
+      if ((((e = new Event(e, { bubbles: !0, cancelable: !1, composed: !0 })).detail = t || {}), r)) r.dispatchEvent(e);
+      else {
+        const n = Object(a.d)();
+        n && n.dispatchEvent(e);
       }
+    }
+    let c = window.cardHelpers;
+    const l = new Promise(async (e, t) => {
+      c && e();
+      const r = async () => {
+        (c = await window.loadCardHelpers()), (window.cardHelpers = c), e();
+      };
+      window.loadCardHelpers
+        ? r()
+        : window.addEventListener('load', async () => {
+            Object(a.b)(), window.loadCardHelpers && r();
+          });
     });
-    return args;
-  }
-
-  static localize(key, def="") {
-    const language = this.hass.language;
-    if(this.hass.resources[language] && this.hass.resources[language][key])
-      return this.hass.resources[language][key];
-    return def;
-  }
-
-  static popUp(title, message, large=false) {
-    let popup = document.createElement('div');
-    popup.innerHTML = `
-    <style>
-      app-toolbar {
-        color: var(--more-info-header-color);
-        background-color: var(--more-info-header-background);
+    function u(e, t) {
+      const r = document.createElement('hui-error-card');
+      return (
+        customElements.whenDefined('hui-error-card').then(() => {
+          r.setConfig({ type: 'error', error: e, origConfig: t });
+        }),
+        l.then(() => {
+          i('ll-rebuild', {}, r);
+        }),
+        r
+      );
+    }
+    function d(e, t) {
+      if (!t || 'object' != typeof t || !t.type) return u(`No ${e} type configured`, t);
+      let r = t.type;
+      if (((r = r.startsWith('custom:') ? r.substr('custom:'.length) : `hui-${r}-${e}`), customElements.get(r)))
+        return (function(e, t) {
+          let r = document.createElement(e);
+          try {
+            r.setConfig(JSON.parse(JSON.stringify(t)));
+          } catch (e) {
+            r = u(e, t);
+          }
+          return (
+            l.then(() => {
+              i('ll-rebuild', {}, r);
+            }),
+            r
+          );
+        })(r, t);
+      const n = u(`Custom element doesn't exist: ${r}.`, t);
+      n.style.display = 'None';
+      const o = setTimeout(() => {
+        n.style.display = '';
+      }, 2e3);
+      return (
+        customElements.whenDefined(r).then(() => {
+          clearTimeout(o), i('ll-rebuild', {}, n);
+        }),
+        n
+      );
+    }
+    function p(e) {
+      return c ? c.createCardElement(e) : d('card', e);
+    }
+    function m(e) {
+      return c ? c.createHuiElement(e) : d('element', e);
+    }
+    function h(e) {
+      if (c) return c.createRowElement(e);
+      const t = new Set(['call-service', 'cast', 'conditional', 'divider', 'section', 'select', 'weblink']);
+      if (!e) return u('Invalid configuration given.', e);
+      if (('string' == typeof e && (e = { entity: e }), 'object' != typeof e || (!e.entity && !e.type)))
+        return u('Invalid configuration given.', e);
+      const r = e.type || 'default';
+      if (t.has(r) || r.startsWith('custom:')) return d('row', e);
+      return d('entity-row', {
+        type:
+          {
+            alert: 'toggle',
+            automation: 'toggle',
+            climate: 'climate',
+            cover: 'cover',
+            fan: 'toggle',
+            group: 'group',
+            input_boolean: 'toggle',
+            input_number: 'input-number',
+            input_select: 'input-select',
+            input_text: 'input-text',
+            light: 'toggle',
+            lock: 'lock',
+            media_player: 'media-player',
+            remote: 'toggle',
+            scene: 'scene',
+            script: 'script',
+            sensor: 'sensor',
+            timer: 'timer',
+            switch: 'toggle',
+            vacuum: 'toggle',
+            water_heater: 'climate',
+            input_datetime: 'input-datetime',
+          }[e.entity.split('.', 1)[0]] || 'text',
+        ...e,
+      });
+    }
+    class f extends n {
+      static get version() {
+        return 2;
       }
-    </style>
-    <app-toolbar>
-      <paper-icon-button
-        icon="hass:close"
-        dialog-dismiss=""
-      ></paper-icon-button>
-      <div class="main-title" main-title="">
-        ${title}
-      </div>
-    </app-toolbar>
-  `;
-    popup.appendChild(message);
-    this.moreInfo(Object.keys(this.hass.states)[0]);
-    let moreInfo = document.querySelector("home-assistant")._moreInfoEl;
-    moreInfo._page = "none";
-    moreInfo.shadowRoot.appendChild(popup);
-    moreInfo.large = large;
-    document.querySelector("home-assistant").provideHass(message);
-
-    setTimeout(() => {
-      let interval = setInterval(() => {
-        if (moreInfo.getAttribute('aria-hidden')) {
-          popup.parentNode.removeChild(popup);
-          clearInterval(interval);
+      static get properties() {
+        return { noHass: { type: Boolean } };
+      }
+      setConfig(e) {
+        (this._config = e),
+          this.el
+            ? this.el.setConfig(e)
+            : ((this.el = this.create(e)), this._hass && (this.el.hass = this._hass), this.noHass && Object(a.e)(this));
+      }
+      set config(e) {
+        this.setConfig(e);
+      }
+      set hass(e) {
+        (this._hass = e), this.el && (this.el.hass = e);
+      }
+      createRenderRoot() {
+        return this;
+      }
+      render() {
+        return o`${this.el}`;
+      }
+    }
+    const _ = function(e, t) {
+        const r = Object.getOwnPropertyDescriptors(t.prototype);
+        for (const [t, n] of Object.entries(r)) 'constructor' !== t && Object.defineProperty(e.prototype, t, n);
+        const n = Object.getOwnPropertyDescriptors(t);
+        for (const [t, r] of Object.entries(n)) 'prototype' !== t && Object.defineProperty(e, t, r);
+        const o = Object.getPrototypeOf(t),
+          s = Object.getOwnPropertyDescriptors(o.prototype);
+        for (const [t, r] of Object.entries(s))
+          'constructor' !== t && Object.defineProperty(Object.getPrototypeOf(e).prototype, t, r);
+        const a = Object.getOwnPropertyDescriptors(o);
+        for (const [t, r] of Object.entries(a))
+          'prototype' !== t && Object.defineProperty(Object.getPrototypeOf(e), t, r);
+      },
+      g = customElements.get('card-maker');
+    if (!g || !g.version || g.version < 2) {
+      class e extends f {
+        create(e) {
+          return p(e);
         }
-      }, 100)
-    }, 1000);
-  return moreInfo;
-  }
-  static closePopUp() {
-    let moreInfo = document.querySelector("home-assistant")._moreInfoEl;
-    if (moreInfo) moreInfo.close()
-  }
-
-  static logger(message, script=null) {
-    if(!('debug' in this.args(script))) return;
-
-    if(typeof message !== "string")
-      message = JSON.stringify(message);
-    console.log(`%cDEBUG:%c ${message}`,
-      "color: blue; font-weight: bold", "");
-  }
-
-});
-
-// Global definition of cardTools
-var cardTools = customElements.get('card-tools');
-
-console.info(`%cCARD-TOOLS IS INSTALLED
-%cDeviceID: ${customElements.get('card-tools').deviceID}`,
-"color: green; font-weight: bold",
-"");
+        getCardSize() {
+          return this.firstElementChild && this.firstElementChild.getCardSize
+            ? this.firstElementChild.getCardSize()
+            : 1;
+        }
+      }
+      g ? _(g, e) : customElements.define('card-maker', e);
+    }
+    const y = customElements.get('element-maker');
+    if (!y || !y.version || y.version < 2) {
+      class e extends f {
+        create(e) {
+          return m(e);
+        }
+      }
+      y ? _(y, e) : customElements.define('element-maker', e);
+    }
+    const w = customElements.get('entity-row-maker');
+    if (!w || !w.version || w.version < 2) {
+      class e extends f {
+        create(e) {
+          return h(e);
+        }
+      }
+      w ? _(w, e) : customElements.define('entity-row-maker', e);
+    }
+    const b = r(1);
+    function v(e, t = {}) {
+      return (
+        customElements.whenDefined('long-press').then(() => {
+          document.body.querySelector('long-press').bind(e);
+        }),
+        customElements.whenDefined('action-handler').then(() => {
+          document.body.querySelector('action-handler').bind(e, t);
+        }),
+        e
+      );
+    }
+    function O(e, t = !1) {
+      const r = document.querySelector('hc-main') || document.querySelector('home-assistant');
+      i('hass-more-info', { entityId: e }, r);
+      const n = r._moreInfoEl;
+      return (n.large = t), n;
+    }
+    function E() {
+      const e = document.querySelector('hc-main') || document.querySelector('home-assistant'),
+        t = e && e._moreInfoEl;
+      t && t.close();
+    }
+    function S(e, t, r = !1, n = null, o = !1) {
+      const s = document.querySelector('hc-main') || document.querySelector('home-assistant');
+      i('hass-more-info', { entityId: null }, s);
+      const c = s._moreInfoEl;
+      c.close(), c.open();
+      const l = c.shadowRoot.querySelector('more-info-controls');
+      l && (l.style.display = 'none');
+      const u = document.createElement('div');
+      u.innerHTML = `\n  <style>\n    app-toolbar {\n      color: var(--more-info-header-color);\n      background-color: var(--more-info-header-background);\n    }\n    .scrollable {\n      overflow: auto;\n      max-width: 100% !important;\n    }\n  </style>\n  ${
+        o
+          ? ''
+          : `\n      <app-toolbar>\n        <ha-icon-button\n          icon="hass:close"\n          dialog-dismiss=""\n          aria-label="Dismiss dialog"\n        ></ha-icon-button>\n        <div class="main-title" main-title="">\n          ${e}\n        </div>\n      </app-toolbar>\n      `
+      }\n    <div class="scrollable">\n    </div>\n  `;
+      const d = u.querySelector('.scrollable'),
+        m = p(t);
+      Object(a.e)(m),
+        d.appendChild(m),
+        m.addEventListener(
+          'll-rebuild',
+          e => {
+            e.stopPropagation();
+            const r = p(t);
+            Object(a.e)(r), d.replaceChild(r, m);
+          },
+          { once: !0 },
+        ),
+        (c.sizingTarget = d),
+        (c.large = r),
+        (c._page = 'none'),
+        c.shadowRoot.appendChild(u);
+      const h = {};
+      if (n) for (const f in (c.resetFit(), n)) (h[f] = c.style[f]), c.style.setProperty(f, n[f]);
+      return (
+        (c._dialogOpenChanged = function(e) {
+          if (
+            !e &&
+            (this.stateObj && this.fire('hass-more-info', { entityId: null }), this.shadowRoot == u.parentNode)
+          ) {
+            (this._page = null), this.shadowRoot.removeChild(u);
+            const e = this.shadowRoot.querySelector('more-info-controls');
+            if ((e && (e.style.display = 'inline'), n))
+              for (const t in (c.resetFit(), h)) h[t] ? c.style.setProperty(t, h[t]) : c.style.removeProperty(t);
+          }
+        }),
+        c
+      );
+    }
+    function C(e, t, r) {
+      e || (e = Object(a.a)().connection);
+      const n = { user: Object(a.a)().user.name, browser: b.a, hash: location.hash.substr(1) || ' ', ...r.variables },
+        o = r.template,
+        s = r.entity_ids;
+      return e.subscribeMessage(
+        e => {
+          let r = e.result;
+          (r = r.replace(/_\([^)]*\)/g, e => Object(a.a)().localize(e.substring(2, e.length - 1)) || e)), t(r);
+        },
+        { type: 'render_template', template: o, variables: n, entity_ids: s },
+      );
+    }
+    const j = r(2);
+    const D = Object(a.a)().callWS({ type: 'config/area_registry/list' }),
+      T = Object(a.a)().callWS({ type: 'config/device_registry/list' }),
+      q = Object(a.a)().callWS({ type: 'config/entity_registry/list' });
+    async function P() {
+      return (
+        (window.cardToolsData = window.cardToolsData || { areas: await D, devices: await T, entities: await q }),
+        window.cardToolsData
+      );
+    }
+    function R(e) {
+      const t = window.cardToolsData;
+      for (const r of t.areas) if (r.name.toLowerCase() === e.toLowerCase()) return r;
+      return null;
+    }
+    function I(e) {
+      const t = window.cardToolsData;
+      const r = [];
+      if (!e) return r;
+      for (const n of t.devices) n.area_id === e.area_id && r.push(n);
+      return r;
+    }
+    function k(e) {
+      const t = window.cardToolsData;
+      for (const r of t.devices) if (r.name.toLowerCase() === e.toLowerCase()) return r;
+      return null;
+    }
+    function x(e) {
+      const t = window.cardToolsData;
+      const r = [];
+      if (!e) return r;
+      for (const n of t.entities) n.device_id === e.id && r.push(n.entity_id);
+      return r;
+    }
+    function L(e, t) {
+      window._registerCard ||
+        ((window._customCardButtons = []),
+        (window._registerCard = (e, t) => {
+          window._customCardButtons.push({ el: e, name: t });
+        }),
+        customElements.whenDefined('hui-card-picker').then(() => {
+          customElements.get('hui-card-picker').prototype.firstUpdated = function() {
+            (this._customCardButtons = document.createElement('div')),
+              this._customCardButtons.classList.add('cards-container'),
+              (this._customCardButtons.id = 'custom'),
+              (this._customCardButtons.style.borderTop = '1px solid var(--primary-color)'),
+              window._customCardButtons.forEach,
+              this.shadowRoot.appendChild(this._customCardButtons),
+              window._customCardButtons.forEach(e => {
+                const t = document.createElement('mwc-button');
+                (t.type = 'custom:' + e.el),
+                  (t.innerHTML = e.name),
+                  t.addEventListener('click', this._cardPicked),
+                  this._customCardButtons.appendChild(t);
+              });
+          };
+        })),
+        window._registerCard(e, t);
+    }
+    P();
+    const $ = new Promise(e => {
+      document.querySelector('home-assistant').addEventListener(
+        'show-dialog',
+        async t => {
+          t.detail.dialogImport().then(() => {
+            const t = document.querySelector('home-assistant').shadowRoot.querySelector('hui-dialog-edit-card');
+            t.updateComplete.then(() => {
+              t._close(), e();
+            });
+          });
+        },
+        { once: !0 },
+      ),
+        Object(a.d)()._addCard();
+    });
+    async function M(e) {
+      await $;
+      const t = document.createElement('hui-card-editor');
+      return (t.yaml = e), t.value;
+    }
+    class B {
+      static checkVersion(e) {}
+      static args() {}
+      static logger() {}
+      static get localize() {
+        return Object(a.a)().localize;
+      }
+      static get deviceID() {
+        return b.a;
+      }
+      static get fireEvent() {
+        return i;
+      }
+      static get hass() {
+        return Object(a.a)();
+      }
+      static get lovelace() {
+        return Object(a.c)();
+      }
+      static get lovelace_view() {
+        return a.d;
+      }
+      static get provideHass() {
+        return a.e;
+      }
+      static get LitElement() {
+        return n;
+      }
+      static get LitHtml() {
+        return o;
+      }
+      static get LitCSS() {
+        return s;
+      }
+      static get longpress() {
+        return v;
+      }
+      static get createCard() {
+        return p;
+      }
+      static get createElement() {
+        return m;
+      }
+      static get createEntityRow() {
+        return h;
+      }
+      static get moreInfo() {
+        return O;
+      }
+      static get popUp() {
+        return S;
+      }
+      static get closePopUp() {
+        return E;
+      }
+      static get hasTemplate() {
+        return e => {
+          return (t = e), !!String(t).includes('{%') || !!String(t).includes('{{') || void 0 || Object(j.a)(e);
+          let t;
+        };
+      }
+      static parseTemplate(e, t, r = {}) {
+        return 'string' == typeof e
+          ? Object(j.b)(e, t)
+          : (async function(e, t, r = {}) {
+              for (const n in (e || (e = e()),
+              (r = {}),
+              (r = Object.assign({ user: e.user.name, browser: b.a, hash: location.hash.substr(1) || ' ' }, r)))) {
+                const o = new RegExp(`\\{${n}\\}`, 'g');
+                t = t.replace(o, r[n]);
+              }
+              return e.callApi('POST', 'template', { template: t });
+            })(e, t, r);
+      }
+      static get subscribeRenderTemplate() {
+        return C;
+      }
+      static get getData() {
+        return P;
+      }
+      static get areaByName() {
+        return R;
+      }
+      static get areaDevices() {
+        return I;
+      }
+      static get deviceByName() {
+        return k;
+      }
+      static get deviceEntities() {
+        return x;
+      }
+      static get registerCard() {
+        return L;
+      }
+      static get yaml2json() {
+        return M;
+      }
+    }
+    const N = r(3);
+    customElements.get('card-tools') ||
+      (customElements.define('card-tools', B),
+      (window.cardTools = customElements.get('card-tools')),
+      console.info(
+        `%cCARD-TOOLS ${N.version} IS INSTALLED\n  %cDeviceID: ${customElements.get('card-tools').deviceID}`,
+        'color: green; font-weight: bold',
+        '',
+      ));
+  },
+]);
