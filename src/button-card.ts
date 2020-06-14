@@ -997,7 +997,7 @@ class ButtonCard extends LitElement {
   // The height of your card. Home Assistant uses this to automatically
   // distribute all cards over the available columns.
   public getCardSize(): number {
-    return 3;
+    return 2;
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
