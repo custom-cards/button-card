@@ -1454,6 +1454,9 @@ styles:
     - --mdc-ripple-press-opacity: 0.5
 ```
 
+## Community guides
+- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
+
 ## Credits
 
 - [ciotlosm](https://github.com/ciotlosm) for the readme template and some awesome examples
