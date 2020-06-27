@@ -1008,7 +1008,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_up
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: card
       color: rgb(223, 255, 97)
@@ -1017,7 +1017,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_down
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: blank-card
     - type: "custom:button-card"
