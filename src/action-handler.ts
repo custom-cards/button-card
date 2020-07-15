@@ -3,6 +3,8 @@ import { directive, PropertyPart } from 'lit-html';
 // tslint:disable-next-line
 import { Ripple } from '@material/mwc-ripple';
 import { myFireEvent } from './my-fire-event';
+import { ButtonCardConfig } from './types';
+import { HomeAssistant, ActionConfig, fireEvent, forwardHaptic, navigate, toggleEntity } from 'custom-card-helpers';
 
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 
@@ -95,6 +97,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     });
 
     const start = (ev: Event): void => {
+      myFireEvent(element, 'action', { action: 'press' });
       this.held = false;
       let x;
       let y;
@@ -129,6 +132,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     const end = (ev: Event): void => {
       // Prevent mouse event if touch event
       ev.preventDefault();
+      myFireEvent(element, 'action', { action: 'release' });
       if (['touchend', 'touchcancel'].includes(ev.type) && this.timer === undefined) {
         if (this.isRepeating && this.repeatTimeout) {
           clearInterval(this.repeatTimeout);

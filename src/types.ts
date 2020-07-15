@@ -15,6 +15,8 @@ export interface ButtonCardConfig {
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
+  press_action?: ActionConfig;
+  release_action?: ActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
