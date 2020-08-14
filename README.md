@@ -1,6 +1,7 @@
 # Button Card by [@RomRider](https://github.com/RomRider) <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
+[![HACS Supported](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![License][license-shield]](LICENSE.md)
 
 ![Project Maintenance][maintenance-shield]
@@ -78,7 +79,7 @@ Lovelace Button card for your entities.
 - rotating animation support
 - confirmation popup for sensitive items (optional) or [locking mecanism](#lock)
 - haptic support for the [Beta IOS App](http://home-assistant.io/ios/beta)
-- support for [custom_updater](https://github.com/custom-components/custom_updater)
+- support for [custom_updater](https://github.com/custom-components/custom_updater) and [HACS](https://github.com/hacs/integration)
 
 ## Configuration
 
@@ -418,7 +419,7 @@ The `grid` element uses CSS grids to design the layout of the card:
 - `state` element is going to the `grid-area: s` by default
 - `label` element is going to the `grid-area: l` by default
 
-You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [home-assitant's community forum][forum] for that.
+You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [Home Assistant's community forum][forum] for that.
 
 To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
 
