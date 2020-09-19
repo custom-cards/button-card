@@ -90,9 +90,9 @@ Lovelace Button card for your entities.
 | `template` | string | optional | any valid template from `button_card_templates` | See [configuration template](#Configuration-Templates) |
 | `entity` | string | optional | `switch.ac` | entity_id |
 | `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggers_update) |
-| `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overriden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
+| `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
-| `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-color)`, for `on` it will be `var(--paper-item-icon-active-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
+| `color` | string | optional | `auto` \| `auto-no-temperature` \| `rgb(28, 128, 199)` | Color of the icon/card. `auto` sets the color based on the color of a light including the temperature of the light. Setting this to `auto-no-temperature` will behave like home-assistant's default, ignoring the temperature of the light. By default, if the entity state is `off`, the color will be `var(--paper-item-icon-color)`, for `on` it will be `var(--paper-item-icon-active-color)` and for any other state it will be `var(--primary-text-color)`. You can redefine each colors using `state` |
 | `size` | string | `40%` | `20px` | Size of the icon. Can be percentage or pixel |
 | `aspect_ratio` | string | optional | `1/1`, `2/1`, `1/1.5`, ... | See [here](#aspect-ratio) for an example. Aspect ratio of the card. `1/1` being a square. This will auto adapt to your screen size |
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used. |
@@ -191,8 +191,8 @@ lock:
 | ---------- | ------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `operator` | string | `==` | See [Available Operators](#Available-operators) | The operator used to compare the current state against the `value` |
 | `value` | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity |
-| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If undefined, uses the general config `name`, and if undefined uses the entity name. Supports templates, see [templates](#javascript-templates) |
-| `icon` | string | optional | `mdi:battery` | The icon to display for this state. Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
+| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If defined uses the general config `name` and if undefined uses the entity name. Supports templates, see [templates](#javascript-templates) |
+| `icon` | string | optional | `mdi:battery` | The icon to display for this state - Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color` | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
 | `styles` | string | optional | | See [styles](#styles) |
 | `spin` | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
@@ -270,7 +270,7 @@ In this second case, you have 2 options:
 
 ### Javascript Templates
 
-The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brakets:
+The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brackets:
 `[[[ javascript function here ]]]`
 
 Don't forget to quote if it's on one line:
@@ -294,7 +294,7 @@ Those are the configuration fields which support templating:
 - `entity_picture`: This needs to return a path to a file or a url as a string.
 - `icon`: This needs to return a string in the format `mdi:icon`
 - All the styles in the style object: This needs to return a string
-- All the value of the state object, appart when the operator is `regex`
+- All the value of the state object, apart from when the operator is `regex`
   - `operator: template`: The function for `value` needs to return a boolean
   - Else: The function for `value` needs to return a string or a number
 - All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
@@ -332,14 +332,14 @@ Styles defined in each state are **additive** with the ones defined in the main 
 
 The `style` object members are:
 
-- `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and it's content, unless redefined in elements below.
+- `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and its content, unless redefined in elements below.
 - `icon`: styles for the icon
 - `entity_picture`: styles for the picture (if any)
 - `name`: styles for the name
 - `state`: styles for the state
 - `label`: styles for the label
 - `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
-- `custom_fields`: styles for each of your custom field. See [Custom Fields](#custom-fields)
+- `custom_fields`: styles for each of your custom fields. See [Custom Fields](#custom-fields)
 
 ```yaml
 - type: custom:button-card
@@ -405,7 +405,7 @@ styles:
 For advanced styling, there are 2 other options in the `styles` config object:
 
 - `grid`: mainly layout for the grid
-- `img_cell`: mainly how you position your icon in it's cell
+- `img_cell`: mainly how you position your icon in its cell
 
 This is how the button is constructed (HTML elements):
 
@@ -508,9 +508,9 @@ Some examples:
 
 #### Injecting CSS with `extra_styles`
 
-**Note**: `extra_styles` **MUST NOT** be used on the first button-card of the currend view, else it will be applied to all the cards in all Lovelace. **It is not possible to fix this behaviour.**
+**Note**: `extra_styles` **MUST NOT** be used on the first button-card of the current view, else it will be applied to all the cards in all Lovelace. **It is not possible to fix this behaviour.**
 
-You can inject any CSS style you want using this config option. It is usefull if you want to inject CSS animations for example. This field supports [templates](#javascript-templates).
+You can inject any CSS style you want using this config option. It is useful if you want to inject CSS animations for example. This field supports [templates](#javascript-templates).
 
 An example is better than words:
 
