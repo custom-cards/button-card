@@ -32,6 +32,7 @@ import {
 } from 'custom-card-helpers';
 import {
   ButtonCardConfig,
+  ExternalButtonCardConfig,
   StateConfig,
   ExemptionUserConfig,
   ExemptionUsernameConfig,
@@ -119,15 +120,21 @@ class ButtonCard extends LitElement {
     super.connectedCallback();
     if (!this._initial_setup_complete) {
       this._initConnected();
+    } else {
+      this._startTimerCountdown();
     }
   }
 
   private _initConnected(): void {
-    if (this.hass === undefined) return;
+    if (this._hass === undefined) return;
     if (this._config === undefined) return;
     if (!this.isConnected) return;
     this._initial_setup_complete = true;
-    if (this._config.entity && computeDomain(this._config.entity) === 'timer') {
+    this._startTimerCountdown();
+  }
+
+  private _startTimerCountdown(): void {
+    if (this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
       const stateObj = this._hass!.states[this._config.entity];
       this._startInterval(stateObj);
     }
@@ -214,7 +221,9 @@ class ButtonCard extends LitElement {
   }
 
   private _calculateRemaining(stateObj: HassEntity): void {
-    this._timeRemaining = timerTimeRemaining(stateObj);
+    if (stateObj.attributes.remaining) {
+      this._timeRemaining = timerTimeRemaining(stateObj);
+    }
   }
 
   private _computeTimeDisplay(stateObj: HassEntity): string | undefined {
@@ -902,7 +911,7 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _configFromLLTemplates(ll: any, config: any): ButtonCardConfig {
+  private _configFromLLTemplates(ll: any, config: any): ExternalButtonCardConfig {
     const tpl = config.template;
     if (!tpl) return config;
     let result: any = {};
@@ -917,10 +926,10 @@ class ButtonCard extends LitElement {
     });
     result = mergeDeep(result, config);
     result.state = mergeStatesById(mergedStateConfig, config.state);
-    return result as ButtonCardConfig;
+    return result as ExternalButtonCardConfig;
   }
 
-  public setConfig(config: ButtonCardConfig): void {
+  public setConfig(config: ExternalButtonCardConfig): void {
     if (!config) {
       throw new Error('Invalid configuration');
     }
@@ -928,9 +937,10 @@ class ButtonCard extends LitElement {
     this._cards = {};
     this._cardsConfig = {};
     const ll = getLovelace() || getLovelaceCast();
-    let template: ButtonCardConfig = JSON.parse(JSON.stringify(config));
+    let template: ExternalButtonCardConfig = JSON.parse(JSON.stringify(config));
     template = this._configFromLLTemplates(ll, template);
     this._config = {
+      type: 'custom:button-card',
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
       layout: 'vertical',
@@ -944,6 +954,15 @@ class ButtonCard extends LitElement {
       show_entity_picture: false,
       show_live_stream: false,
       ...template,
+      default_color: 'DUMMY',
+      color_off: 'DUMMY',
+      color_on: 'DUMMY',
+      lock: {
+        enabled: false,
+        duration: 5,
+        unlock: 'tap',
+        ...template.lock,
+      },
     };
     if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
       this._config = {
@@ -956,12 +975,12 @@ class ButtonCard extends LitElement {
         ...this._config,
       };
     }
-    this._config.lock = {
-      enabled: false,
-      duration: 5,
-      unlock: 'tap',
-      ...this._config.lock,
-    };
+    // this._config.lock = {
+    //   enabled: false,
+    //   duration: 5,
+    //   unlock: 'tap',
+    //   ...this._config.lock,
+    // };
     this._config!.default_color = 'var(--primary-text-color)';
     if (this._config!.color_type !== 'icon') {
       this._config!.color_off = 'var(--card-background-color)';
