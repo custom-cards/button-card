@@ -379,6 +379,9 @@ views:
             - background-size: cover
           name:
             - color: white
+        tap_action:
+          action: media_browser
+          entity_id: media_player.bla
       - type: entities
         entities:
           - input_number.test

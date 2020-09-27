@@ -29,6 +29,7 @@ import {
   fireEvent,
   DOMAINS_TOGGLE,
   LovelaceCard,
+  ActionConfig,
 } from 'custom-card-helpers';
 import {
   ButtonCardConfig,
@@ -39,6 +40,7 @@ import {
   CustomFieldCard,
   ButtonCardEmbeddedCards,
   ButtonCardEmbeddedCardsConfig,
+  MediaBrowserActionConfig,
 } from './types';
 import { actionHandler } from './action-handler';
 import {
@@ -1086,19 +1088,51 @@ class ButtonCard extends LitElement {
   private _handleTap(ev): void {
     const config = ev.target.config;
     if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'tap_action'), false, false);
+    const evaledAction = this._evalActions(config, 'tap_action');
+    if (evaledAction.tap_action?.action == 'media_browser') {
+      this._handleMediaBrowerEvent(evaledAction.tap_action);
+    } else {
+      handleClick(this, this._hass!, evaledAction as {}, false, false);
+    }
   }
 
   private _handleHold(ev): void {
     const config = ev.target.config;
     if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'hold_action'), true, false);
+    const evaledAction = this._evalActions(config, 'hold_action');
+    if (evaledAction.hold_action?.action == 'media_browser') {
+      this._handleMediaBrowerEvent(evaledAction.hold_action);
+    } else {
+      handleClick(this, this._hass!, evaledAction as {}, true, false);
+    }
   }
 
   private _handleDblTap(ev): void {
     const config = ev.target.config;
     if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'double_tap_action'), false, true);
+    const evaledAction = this._evalActions(config, 'double_tap_action');
+    if (evaledAction.double_tap_action?.action == 'media_browser') {
+      this._handleMediaBrowerEvent(evaledAction.double_tap_action);
+    } else {
+      handleClick(this, this._hass!, evaledAction as {}, false, true);
+    }
+  }
+
+  private _handleMediaBrowerEvent(actionConfig: MediaBrowserActionConfig): void {
+    fireEvent(this, 'show-dialog', {
+      dialogTag: 'dialog-media-player-browse',
+      dialogParams: {
+        action: 'play',
+        entityId: actionConfig.entity_id ? actionConfig.entity_id : this._config?.entity,
+        mediaPickedCallback: (pickedMedia: any) => {
+          this._hass!.callService('media_player', 'play_media', {
+            entity_id: actionConfig.entity_id ? actionConfig.entity_id : this._config?.entity,
+            media_content_id: pickedMedia.item.media_content_id,
+            media_content_type: pickedMedia.item.media_content_type,
+          });
+        },
+      },
+    });
   }
 
   private _handleUnlockType(ev): void {

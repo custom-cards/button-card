@@ -1,4 +1,4 @@
-import { ActionConfig, LovelaceCardConfig, LovelaceCard } from 'custom-card-helpers';
+import { ActionConfig, LovelaceCardConfig, LovelaceCard, BaseActionConfig } from 'custom-card-helpers';
 
 export interface ButtonCardConfig {
   template?: string | string[];
@@ -12,9 +12,9 @@ export interface ButtonCardConfig {
   size: string;
   aspect_ratio?: string;
   lock: LockConfig;
-  tap_action?: ActionConfig;
-  hold_action?: ActionConfig;
-  double_tap_action?: ActionConfig;
+  tap_action?: ButtonCardActionConfig;
+  hold_action?: ButtonCardActionConfig;
+  double_tap_action?: ButtonCardActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
@@ -51,9 +51,9 @@ export interface ExternalButtonCardConfig {
   size?: string;
   aspect_ratio?: string;
   lock?: LockConfig;
-  tap_action?: ActionConfig;
-  hold_action?: ActionConfig;
-  double_tap_action?: ActionConfig;
+  tap_action?: ButtonCardActionConfig;
+  hold_action?: ButtonCardActionConfig;
+  double_tap_action?: ButtonCardActionConfig;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
@@ -92,6 +92,13 @@ export interface LockConfig {
   unlock: 'tap' | 'double_tap' | 'hold';
   exemptions?: (ExemptionUserConfig | ExemptionUsernameConfig)[];
 }
+
+export interface MediaBrowserActionConfig extends BaseActionConfig {
+  action: 'media_browser';
+  repeat?: number;
+  entity_id?: string;
+}
+export declare type ButtonCardActionConfig = ActionConfig | MediaBrowserActionConfig;
 
 export interface ExemptionUserConfig {
   user: string;
