@@ -44,5 +44,8 @@ export default [
       sourcemap: dev ? true : false,
     },
     plugins: [...plugins],
+    watch: {
+      exclude: 'node_modules/**',
+    },
   },
 ];

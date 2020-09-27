@@ -33,6 +33,13 @@
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "markdown.extension.toc.githubCompatibility": true
+    "markdown.extension.toc.githubCompatibility": true,
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/**": true,
+      "**/.hg/store/**": true,
+      "**/.rpt2_cache/**": true
+    }
   }
 }
