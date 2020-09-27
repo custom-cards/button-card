@@ -1,14 +1,3 @@
-resources:
-  - url: http://127.0.0.1:5000/button-card.js
-    type: module
-  - url: https://cdn.jsdelivr.net/gh/thomasloven/lovelace-card-mod@master/card-mod.js
-    type: module
-  - { type: js, url: '/local/lovelace/lovelace-card-tools/card-tools.js' }
-  - { type: js, url: '/local/lovelace/lovelace-card-modder/card-modder.js' }
-  - { type: module, url: '/local/lovelace/config-template-card.js' }
-  - { type: js, url: '/local/lovelace/vertical-stack-in-card.js' }
-  - { type: js, url: '/local/lovelace/decluttering-card.js' }
-
 decluttering_templates:
   test_template:
     card:
