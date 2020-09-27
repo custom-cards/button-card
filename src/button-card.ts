@@ -30,7 +30,16 @@ import {
   DOMAINS_TOGGLE,
   LovelaceCard,
 } from 'custom-card-helpers';
-import { ButtonCardConfig, StateConfig, ExemptionUserConfig, ExemptionUsernameConfig } from './types';
+import {
+  ButtonCardConfig,
+  ExternalButtonCardConfig,
+  StateConfig,
+  ExemptionUserConfig,
+  ExemptionUsernameConfig,
+  CustomFieldCard,
+  ButtonCardEmbeddedCards,
+  ButtonCardEmbeddedCardsConfig,
+} from './types';
 import { actionHandler } from './action-handler';
 import {
   computeDomain,
@@ -83,15 +92,22 @@ class ButtonCard extends LitElement {
 
   private _interval?: number;
 
-  private _cards: LovelaceCard[] = [];
+  private _cards: ButtonCardEmbeddedCards = {};
+
+  private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
 
   private _entities: string[] = [];
 
+  private _initial_setup_complete = false;
+
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
-    for (const element of this._cards) {
-      const el = element as any;
+    Object.keys(this._cards).forEach(element => {
+      const el = this._cards[element];
       el.hass = this._hass;
+    });
+    if (!this._initial_setup_complete) {
+      this._initConnected();
     }
   }
 
@@ -102,7 +118,23 @@ class ButtonCard extends LitElement {
 
   public connectedCallback(): void {
     super.connectedCallback();
-    if (this._hass && this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
+    if (!this._initial_setup_complete) {
+      this._initConnected();
+    } else {
+      this._startTimerCountdown();
+    }
+  }
+
+  private _initConnected(): void {
+    if (this._hass === undefined) return;
+    if (this._config === undefined) return;
+    if (!this.isConnected) return;
+    this._initial_setup_complete = true;
+    this._startTimerCountdown();
+  }
+
+  private _startTimerCountdown(): void {
+    if (this._config && this._config.entity && computeDomain(this._config.entity) === 'timer') {
       const stateObj = this._hass!.states[this._config.entity];
       this._startInterval(stateObj);
     }
@@ -124,15 +156,12 @@ class ButtonCard extends LitElement {
   }
 
   protected render(): TemplateResult | void {
+    if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._cards = [];
       this._evaledVariables = this._config!.variables
         ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
         : undefined;
-      if (!this._config || !this._hass) {
-        return html``;
-      }
       return this._cardHtml();
     } catch (e) {
       if (e.stack) console.error(e.stack);
@@ -192,7 +221,9 @@ class ButtonCard extends LitElement {
   }
 
   private _calculateRemaining(stateObj: HassEntity): void {
-    this._timeRemaining = timerTimeRemaining(stateObj);
+    if (stateObj.attributes.remaining) {
+      this._timeRemaining = timerTimeRemaining(stateObj);
+    }
   }
 
   private _computeTimeDisplay(stateObj: HassEntity): string | undefined {
@@ -539,20 +570,20 @@ class ButtonCard extends LitElement {
     if (this._config!.custom_fields) {
       Object.keys(this._config!.custom_fields).forEach(key => {
         const value = this._config!.custom_fields![key];
-        if (!value.card) {
+        if (!(value as CustomFieldCard).card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, value.card);
+          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
         }
       });
     }
     if (configState && configState.custom_fields) {
       Object.keys(configState.custom_fields).forEach(key => {
         const value = configState!.custom_fields![key];
-        if (!value!.card) {
+        if (!(value as CustomFieldCard)!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, value.card);
+          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
         }
       });
     }
@@ -576,8 +607,15 @@ class ButtonCard extends LitElement {
           ...this._buildCustomStyleGeneric(state, configState, key),
           'grid-area': key,
         };
-        const thing = this._createCard(cards[key]);
-        this._cards.push(thing);
+        let thing;
+        const stringConfig = JSON.stringify(cards[key]);
+        if (this._cardsConfig[key] !== stringConfig) {
+          thing = this._createCard(cards[key]);
+          this._cards[key] = thing;
+          this._cardsConfig[key] = stringConfig;
+        } else {
+          thing = this._cards[key];
+        }
         thing.hass = this._hass;
         result = html`
           ${result}
@@ -873,7 +911,7 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _configFromLLTemplates(ll: any, config: any): ButtonCardConfig {
+  private _configFromLLTemplates(ll: any, config: any): ExternalButtonCardConfig {
     const tpl = config.template;
     if (!tpl) return config;
     let result: any = {};
@@ -888,18 +926,21 @@ class ButtonCard extends LitElement {
     });
     result = mergeDeep(result, config);
     result.state = mergeStatesById(mergedStateConfig, config.state);
-    return result as ButtonCardConfig;
+    return result as ExternalButtonCardConfig;
   }
 
-  public setConfig(config: ButtonCardConfig): void {
+  public setConfig(config: ExternalButtonCardConfig): void {
     if (!config) {
       throw new Error('Invalid configuration');
     }
 
+    this._cards = {};
+    this._cardsConfig = {};
     const ll = getLovelace() || getLovelaceCast();
-    let template: ButtonCardConfig = JSON.parse(JSON.stringify(config));
+    let template: ExternalButtonCardConfig = JSON.parse(JSON.stringify(config));
     template = this._configFromLLTemplates(ll, template);
     this._config = {
+      type: 'custom:button-card',
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
       layout: 'vertical',
@@ -913,6 +954,15 @@ class ButtonCard extends LitElement {
       show_entity_picture: false,
       show_live_stream: false,
       ...template,
+      default_color: 'DUMMY',
+      color_off: 'DUMMY',
+      color_on: 'DUMMY',
+      lock: {
+        enabled: false,
+        duration: 5,
+        unlock: 'tap',
+        ...template.lock,
+      },
     };
     if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
       this._config = {
@@ -925,15 +975,15 @@ class ButtonCard extends LitElement {
         ...this._config,
       };
     }
-    this._config.lock = {
-      enabled: false,
-      duration: 5,
-      unlock: 'tap',
-      ...this._config.lock,
-    };
+    // this._config.lock = {
+    //   enabled: false,
+    //   duration: 5,
+    //   unlock: 'tap',
+    //   ...this._config.lock,
+    // };
     this._config!.default_color = 'var(--primary-text-color)';
     if (this._config!.color_type !== 'icon') {
-      this._config!.color_off = 'var(--paper-card-background-color)';
+      this._config!.color_off = 'var(--card-background-color)';
     } else {
       this._config!.color_off = 'var(--paper-item-icon-color)';
     }
@@ -958,6 +1008,9 @@ class ButtonCard extends LitElement {
     if (this._config.entity && !this._entities.includes(this._config.entity)) this._entities.push(this._config.entity);
     const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'gm');
     this._hasTemplate = this._config.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
+    if (!this._initial_setup_complete) {
+      this._initConnected();
+    }
   }
 
   // The height of your card. Home Assistant uses this to automatically

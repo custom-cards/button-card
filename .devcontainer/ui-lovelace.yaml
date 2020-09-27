@@ -2605,7 +2605,7 @@ views:
                     style="width: 12px; height: 12px; color: deepskyblue;">
                     </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
                 ]]]
-            template: button_good
+            #template: button_good
           - type: custom:button-card
             aspect_ratio: 1/1
             custom_fields:
@@ -2621,7 +2621,7 @@ views:
               picture:
                 card:
                   type: picture-glance
-                  camera_image: camera.yi_dome
+                  camera_image: camera.demo_camera
                   entities: []
                   camera_view: live
             styles:

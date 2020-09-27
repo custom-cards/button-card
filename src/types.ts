@@ -1,4 +1,4 @@
-import { ActionConfig } from 'custom-card-helpers';
+import { ActionConfig, LovelaceCardConfig, LovelaceCard } from 'custom-card-helpers';
 
 export interface ButtonCardConfig {
   template?: string | string[];
@@ -35,6 +35,42 @@ export interface ButtonCardConfig {
   default_color: string;
   color_on: string;
   color_off: string;
+  custom_fields?: CustomFields;
+  variables?: Variables;
+  extra_styles?: string;
+}
+
+export interface ExternalButtonCardConfig {
+  template?: string | string[];
+  triggers_update?: string[] | 'all';
+  entity?: string;
+  name?: string;
+  icon?: string;
+  color_type?: 'icon' | 'card' | 'label-card' | 'blank-card';
+  color?: 'auto' | 'auto-no-temperature' | string;
+  size?: string;
+  aspect_ratio?: string;
+  lock?: LockConfig;
+  tap_action?: ActionConfig;
+  hold_action?: ActionConfig;
+  double_tap_action?: ActionConfig;
+  show_name?: boolean;
+  show_state?: boolean;
+  show_icon?: boolean;
+  show_units?: boolean;
+  show_entity_picture?: boolean;
+  show_last_changed?: boolean;
+  show_label?: boolean;
+  show_live_stream?: boolean;
+  label?: string;
+  entity_picture?: string;
+  units?: string;
+  state_display?: string;
+  state?: StateConfig[];
+  styles?: StylesConfig;
+  confirmation?: string;
+  layout?: Layout;
+  entity_picture_style?: CssStyleConfig[];
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
@@ -102,9 +138,21 @@ export interface CssStyleConfig {
 }
 
 export interface CustomFields {
-  [key: string]: any;
+  [key: string]: string | CustomFieldCard;
+}
+
+export interface CustomFieldCard {
+  card: LovelaceCardConfig;
 }
 
 export interface Variables {
   [key: string]: any;
+}
+
+export interface ButtonCardEmbeddedCards {
+  [key: string]: LovelaceCard;
+}
+
+export interface ButtonCardEmbeddedCardsConfig {
+  [key: string]: string | undefined;
 }
