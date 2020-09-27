@@ -185,6 +185,14 @@ lock:
   exemptions: []
 ```
 
+By default the lock is visible in the upper-right corner. If you want to move the position of the lock to for example the bottom-right corner you can use this code:
+```yaml
+styles:
+  lock:
+    - justify-content: flex-end
+    - align-items: flex-end
+```
+
 ### State
 
 | Name | Type | Default | Supported options | Description |
