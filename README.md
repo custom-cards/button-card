@@ -186,6 +186,14 @@ lock:
   exemptions: []
 ```
 
+By default the lock is visible in the upper-right corner. If you want to move the position of the lock to for example the bottom-right corner you can use this code:
+```yaml
+styles:
+  lock:
+    - justify-content: flex-end
+    - align-items: flex-end
+```
+
 ### State
 
 | Name | Type | Default | Supported options | Description |
@@ -1009,7 +1017,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_up
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: card
       color: rgb(223, 255, 97)
@@ -1018,7 +1026,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_down
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: blank-card
     - type: "custom:button-card"
@@ -1454,6 +1462,9 @@ styles:
     - --mdc-ripple-color: blue
     - --mdc-ripple-press-opacity: 0.5
 ```
+
+## Community guides
+- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
 
 ## Credits
 
