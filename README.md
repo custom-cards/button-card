@@ -1,6 +1,7 @@
 # Button Card by [@RomRider](https://github.com/RomRider) <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
+[![HACS Supported](https://img.shields.io/badge/HACS-Supported-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 [![License][license-shield]](LICENSE.md)
 
 ![Project Maintenance][maintenance-shield]
@@ -78,7 +79,7 @@ Lovelace Button card for your entities.
 - rotating animation support
 - confirmation popup for sensitive items (optional) or [locking mecanism](#lock)
 - haptic support for the [Beta IOS App](http://home-assistant.io/ios/beta)
-- support for [custom_updater](https://github.com/custom-components/custom_updater)
+- support for [custom_updater](https://github.com/custom-components/custom_updater) and [HACS](https://github.com/hacs/integration)
 
 ## Configuration
 
@@ -183,6 +184,14 @@ If you want to lock the button for everyone and disable the unlocking possibilit
 lock:
   enabled: true
   exemptions: []
+```
+
+By default the lock is visible in the upper-right corner. If you want to move the position of the lock to for example the bottom-right corner you can use this code:
+```yaml
+styles:
+  lock:
+    - justify-content: flex-end
+    - align-items: flex-end
 ```
 
 ### State
@@ -418,7 +427,7 @@ The `grid` element uses CSS grids to design the layout of the card:
 - `state` element is going to the `grid-area: s` by default
 - `label` element is going to the `grid-area: l` by default
 
-You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [home-assitant's community forum][forum] for that.
+You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [Home Assistant's community forum][forum] for that.
 
 To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
 
@@ -1008,7 +1017,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_up
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: card
       color: rgb(223, 255, 97)
@@ -1017,7 +1026,7 @@ Horizontal stack with :
         action: call-service
         service: media_player.volume_down
         service_data:
-          entity_id: media_player.livimg_room_speaker
+          entity_id: media_player.living_room_speaker
     - type: "custom:button-card"
       color_type: blank-card
     - type: "custom:button-card"
@@ -1453,6 +1462,9 @@ styles:
     - --mdc-ripple-color: blue
     - --mdc-ripple-press-opacity: 0.5
 ```
+
+## Community guides
+- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
 
 ## Credits
 
