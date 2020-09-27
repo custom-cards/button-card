@@ -964,7 +964,7 @@ class ButtonCard extends LitElement {
     };
     this._config!.default_color = 'var(--primary-text-color)';
     if (this._config!.color_type !== 'icon') {
-      this._config!.color_off = 'var(--paper-card-background-color)';
+      this._config!.color_off = 'var(--card-background-color)';
     } else {
       this._config!.color_off = 'var(--paper-item-icon-color)';
     }
