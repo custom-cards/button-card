@@ -185,6 +185,14 @@ lock:
   exemptions: []
 ```
 
+By default the lock is visible in the upper-right corner. If you want to move the position of the lock to for example the bottom-right corner you can use this code:
+```yaml
+styles:
+  lock:
+    - justify-content: flex-end
+    - align-items: flex-end
+```
+
 ### State
 
 | Name | Type | Default | Supported options | Description |
@@ -1453,6 +1461,9 @@ styles:
     - --mdc-ripple-color: blue
     - --mdc-ripple-press-opacity: 0.5
 ```
+
+## Community guides
+- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
 
 ## Credits
 
