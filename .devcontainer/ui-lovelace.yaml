@@ -338,6 +338,10 @@ views:
         show_entity_picture: true
         name: Entity Picture Cast
         entity_picture: /local/cast.jpg
+        tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
+        styles:
+          tooltip:
+            - color: red
       - type: 'custom:button-card'
         custom_fields:
           test:

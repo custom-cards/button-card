@@ -673,8 +673,10 @@ class ButtonCard extends LitElement {
     const aspectRatio: any = {};
     const lockStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'lock');
     const configCardStyle = this._buildStyleGeneric(this._stateObj, configState, 'card');
+    const tooltipStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'tooltip');
     const classList: ClassInfo = {
       'button-card-main': true,
+      tooltip: this._config?.tooltip ? true : false,
       disabled: !this._isClickable(this._stateObj),
     };
     if (configCardStyle.width) {
@@ -741,6 +743,13 @@ class ButtonCard extends LitElement {
           .config="${this._config}"
         >
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
+          ${this._config?.tooltip
+            ? html`
+                <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}
+                  >${this._getTemplateOrValue(this._stateObj, this._config.tooltip)}</span
+                >
+              `
+            : ''}
           <mwc-ripple id="ripple"></mwc-ripple>
         </ha-card>
       </div>

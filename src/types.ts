@@ -39,6 +39,7 @@ export interface ButtonCardConfig {
   variables?: Variables;
   extra_styles?: string;
   card_size: number;
+  tooltip?: string;
 }
 
 export interface ExternalButtonCardConfig {
@@ -76,6 +77,7 @@ export interface ExternalButtonCardConfig {
   variables?: Variables;
   extra_styles?: string;
   card_size?: number;
+  tooltip?: string;
 }
 
 export type Layout =
@@ -128,6 +130,7 @@ export interface StylesConfig {
   grid?: CssStyleConfig[];
   img_cell?: CssStyleConfig[];
   lock?: CssStyleConfig[];
+  tooltip?: CssStyleConfig[];
   custom_fields?: CustomStyleConfig;
 }
 
