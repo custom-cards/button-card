@@ -54,6 +54,7 @@ Lovelace Button card for your entities.
   - [Lock](#lock)
   - [Aspect Ratio](#aspect-ratio)
   - [Changing the feedback color during a click](#changing-the-feedback-color-during-a-click)
+- [Community guides](#community-guides)
 - [Credits](#credits)
 
 ## Features
@@ -120,6 +121,8 @@ Lovelace Button card for your entities.
 | `layout` | string | optional | See [Layout](#Layout) | The layout of the button can be modified using this option |
 | `custom_fields` | object | optional | See [Custom Fields](#Custom-Fields) |
 | `variables` | object | optional | See [Variables](#Variables) |
+| `card_size` | number | 3 | Any number | Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px) |
+| `tooltip` | string | optional | Any string | (Not supported on touchscreens) You can configure the tooltip displayed after hovering the card for 1.5 seconds . Supports templates, see [templates](#javascript-templates) |
 
 ### Action
 
@@ -347,7 +350,8 @@ The `style` object members are:
 - `name`: styles for the name
 - `state`: styles for the state
 - `label`: styles for the label
-- `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L36-L49) for the default style)
+- `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L73-L86) for the default style)
+- `tooltip`: styles for the tooltip overlay (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L30-L46))
 - `custom_fields`: styles for each of your custom fields. See [Custom Fields](#custom-fields)
 
 ```yaml
