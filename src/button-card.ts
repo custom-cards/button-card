@@ -953,6 +953,7 @@ class ButtonCard extends LitElement {
       show_label: false,
       show_entity_picture: false,
       show_live_stream: false,
+      card_size: 3,
       ...template,
       default_color: 'DUMMY',
       color_off: 'DUMMY',
@@ -975,12 +976,6 @@ class ButtonCard extends LitElement {
         ...this._config,
       };
     }
-    // this._config.lock = {
-    //   enabled: false,
-    //   duration: 5,
-    //   unlock: 'tap',
-    //   ...this._config.lock,
-    // };
     this._config!.default_color = 'var(--primary-text-color)';
     if (this._config!.color_type !== 'icon') {
       this._config!.color_off = 'var(--card-background-color)';
@@ -1016,7 +1011,7 @@ class ButtonCard extends LitElement {
   // The height of your card. Home Assistant uses this to automatically
   // distribute all cards over the available columns.
   public getCardSize(): number {
-    return 3;
+    return this._config?.card_size || 3;
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {

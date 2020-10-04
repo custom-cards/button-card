@@ -38,6 +38,7 @@ export interface ButtonCardConfig {
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
+  card_size: number;
 }
 
 export interface ExternalButtonCardConfig {
@@ -74,6 +75,7 @@ export interface ExternalButtonCardConfig {
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
+  card_size?: number;
 }
 
 export type Layout =
