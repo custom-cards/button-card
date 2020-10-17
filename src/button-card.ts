@@ -339,27 +339,31 @@ class ButtonCard extends LitElement {
   private _getColorForLightEntity(state: HassEntity | undefined, useTemperature: boolean): string {
     let color: string = this._config!.default_color;
     if (state) {
-      if (state.attributes.rgb_color) {
-        color = `rgb(${state.attributes.rgb_color.join(',')})`;
-        if (state.attributes.brightness) {
-          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+      if (state.state === 'on') {
+        if (state.attributes.rgb_color) {
+          color = `rgb(${state.attributes.rgb_color.join(',')})`;
+          if (state.attributes.brightness) {
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+          }
+        } else if (
+          useTemperature &&
+          state.attributes.color_temp &&
+          state.attributes.min_mireds &&
+          state.attributes.max_mireds
+        ) {
+          color = getLightColorBasedOnTemperature(
+            state.attributes.color_temp,
+            state.attributes.min_mireds,
+            state.attributes.max_mireds,
+          );
+          if (state.attributes.brightness) {
+            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+          }
+        } else if (state.attributes.brightness) {
+          color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
+        } else {
+          color = this._getDefaultColorForState(state);
         }
-      } else if (
-        useTemperature &&
-        state.attributes.color_temp &&
-        state.attributes.min_mireds &&
-        state.attributes.max_mireds
-      ) {
-        color = getLightColorBasedOnTemperature(
-          state.attributes.color_temp,
-          state.attributes.min_mireds,
-          state.attributes.max_mireds,
-        );
-        if (state.attributes.brightness) {
-          color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
-        }
-      } else if (state.attributes.brightness) {
-        color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
       } else {
         color = this._getDefaultColorForState(state);
       }
