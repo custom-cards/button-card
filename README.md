@@ -564,7 +564,7 @@ An example is better than words:
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon).
 This is an advanced feature which leverages (if you require it) the CSS Grid.
 
-Custom fields also support embeded cards, see [exemple below](#custom_fields_card_example).
+Custom fields also support embeded cards, see [example below](#custom_fields_card_example).
 
 Each custom field supports its own styling config, the name needs to match between both objects needs to match:
 
@@ -865,7 +865,7 @@ state:
 #### Variables
 
 You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
-An exemple below:
+An example below:
 
 ```yaml
 button_card_templates:
