@@ -745,13 +745,7 @@ Examples are better than a long text, so here you go:
 
 #### General
 
-- Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄
-  Make sure which type of lovelace you are using before changing main lovelace configuration:
-  * **`managed`** changes are managed by lovelace ui - add the template configuration to configuration in raw editor
-      * go to your dashboard
-      * click three dots and `Edit dashboard` button 
-      * click three dots again and click `Raw configuration editor` button
-  * **`yaml`** - add template configuration to your `ui-lovelace.yaml`
+- Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄  
 - You can overload any parameter with a new one
 - You can merge states together **by `id`** when using templates. The states you want to merge have to have the same `id`. This `id` parameter is new and can be anything (string, number, ...). States without `id` will be appended to the state array. Styles embedded in a state are merged together as usual. See [here](#merging-state-by-id) for an example.
 - You can also inherit another template from within a template.
@@ -766,7 +760,12 @@ Examples are better than a long text, so here you go:
 
   The button templates will be applied in the order they are defined: `template2` will be merged with `template1` and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).
 
-In `ui-lovelace.yaml` (or in another file using `!import`)
+Make sure which type of lovelace dashboard you are using before changing the main lovelace configuration:
+  * **`managed`** changes are managed by lovelace ui - add the template configuration to configuration in raw editor
+      * go to your dashboard
+      * click three dots and `Edit dashboard` button 
+      * click three dots again and click `Raw configuration editor` button
+  * **`yaml`** - add template configuration to your `ui-lovelace.yaml`
 
 ```yaml
 button_card_templates:
