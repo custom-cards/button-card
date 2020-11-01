@@ -3,6 +3,7 @@ import { ActionConfig, LovelaceCardConfig, LovelaceCard } from 'custom-card-help
 export interface ButtonCardConfig {
   template?: string | string[];
   triggers_update?: string[] | 'all';
+  group_expand: boolean;
   type: string;
   entity?: string;
   name?: string;
@@ -45,6 +46,7 @@ export interface ButtonCardConfig {
 export interface ExternalButtonCardConfig {
   template?: string | string[];
   triggers_update?: string[] | 'all';
+  group_expand?: boolean;
   entity?: string;
   name?: string;
   icon?: string;

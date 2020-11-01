@@ -180,7 +180,11 @@ class ButtonCard extends LitElement {
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     const forceUpdate = this._hasTemplate || changedProps.has('_timeRemaining') ? true : false;
-    return forceUpdate || myHasConfigOrEntityChanged(this, changedProps);
+    if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
+      this._expandTriggerGroups();
+      return true;
+    }
+    return false;
   }
 
   protected updated(changedProps: PropertyValues): void {
@@ -954,6 +958,7 @@ class ButtonCard extends LitElement {
     template = this._configFromLLTemplates(ll, template);
     this._config = {
       type: 'custom:button-card',
+      group_expand: false,
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
       layout: 'vertical',
@@ -1014,10 +1019,38 @@ class ButtonCard extends LitElement {
       });
     }
     if (this._config.entity && !this._entities.includes(this._config.entity)) this._entities.push(this._config.entity);
+    this._expandTriggerGroups();
+
     const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'gm');
     this._hasTemplate = this._config.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
     if (!this._initial_setup_complete) {
       this._initConnected();
+    }
+  }
+
+  private _loopGroup(entityList: string[] | undefined): void {
+    if (entityList) {
+      entityList.forEach(childEntity => {
+        if (this._hass?.states[childEntity]) {
+          if (computeDomain(childEntity) === 'group' && this._hass.states[childEntity].attributes?.entity_id) {
+            this._loopGroup(this._hass.states[childEntity].attributes.entity_id);
+          } else {
+            if (!this._entities.includes(childEntity)) {
+              this._entities.push(childEntity);
+            }
+          }
+        }
+      });
+    }
+  }
+
+  private _expandTriggerGroups(): void {
+    if (this._hass && this._config?.group_expand && this._entities) {
+      this._entities.forEach(entity => {
+        if (computeDomain(entity) === 'group') {
+          this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
+        }
+      });
     }
   }
 
