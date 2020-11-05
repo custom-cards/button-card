@@ -1110,13 +1110,13 @@ class ButtonCard extends LitElement {
     if (ev.detail && ev.detail.action) {
       switch (ev.detail.action) {
         case 'tap':
-          this._handleTap(ev);
+          this._handleTap();
           break;
         case 'hold':
-          this._handleHold(ev);
+          this._handleHold();
           break;
         case 'double_tap':
-          this._handleDblTap(ev);
+          this._handleDblTap();
           break;
         default:
           break;
@@ -1124,26 +1124,26 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _handleTap(ev): void {
-    const config = ev.target.config;
+  private _handleTap(): void {
+    const config = this._config;
     if (!config) return;
     handleClick(this, this._hass!, this._evalActions(config, 'tap_action'), false, false);
   }
 
-  private _handleHold(ev): void {
-    const config = ev.target.config;
+  private _handleHold(): void {
+    const config = this._config;
     if (!config) return;
     handleClick(this, this._hass!, this._evalActions(config, 'hold_action'), true, false);
   }
 
-  private _handleDblTap(ev): void {
-    const config = ev.target.config;
+  private _handleDblTap(): void {
+    const config = this._config;
     if (!config) return;
     handleClick(this, this._hass!, this._evalActions(config, 'double_tap_action'), false, true);
   }
 
   private _handleUnlockType(ev): void {
-    const config = ev.target.config as ButtonCardConfig;
+    const config = this._config as ButtonCardConfig;
     if (!config) return;
     if (config.lock.unlock === ev.detail.action) {
       this._handleLock();
