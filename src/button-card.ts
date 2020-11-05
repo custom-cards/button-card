@@ -55,7 +55,9 @@ import {
 } from './helpers';
 import { styles } from './styles';
 import { myComputeStateDisplay } from './compute_state_display';
+import copy from 'fast-copy';
 import * as pjson from '../package.json';
+import { deepEqual } from './deep-equal';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise(async resolve => {
@@ -308,7 +310,7 @@ class ButtonCard extends LitElement {
   }
 
   private _objectEvalTemplate(state: HassEntity | undefined, obj: any | undefined): any {
-    const objClone = JSON.parse(JSON.stringify(obj));
+    const objClone = copy(obj);
     return this._getTemplateOrValue(state, objClone);
   }
 
@@ -616,11 +618,10 @@ class ButtonCard extends LitElement {
           'grid-area': key,
         };
         let thing;
-        const stringConfig = JSON.stringify(cards[key]);
-        if (this._cardsConfig[key] !== stringConfig) {
+        if (!deepEqual(this._cardsConfig[key], cards[key])) {
           thing = this._createCard(cards[key]);
           this._cards[key] = thing;
-          this._cardsConfig[key] = stringConfig;
+          this._cardsConfig[key] = copy(cards[key]);
         } else {
           thing = this._cards[key];
         }
@@ -1021,7 +1022,7 @@ class ButtonCard extends LitElement {
     if (this._config.entity && !this._entities.includes(this._config.entity)) this._entities.push(this._config.entity);
     this._expandTriggerGroups();
 
-    const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'gm');
+    const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'm');
     this._hasTemplate = this._config.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
     if (!this._initial_setup_complete) {
       this._initConnected();

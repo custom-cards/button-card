@@ -59,6 +59,7 @@
     "@ctrl/tinycolor": "^2.6.1",
     "@material/mwc-ripple": "^0.15.0",
     "custom-card-helpers": "^1.6.5",
+    "fast-copy": "^2.1.0",
     "home-assistant-js-websocket": "^5.1.0",
     "lit-element": "^2.3.0",
     "lit-html": "^1.2.0"
