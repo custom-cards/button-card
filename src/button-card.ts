@@ -60,7 +60,7 @@ import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 
 let helpers = (window as any).cardHelpers;
-const helperPromise = new Promise(async resolve => {
+const helperPromise = new Promise(async (resolve) => {
   if (helpers) resolve();
   if ((window as any).loadCardHelpers) {
     helpers = await (window as any).loadCardHelpers();
@@ -104,7 +104,7 @@ class ButtonCard extends LitElement {
 
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
-    Object.keys(this._cards).forEach(element => {
+    Object.keys(this._cards).forEach((element) => {
       const el = this._cards[element];
       el.hass = this._hass;
     });
@@ -174,9 +174,7 @@ class ButtonCard extends LitElement {
         error: e.toString(),
         origConfig: this._config,
       });
-      return html`
-        ${errorCard}
-      `;
+      return html` ${errorCard} `;
     }
   }
 
@@ -244,12 +242,12 @@ class ButtonCard extends LitElement {
     if (!this._config!.state) {
       return undefined;
     }
-    const hasTemplate = this._config!.state.find(elt => elt.operator === 'template');
+    const hasTemplate = this._config!.state.find((elt) => elt.operator === 'template');
     if (!state && !hasTemplate) {
       return undefined;
     }
     let def: StateConfig | undefined;
-    const retval = this._config!.state.find(elt => {
+    const retval = this._config!.state.find((elt) => {
       if (elt.operator) {
         switch (elt.operator) {
           case '==':
@@ -318,7 +316,7 @@ class ButtonCard extends LitElement {
     if (['number', 'boolean'].includes(typeof value)) return value;
     if (!value) return value;
     if (['object'].includes(typeof value)) {
-      Object.keys(value).forEach(key => {
+      Object.keys(value).forEach((key) => {
         value[key] = this._getTemplateOrValue(state, value[key]);
       });
       return value;
@@ -448,7 +446,7 @@ class ButtonCard extends LitElement {
         ...configStateStyle,
       };
     }
-    Object.keys(style).forEach(key => {
+    Object.keys(style).forEach((key) => {
       style[key] = this._getTemplateOrValue(state, style[key]);
     });
     return style;
@@ -476,7 +474,7 @@ class ButtonCard extends LitElement {
         ...configStateStyle,
       };
     }
-    Object.keys(style).forEach(key => {
+    Object.keys(style).forEach((key) => {
       style[key] = this._getTemplateOrValue(state, style[key]);
     });
     return style;
@@ -578,7 +576,7 @@ class ButtonCard extends LitElement {
     const fields: any = {};
     const cards: any = {};
     if (this._config!.custom_fields) {
-      Object.keys(this._config!.custom_fields).forEach(key => {
+      Object.keys(this._config!.custom_fields).forEach((key) => {
         const value = this._config!.custom_fields![key];
         if (!(value as CustomFieldCard).card) {
           fields[key] = this._getTemplateOrValue(state, value);
@@ -588,7 +586,7 @@ class ButtonCard extends LitElement {
       });
     }
     if (configState && configState.custom_fields) {
-      Object.keys(configState.custom_fields).forEach(key => {
+      Object.keys(configState.custom_fields).forEach((key) => {
         const value = configState!.custom_fields![key];
         if (!(value as CustomFieldCard)!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
@@ -597,7 +595,7 @@ class ButtonCard extends LitElement {
         }
       });
     }
-    Object.keys(fields).forEach(key => {
+    Object.keys(fields).forEach((key) => {
       if (fields[key] != undefined) {
         const customStyle: StyleInfo = {
           ...this._buildCustomStyleGeneric(state, configState, key),
@@ -611,7 +609,7 @@ class ButtonCard extends LitElement {
         `;
       }
     });
-    Object.keys(cards).forEach(key => {
+    Object.keys(cards).forEach((key) => {
       if (cards[key] != undefined) {
         const customStyle: StyleInfo = {
           ...this._buildCustomStyleGeneric(state, configState, key),
@@ -935,7 +933,7 @@ class ButtonCard extends LitElement {
     let result: any = {};
     let mergedStateConfig: StateConfig[] | undefined;
     const tpls = tpl && Array.isArray(tpl) ? tpl : [tpl];
-    tpls?.forEach(template => {
+    tpls?.forEach((template) => {
       if (!(ll.config.button_card_templates && ll.config.button_card_templates[template]))
         throw new Error(`Button-card template '${template}' is missing!`);
       const res = this._configFromLLTemplates(ll, ll.config.button_card_templates[template]);
@@ -1014,7 +1012,7 @@ class ButtonCard extends LitElement {
       const entitiesRxp = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'gm');
       const entitiesRxp2 = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'm');
       const matched = jsonConfig.match(entitiesRxp);
-      matched?.forEach(match => {
+      matched?.forEach((match) => {
         const res = match.match(entitiesRxp2);
         if (res && !this._entities.includes(res[2])) this._entities.push(res[2]);
       });
@@ -1031,7 +1029,7 @@ class ButtonCard extends LitElement {
 
   private _loopGroup(entityList: string[] | undefined): void {
     if (entityList) {
-      entityList.forEach(childEntity => {
+      entityList.forEach((childEntity) => {
         if (this._hass?.states[childEntity]) {
           if (computeDomain(childEntity) === 'group' && this._hass.states[childEntity].attributes?.entity_id) {
             this._loopGroup(this._hass.states[childEntity].attributes.entity_id);
@@ -1047,7 +1045,7 @@ class ButtonCard extends LitElement {
 
   private _expandTriggerGroups(): void {
     if (this._hass && this._config?.group_expand && this._entities) {
-      this._entities.forEach(entity => {
+      this._entities.forEach((entity) => {
         if (computeDomain(entity) === 'group') {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
@@ -1068,7 +1066,7 @@ class ButtonCard extends LitElement {
       if (!configEval) {
         return configEval;
       }
-      Object.keys(configEval).forEach(key => {
+      Object.keys(configEval).forEach((key) => {
         if (typeof configEval[key] === 'object') {
           configEval[key] = __evalObject(configEval[key]);
         } else {
@@ -1092,19 +1090,19 @@ class ButtonCard extends LitElement {
   // backward compatibility
   @eventOptions({ passive: true })
   private handleRippleActivate(evt?: Event): void {
-    this._ripple.then(r => r && r.startPress && this._rippleHandlers.startPress(evt));
+    this._ripple.then((r) => r && r.startPress && this._rippleHandlers.startPress(evt));
   }
 
   private handleRippleDeactivate(): void {
-    this._ripple.then(r => r && r.endPress && this._rippleHandlers.endPress());
+    this._ripple.then((r) => r && r.endPress && this._rippleHandlers.endPress());
   }
 
   private handleRippleFocus(): void {
-    this._ripple.then(r => r && r.startFocus && this._rippleHandlers.startFocus());
+    this._ripple.then((r) => r && r.startFocus && this._rippleHandlers.startFocus());
   }
 
   private handleRippleBlur(): void {
-    this._ripple.then(r => r && r.endFocus && this._rippleHandlers.endFocus());
+    this._ripple.then((r) => r && r.endFocus && this._rippleHandlers.endFocus());
   }
 
   private _handleAction(ev: any): void {
@@ -1157,7 +1155,7 @@ class ButtonCard extends LitElement {
     if (this._config!.lock!.exemptions) {
       if (!this._hass!.user.name || !this._hass!.user.id) return;
       let matched = false;
-      this._config!.lock!.exemptions.forEach(e => {
+      this._config!.lock!.exemptions.forEach((e) => {
         if (
           (!matched && (e as ExemptionUserConfig).user === this._hass!.user.id) ||
           (e as ExemptionUsernameConfig).username === this._hass!.user.name
