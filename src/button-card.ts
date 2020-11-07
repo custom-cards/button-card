@@ -953,7 +953,7 @@ class ButtonCard extends LitElement {
     this._cards = {};
     this._cardsConfig = {};
     const ll = getLovelace() || getLovelaceCast();
-    let template: ExternalButtonCardConfig = JSON.parse(JSON.stringify(config));
+    let template: ExternalButtonCardConfig = copy(config);
     template = this._configFromLLTemplates(ll, template);
     this._config = {
       type: 'custom:button-card',
@@ -1060,7 +1060,7 @@ class ButtonCard extends LitElement {
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
-    const configDuplicate = JSON.parse(JSON.stringify(config));
+    const configDuplicate = copy(config);
     /* eslint no-param-reassign: 0 */
     const __evalObject = (configEval: any): any => {
       if (!configEval) {
