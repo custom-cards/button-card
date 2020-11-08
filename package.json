@@ -4,7 +4,7 @@
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "scripts": {
-    "build": "npm run lint && npm run rollup && npm run babel",
+    "build": "npm run lint && npm run rollup",
     "rollup": "rollup -c",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/*.ts",
@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/custom-cards/button-card#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-decorators": "^7.12.1",
