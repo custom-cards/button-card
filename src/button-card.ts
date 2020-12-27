@@ -623,9 +623,13 @@ class ButtonCard extends LitElement {
           ${result}
           <div
             id=${key}
-            class="ellipsis"
+            @action=${this._stopPropagation}
             @click=${this._stopPropagation}
             @touchstart=${this._stopPropagation}
+            @mousedown=${this._stopPropagation}
+            @mouseup=${this._stopPropagation}
+            @touchend=${this._stopPropagation}
+            @touchcancel=${this._stopPropagation}
             style=${styleMap(customStyle)}
           >
             ${thing}
@@ -1188,7 +1192,7 @@ class ButtonCard extends LitElement {
     }, this._config!.lock!.duration! * 1000);
   }
 
-  private _stopPropagation(ev): void {
+  private _stopPropagation(ev: Event): void {
     ev.stopPropagation();
   }
 }
