@@ -78,10 +78,10 @@ console.info(
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: "button-card",
-  name: "Button-Card",
+  type: 'button-card',
+  name: 'Button-Card',
   preview: false,
-  description: "A massively customizable custom button card",
+  description: 'A massively customizable custom button card',
 });
 
 @customElement('button-card')
