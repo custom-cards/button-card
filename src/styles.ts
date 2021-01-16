@@ -27,7 +27,8 @@ export const styles = css`
     pointer-events: none;
     cursor: default;
   }
-  .tooltip .tooltiptext {
+  :host(.tooltip) .tooltiptext {
+    pointer-events: none;
     opacity: 0;
     text-align: center;
     padding: 4px;
@@ -42,9 +43,12 @@ export const styles = css`
     border: 1px solid var(--primary-text-color);
     color: var(--primary-text-color);
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 9999;
   }
-  .tooltip:hover span.tooltiptext {
+  :host(.tooltip:hover) span.tooltiptext {
     opacity: 1;
     transition-delay: 1.5s;
   }

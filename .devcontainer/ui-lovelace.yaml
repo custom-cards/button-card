@@ -338,7 +338,19 @@ views:
         show_entity_picture: true
         name: Entity Picture Cast
         entity_picture: /local/cast.jpg
-        tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
+        tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
+        styles:
+          tooltip:
+            - color: red
+      - type: 'custom:button-card'
+        color_type: card
+        icon: mdi:lock
+        name: Lock + Tooltip Test
+        tooltip: 'Test Test'
+        lock:
+          enabled: true
+          duration: 7
+          unlock: hold
         styles:
           tooltip:
             - color: red
