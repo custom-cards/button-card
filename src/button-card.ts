@@ -76,6 +76,14 @@ console.info(
   'color: white; font-weight: bold; background: dimgray',
 );
 
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+  type: "button-card",
+  name: "Button-Card",
+  preview: false,
+  description: "A massively customizable custom button card",
+});
+
 @customElement('button-card')
 class ButtonCard extends LitElement {
   @property() private _hass?: HomeAssistant;
