@@ -79,7 +79,7 @@ Lovelace Button card for your entities.
 - [blink](#blink) animation support
 - rotating animation support
 - confirmation popup for sensitive items (optional) or [locking mecanism](#lock)
-- haptic support for the [Beta IOS App](http://home-assistant.io/ios/beta)
+- haptic support for the [IOS companion App](https://companion.home-assistant.io/docs/integrations/haptics)
 - support for [custom_updater](https://github.com/custom-components/custom_updater) and [HACS](https://github.com/hacs/integration)
 
 ## Configuration
