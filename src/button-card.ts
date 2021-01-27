@@ -76,6 +76,14 @@ console.info(
   'color: white; font-weight: bold; background: dimgray',
 );
 
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+  type: 'button-card',
+  name: 'Button-Card',
+  preview: false,
+  description: 'A massively customizable custom button card',
+});
+
 @customElement('button-card')
 class ButtonCard extends LitElement {
   @property() private _hass?: HomeAssistant;
@@ -682,9 +690,11 @@ class ButtonCard extends LitElement {
     const tooltipStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'tooltip');
     const classList: ClassInfo = {
       'button-card-main': true,
-      tooltip: this._config?.tooltip ? true : false,
       disabled: !this._isClickable(this._stateObj),
     };
+    if (this._config?.tooltip) {
+      this.classList.add('tooltip');
+    }
     if (configCardStyle.width) {
       this.style.setProperty('flex', '0 0 auto');
       this.style.setProperty('max-width', 'fit-content');
@@ -749,17 +759,17 @@ class ButtonCard extends LitElement {
           .config="${this._config}"
         >
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
-          ${this._config?.tooltip
-            ? html`
-                <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}
-                  >${this._getTemplateOrValue(this._stateObj, this._config.tooltip)}</span
-                >
-              `
-            : ''}
           <mwc-ripple id="ripple"></mwc-ripple>
         </ha-card>
       </div>
       ${this._getLock(lockStyle)}
+      ${this._config?.tooltip
+        ? html`
+            <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}>
+              ${this._getTemplateOrValue(this._stateObj, this._config.tooltip)}
+            </span>
+          `
+        : ''}
     `;
   }
 
