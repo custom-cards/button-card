@@ -8,7 +8,8 @@
     "rollup": "rollup -c",
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/*.ts",
-    "start": "rollup -c --watch"
+    "start": "rollup -c --watch",
+    "postversion": "npm run build"
   },
   "repository": {
     "type": "git",
