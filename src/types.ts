@@ -120,6 +120,7 @@ export interface StateConfig {
   spin?: boolean;
   label?: string;
   custom_fields?: CustomFields;
+  state_display?: string;
 }
 
 export interface StylesConfig {

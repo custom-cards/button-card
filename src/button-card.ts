@@ -799,10 +799,9 @@ class ButtonCard extends LitElement {
     color: string,
   ): TemplateResult {
     const name = this._buildName(state, configState);
+    const stateDisplayActual = configState?.state_display || this._config!.state_display || undefined;
     const stateDisplay =
-      this._config!.show_state && this._config!.state_display
-        ? this._getTemplateOrValue(state, this._config!.state_display)
-        : undefined;
+      this._config!.show_state && stateDisplayActual ? this._getTemplateOrValue(state, stateDisplayActual) : undefined;
     const stateString = stateDisplay ? stateDisplay : this._buildStateString(state);
     const nameStateString = buildNameStateConcat(name, stateString);
 

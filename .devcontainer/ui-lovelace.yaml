@@ -2725,3 +2725,12 @@ views:
             - color: '#DADADB'
           label:
             - font-size: 6em
+
+      - type: custom:button-card
+        entity: switch.skylight
+        state_display: Default state_display
+        show_state: true
+        state:
+          - value: 'on'
+            state_display: state[].state_display
+          - value: 'off'
