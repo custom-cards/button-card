@@ -1754,10 +1754,10 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
-custom-card-helpers@^1.6.5:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/custom-card-helpers/-/custom-card-helpers-1.6.5.tgz#4f8422d36906dc6240355726412a6141aebe5a36"
-  integrity sha512-+fivxnieWj6Gk+7+fBzWwQh7oCjm0cQTc+0OCIAQbXshwKSwkbVy7e8P1s41ebx0S34rwibmRYfBKMbfMHuE8A==
+custom-card-helpers@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/custom-card-helpers/-/custom-card-helpers-1.7.0.tgz#7b7b6d8889797f6140f64218df539b81aab681fa"
+  integrity sha512-7XybyH1HhvEO6MqoH/xRj2jpMqH1bCRi/smsOeR8KtBXOVx8ijWns7Dp33VqkH8WDR+D5pav/UI31JLVkAPnBQ==
   dependencies:
     fecha "^4.2.0"
     home-assistant-js-websocket "^5.1.0"
