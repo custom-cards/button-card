@@ -1,28 +1,73 @@
 {
   "version": "2.0.0",
-  "tasks": [{
-      "label": "Run Home Assistant on port 9123",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "watch",
+      "group": "test",
+      "label": "npm: watch",
+      "detail": "rollup -c --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": [
+          {
+            "regexp": ".",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^bundles\\s",
+          "endsPattern": "^.*waiting for changes\\.\\.\\."
+        }
+      }
+    },
+    {
       "type": "shell",
-      "command": "dc start",
+      "label": "devcontainer: Start HA",
+      "command": "sh -c 'sudo --preserve-env=PATH container start'",
+      "problemMatcher": {
+        "pattern": [
+          {
+            "regexp": ".",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "^Start Home Assistant$"
+        }
+      },
+      "group": "test",
+      "isBackground": true
+    },
+    {
+      "label": "debug",
+      "group": "test",
+      "dependsOn": ["devcontainer: Start HA", "npm: watch"],
       "problemMatcher": []
     },
     {
-      "label": "Run Home Assistant configuration against /config",
-      "type": "shell",
-      "command": "dc check",
-      "problemMatcher": []
-    },
-    {
-      "label": "Upgrade Home Assistant to latest dev",
-      "type": "shell",
-      "command": "dc install",
-      "problemMatcher": []
-    },
-    {
-      "label": "Install a spesific version of Home Assistant",
-      "type": "shell",
-      "command": "dc set-version",
-      "problemMatcher": []
+      "label": "devcontainer: stop debug",
+      "group": "test",
+      "command": "sh",
+      "presentation": {
+        "echo": true,
+        "reveal": "never",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "args": [
+        "-c",
+        "sudo killall hass; sudo kill $(ps au | grep 'node.*rollup' | grep -v grep | awk {'print $2'}); exit 0;"
+      ]
     }
   ]
 }

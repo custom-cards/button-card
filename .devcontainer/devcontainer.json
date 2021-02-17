@@ -5,7 +5,7 @@
   "context": "..",
   "remoteUser": "vscode",
   "appPort": ["5000:5000", "9123:8123"],
-  "postCreateCommand": "yarn install",
+  "postCreateCommand": "yarn install && sudo container install",
   "runArgs": ["-v", "${localWorkspaceFolder}/.devcontainer/www:/config/www"],
   "extensions": [
     "github.vscode-pull-request-github",
