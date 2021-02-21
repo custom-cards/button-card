@@ -296,9 +296,9 @@ name: '[[[ if (entity.state > 42) return "Above 42"; else return "Below 42" ]]]'
 name: >
   [[[
     if (entity.state > 42)
-      return "Above 42;
+      return "Above 42";
     else
-      return "Below 42;
+      return "Below 42";
   ]]]
 ```
 
