@@ -174,7 +174,7 @@ Example:
 
 ```yaml
 lock:
-  enabled: '[[[ return entity.state === 'on'; ]]]'
+  enabled: '[[[ return entity.state === "on"; ]]]'
   duration: 10
   unlock: hold
   exemptions:
