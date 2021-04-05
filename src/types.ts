@@ -3,6 +3,7 @@ import { ActionConfig, LovelaceCardConfig, LovelaceCard } from 'custom-card-help
 export interface ButtonCardConfig {
   template?: string | string[];
   triggers_update?: string[] | 'all';
+  group_expand: boolean;
   type: string;
   entity?: string;
   name?: string;
@@ -40,6 +41,47 @@ export interface ButtonCardConfig {
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
+  card_size: number;
+  tooltip?: string;
+}
+
+export interface ExternalButtonCardConfig {
+  template?: string | string[];
+  triggers_update?: string[] | 'all';
+  group_expand?: boolean;
+  entity?: string;
+  name?: string;
+  icon?: string;
+  color_type?: 'icon' | 'card' | 'label-card' | 'blank-card';
+  color?: 'auto' | 'auto-no-temperature' | string;
+  size?: string;
+  aspect_ratio?: string;
+  lock?: LockConfig;
+  tap_action?: ActionConfig;
+  hold_action?: ActionConfig;
+  double_tap_action?: ActionConfig;
+  show_name?: boolean;
+  show_state?: boolean;
+  show_icon?: boolean;
+  show_units?: boolean;
+  show_entity_picture?: boolean;
+  show_last_changed?: boolean;
+  show_label?: boolean;
+  show_live_stream?: boolean;
+  label?: string;
+  entity_picture?: string;
+  units?: string;
+  state_display?: string;
+  state?: StateConfig[];
+  styles?: StylesConfig;
+  confirmation?: string;
+  layout?: Layout;
+  entity_picture_style?: CssStyleConfig[];
+  custom_fields?: CustomFields;
+  variables?: Variables;
+  extra_styles?: string;
+  card_size?: number;
+  tooltip?: string;
 }
 
 export type Layout =
@@ -92,6 +134,7 @@ export interface StylesConfig {
   grid?: CssStyleConfig[];
   img_cell?: CssStyleConfig[];
   lock?: CssStyleConfig[];
+  tooltip?: CssStyleConfig[];
   custom_fields?: CustomStyleConfig;
 }
 

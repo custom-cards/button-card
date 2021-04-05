@@ -1,14 +1,3 @@
-resources:
-  - url: http://127.0.0.1:5000/button-card.js
-    type: module
-  - url: https://cdn.jsdelivr.net/gh/thomasloven/lovelace-card-mod@master/card-mod.js
-    type: module
-  - { type: js, url: '/local/lovelace/lovelace-card-tools/card-tools.js' }
-  - { type: js, url: '/local/lovelace/lovelace-card-modder/card-modder.js' }
-  - { type: module, url: '/local/lovelace/config-template-card.js' }
-  - { type: js, url: '/local/lovelace/vertical-stack-in-card.js' }
-  - { type: js, url: '/local/lovelace/decluttering-card.js' }
-
 decluttering_templates:
   test_template:
     card:
@@ -349,6 +338,22 @@ views:
         show_entity_picture: true
         name: Entity Picture Cast
         entity_picture: /local/cast.jpg
+        tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
+        styles:
+          tooltip:
+            - color: red
+      - type: 'custom:button-card'
+        color_type: card
+        icon: mdi:lock
+        name: Lock + Tooltip Test
+        tooltip: 'Test Test'
+        lock:
+          enabled: true
+          duration: 7
+          unlock: hold
+        styles:
+          tooltip:
+            - color: red
       - type: 'custom:button-card'
         custom_fields:
           test:

@@ -13,10 +13,7 @@ export function computeEntity(entityId: string): string {
 
 export function getColorFromVariable(color: string): string {
   if (color.substring(0, 3) === 'var') {
-    return window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue(color.substring(4).slice(0, -1))
-      .trim();
+    return window.getComputedStyle(document.documentElement).getPropertyValue(color.substring(4).slice(0, -1)).trim();
   }
   return color;
 }
@@ -99,7 +96,7 @@ export function mergeDeep(...objects: any): any {
   const isObject = (obj: any) => obj && typeof obj === 'object';
 
   return objects.reduce((prev: any, obj: any) => {
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       const pVal = prev[key];
       const oVal = obj[key];
 
@@ -123,10 +120,10 @@ export function mergeStatesById(
 ): StateConfig[] {
   let resultStateConfigs: StateConfig[] = [];
   if (intoStates) {
-    intoStates.forEach(intoState => {
+    intoStates.forEach((intoState) => {
       let localState = intoState;
       if (fromStates) {
-        fromStates.forEach(fromState => {
+        fromStates.forEach((fromState) => {
           if (fromState.id && intoState.id && fromState.id == intoState.id)
             localState = mergeDeep(localState, fromState);
         });
@@ -137,7 +134,7 @@ export function mergeStatesById(
   if (fromStates) {
     /* eslint eqeqeq: 0 no-confusing-arrow: 0 */
     resultStateConfigs = resultStateConfigs.concat(
-      fromStates.filter(x => (!intoStates ? true : !intoStates.find(y => (y.id && x.id ? y.id == x.id : false)))),
+      fromStates.filter((x) => (!intoStates ? true : !intoStates.find((y) => (y.id && x.id ? y.id == x.id : false)))),
     );
   }
   return resultStateConfigs;

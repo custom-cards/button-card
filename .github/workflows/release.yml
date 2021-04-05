@@ -1,30 +1,33 @@
 name: Release
 
-on:
-  release:
-    types: [published]
+on: workflow_dispatch
 
 jobs:
-  release:
-    name: Prepare release
+  release-bundle:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+
     steps:
-      - uses: actions/checkout@v1
-
-      # Build
-      - name: Build the file
-        run: |
-          cd /home/runner/work/button-card/button-card
-          yarn install
-          npm run build
-
-      # Upload build file to the releas as an asset.
-      - name: Upload zip to release
-        uses: svenstaro/upload-release-action@v1-release
-
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2.1.4
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /home/runner/work/button-card/button-card/dist/button-card.js
-          asset_name: button-card.js
-          tag: ${{ github.ref }}
-          overwrite: true
+          node-version: 12.x
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.OS }}-node-12.x-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-12.x
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

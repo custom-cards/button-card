@@ -27,6 +27,31 @@ export const styles = css`
     pointer-events: none;
     cursor: default;
   }
+  :host(.tooltip) .tooltiptext {
+    pointer-events: none;
+    opacity: 0;
+    text-align: center;
+    padding: 4px;
+    border-radius: var(--ha-card-border-radius, 4px);
+    box-shadow: var(
+      --ha-card-box-shadow,
+      0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 3px 0px rgba(0, 0, 0, 0.12)
+    );
+    background: var(--ha-card-background, var(--card-background-color, white));
+    border: 1px solid var(--primary-text-color);
+    color: var(--primary-text-color);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+  :host(.tooltip:hover) span.tooltiptext {
+    opacity: 1;
+    transition-delay: 1.5s;
+  }
   ha-icon {
     display: inline-block;
     margin: auto;
