@@ -21,6 +21,7 @@ import {
   stateIcon,
   HomeAssistant,
   handleClick,
+  handleActionConfig,
   getLovelace,
   timerTimeRemaining,
   secondsToDuration,
@@ -41,7 +42,6 @@ import {
   ButtonCardEmbeddedCardsConfig,
 } from './types';
 import { actionHandler } from './action-handler';
-import { handleActionConfig } from './handle-action';
 import {
   computeDomain,
   computeEntity,
@@ -1152,23 +1152,19 @@ class ButtonCard extends LitElement {
   private _handlePress(): void {
     const config = this._config;
     if (!config) return;
-    handleActionConfig(
-      this,
-      this._hass!,
-      this._evalActions(config, 'press_action'),
-      this._evalActions(config, 'press_action').press_action,
-    );
+    const actionConfig = this._evalActions(config, 'press_action');
+    if (!actionConfig || !actionConfig.press_action) return;
+
+    handleActionConfig(this, this._hass!, actionConfig, actionConfig.press_action);
   }
 
   private _handleRelease(): void {
     const config = this._config;
     if (!config) return;
-    handleActionConfig(
-      this,
-      this._hass!,
-      this._evalActions(config, 'release_action'),
-      this._evalActions(config, 'release_action').release_action,
-    );
+    const actionConfig = this._evalActions(config, 'release_action');
+    if (!actionConfig || !actionConfig.release_action) return;
+
+    handleActionConfig(this, this._hass!, actionConfig, actionConfig.release_action);
   }
 
   private _handleTap(): void {

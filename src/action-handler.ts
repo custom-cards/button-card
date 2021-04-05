@@ -3,8 +3,6 @@ import { directive, PropertyPart } from 'lit-html';
 // tslint:disable-next-line
 import { Ripple } from '@material/mwc-ripple';
 import { myFireEvent } from './my-fire-event';
-import { ButtonCardConfig } from './types';
-import { HomeAssistant, ActionConfig, fireEvent, forwardHaptic, navigate, toggleEntity } from 'custom-card-helpers';
 import { deepEqual } from './deep-equal';
 
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
@@ -15,7 +13,7 @@ interface ActionHandler extends HTMLElement {
 }
 
 export interface ActionHandlerDetail {
-  action: 'hold' | 'tap' | 'double_tap';
+  action: 'hold' | 'tap' | 'double_tap' | 'press' | 'release';
 }
 
 export interface ActionHandlerOptions {
