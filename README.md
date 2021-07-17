@@ -1479,6 +1479,7 @@ styles:
 ## Community guides
 
 - [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
+- [Video Tutorials](https://www.youtube.com/playlist?list=PLWRTMby105bghMzvCYV5Y2v1_dAeqILIG): 3ATIVE's growing YouTube Tutorial Playlist for some advanced Color and Animation settings 
 
 ## Credits
 
