@@ -755,6 +755,7 @@ class ButtonCard extends LitElement {
             hasDoubleClick: this._config!.double_tap_action!.action !== 'none',
             hasHold: this._config!.hold_action!.action !== 'none',
             repeat: this._config!.hold_action!.repeat,
+            repeatLimit: (this._config!.hold_action! as any).repeat_limit,
           })}
           .config="${this._config}"
         >
