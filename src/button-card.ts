@@ -338,14 +338,15 @@ class ButtonCard extends LitElement {
   }
 
   private _getDefaultColorForState(state: HassEntity): string {
-    switch (state.state) {
-      case 'on':
-        return this._config!.color_on;
-      case 'off':
-        return this._config!.color_off;
-      default:
-        return this._config!.default_color;
-    }
+    let domain = computeDomain(state.entity_id)
+    // If domain is undefined, return the default color
+    if (!domain) return this._config!.default_color;
+
+    // If state.state is "on", map to "active", if state.state is "off", map to "inactive", otherwise map to state.state
+    const stateValue = state.state === 'on' ? 'active' : state.state === 'off' ? 'inactive' : state.state;
+    const device_class = state.attributes.device_class
+    // Return a value state-{domain}-{device_class}-{state}-color if the device_class is defined, otherwise return state-{domain}-{state}-color
+    return `var(--state-${domain}-${device_class ? device_class + '-' : ''}${stateValue}-color, var(--state-icon-color))`;
   }
 
   private _getColorForLightEntity(state: HassEntity | undefined, useTemperature: boolean): string {
@@ -374,7 +375,7 @@ class ButtonCard extends LitElement {
         } else if (state.attributes.brightness) {
           color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
         } else {
-          color = this._getDefaultColorForState(state);
+          color = 'var(--state-light-active-color)';
         }
       } else {
         color = this._getDefaultColorForState(state);
