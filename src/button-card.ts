@@ -21,7 +21,6 @@ import {
   stateIcon,
   HomeAssistant,
   handleClick,
-  getLovelace,
   timerTimeRemaining,
   secondsToDuration,
   durationToSeconds,
@@ -51,6 +50,7 @@ import {
   getLightColorBasedOnTemperature,
   mergeDeep,
   mergeStatesById,
+  getLovelace,
   getLovelaceCast,
 } from './helpers';
 import { styles } from './styles';
