@@ -9,7 +9,8 @@
     "babel": "babel dist/button-card.js --out-file dist/button-card.js",
     "lint": "eslint src/*.ts",
     "watch": "rollup -c --watch",
-    "postversion": "npm run build"
+    "postversion": "npm run build",
+    "audit-fix": "npx yarn-audit-fix"
   },
   "repository": {
     "type": "git",
