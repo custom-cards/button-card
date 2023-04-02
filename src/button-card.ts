@@ -669,6 +669,7 @@ class ButtonCard extends LitElement {
     const blankCardStyle = {
       background: 'none',
       'box-shadow': 'none',
+      'border-style': 'none',
       ...cardStyle,
     };
     return html`
