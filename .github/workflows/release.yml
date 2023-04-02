@@ -13,17 +13,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Cache Node.js modules
         uses: actions/cache@v2
         with:
           path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-12.x-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.OS }}-node-16.x-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-12.x
+            ${{ runner.OS }}-node-16.x
             ${{ runner.OS }}-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
