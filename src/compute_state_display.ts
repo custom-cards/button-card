@@ -95,7 +95,7 @@ export const myComputeStateDisplay = (
   return (
     // Return device class translation
     (stateObj.attributes.device_class &&
-      localize(`component.${domain}.state.${stateObj.attributes.device_class}.${stateObj.state}`)) ||
+      localize(`component.${domain}.entity_component.${stateObj.attributes.device_class}.state.${stateObj.state}`)) ||
     // Return default translation
     localize(`component.${domain}.entity_component._.state.${stateObj.state}`) ||
     // We don't know! Return the raw state.
