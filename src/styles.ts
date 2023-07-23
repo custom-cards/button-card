@@ -53,7 +53,7 @@ export const styles = css`
     opacity: 1;
     transition-delay: 1.5s;
   }
-  ha-icon {
+  ha-state-icon {
     display: inline-block;
     margin: auto;
     --mdc-icon-size: 100%;
@@ -175,7 +175,7 @@ export const styles = css`
     position: relative;
   }
 
-  ha-icon#icon {
+  ha-state-icon#icon {
     height: 100%;
     width: 100%;
     max-height: 100%;
@@ -209,6 +209,10 @@ export const styles = css`
     justify-self: center;
   }
 
+  #container.vertical div#img-cell + div,
+  #container.name_state div#img-cell + div {
+    margin-top: 8px;
+  }
   #container.vertical {
     grid-template-areas: 'i' 'n' 's' 'l';
     grid-template-columns: 1fr;

@@ -18,7 +18,6 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
 import { HassEntity } from 'home-assistant-js-websocket';
 import {
-  stateIcon,
   HomeAssistant,
   handleClick,
   timerTimeRemaining,
@@ -28,6 +27,7 @@ import {
   fireEvent,
   DOMAINS_TOGGLE,
   LovelaceCard,
+  computeStateDomain,
 } from 'custom-card-helpers';
 import {
   ButtonCardConfig,
@@ -407,8 +407,7 @@ class ButtonCard extends LitElement {
     } else if (this._config!.icon) {
       icon = this._config!.icon;
     } else {
-      if (!state) return undefined;
-      icon = stateIcon(state);
+      return undefined;
     }
     return this._getTemplateOrValue(state, icon);
   }
@@ -880,18 +879,26 @@ class ButtonCard extends LitElement {
       ...entityPictureStyleFromConfig,
     };
     const liveStream = this._buildLiveStream(entityPictureStyle);
+    const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    if (icon || entityPicture) {
+    if (shouldShowIcon || entityPicture) {
+      let domain: string | undefined = undefined;
+      if (state) {
+        domain = computeStateDomain(state);
+      }
       return html`
         <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
-          ${icon && !entityPicture && !liveStream
+          ${shouldShowIcon && !entityPicture && !liveStream
             ? html`
-                <ha-icon
+                <ha-state-icon
+                  .state=${state}
+                  ?data-domain=${domain}
+                  data-state=${state?.state}
                   style=${styleMap(haIconStyle)}
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                ></ha-icon>
+                ></ha-state-icon>
               `
             : ''}
           ${liveStream ? liveStream : ''}
