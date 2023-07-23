@@ -1,3 +1,14 @@
+## [4.0.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.1...v4.0.0-dev.2) (2023-07-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **icons:** This might break your card-mod setup
+
+### Features
+
+* **icons:** replace ha-icon with ha-state-icon to follow new HA's icons per domain automatically ([ab6a3f5](https://github.com/custom-cards/button-card/commit/ab6a3f5bd39fc48890f1b851e929df2fe1d8796c))
+
 ## [4.0.0-dev.1](https://github.com/custom-cards/button-card/compare/v3.5.0...v4.0.0-dev.1) (2023-07-23)
 
 
