@@ -58,6 +58,8 @@ import { myComputeStateDisplay } from './compute_state_display';
 import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
+import { stateColorCss } from './state_color';
+import { ON } from './const';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise(async (resolve) => {
@@ -337,21 +339,10 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _getDefaultColorForState(state: HassEntity): string {
-    switch (state.state) {
-      case 'on':
-        return this._config!.color_on;
-      case 'off':
-        return this._config!.color_off;
-      default:
-        return this._config!.default_color;
-    }
-  }
-
   private _getColorForLightEntity(state: HassEntity | undefined, useTemperature: boolean): string {
     let color: string = this._config!.default_color;
     if (state) {
-      if (state.state === 'on') {
+      if (state.state === ON) {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
           if (state.attributes.brightness) {
@@ -372,12 +363,15 @@ class ButtonCard extends LitElement {
             color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
           }
         } else if (state.attributes.brightness) {
-          color = applyBrightnessToColor(this._getDefaultColorForState(state), (state.attributes.brightness + 245) / 5);
+          color = applyBrightnessToColor(
+            stateColorCss(state, state.state) || this._config!.default_color,
+            (state.attributes.brightness + 245) / 5,
+          );
         } else {
-          color = this._getDefaultColorForState(state);
+          color = stateColorCss(state, state.state) || this._config!.default_color;
         }
       } else {
-        color = this._getDefaultColorForState(state);
+        color = stateColorCss(state, state.state) || this._config!.default_color;
       }
     }
     return color;
@@ -388,8 +382,6 @@ class ButtonCard extends LitElement {
     let color: undefined | string;
     if (configState?.color) {
       colorValue = configState.color;
-    } else if (this._config!.color !== 'auto' && state?.state === 'off') {
-      colorValue = this._config!.color_off;
     } else if (this._config!.color) {
       colorValue = this._config!.color;
     }
@@ -398,7 +390,7 @@ class ButtonCard extends LitElement {
     } else if (colorValue) {
       color = colorValue;
     } else if (state) {
-      color = this._getDefaultColorForState(state);
+      color = stateColorCss(state, state.state) || this._config!.default_color;
     } else {
       color = this._config!.default_color;
     }
@@ -982,8 +974,6 @@ class ButtonCard extends LitElement {
       card_size: 3,
       ...template,
       default_color: 'DUMMY',
-      color_off: 'DUMMY',
-      color_on: 'DUMMY',
       lock: {
         enabled: false,
         duration: 5,
@@ -1003,12 +993,6 @@ class ButtonCard extends LitElement {
       };
     }
     this._config!.default_color = 'var(--primary-text-color)';
-    if (this._config!.color_type !== 'icon') {
-      this._config!.color_off = 'var(--card-background-color)';
-    } else {
-      this._config!.color_off = 'var(--paper-item-icon-color)';
-    }
-    this._config!.color_on = 'var(--paper-item-icon-active-color)';
 
     const jsonConfig = JSON.stringify(this._config);
     this._entities = [];

@@ -34,8 +34,6 @@ export interface ButtonCardConfig {
   layout: Layout;
   entity_picture_style?: CssStyleConfig[];
   default_color: string;
-  color_on: string;
-  color_off: string;
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
