@@ -762,8 +762,8 @@ class ButtonCard extends LitElement {
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
           <mwc-ripple id="ripple"></mwc-ripple>
         </ha-card>
+        ${this._getLock(lockStyle)}
       </div>
-      ${this._getLock(lockStyle)}
       ${this._config?.tooltip
         ? html`
             <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}>
