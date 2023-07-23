@@ -92,12 +92,23 @@ export const myComputeStateDisplay = (
     return formatDateTime(date, language);
   }
 
+  if (!atLeastVersion(hass.config.version, 2023, 4)) {
+    return (
+      // Return device class translation
+      (stateObj.attributes.device_class &&
+        localize(`component.${domain}.state.${stateObj.attributes.device_class}.${stateObj.state}`)) ||
+      // Return default translation
+      localize(`component.${domain}.state._.${stateObj.state}`) ||
+      // We don't know! Return the raw state.
+      stateObj.state
+    );
+  }
   return (
     // Return device class translation
     (stateObj.attributes.device_class &&
-      localize(`component.${domain}.state.${stateObj.attributes.device_class}.${stateObj.state}`)) ||
+      localize(`component.${domain}.entity_component.${stateObj.attributes.device_class}.state.${stateObj.state}`)) ||
     // Return default translation
-    localize(`component.${domain}.state._.${stateObj.state}`) ||
+    localize(`component.${domain}.entity_component._.state.${stateObj.state}`) ||
     // We don't know! Return the raw state.
     stateObj.state
   );
