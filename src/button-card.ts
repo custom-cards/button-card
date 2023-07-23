@@ -11,24 +11,15 @@ import {
   queryAsync,
   eventOptions,
 } from 'lit-element';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
 import { HassEntity } from 'home-assistant-js-websocket';
-import {
-  HomeAssistant,
-  handleClick,
-  timerTimeRemaining,
-  secondsToDuration,
-  durationToSeconds,
-  createThing,
-  fireEvent,
-  DOMAINS_TOGGLE,
-  LovelaceCard,
-  computeStateDomain,
-} from 'custom-card-helpers';
+import { timerTimeRemaining, createThing, DOMAINS_TOGGLE, computeStateDomain } from 'custom-card-helpers';
+import { LovelaceCard } from './types/lovelace';
 import {
   ButtonCardConfig,
   ExternalButtonCardConfig,
@@ -38,7 +29,7 @@ import {
   CustomFieldCard,
   ButtonCardEmbeddedCards,
   ButtonCardEmbeddedCardsConfig,
-} from './types';
+} from './types/types';
 import { actionHandler } from './action-handler';
 import {
   computeDomain,
@@ -52,17 +43,22 @@ import {
   mergeStatesById,
   getLovelace,
   getLovelaceCast,
+  secondsToDuration,
+  durationToSeconds,
 } from './helpers';
 import { styles } from './styles';
-import { myComputeStateDisplay } from './compute_state_display';
+import { computeStateDisplay } from './compute_state_display';
 import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 import { stateColorCss } from './state_color';
-import { ON } from './const';
+import { ON } from './common/const';
+import { handleAction } from './handle-action';
+import { myFireEvent } from './my-fire-event';
+import { HomeAssistant } from './types/homeassistant';
 
 let helpers = (window as any).cardHelpers;
-const helperPromise = new Promise(async (resolve) => {
+const helperPromise = new Promise<void>(async (resolve) => {
   if (helpers) resolve();
   if ((window as any).loadCardHelpers) {
     helpers = await (window as any).loadCardHelpers();
@@ -157,7 +153,7 @@ class ButtonCard extends LitElement {
     else {
       const element = createThing(config);
       helperPromise.then(() => {
-        fireEvent(element, 'll-rebuild', {});
+        myFireEvent(element, 'll-rebuild', {});
       });
       return element;
     }
@@ -175,7 +171,7 @@ class ButtonCard extends LitElement {
         ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
         : undefined;
       return this._cardHtml();
-    } catch (e) {
+    } catch (e: any) {
       if (e.stack) console.error(e.stack);
       else console.error(e);
       const errorCard = document.createElement('hui-error-card') as LovelaceCard;
@@ -240,7 +236,7 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _computeTimeDisplay(stateObj: HassEntity): string | undefined {
+  private _computeTimeDisplay(stateObj: HassEntity): string | undefined | null {
     if (!stateObj) {
       return undefined;
     }
@@ -309,7 +305,7 @@ class ButtonCard extends LitElement {
         this._evaledVariables,
         html,
       );
-    } catch (e) {
+    } catch (e: any) {
       const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
       e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
       e.name = 'ButtonCardJSTemplateError';
@@ -493,30 +489,43 @@ class ButtonCard extends LitElement {
     return this._getTemplateOrValue(state, name);
   }
 
-  private _buildStateString(stateObj: HassEntity | undefined): string | undefined {
-    let stateString: string | undefined;
+  private _buildStateString(stateObj: HassEntity | undefined): string | undefined | null {
+    let stateString: string | undefined | null;
     if (this._config!.show_state && stateObj && stateObj.state) {
       const units = this._buildUnits(stateObj);
       if (units) {
         stateString = `${stateObj.state} ${units}`;
       } else if (computeDomain(stateObj.entity_id) === 'timer') {
         if (stateObj.state === 'idle' || this._timeRemaining === 0) {
-          stateString = myComputeStateDisplay(this._hass!, this._hass!.localize, stateObj, this._hass!.language);
+          stateString = computeStateDisplay(
+            this._hass!.localize,
+            stateObj,
+            this._hass!.locale,
+            this._hass!.config,
+            this._hass!.entities,
+          );
         } else {
           stateString = this._computeTimeDisplay(stateObj);
           if (stateObj.state === 'paused') {
-            stateString += ` (${myComputeStateDisplay(
-              this._hass!,
+            stateString += ` (${computeStateDisplay(
               this._hass!.localize,
               stateObj,
-              this._hass!.language,
+              this._hass!.locale,
+              this._hass!.config,
+              this._hass!.entities,
             )})`;
           }
         }
       } else if (!this._config?.show_units && computeDomain(stateObj.entity_id) === 'sensor') {
         stateString = stateObj.state;
       } else {
-        stateString = myComputeStateDisplay(this._hass!, this._hass!.localize, stateObj, this._hass!.language);
+        stateString = computeStateDisplay(
+          this._hass!.localize,
+          stateObj,
+          this._hass!.locale,
+          this._hass!.config,
+          this._hass!.entities,
+        );
       }
     }
     return stateString;
@@ -893,7 +902,7 @@ class ButtonCard extends LitElement {
                 <ha-state-icon
                   .state=${state}
                   ?data-domain=${domain}
-                  data-state=${state?.state}
+                  data-state=${ifDefined(state?.state)}
                   style=${styleMap(haIconStyle)}
                   .icon="${icon}"
                   id="icon"
@@ -1075,6 +1084,15 @@ class ButtonCard extends LitElement {
       });
       return configEval;
     };
+    if (configDuplicate[action]?.service_data?.entity_id === 'entity') {
+      configDuplicate[action].service_data.entity_id = config.entity;
+    }
+    if (configDuplicate[action]?.data?.entity_id === 'entity') {
+      configDuplicate[action].data.entity_id = config.entity;
+    }
+    if (configDuplicate[action]?.entity) {
+      configDuplicate.entity = configDuplicate[action].entity;
+    }
     configDuplicate[action] = __evalObject(configDuplicate[action]);
     if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
       configDuplicate[action].confirmation = __evalObject(configDuplicate.confirmation);
@@ -1090,55 +1108,37 @@ class ButtonCard extends LitElement {
   // backward compatibility
   @eventOptions({ passive: true })
   private handleRippleActivate(evt?: Event): void {
-    this._ripple.then((r) => r && r.startPress && this._rippleHandlers.startPress(evt));
+    this._ripple.then((r) => r && typeof r.startPress === 'function' && this._rippleHandlers.startPress(evt));
   }
 
   private handleRippleDeactivate(): void {
-    this._ripple.then((r) => r && r.endPress && this._rippleHandlers.endPress());
+    this._ripple.then((r) => r && typeof r.endPress === 'function' && this._rippleHandlers.endPress());
   }
 
   private handleRippleFocus(): void {
-    this._ripple.then((r) => r && r.startFocus && this._rippleHandlers.startFocus());
+    this._ripple.then((r) => r && typeof r.startFocus === 'function' && this._rippleHandlers.startFocus());
   }
 
   private handleRippleBlur(): void {
-    this._ripple.then((r) => r && r.endFocus && this._rippleHandlers.endFocus());
+    this._ripple.then((r) => r && typeof r.endFocus === 'function' && this._rippleHandlers.endFocus());
   }
 
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
       switch (ev.detail.action) {
         case 'tap':
-          this._handleTap();
-          break;
         case 'hold':
-          this._handleHold();
-          break;
         case 'double_tap':
-          this._handleDblTap();
+          const config = this._config;
+          if (!config) return;
+          const action = ev.detail.action;
+          const localAction = this._evalActions(config, `${action}_action`);
+          handleAction(this, this._hass!, localAction, action);
           break;
         default:
           break;
       }
     }
-  }
-
-  private _handleTap(): void {
-    const config = this._config;
-    if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'tap_action'), false, false);
-  }
-
-  private _handleHold(): void {
-    const config = this._config;
-    if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'hold_action'), true, false);
-  }
-
-  private _handleDblTap(): void {
-    const config = this._config;
-    if (!config) return;
-    handleClick(this, this._hass!, this._evalActions(config, 'double_tap_action'), false, true);
   }
 
   private _handleUnlockType(ev): void {
@@ -1153,12 +1153,12 @@ class ButtonCard extends LitElement {
     const lock = this.shadowRoot!.getElementById('lock') as LitElement;
     if (!lock) return;
     if (this._config!.lock!.exemptions) {
-      if (!this._hass!.user.name || !this._hass!.user.id) return;
+      if (!this._hass!.user?.name || !this._hass!.user.id) return;
       let matched = false;
       this._config!.lock!.exemptions.forEach((e) => {
         if (
-          (!matched && (e as ExemptionUserConfig).user === this._hass!.user.id) ||
-          (e as ExemptionUsernameConfig).username === this._hass!.user.name
+          (!matched && (e as ExemptionUserConfig).user === this._hass!.user?.id) ||
+          (e as ExemptionUsernameConfig).username === this._hass!.user?.name
         ) {
           matched = true;
         }

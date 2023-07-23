@@ -3,11 +3,7 @@
     "target": "es2017",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": [
-      "es2017",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es2017", "dom", "dom.iterable"],
     "plugins": [
       {
         "name": "ts-lit-plugin"
@@ -23,9 +19,7 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/*"
-  ]
+  "include": ["src/*", "src/**/*"]
 }

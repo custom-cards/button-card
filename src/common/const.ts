@@ -1,4 +1,6 @@
 export const UNAVAILABLE = 'unavailable';
+export const BINARY_STATE_ON = 'on';
+export const BINARY_STATE_OFF = 'off';
 const arrayLiteralIncludes = <T extends readonly unknown[]>(array: T) => (
   searchElement: unknown,
   fromIndex?: number,

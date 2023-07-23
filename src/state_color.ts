@@ -1,6 +1,6 @@
 /** Return an color representing a state. */
 import { HassEntity } from 'home-assistant-js-websocket';
-import { UNAVAILABLE } from './const';
+import { UNAVAILABLE } from './common/const';
 import { computeGroupDomain, GroupEntity } from './helpers';
 import { computeCssVariable } from './helpers';
 import { computeDomain, slugify } from './helpers';

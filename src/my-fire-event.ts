@@ -30,7 +30,7 @@
 
 declare global {
   // eslint-disable-next-line
-  interface HASSDomEvents { }
+  interface HASSDomEvents {}
 }
 
 export type ValidHassDomEvent = keyof HASSDomEvents;
@@ -54,6 +54,7 @@ export interface HASSDomEvent<T> extends Event {
  *  `node` on which to fire the event (HTMLElement, defaults to `this`).
  * @return {Event} The new event that was fired.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const myFireEvent = <HassEvent extends ValidHassDomEvent>(
   node: HTMLElement | Window,
   type: HassEvent,
@@ -63,8 +64,9 @@ export const myFireEvent = <HassEvent extends ValidHassDomEvent>(
     cancelable?: boolean;
     composed?: boolean;
   },
-): any => {
+) => {
   options = options || {};
+  // @ts-ignore
   detail = detail === null || detail === undefined ? {} : detail;
   const event = new Event(type, {
     bubbles: options.bubbles === undefined ? true : options.bubbles,

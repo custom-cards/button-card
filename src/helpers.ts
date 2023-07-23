@@ -1,9 +1,9 @@
 import { PropertyValues } from 'lit-element';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, LovelaceConfig } from 'custom-card-helpers';
-import { StateConfig } from './types';
+import { StateConfig } from './types/types';
 import { HassEntity, HassEntityAttributeBase, HassEntityBase } from 'home-assistant-js-websocket';
-import { OFF, UNAVAILABLE, isUnavailableState } from './const';
+import { OFF, UNAVAILABLE, isUnavailableState } from './common/const';
 
 export function computeDomain(entityId: string): string {
   return entityId.substr(0, entityId.indexOf('.'));
@@ -330,4 +330,32 @@ export function computeCssValue(prop: string | string[], computedStyles: CSSStyl
     return undefined;
   }
   return computedStyles.getPropertyValue(prop).trim() || undefined;
+}
+
+export function durationToSeconds(duration: string): number {
+  const parts = duration.split(':').map(Number);
+  return parts[0] * 3600 + parts[1] * 60 + parts[2];
+}
+
+const leftPad = (num: number) => (num < 10 ? `0${num}` : num);
+
+export function secondsToDuration(d: number): string | null {
+  const h = Math.floor(d / 3600);
+  const m = Math.floor((d % 3600) / 60);
+  const s = Math.floor((d % 3600) % 60);
+
+  if (h > 0) {
+    return `${h}:${leftPad(m)}:${leftPad(s)}`;
+  }
+  if (m > 0) {
+    return `${m}:${leftPad(s)}`;
+  }
+  if (s > 0) {
+    return '' + s;
+  }
+  return null;
+}
+
+export function isNumericFromAttributes(attributes: HassEntityAttributeBase): boolean {
+  return !!attributes.unit_of_measurement || !!attributes.state_class;
 }

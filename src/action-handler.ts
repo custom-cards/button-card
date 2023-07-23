@@ -1,10 +1,13 @@
-import { directive, PropertyPart } from 'lit-html';
+import { PropertyPart, noChange } from 'lit-html';
 // import '@material/mwc-ripple';
 // tslint:disable-next-line
 import { Ripple } from '@material/mwc-ripple';
 import { myFireEvent } from './my-fire-event';
 import { deepEqual } from './deep-equal';
+import { AttributePart, Directive, DirectiveParameters, directive } from 'lit-html/directive';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 
 interface ActionHandler extends HTMLElement {
@@ -254,14 +257,21 @@ const getActionHandler = (): ActionHandler => {
   return actionhandler as ActionHandler;
 };
 
-export const actionHandlerBind = (element: ActionHandlerElement, options: ActionHandlerOptions): void => {
+export const actionHandlerBind = (element: ActionHandlerElement, options?: ActionHandlerOptions) => {
   const actionhandler: ActionHandler = getActionHandler();
   if (!actionhandler) {
     return;
   }
   actionhandler.bind(element, options);
 };
+export const actionHandler = directive(
+  class extends Directive {
+    update(part: AttributePart, [options]: DirectiveParameters<this>) {
+      actionHandlerBind(part.element as ActionHandlerElement, options);
+      return noChange;
+    }
 
-export const actionHandler = directive((options: ActionHandlerOptions = {}) => (part: PropertyPart): void => {
-  actionHandlerBind(part.committer.element as ActionHandlerElement, options);
-});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    render(_options?: ActionHandlerOptions) {}
+  },
+);
