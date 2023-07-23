@@ -1,4 +1,4 @@
-import { PropertyPart, noChange } from 'lit-html';
+import { noChange } from 'lit-html';
 // import '@material/mwc-ripple';
 // tslint:disable-next-line
 import { Ripple } from '@material/mwc-ripple';
@@ -271,7 +271,7 @@ export const actionHandler = directive(
       return noChange;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
     render(_options?: ActionHandlerOptions) {}
   },
 );

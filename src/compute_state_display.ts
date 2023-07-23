@@ -1,7 +1,6 @@
 import { HassConfig, HassEntity } from 'home-assistant-js-websocket';
 import { LocalizeFunc } from 'custom-card-helpers';
 import { computeDomain, isNumericFromAttributes } from './helpers';
-import { atLeastVersion } from './at_least_version';
 import { formatNumber, getNumberFormatOptions, blankBeforePercent } from './common/format_number';
 import { EntityRegistryDisplayEntry, FrontendLocaleData, HomeAssistant, TimeZone } from './types/homeassistant';
 import { UNIT_TO_MILLISECOND_CONVERT, formatDuration } from './common/duration';

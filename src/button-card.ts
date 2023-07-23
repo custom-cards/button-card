@@ -83,6 +83,7 @@ console.info(
 });
 
 @customElement('button-card')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ButtonCard extends LitElement {
   @property() private _hass?: HomeAssistant;
 

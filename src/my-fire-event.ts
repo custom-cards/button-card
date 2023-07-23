@@ -66,6 +66,7 @@ export const myFireEvent = <HassEvent extends ValidHassDomEvent>(
   },
 ) => {
   options = options || {};
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   detail = detail === null || detail === undefined ? {} : detail;
   const event = new Event(type, {

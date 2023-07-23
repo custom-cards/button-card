@@ -11,6 +11,8 @@ module.exports = {
     experimentalDecorators: true,
   },
   rules: {
-    "@typescript-eslint/camelcase": 0
-  }
+    '@typescript-eslint/camelcase': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-unsafe-declaration-merging': 0,
+  },
 };
