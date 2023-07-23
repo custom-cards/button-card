@@ -1,3 +1,17 @@
+## [4.0.0-dev.1](https://github.com/custom-cards/button-card/compare/v3.5.0...v4.0.0-dev.1) (2023-07-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* this might break some of your color settings
+
+### Bug Fixes
+
+* Color are now aligned with HA > 2022.12 ([685d55e](https://github.com/custom-cards/button-card/commit/685d55e49cacfacace96a56d17f97649a4e3cafd)), closes [#635](https://github.com/custom-cards/button-card/issues/635)
+* localization fix ([02dfab3](https://github.com/custom-cards/button-card/commit/02dfab3db391d2ab671f9722c730c1e70dd723db)), closes [#685](https://github.com/custom-cards/button-card/issues/685) [#693](https://github.com/custom-cards/button-card/issues/693)
+* lock icon was displaying over more-info dialog ([bf075b0](https://github.com/custom-cards/button-card/commit/bf075b00e4a2f7aa6a193d03eb8c93e0aa30e8ae)), closes [#694](https://github.com/custom-cards/button-card/issues/694)
+* lock would go out of the button ([0b3e4d3](https://github.com/custom-cards/button-card/commit/0b3e4d331cfa21b5f682c962ea6222c9e1be7754))
+
 ## [3.5.0](https://github.com/custom-cards/button-card/compare/v3.4.2...v3.5.0) (2023-04-02)
 
 
