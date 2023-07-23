@@ -1,3 +1,14 @@
+## [4.0.0-dev.3](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.2...v4.0.0-dev.3) (2023-07-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **actions:** Requires HA 2023.4 minimum. Support for the new action format (`target` is also be supported), `service_data` should be renamed to `data` (but it still works with the old format)
+
+### Features
+
+* **actions:** Support for the new action (assist) and all the future ones ([d9c17a4](https://github.com/custom-cards/button-card/commit/d9c17a40652c020a42497828a56f49d11748d1b8)), closes [#711](https://github.com/custom-cards/button-card/issues/711) [#685](https://github.com/custom-cards/button-card/issues/685)
+
 ## [4.0.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.1...v4.0.0-dev.2) (2023-07-23)
 
 
