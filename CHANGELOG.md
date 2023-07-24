@@ -1,3 +1,10 @@
+## [4.0.0-dev.9](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.8...v4.0.0-dev.9) (2023-07-24)
+
+
+### Bug Fixes
+
+* numerical states would not follow HA's format ([72d7c41](https://github.com/custom-cards/button-card/commit/72d7c4133ff96713ecbe42168db0d6732b82510c)), closes [#662](https://github.com/custom-cards/button-card/issues/662)
+
 ## [4.0.0-dev.8](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.7...v4.0.0-dev.8) (2023-07-24)
 
 
