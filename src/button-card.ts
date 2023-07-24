@@ -623,9 +623,7 @@ class ButtonCard extends LitElement {
         };
         result = html`
           ${result}
-          <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>
-            ${(fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
-          </div>
+          <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${this._unsafeHTMLorNot(fields[key])}</div>
         `;
       }
     });
@@ -853,6 +851,14 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _unsafeHTMLorNot(input: any): any {
+    if (input.strings || input.values) {
+      return input;
+    } else {
+      return unsafeHTML(`${input}`);
+    }
+  }
+
   private _gridHtml(
     state: HassEntity | undefined,
     configState: StateConfig | undefined,
@@ -880,21 +886,21 @@ class ButtonCard extends LitElement {
         ${name
           ? html`
               <div id="name" class="ellipsis" style=${styleMap(nameStyleFromConfig)}>
-                ${(name as any).type === 'html' ? name : unsafeHTML(name)}
+                ${this._unsafeHTMLorNot(name)}
               </div>
             `
           : ''}
         ${stateString
           ? html`
               <div id="state" class="ellipsis" style=${styleMap(stateStyleFromConfig)}>
-                ${(stateString as any).type === 'html' ? stateString : unsafeHTML(stateString)}
+                ${this._unsafeHTMLorNot(stateString)}
               </div>
             `
           : ''}
         ${label && !lastChangedTemplate
           ? html`
               <div id="label" class="ellipsis" style=${styleMap(labelStyleFromConfig)}>
-                ${(label as any).type === 'html' ? label : unsafeHTML(label)}
+                ${this._unsafeHTMLorNot(label)}
               </div>
             `
           : ''}
