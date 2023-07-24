@@ -89,9 +89,13 @@ export const formatNumber = (
  */
 export const getNumberFormatOptions = (
   entityState: HassEntity,
+  numeric_precision: number | undefined,
   entity?: EntityRegistryDisplayEntry,
 ): Intl.NumberFormatOptions | undefined => {
-  const precision = entity?.display_precision;
+  let precision = entity?.display_precision;
+  if (numeric_precision !== undefined) {
+    precision = numeric_precision;
+  }
   if (precision != null) {
     return {
       maximumFractionDigits: precision,

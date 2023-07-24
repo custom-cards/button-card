@@ -302,6 +302,7 @@ class ButtonCard extends LitElement {
       this._hass!.locale,
       this._hass!.config,
       this._hass!.entities,
+      this._config?.numeric_precision,
       state,
     );
   }
@@ -553,6 +554,7 @@ class ButtonCard extends LitElement {
             this._hass!.locale,
             this._hass!.config,
             this._hass!.entities,
+            this._config?.numeric_precision,
           );
         } else {
           stateString = this._computeTimeDisplay(stateObj);
@@ -563,6 +565,7 @@ class ButtonCard extends LitElement {
               this._hass!.locale,
               this._hass!.config,
               this._hass!.entities,
+              this._config?.numeric_precision,
             )})`;
           }
         }
@@ -575,6 +578,7 @@ class ButtonCard extends LitElement {
           this._hass!.locale,
           this._hass!.config,
           this._hass!.entities,
+          this._config?.numeric_precision,
         );
       }
     }

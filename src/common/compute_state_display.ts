@@ -24,6 +24,7 @@ export const computeStateDisplaySingleEntity = (
   locale: FrontendLocaleData,
   config: HassConfig,
   entity: EntityRegistryDisplayEntry | undefined,
+  numeric_precision: number | undefined,
   state?: string,
 ): string =>
   computeStateDisplayFromEntityAttributes(
@@ -33,6 +34,7 @@ export const computeStateDisplaySingleEntity = (
     entity,
     stateObj.entity_id,
     stateObj.attributes,
+    numeric_precision,
     state !== undefined ? state : stateObj.state,
   );
 
@@ -42,6 +44,7 @@ export const computeStateDisplay = (
   locale: FrontendLocaleData,
   config: HassConfig,
   entities: HomeAssistant['entities'],
+  numeric_precision: number | undefined,
   state?: string,
 ): string => {
   const entity = entities[stateObj.entity_id] as EntityRegistryDisplayEntry | undefined;
@@ -53,6 +56,7 @@ export const computeStateDisplay = (
     entity,
     stateObj.entity_id,
     stateObj.attributes,
+    numeric_precision,
     state !== undefined ? state : stateObj.state,
   );
 };
@@ -64,6 +68,7 @@ export const computeStateDisplayFromEntityAttributes = (
   entity: EntityRegistryDisplayEntry | undefined,
   entityId: string,
   attributes: any,
+  numeric_precision: number | undefined,
   state: string,
 ): string => {
   if (state === UNKNOWN || state === UNAVAILABLE) {
@@ -91,7 +96,7 @@ export const computeStateDisplayFromEntityAttributes = (
           currency: attributes.unit_of_measurement,
           minimumFractionDigits: 2,
           // Override monetary options with number format
-          ...getNumberFormatOptions({ state, attributes } as HassEntity, entity),
+          ...getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
         });
       } catch (_err) {
         // fallback to default
@@ -102,7 +107,11 @@ export const computeStateDisplayFromEntityAttributes = (
       : attributes.unit_of_measurement === '%'
       ? blankBeforePercent(locale) + '%'
       : ` ${attributes.unit_of_measurement}`;
-    return `${formatNumber(state, locale, getNumberFormatOptions({ state, attributes } as HassEntity, entity))}${unit}`;
+    return `${formatNumber(
+      state,
+      locale,
+      getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
+    )}${unit}`;
   }
 
   const domain = computeDomain(entityId);
@@ -149,7 +158,11 @@ export const computeStateDisplayFromEntityAttributes = (
   // `counter` `number` and `input_number` domains do not have a unit of measurement but should still use `formatNumber`
   if (domain === 'counter' || domain === 'number' || domain === 'input_number') {
     // Format as an integer if the value and step are integers
-    return formatNumber(state, locale, getNumberFormatOptions({ state, attributes } as HassEntity, entity));
+    return formatNumber(
+      state,
+      locale,
+      getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
+    );
   }
 
   // state is a timestamp
