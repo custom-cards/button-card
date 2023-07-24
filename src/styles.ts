@@ -53,6 +53,7 @@ export const styles = css`
     opacity: 1;
     transition-delay: 1.5s;
   }
+  ha-icon,
   ha-state-icon {
     display: inline-block;
     margin: auto;
