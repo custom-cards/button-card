@@ -624,7 +624,7 @@ class ButtonCard extends LitElement {
         result = html`
           ${result}
           <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>
-            ${fields[key] && (fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
+            ${(fields[key] as any).type === 'html' ? fields[key] : unsafeHTML(fields[key])}
           </div>
         `;
       }
