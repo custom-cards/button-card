@@ -21,6 +21,11 @@ input_number:
     max: 255
     step: 5
 
+homeassistant:
+  customize:
+    switch.skylight:
+      device_class: switch
+
 switch:
   - platform: template
     switches:

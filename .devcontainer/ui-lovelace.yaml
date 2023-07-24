@@ -563,7 +563,6 @@ views:
                 layout: icon_name_state
               - type: 'custom:button-card'
                 color_type: label-card
-                color: var(--item-color-main)
                 name: Testing default size
                 styles:
                   card:
