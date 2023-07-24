@@ -2,7 +2,7 @@ import { noChange } from 'lit-html';
 // import '@material/mwc-ripple';
 // tslint:disable-next-line
 import { Ripple } from '@material/mwc-ripple';
-import { myFireEvent } from './my-fire-event';
+import { fireEvent } from './common/fire-event';
 import { deepEqual } from './deep-equal';
 import { AttributePart, Directive, DirectiveParameters, directive } from 'lit-html/directive';
 
@@ -154,7 +154,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           if (options.repeat && !this.isRepeating) {
             this.isRepeating = true;
             this.repeatTimeout = setInterval(() => {
-              myFireEvent(element, 'action', { action: 'hold' });
+              fireEvent(element, 'action', { action: 'hold' });
             }, options.repeat);
           }
         }, this.holdTime);
@@ -186,21 +186,21 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       }
       if (options.hasHold && this.held) {
         if (!options.repeat) {
-          myFireEvent(target, 'action', { action: 'hold' });
+          fireEvent(target, 'action', { action: 'hold' });
         }
       } else if (options.hasDoubleClick) {
         if ((ev.type === 'click' && (ev as MouseEvent).detail < 2) || !this.dblClickTimeout) {
           this.dblClickTimeout = window.setTimeout(() => {
             this.dblClickTimeout = undefined;
-            myFireEvent(target, 'action', { action: 'tap' });
+            fireEvent(target, 'action', { action: 'tap' });
           }, 250);
         } else {
           clearTimeout(this.dblClickTimeout);
           this.dblClickTimeout = undefined;
-          myFireEvent(target, 'action', { action: 'double_tap' });
+          fireEvent(target, 'action', { action: 'double_tap' });
         }
       } else {
-        myFireEvent(target, 'action', { action: 'tap' });
+        fireEvent(target, 'action', { action: 'tap' });
       }
     };
 

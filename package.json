@@ -68,7 +68,6 @@
   "dependencies": {
     "@ctrl/tinycolor": "^3.1.6",
     "@material/mwc-ripple": "^0.19.1",
-    "custom-card-helpers": "^1.9.0",
     "fast-copy": "^2.1.0",
     "home-assistant-js-websocket": "^8.2.0",
     "lit": "^2.7.6",

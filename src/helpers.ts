@@ -1,9 +1,15 @@
 import { PropertyValues } from 'lit';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
-import { HomeAssistant, LovelaceConfig } from 'custom-card-helpers';
+import { HomeAssistant } from './types/homeassistant';
+import { LovelaceConfig } from './types/lovelace';
 import { StateConfig } from './types/types';
 import { HassEntity, HassEntityAttributeBase, HassEntityBase } from 'home-assistant-js-websocket';
 import { OFF, UNAVAILABLE, isUnavailableState } from './common/const';
+
+export const atLeastVersion = (version: string, major: number, minor: number): boolean => {
+  const [haMajor, haMinor] = version.split('.', 2);
+  return Number(haMajor) > major || (Number(haMajor) === major && Number(haMinor) >= minor);
+};
 
 export function computeDomain(entityId: string): string {
   return entityId.substr(0, entityId.indexOf('.'));
@@ -12,6 +18,8 @@ export function computeDomain(entityId: string): string {
 export function computeEntity(entityId: string): string {
   return entityId.substr(entityId.indexOf('.') + 1);
 }
+
+export const computeStateDomain = (stateObj: HassEntity) => computeDomain(stateObj.entity_id);
 
 export function getColorFromVariable(elt: Element, color: string): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -9,7 +9,6 @@ import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
 import { HassEntity } from 'home-assistant-js-websocket';
-import { timerTimeRemaining, createThing, DOMAINS_TOGGLE, computeStateDomain } from 'custom-card-helpers';
 import { LovelaceCard } from './types/lovelace';
 import {
   ButtonCardConfig,
@@ -36,17 +35,20 @@ import {
   getLovelaceCast,
   secondsToDuration,
   durationToSeconds,
+  computeStateDomain,
 } from './helpers';
+import { createThing } from './common/create-thing';
 import { styles } from './styles';
-import { computeStateDisplay } from './compute_state_display';
+import { computeStateDisplay } from './common/compute_state_display';
 import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
-import { stateColorCss } from './state_color';
-import { ON } from './common/const';
+import { stateColorCss } from './common/state_color';
+import { ON, DOMAINS_TOGGLE } from './common/const';
 import { handleAction } from './handle-action';
-import { myFireEvent } from './my-fire-event';
+import { fireEvent } from './common/fire-event';
 import { HomeAssistant } from './types/homeassistant';
+import { timerTimeRemaining } from './common/timer';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -145,7 +147,7 @@ class ButtonCard extends LitElement {
     else {
       const element = createThing(config);
       helperPromise.then(() => {
-        myFireEvent(element, 'll-rebuild', {});
+        fireEvent(element, 'll-rebuild', {});
       });
       return element;
     }

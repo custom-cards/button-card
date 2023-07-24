@@ -1,4 +1,4 @@
-import { myFireEvent } from './my-fire-event';
+import { fireEvent } from './common/fire-event';
 import { ActionConfig } from './types/types';
 import { HomeAssistant } from './types/homeassistant';
 
@@ -16,7 +16,7 @@ export const handleAction = async (
   config: ActionConfigParams,
   action: string,
 ): Promise<void> => {
-  myFireEvent(node, 'hass-action', { config, action });
+  fireEvent(node, 'hass-action', { config, action });
 };
 
 type ActionParams = { config: ActionConfigParams; action: string };

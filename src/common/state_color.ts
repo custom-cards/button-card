@@ -1,11 +1,11 @@
 /** Return an color representing a state. */
 import { HassEntity } from 'home-assistant-js-websocket';
-import { UNAVAILABLE } from './common/const';
-import { computeGroupDomain, GroupEntity } from './helpers';
-import { computeCssVariable } from './helpers';
-import { computeDomain, slugify } from './helpers';
-import { batteryStateColorProperty } from './helpers';
-import { stateActive } from './helpers';
+import { UNAVAILABLE } from './const';
+import { computeGroupDomain, GroupEntity } from '../helpers';
+import { computeCssVariable } from '../helpers';
+import { computeDomain, slugify } from '../helpers';
+import { batteryStateColorProperty } from '../helpers';
+import { stateActive } from '../helpers';
 
 const STATE_COLORED_DOMAIN = new Set([
   'alarm_control_panel',

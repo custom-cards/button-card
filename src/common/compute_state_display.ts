@@ -1,14 +1,19 @@
 import { HassConfig, HassEntity } from 'home-assistant-js-websocket';
-import { LocalizeFunc } from 'custom-card-helpers';
-import { computeDomain, isNumericFromAttributes } from './helpers';
-import { formatNumber, getNumberFormatOptions, blankBeforePercent } from './common/format_number';
-import { EntityRegistryDisplayEntry, FrontendLocaleData, HomeAssistant, TimeZone } from './types/homeassistant';
-import { UNIT_TO_MILLISECOND_CONVERT, formatDuration } from './common/duration';
-import { formatDateTime } from './common/format_date_time';
-import { formatDate } from './common/format_date';
-import { formatTime } from './common/format_time';
-import { UPDATE_SUPPORT_PROGRESS, updateIsInstallingFromAttributes } from './common/update';
-import { supportsFeatureFromAttributes } from './common/supports-features';
+import { computeDomain, isNumericFromAttributes } from '../helpers';
+import { formatNumber, getNumberFormatOptions, blankBeforePercent } from './format_number';
+import {
+  LocalizeFunc,
+  EntityRegistryDisplayEntry,
+  FrontendLocaleData,
+  HomeAssistant,
+  TimeZone,
+} from '../types/homeassistant';
+import { UNIT_TO_MILLISECOND_CONVERT, formatDuration } from './duration';
+import { formatDateTime } from './format_date_time';
+import { formatDate } from './format_date';
+import { formatTime } from './format_time';
+import { UPDATE_SUPPORT_PROGRESS, updateIsInstallingFromAttributes } from './update';
+import { supportsFeatureFromAttributes } from './supports-features';
 
 const UNAVAILABLE = 'unavailable';
 const UNKNOWN = 'unknown';
