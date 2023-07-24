@@ -1,3 +1,17 @@
+## [4.0.0-dev.8](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.7...v4.0.0-dev.8) (2023-07-24)
+
+
+### Features
+
+* Force the `numeric_precision` for states which are numbers ([24d75c2](https://github.com/custom-cards/button-card/commit/24d75c2651c9e6b3b080b1c2561bda2c30a2f294))
+* **action:** `repeat_limit` for `hold_action` ([73c216f](https://github.com/custom-cards/button-card/commit/73c216f1bf82c104848bb5d7aef2d91ba3597a95)), closes [#564](https://github.com/custom-cards/button-card/issues/564) [#555](https://github.com/custom-cards/button-card/issues/555)
+* new helper functions for date/time in templates ([2b75993](https://github.com/custom-cards/button-card/commit/2b75993f22e4624776c839bfa9dafe1ddde7660d)), closes [#701](https://github.com/custom-cards/button-card/issues/701)
+
+
+### Bug Fixes
+
+* ha-icon (if in custom_fields) size was weird ([a448c8e](https://github.com/custom-cards/button-card/commit/a448c8e826605d17591beebd4a230d0287cdf945))
+
 ## [4.0.0-dev.7](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.6...v4.0.0-dev.7) (2023-07-24)
 
 
