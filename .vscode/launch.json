@@ -8,11 +8,11 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
-      "url": "http://localhost:8123",
+      "url": "http://127.0.0.1:9123",
       "webRoot": "${workspaceFolder}/dist",
-      "sourceMaps": true,
       "preLaunchTask": "debug",
-      "postDebugTask": "devcontainer: stop debug"
+      "postDebugTask": "devcontainer: stop debug",
+      "skipFiles": ["**/frontend_latest/**"]
     }
   ]
 }
