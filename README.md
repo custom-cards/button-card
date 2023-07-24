@@ -334,7 +334,13 @@ Inside the javascript code, you'll have access to those variables:
 - `user`: The user object (equivalent to `hass.user`)
 - `hass`: The complete `hass` object
 - `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
-- `localize(entity, state?)`: a function which localizes a state (eg. `localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes an optional `state` string as argument. If `state` is not provided, it localizes the state of the `entity` (Eg. `localize(entity)` or `localize(states['weather.your_city'])`). If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
+- `localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state (eg. `localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments.
+  - If `state` is not provided, it localizes the state of the `entity` (Eg. `localize(entity)` or `localize(states['weather.your_city'])`).
+  - If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `localize(entity, entity.attributes.forecast[0].condition)` or `localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
+  - `numeric_precision` (number): For state which are numbers, force the precision instead of letting HA decide for you
+  - `show_units` (boolean): Will display units or not. Default is to display them.
+  - `units` (string): Will force the units to be the value of that parameter.
+  - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
 - `formatDateTime(date)`, `formatShortDateTimeWithYear(date)`, `formatShortDateTime(date)`, `formatDateTimeWithSeconds(date)`, `formatDateTimeNumeric(date)`: Some helper functions to format a date time string or Date object. Name are pretty explicit. Example: `return formatDateTime(entity.attribute.last_changed)`
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!

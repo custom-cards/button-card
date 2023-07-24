@@ -14,6 +14,7 @@ import { formatDate } from './format_date';
 import { formatTime } from './format_time';
 import { UPDATE_SUPPORT_PROGRESS, updateIsInstallingFromAttributes } from './update';
 import { supportsFeatureFromAttributes } from './supports-features';
+import { ButtonCardConfig } from '../types/types';
 
 const UNAVAILABLE = 'unavailable';
 const UNKNOWN = 'unknown';
@@ -24,7 +25,7 @@ export const computeStateDisplaySingleEntity = (
   locale: FrontendLocaleData,
   config: HassConfig,
   entity: EntityRegistryDisplayEntry | undefined,
-  numeric_precision: number | undefined,
+  buttonConfig: { numeric_precision?: number; show_units?: boolean; units?: string } | undefined,
   state?: string,
 ): string =>
   computeStateDisplayFromEntityAttributes(
@@ -34,7 +35,7 @@ export const computeStateDisplaySingleEntity = (
     entity,
     stateObj.entity_id,
     stateObj.attributes,
-    numeric_precision,
+    buttonConfig,
     state !== undefined ? state : stateObj.state,
   );
 
@@ -44,7 +45,7 @@ export const computeStateDisplay = (
   locale: FrontendLocaleData,
   config: HassConfig,
   entities: HomeAssistant['entities'],
-  numeric_precision: number | undefined,
+  buttonConfig: { numeric_precision?: number; show_units?: boolean; units?: string } | undefined,
   state?: string,
 ): string => {
   const entity = entities[stateObj.entity_id] as EntityRegistryDisplayEntry | undefined;
@@ -56,7 +57,7 @@ export const computeStateDisplay = (
     entity,
     stateObj.entity_id,
     stateObj.attributes,
-    numeric_precision,
+    buttonConfig,
     state !== undefined ? state : stateObj.state,
   );
 };
@@ -68,7 +69,7 @@ export const computeStateDisplayFromEntityAttributes = (
   entity: EntityRegistryDisplayEntry | undefined,
   entityId: string,
   attributes: any,
-  numeric_precision: number | undefined,
+  buttonConfig: { numeric_precision?: number; show_units?: boolean; units?: string } | undefined,
   state: string,
 ): string => {
   if (state === UNKNOWN || state === UNAVAILABLE) {
@@ -93,24 +94,29 @@ export const computeStateDisplayFromEntityAttributes = (
       try {
         return formatNumber(state, locale, {
           style: 'currency',
-          currency: attributes.unit_of_measurement,
+          currency: buttonConfig?.units || attributes.unit_of_measurement,
           minimumFractionDigits: 2,
           // Override monetary options with number format
-          ...getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
+          ...getNumberFormatOptions({ state, attributes } as HassEntity, buttonConfig?.numeric_precision, entity),
         });
       } catch (_err) {
         // fallback to default
       }
     }
-    const unit = !attributes.unit_of_measurement
+    const localOrConfigUnit = buttonConfig?.show_units
+      ? buttonConfig?.units
+        ? buttonConfig?.units
+        : attributes.unit_of_measurement
+      : undefined;
+    const unit = !localOrConfigUnit
       ? ''
-      : attributes.unit_of_measurement === '%'
+      : localOrConfigUnit === '%'
       ? blankBeforePercent(locale) + '%'
-      : ` ${attributes.unit_of_measurement}`;
+      : ` ${localOrConfigUnit}`;
     return `${formatNumber(
       state,
       locale,
-      getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
+      getNumberFormatOptions({ state, attributes } as HassEntity, buttonConfig?.numeric_precision, entity),
     )}${unit}`;
   }
 
@@ -161,7 +167,7 @@ export const computeStateDisplayFromEntityAttributes = (
     return formatNumber(
       state,
       locale,
-      getNumberFormatOptions({ state, attributes } as HassEntity, numeric_precision, entity),
+      getNumberFormatOptions({ state, attributes } as HassEntity, buttonConfig?.numeric_precision, entity),
     );
   }
 

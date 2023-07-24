@@ -294,7 +294,13 @@ class ButtonCard extends LitElement {
     return retval;
   }
 
-  private _localize(stateObj: HassEntity, state?: string): string {
+  private _localize(
+    stateObj: HassEntity,
+    state?: string,
+    numeric_precision?: number,
+    show_units = true,
+    units?: string,
+  ): string {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     return computeStateDisplay(
       this._hass!.localize,
@@ -302,7 +308,7 @@ class ButtonCard extends LitElement {
       this._hass!.locale,
       this._hass!.config,
       this._hass!.entities,
-      this._config?.numeric_precision,
+      { numeric_precision: numeric_precision || this._config?.numeric_precision, show_units, units },
       state,
     );
   }
@@ -543,10 +549,7 @@ class ButtonCard extends LitElement {
   private _buildStateString(stateObj: HassEntity | undefined): string | undefined | null {
     let stateString: string | undefined | null;
     if (this._config!.show_state && stateObj && stateObj.state) {
-      const units = this._buildUnits(stateObj);
-      if (units) {
-        stateString = `${stateObj.state} ${units}`;
-      } else if (computeDomain(stateObj.entity_id) === 'timer') {
+      if (computeDomain(stateObj.entity_id) === 'timer') {
         if (stateObj.state === 'idle' || this._timeRemaining === 0) {
           stateString = computeStateDisplay(
             this._hass!.localize,
@@ -554,7 +557,7 @@ class ButtonCard extends LitElement {
             this._hass!.locale,
             this._hass!.config,
             this._hass!.entities,
-            this._config?.numeric_precision,
+            this._config,
           );
         } else {
           stateString = this._computeTimeDisplay(stateObj);
@@ -565,12 +568,10 @@ class ButtonCard extends LitElement {
               this._hass!.locale,
               this._hass!.config,
               this._hass!.entities,
-              this._config?.numeric_precision,
+              this._config,
             )})`;
           }
         }
-      } else if (!this._config?.show_units && computeDomain(stateObj.entity_id) === 'sensor') {
-        stateString = stateObj.state;
       } else {
         stateString = computeStateDisplay(
           this._hass!.localize,
@@ -578,25 +579,11 @@ class ButtonCard extends LitElement {
           this._hass!.locale,
           this._hass!.config,
           this._hass!.entities,
-          this._config?.numeric_precision,
+          this._config,
         );
       }
     }
     return stateString;
-  }
-
-  private _buildUnits(state: HassEntity | undefined): string | undefined {
-    let units: string | undefined;
-    if (state) {
-      if (this._config!.show_units) {
-        if (state.attributes?.unit_of_measurement && !this._config!.units) {
-          units = state.attributes.unit_of_measurement;
-        } else {
-          units = this._config!.units ? this._config!.units : undefined;
-        }
-      }
-    }
-    return units;
   }
 
   private _buildLastChanged(state: HassEntity | undefined, style: StyleInfo): TemplateResult | undefined {
