@@ -139,6 +139,12 @@ class ActionHandler extends HTMLElement implements ActionHandler {
 
     element.actionHandler.start = (ev: Event) => {
       fireEvent(element, 'action', { action: 'press' });
+      if (element.actionHandler) {
+        element.removeEventListener('mouseleave', element.actionHandler.end!);
+        element.addEventListener('mouseleave', element.actionHandler.end!, {
+          passive: true,
+        });
+      }
       this.cancelled = false;
       let x;
       let y;
@@ -174,9 +180,14 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     element.actionHandler.end = (ev: Event) => {
       // Don't respond when moved or scrolled while touch
       if (['touchend', 'touchcancel'].includes(ev.type) && this.cancelled) {
+        fireEvent(element, 'action', { action: 'release' });
         if (this.isRepeating && this.repeatTimeout) {
           clearInterval(this.repeatTimeout);
           this.isRepeating = false;
+          this.stopAnimation();
+        }
+        if (element.actionHandler) {
+          element.removeEventListener('mouseleave', element.actionHandler.end!);
         }
         return;
       }
@@ -200,7 +211,10 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           fireEvent(target, 'action', { action: 'hold' });
         }
       } else if (options.hasDoubleClick) {
-        if ((ev.type === 'click' && (ev as MouseEvent).detail < 2) || !this.dblClickTimeout) {
+        if (
+          ev.type !== 'mouseleave' &&
+          ((ev.type === 'click' && (ev as MouseEvent).detail < 2) || !this.dblClickTimeout)
+        ) {
           this.dblClickTimeout = window.setTimeout(() => {
             this.dblClickTimeout = undefined;
             fireEvent(target, 'action', { action: 'tap' });
@@ -209,9 +223,14 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           clearTimeout(this.dblClickTimeout);
           this.dblClickTimeout = undefined;
           fireEvent(target, 'action', { action: 'double_tap' });
+          this.stopAnimation();
         }
-      } else {
+      } else if (ev.type !== 'mouseleave') {
         fireEvent(target, 'action', { action: 'tap' });
+      }
+      this.stopAnimation();
+      if (element.actionHandler) {
+        element.removeEventListener('mouseleave', element.actionHandler.end!);
       }
     };
 
@@ -227,7 +246,6 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     });
     element.addEventListener('touchend', element.actionHandler.end);
     element.addEventListener('touchcancel', element.actionHandler.end);
-
     element.addEventListener('mousedown', element.actionHandler.start, {
       passive: true,
     });
