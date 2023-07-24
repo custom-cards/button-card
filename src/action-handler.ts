@@ -24,6 +24,7 @@ export interface ActionHandlerOptions {
   hasDoubleClick?: boolean;
   disabled?: boolean;
   repeat?: number;
+  repeatLimit?: number;
 }
 
 interface ActionHandlerElement extends HTMLElement {
@@ -60,6 +61,8 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   private repeatTimeout: NodeJS.Timeout | undefined;
 
   private isRepeating = false;
+
+  private repeatCount = 0;
 
   constructor() {
     super();
@@ -152,9 +155,15 @@ class ActionHandler extends HTMLElement implements ActionHandler {
           this.startAnimation(x, y);
           this.held = true;
           if (options.repeat && !this.isRepeating) {
+            this.repeatCount = 0;
             this.isRepeating = true;
             this.repeatTimeout = setInterval(() => {
               fireEvent(element, 'action', { action: 'hold' });
+              this.repeatCount++;
+              if (this.repeatTimeout && options.repeatLimit && this.repeatCount >= options.repeatLimit) {
+                clearInterval(this.repeatTimeout);
+                this.isRepeating = false;
+              }
             }, options.repeat);
           }
         }, this.holdTime);

@@ -1970,6 +1970,7 @@ views:
             hold_action:
               action: call-service
               repeat: 500
+              repeat_limit: 2
               service: input_number.increment
               service_data:
                 entity_id: input_number.test

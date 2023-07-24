@@ -210,6 +210,7 @@ export interface BaseActionConfig {
   action: string;
   confirmation?: ConfirmationRestrictionConfig;
   repeat?: number;
+  repeat_limit?: number;
 }
 
 export interface ConfirmationRestrictionConfig {
