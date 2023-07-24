@@ -332,6 +332,7 @@ Inside the javascript code, you'll have access to those variables:
 - `user`: The user object (equivalent to `hass.user`)
 - `hass`: The complete `hass` object
 - `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
+- `localize(entity, state?)`: a function which localizes a state (eg. `localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes an optional `state` string as argument. If `state` is not provided, it localizes the state of the `entity` (Eg. `localize(entity)` or `localize(states['weather.your_city'])`). If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 

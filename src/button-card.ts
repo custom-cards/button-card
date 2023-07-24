@@ -287,10 +287,31 @@ class ButtonCard extends LitElement {
     return retval;
   }
 
+  private _localize(stateObj: HassEntity, state?: string): string {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    return computeStateDisplay(
+      this._hass!.localize,
+      stateObj,
+      this._hass!.locale,
+      this._hass!.config,
+      this._hass!.entities,
+      state,
+    );
+  }
+
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
     try {
-      return new Function('states', 'entity', 'user', 'hass', 'variables', 'html', `'use strict'; ${func}`).call(
+      return new Function(
+        'states',
+        'entity',
+        'user',
+        'hass',
+        'variables',
+        'html',
+        `localize`,
+        `'use strict'; ${func}`,
+      ).call(
         this,
         this._hass!.states,
         state,
@@ -298,6 +319,7 @@ class ButtonCard extends LitElement {
         this._hass,
         this._evaledVariables,
         html,
+        this._localize.bind(this),
       );
     } catch (e: any) {
       const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
