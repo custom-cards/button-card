@@ -1,3 +1,11 @@
+## [4.0.0-dev.5](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.4...v4.0.0-dev.5) (2023-07-24)
+
+
+### Bug Fixes
+
+* optimize contrast color compute ([35109c3](https://github.com/custom-cards/button-card/commit/35109c3d5c8454958f67be706026e73786f853bc))
+* Some cards with child cards wouldn't be clickable ([9f21c58](https://github.com/custom-cards/button-card/commit/9f21c58dacf5605851ef3ab2d936ef8f35d0b783))
+
 ## [4.0.0-dev.4](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.3...v4.0.0-dev.4) (2023-07-24)
 
 
