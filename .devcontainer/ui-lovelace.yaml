@@ -1961,12 +1961,6 @@ views:
                   var now = new Date();
                   return `${now} <br/>- ${last_changed}`
                   ]]]
-            tap_action:
-              action: none
-            press_action:
-              action: toggle
-            release_action:
-              action: toggle
           - type: custom:button-card
             entity: input_number.test
             show_state: true
