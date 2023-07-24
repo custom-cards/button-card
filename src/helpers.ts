@@ -13,7 +13,7 @@ export function computeEntity(entityId: string): string {
   return entityId.substr(entityId.indexOf('.') + 1);
 }
 
-export function getColorFromVariable(color: string): string {
+export function getColorFromVariable(elt: Element, color: string): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const colorArray: string[] = [];
   let result = color;
@@ -26,6 +26,11 @@ export function getColorFromVariable(color: string): string {
     });
 
     colorArray.some((color) => {
+      const card = window.getComputedStyle(elt).getPropertyValue(color);
+      if (card) {
+        result = card;
+        return true;
+      }
       const root = window.getComputedStyle(document.documentElement).getPropertyValue(color);
       if (root) {
         result = root;
@@ -45,18 +50,20 @@ export function getColorFromVariable(color: string): string {
   return result;
 }
 
-export function getFontColorBasedOnBackgroundColor(backgroundColor: string): string {
-  const bgLuminance = new TinyColor(getColorFromVariable(backgroundColor)).getLuminance();
-  const light = new TinyColor({ r: 225, g: 225, b: 225 }).getLuminance();
-  const dark = new TinyColor({ r: 28, g: 28, b: 28 }).getLuminance();
+export function getFontColorBasedOnBackgroundColor(elt: Element, backgroundColor: string): string {
+  const bgLuminance = new TinyColor(getColorFromVariable(elt, backgroundColor)).getLuminance();
+  const light = new TinyColor({ r: 225, g: 225, b: 225 });
+  const lightLuminance = light.getLuminance();
+  const dark = new TinyColor({ r: 28, g: 28, b: 28 });
+  const darkLuminance = dark.getLuminance();
 
   if (bgLuminance === 0) {
-    return 'rgb(225, 225, 225)';
+    return light.toRgbString();
   }
 
-  const whiteContrast = (Math.max(bgLuminance, light) + 0.05) / Math.min(bgLuminance, light + 0.05);
-  const blackContrast = (Math.max(bgLuminance, dark) + 0.05) / Math.min(bgLuminance, dark + 0.05);
-  return whiteContrast > blackContrast ? 'rgb(225, 225, 225)' : 'rgb(28, 28, 28)';
+  const whiteContrast = (Math.max(bgLuminance, lightLuminance) + 0.05) / Math.min(bgLuminance, lightLuminance + 0.05);
+  const blackContrast = (Math.max(bgLuminance, darkLuminance) + 0.05) / Math.min(bgLuminance, darkLuminance + 0.05);
+  return whiteContrast > blackContrast ? light.toRgbString() : dark.toRgbString();
 }
 
 export function getLightColorBasedOnTemperature(current: number, min: number, max: number): string {
@@ -92,8 +99,8 @@ export function buildNameStateConcat(name: string | undefined, stateString: stri
   return nameStateString;
 }
 
-export function applyBrightnessToColor(color: string, brightness: number): string {
-  const colorObj = new TinyColor(getColorFromVariable(color));
+export function applyBrightnessToColor(elt: Element, color: string, brightness: number): string {
+  const colorObj = new TinyColor(getColorFromVariable(elt, color));
   if (colorObj.isValid) {
     const validColor = colorObj.mix('black', 100 - brightness).toString();
     if (validColor) return validColor;

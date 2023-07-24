@@ -343,7 +343,7 @@ class ButtonCard extends LitElement {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
           if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+            color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
           }
         } else if (
           useTemperature &&
@@ -357,10 +357,11 @@ class ButtonCard extends LitElement {
             state.attributes.max_mireds,
           );
           if (state.attributes.brightness) {
-            color = applyBrightnessToColor(color, (state.attributes.brightness + 245) / 5);
+            color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
           }
         } else if (state.attributes.brightness) {
           color = applyBrightnessToColor(
+            this,
             stateColorCss(state, state.state) || this._config!.default_color,
             (state.attributes.brightness + 245) / 5,
           );
@@ -706,7 +707,7 @@ class ButtonCard extends LitElement {
         return this._blankCardColoredHtml(configCardStyle);
       case 'card':
       case 'label-card': {
-        const fontColor = getFontColorBasedOnBackgroundColor(color);
+        const fontColor = getFontColorBasedOnBackgroundColor(this, color);
         cardStyle.color = fontColor;
         lockStyle.color = fontColor;
         cardStyle['background-color'] = color;
