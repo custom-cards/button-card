@@ -1,7 +1,7 @@
 # Button Card by [@RomRider](https://github.com/RomRider) <!-- omit in toc -->
 
 [![GitHub Release][releases-shield]][releases]
-[![HACS Supported](https://img.shields.io/badge/HACS-Supported-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![License][license-shield]](LICENSE.md)
 
 ![Project Maintenance][maintenance-shield]
