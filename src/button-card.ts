@@ -641,12 +641,33 @@ class ButtonCard extends LitElement {
     return result;
   }
 
-  private _isClickable(state: HassEntity | undefined): boolean {
+  private _isClickable(state: HassEntity | undefined, configState: StateConfig | undefined): boolean {
     let clickable = true;
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
-    if (tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none') {
+    let hasChildCards = false;
+    if (this._config!.custom_fields) {
+      hasChildCards = Object.keys(this._config!.custom_fields).some((key) => {
+        const value = this._config!.custom_fields![key];
+        if ((value as CustomFieldCard)!.card) {
+          return true;
+        }
+        return false;
+      });
+    }
+    if (!hasChildCards && configState) {
+      if (configState.custom_fields) {
+        return (hasChildCards = Object.keys(configState.custom_fields).some((key) => {
+          const value = configState.custom_fields![key];
+          if ((value as CustomFieldCard)!.card) {
+            return true;
+          }
+          return false;
+        }));
+      }
+    }
+    if (tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards) {
       clickable = true;
     } else {
       clickable = false;
@@ -684,7 +705,7 @@ class ButtonCard extends LitElement {
     const tooltipStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'tooltip');
     const classList: ClassInfo = {
       'button-card-main': true,
-      disabled: !this._isClickable(this._stateObj),
+      disabled: !this._isClickable(this._stateObj, configState),
     };
     if (this._config?.tooltip) {
       this.classList.add('tooltip');
@@ -995,9 +1016,14 @@ class ButtonCard extends LitElement {
         tap_action: { action: 'toggle' },
         ...this._config,
       };
-    } else {
+    } else if (this._config!.entity) {
       this._config = {
         tap_action: { action: 'more-info' },
+        ...this._config,
+      };
+    } else {
+      this._config = {
+        tap_action: { action: 'none' },
         ...this._config,
       };
     }
