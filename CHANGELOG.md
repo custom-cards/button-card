@@ -1,3 +1,20 @@
+## [4.0.0-dev.6](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.5...v4.0.0-dev.6) (2023-07-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **hacs:** Minimum required HA Version is now 2023.7
+
+### Features
+
+* Support for localization in templates ([5de2dc9](https://github.com/custom-cards/button-card/commit/5de2dc906781f46a952377d40ba77d75728f19e3))
+
+
+### Bug Fixes
+
+* custom fields would sometime throw unsafeHTML errors ([c67e1d5](https://github.com/custom-cards/button-card/commit/c67e1d550c79bc6610e1592c95e509cfc6a06fa5)), closes [#725](https://github.com/custom-cards/button-card/issues/725)
+* **hacs:** minimum HA version 2023.7 ([db3b394](https://github.com/custom-cards/button-card/commit/db3b394fa6e970599d58c51d0caaa0ab2afbda1d))
+
 ## [4.0.0-dev.5](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.4...v4.0.0-dev.5) (2023-07-24)
 
 
