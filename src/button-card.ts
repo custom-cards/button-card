@@ -701,6 +701,9 @@ class ButtonCard extends LitElement {
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
+    const press_action = this._getTemplateOrValue(state, this._config!.press_action!.action);
+    const release_action = this._getTemplateOrValue(state, this._config!.release_action!.action);
+
     let hasChildCards = false;
     if (this._config!.custom_fields) {
       hasChildCards = Object.keys(this._config!.custom_fields).some((key) => {
@@ -722,7 +725,14 @@ class ButtonCard extends LitElement {
         }));
       }
     }
-    if (tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards) {
+    if (
+      tap_action != 'none' ||
+      hold_action != 'none' ||
+      double_tap_action != 'none' ||
+      press_action != 'none' ||
+      release_action != 'none' ||
+      hasChildCards
+    ) {
       clickable = true;
     } else {
       clickable = false;
@@ -1055,6 +1065,8 @@ class ButtonCard extends LitElement {
       group_expand: false,
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
+      press_action: { action: 'none' },
+      release_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -1212,10 +1224,21 @@ class ButtonCard extends LitElement {
         case 'tap':
         case 'hold':
         case 'double_tap':
+        case 'press':
+        case 'release':
           const config = this._config;
           if (!config) return;
           const action = ev.detail.action;
           const localAction = this._evalActions(config, `${action}_action`);
+          if (!localAction || !localAction[`${action}_action`] || localAction[`${action}_action`].action === 'none') {
+            break;
+          }
+          if (action === 'press' || action === 'release') {
+            // Hack HA (because it only supports tap, hold and dble_tap with the hass-action event)
+            localAction.tap_action = localAction[`${action}_action`];
+            handleAction(this, this._hass!, localAction, 'tap');
+            break;
+          }
           handleAction(this, this._hass!, localAction, action);
           break;
         default:

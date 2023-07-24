@@ -16,7 +16,7 @@ interface ActionHandler extends HTMLElement {
 }
 
 export interface ActionHandlerDetail {
-  action: 'hold' | 'tap' | 'double_tap';
+  action: 'hold' | 'tap' | 'double_tap' | 'press' | 'release';
 }
 
 export interface ActionHandlerOptions {
@@ -138,6 +138,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     }
 
     element.actionHandler.start = (ev: Event) => {
+      fireEvent(element, 'action', { action: 'press' });
       this.cancelled = false;
       let x;
       let y;
@@ -184,6 +185,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       if (ev.cancelable) {
         ev.preventDefault();
       }
+      fireEvent(element, 'action', { action: 'release' });
       if (options.hasHold) {
         clearTimeout(this.timer);
         if (this.isRepeating && this.repeatTimeout) {
