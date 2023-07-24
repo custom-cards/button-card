@@ -1,4 +1,4 @@
-import { PropertyValues } from 'lit-element';
+import { PropertyValues } from 'lit';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, LovelaceConfig } from 'custom-card-helpers';
 import { StateConfig } from './types/types';

@@ -230,3 +230,5 @@ export type ActionConfig =
   | AssistActionConfig
   | NoActionConfig
   | CustomActionConfig;
+
+export type Constructor<T = any> = new (...args: any[]) => T;

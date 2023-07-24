@@ -1,16 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import {
-  LitElement,
-  html,
-  customElement,
-  property,
-  TemplateResult,
-  CSSResult,
-  PropertyValues,
-  queryAsync,
-  eventOptions,
-} from 'lit-element';
+import { LitElement, html, TemplateResult, CSSResult, PropertyValues } from 'lit';
+import { customElement, property, queryAsync, eventOptions } from 'lit/decorators';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';

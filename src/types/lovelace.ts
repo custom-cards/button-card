@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HassEventBase, HassServiceTarget } from 'home-assistant-js-websocket';
 import { FrontendLocaleData, HomeAssistant } from './homeassistant';
-import { Constructor } from 'lit-element';
+import { Constructor } from './types';
 
 export interface Lovelace {
   config: LovelaceConfig;
