@@ -31,19 +31,6 @@ export function getColorFromVariable(elt: Element, color: string): string {
         result = card;
         return true;
       }
-      const root = window.getComputedStyle(document.documentElement).getPropertyValue(color);
-      if (root) {
-        result = root;
-        return true;
-      }
-      const customStyles = document.documentElement.getElementsByTagName('custom-style');
-      for (const element of customStyles) {
-        const value = window.getComputedStyle(element).getPropertyValue(color);
-        if (value) {
-          result = value;
-          return true;
-        }
-      }
       return false;
     });
   }
