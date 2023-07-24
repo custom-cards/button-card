@@ -1,3 +1,10 @@
+## [4.0.0-dev.4](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.3...v4.0.0-dev.4) (2023-07-24)
+
+
+### Bug Fixes
+
+* text/icon contrast when using label-card ([01e199b](https://github.com/custom-cards/button-card/commit/01e199b18b9caa31d4bc1a43c5a143e8d40f2836))
+
 ## [4.0.0-dev.3](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.2...v4.0.0-dev.3) (2023-07-23)
 
 
