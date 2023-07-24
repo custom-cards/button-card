@@ -49,6 +49,13 @@ import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
 import { HomeAssistant } from './types/homeassistant';
 import { timerTimeRemaining } from './common/timer';
+import {
+  formatDateTime,
+  formatDateTimeNumeric,
+  formatDateTimeWithSeconds,
+  formatShortDateTime,
+  formatShortDateTimeWithYear,
+} from './common/format_date_time';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -299,6 +306,22 @@ class ButtonCard extends LitElement {
     );
   }
 
+  private _formatDateTime(date: string | Date): string {
+    return formatDateTime(new Date(date), this._hass!.locale, this._hass!.config);
+  }
+  private _formatShortDateTimeWithYear(date: string | Date): string {
+    return formatShortDateTimeWithYear(new Date(date), this._hass!.locale, this._hass!.config);
+  }
+  private _formatShortDateTime(date: string | Date): string {
+    return formatShortDateTime(new Date(date), this._hass!.locale, this._hass!.config);
+  }
+  private _formatDateTimeWithSeconds(date: string | Date): string {
+    return formatDateTimeWithSeconds(new Date(date), this._hass!.locale, this._hass!.config);
+  }
+  private _formatDateTimeNumeric(date: string | Date): string {
+    return formatDateTimeNumeric(new Date(date), this._hass!.locale, this._hass!.config);
+  }
+
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
     try {
@@ -310,6 +333,11 @@ class ButtonCard extends LitElement {
         'variables',
         'html',
         `localize`,
+        `formatDateTime`,
+        `formatShortDateTimeWithYear`,
+        `formatShortDateTime`,
+        `formatDateTimeWithSeconds`,
+        `formatDateTimeNumeric`,
         `'use strict'; ${func}`,
       ).call(
         this,
@@ -320,6 +348,11 @@ class ButtonCard extends LitElement {
         this._evaledVariables,
         html,
         this._localize.bind(this),
+        this._formatDateTime.bind(this),
+        this._formatShortDateTimeWithYear.bind(this),
+        this._formatShortDateTime.bind(this),
+        this._formatDateTimeWithSeconds.bind(this),
+        this._formatDateTimeNumeric.bind(this),
       );
     } catch (e: any) {
       const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
