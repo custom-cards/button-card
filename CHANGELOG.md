@@ -1,3 +1,10 @@
+## [4.0.0-dev.7](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.6...v4.0.0-dev.7) (2023-07-24)
+
+
+### Bug Fixes
+
+* non string fiels would error with an unsafeHTML error ([d65c347](https://github.com/custom-cards/button-card/commit/d65c34757a20859a8c3c70fd2b612bfe818a662a)), closes [#725](https://github.com/custom-cards/button-card/issues/725)
+
 ## [4.0.0-dev.6](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.5...v4.0.0-dev.6) (2023-07-24)
 
 
