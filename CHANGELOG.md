@@ -1,3 +1,10 @@
+## [4.0.0-dev.10](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.9...v4.0.0-dev.10) (2023-07-25)
+
+
+### Bug Fixes
+
+* **color:** main config `color` was broken ([b93c996](https://github.com/custom-cards/button-card/commit/b93c9969c2d1d9be9486edc1607a11635b03c29a))
+
 ## [4.0.0-dev.9](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.8...v4.0.0-dev.9) (2023-07-24)
 
 
