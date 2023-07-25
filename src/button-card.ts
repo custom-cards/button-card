@@ -45,7 +45,7 @@ import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 import { stateColorCss } from './common/state_color';
-import { ON, DOMAINS_TOGGLE } from './common/const';
+import { DOMAINS_TOGGLE } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
 import { HomeAssistant } from './types/homeassistant';
