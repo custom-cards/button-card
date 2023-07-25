@@ -36,6 +36,7 @@ import {
   secondsToDuration,
   durationToSeconds,
   computeStateDomain,
+  stateActive,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -394,7 +395,7 @@ class ButtonCard extends LitElement {
   private _getColorForLightEntity(state: HassEntity | undefined, useTemperature: boolean): string {
     let color: string = this._config!.default_color;
     if (state) {
-      if (state.state === ON) {
+      if (stateActive(state)) {
         if (state.attributes.rgb_color) {
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
           if (state.attributes.brightness) {
@@ -741,7 +742,20 @@ class ButtonCard extends LitElement {
 
   private _cardHtml(): TemplateResult {
     const configState = this._getMatchingConfigState(this._stateObj);
-    const color = this._buildCssColorAttribute(this._stateObj, configState);
+    let color: string = 'var(--state-inactive-color)';
+    if (!!configState?.color) {
+      color = configState.color;
+    } else if (!!this._config?.color) {
+      if (this._stateObj) {
+        if (stateActive(this._stateObj)) {
+          color = this._config?.color || color;
+        }
+      } else {
+        color = this._config.color;
+      }
+    } else {
+      color = this._buildCssColorAttribute(this._stateObj, configState);
+    }
     let buttonColor = color;
     let cardStyle: any = {};
     let lockStyle: any = {};
