@@ -298,7 +298,7 @@ class ButtonCard extends LitElement {
   private _localize(
     stateObj: HassEntity,
     state?: string,
-    numeric_precision?: number,
+    numeric_precision?: number | 'card',
     show_units = true,
     units?: string,
   ): string {
@@ -309,7 +309,11 @@ class ButtonCard extends LitElement {
       this._hass!.locale,
       this._hass!.config,
       this._hass!.entities,
-      { numeric_precision: numeric_precision || this._config?.numeric_precision, show_units, units },
+      {
+        numeric_precision: numeric_precision === 'card' ? this._config?.numeric_precision : numeric_precision,
+        show_units,
+        units,
+      },
       state,
     );
   }
