@@ -47,7 +47,6 @@ export const styles = css`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 9999;
   }
   :host(.tooltip:hover) span.tooltiptext {
     opacity: 1;
