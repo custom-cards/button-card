@@ -57,6 +57,18 @@ import {
   formatShortDateTime,
   formatShortDateTimeWithYear,
 } from './common/format_date_time';
+import { formatTime, formatTime24h, formatTimeWeekday, formatTimeWithSeconds } from './common/format_time';
+import {
+  formatDate,
+  formatDateMonth,
+  formatDateMonthYear,
+  formatDateNumeric,
+  formatDateShort,
+  formatDateWeekday,
+  formatDateWeekdayDay,
+  formatDateWeekdayShort,
+  formatDateYear,
+} from './common/format_date';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -332,25 +344,67 @@ class ButtonCard extends LitElement {
     return '';
   }
 
-  private _getHelpers() {
+  private _getTemplateHelpers() {
     return {
       localize: this._localize.bind(this),
-      formatDateTime: (date) => {
-        return formatDateTime(new Date(date), this._hass!.locale, this._hass!.config);
+      // Datetime functions
+      formatDateTime: (datetime) => {
+        return formatDateTime(new Date(datetime), this._hass!.locale, this._hass!.config);
       },
-      formatShortDateTimeWithYear: (date) => {
-        return formatShortDateTimeWithYear(new Date(date), this._hass!.locale, this._hass!.config);
+      formatShortDateTimeWithYear: (datetime) => {
+        return formatShortDateTimeWithYear(new Date(datetime), this._hass!.locale, this._hass!.config);
       },
-      formatShortDateTime: (date) => {
-        return formatShortDateTime(new Date(date), this._hass!.locale, this._hass!.config);
+      formatShortDateTime: (datetime) => {
+        return formatShortDateTime(new Date(datetime), this._hass!.locale, this._hass!.config);
       },
-      formatDateTimeWithSeconds: (date) => {
-        return formatDateTimeWithSeconds(new Date(date), this._hass!.locale, this._hass!.config);
+      formatDateTimeWithSeconds: (datetime) => {
+        return formatDateTimeWithSeconds(new Date(datetime), this._hass!.locale, this._hass!.config);
       },
-      formatDateTimeNumeric: (date) => {
-        return formatDateTimeNumeric(new Date(date), this._hass!.locale, this._hass!.config);
+      formatDateTimeNumeric: (datetime) => {
+        return formatDateTimeNumeric(new Date(datetime), this._hass!.locale, this._hass!.config);
       },
+      // Time functions
       relativeTime: this._relativeTime.bind(this),
+      formatTime: (time) => {
+        return formatTime(new Date(time), this._hass!.locale, this._hass!.config);
+      },
+      formatTimeWithSeconds: (time) => {
+        return formatTimeWithSeconds(new Date(time), this._hass!.locale, this._hass!.config);
+      },
+      formatTimeWeekday: (time) => {
+        return formatTimeWeekday(new Date(time), this._hass!.locale, this._hass!.config);
+      },
+      formatTime24h: (time) => {
+        return formatTime24h(new Date(time), this._hass!.locale, this._hass!.config);
+      },
+      // Date functions
+      formatDateWeekdayDay: (date) => {
+        return formatDateWeekdayDay(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDate: (date) => {
+        return formatDate(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateNumeric: (date) => {
+        return formatDateNumeric(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateShort: (date) => {
+        return formatDateShort(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateMonthYear: (date) => {
+        return formatDateMonthYear(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateMonth: (date) => {
+        return formatDateMonth(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateYear: (date) => {
+        return formatDateYear(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateWeekday: (date) => {
+        return formatDateWeekday(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      formatDateWeekdayShort: (date) => {
+        return formatDateWeekdayShort(new Date(date), this._hass!.locale, this._hass!.config);
+      },
     };
   }
 
@@ -374,7 +428,7 @@ class ButtonCard extends LitElement {
         this._hass,
         this._evaledVariables,
         html,
-        this._getHelpers(),
+        this._getTemplateHelpers(),
       );
     } catch (e: any) {
       const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;

@@ -335,14 +335,33 @@ Inside the javascript code, you'll have access to those variables:
 - `hass`: The complete `hass` object
 - `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
 - Helper functions availble through the object `helpers`:
-  - `helpers.localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state (eg. `helpers.localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments.
+  - `helpers.localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state to your language (eg. `helpers.localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments. Works with numerical states also.
     - If `state` is not provided, it localizes the state of the `entity` (Eg. `helpers.localize(entity)` or `helpers.localize(states['weather.your_city'])`).
     - If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `helpers.localize(entity, entity.attributes.forecast[0].condition)` or `helpers.localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
     - `numeric_precision` (number or `'card'`. Default is `undefined`): For state which are numbers, force the precision instead of letting HA decide for you. If the value is set to `'card'`, it will use the `numeric_precision` from the main config. If `undefined`, it will use the default value for the entity you're willing to display. The latter is the default.
     - `show_units` (boolean. Default is `true`): Will display units or not. Default is to display them.
     - `units` (string): Will force the units to be the value of that parameter.
     - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `helpers.localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
-  - `helpers.formatDateTime(date)`, `helpers.formatShortDateTimeWithYear(date)`, `helpers.formatShortDateTime(date)`, `helpers.formatDateTimeWithSeconds(date)`, `helpers.formatDateTimeNumeric(date)`: Some helper functions to format a date time string or Date object. Name are pretty explicit. Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
+  - Date, Time and Date Time format helpers, all localized (takes a string or a `Date` object as input):
+    - `helpers.formatTime(time)`: 21:15 / 9:15
+    - `helpers.formatTimeWithSeconds(time)`: 9:15:24 PM || 21:15:24
+    - `helpers.formatTimeWeekday(time)`: Tuesday 7:00 PM || Tuesday 19:00
+    - `helpers.formatTime24h(time)`: 21:15
+    - `helpers.formatDateWeekdayDay(date)`: Tuesday, August 10
+    - `helpers.formatDate(date)`: August 10, 2021
+    - `helpers.formatDateNumeric(date)`: 10/08/2021
+    - `helpers.formatDateShort(date)`: Aug 10
+    - `helpers.formatDateMonthYear(date)`: August 2021
+    - `helpers.formatDateMonth(date)`: August
+    - `helpers.formatDateYear(date)`: 2021
+    - `helpers.formatDateWeekday(date)`: Monday
+    - `helpers.formatDateWeekdayShort(date)`: Mon
+    - `helpers.formatDateTime(datetime)`: August 9, 2021, 8:23 AM
+    - `helpers.formatDateTimeNumeric(datetime)`: Aug 9, 2021, 8:23 AM
+    - `helpers.formatDateTimeWithSeconds(datetime)`: Aug 9, 8:23 AM
+    - `helpers.formatShortDateTime(datetime)`: August 9, 2021, 8:23:15 AM
+    - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
+    - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
   - `helpers.relativeTime(date)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
