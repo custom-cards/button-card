@@ -14,7 +14,6 @@ import { formatDate } from './format_date';
 import { formatTime } from './format_time';
 import { UPDATE_SUPPORT_PROGRESS, updateIsInstallingFromAttributes } from './update';
 import { supportsFeatureFromAttributes } from './supports-features';
-import { ButtonCardConfig } from '../types/types';
 
 const UNAVAILABLE = 'unavailable';
 const UNKNOWN = 'unknown';
