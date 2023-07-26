@@ -334,15 +334,16 @@ Inside the javascript code, you'll have access to those variables:
 - `user`: The user object (equivalent to `hass.user`)
 - `hass`: The complete `hass` object
 - `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
-- `localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state (eg. `localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments.
-  - If `state` is not provided, it localizes the state of the `entity` (Eg. `localize(entity)` or `localize(states['weather.your_city'])`).
-  - If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `localize(entity, entity.attributes.forecast[0].condition)` or `localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
-  - `numeric_precision` (number or `'card'`. Default is `undefined`): For state which are numbers, force the precision instead of letting HA decide for you. If the value is set to `'card'`, it will use the `numeric_precision` from the main config. If `undefined`, it will use the default value for the entity you're willing to display. The latter is the default.
-  - `show_units` (boolean. Default is `true`): Will display units or not. Default is to display them.
-  - `units` (string): Will force the units to be the value of that parameter.
-  - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
-- `formatDateTime(date)`, `formatShortDateTimeWithYear(date)`, `formatShortDateTime(date)`, `formatDateTimeWithSeconds(date)`, `formatDateTimeNumeric(date)`: Some helper functions to format a date time string or Date object. Name are pretty explicit. Example: `return formatDateTime(entity.attribute.last_changed)`
-- `relativeTime(date)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. Usage for eg.: `return relativeTime(entity.last_changed)`
+- Helper functions availble through the object `helpers`:
+  - `helpers.localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state (eg. `helpers.localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments.
+    - If `state` is not provided, it localizes the state of the `entity` (Eg. `helpers.localize(entity)` or `helpers.localize(states['weather.your_city'])`).
+    - If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `helpers.localize(entity, entity.attributes.forecast[0].condition)` or `helpers.localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
+    - `numeric_precision` (number or `'card'`. Default is `undefined`): For state which are numbers, force the precision instead of letting HA decide for you. If the value is set to `'card'`, it will use the `numeric_precision` from the main config. If `undefined`, it will use the default value for the entity you're willing to display. The latter is the default.
+    - `show_units` (boolean. Default is `true`): Will display units or not. Default is to display them.
+    - `units` (string): Will force the units to be the value of that parameter.
+    - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `helpers.localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
+  - `helpers.formatDateTime(date)`, `helpers.formatShortDateTimeWithYear(date)`, `helpers.formatShortDateTime(date)`, `helpers.formatDateTimeWithSeconds(date)`, `helpers.formatDateTimeNumeric(date)`: Some helper functions to format a date time string or Date object. Name are pretty explicit. Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
+  - `helpers.relativeTime(date)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
