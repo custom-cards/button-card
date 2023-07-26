@@ -1149,7 +1149,7 @@ class ButtonCard extends LitElement {
     if (entityList) {
       entityList.forEach((childEntity) => {
         if (this._hass?.states[childEntity]) {
-          if (computeDomain(childEntity) === 'group' && this._hass.states[childEntity].attributes?.entity_id) {
+          if (this._hass.states[childEntity].attributes?.entity_id) {
             this._loopGroup(this._hass.states[childEntity].attributes.entity_id);
           } else {
             if (!this._entities.includes(childEntity)) {
@@ -1164,7 +1164,7 @@ class ButtonCard extends LitElement {
   private _expandTriggerGroups(): void {
     if (this._hass && this._config?.group_expand && this._entities) {
       this._entities.forEach((entity) => {
-        if (computeDomain(entity) === 'group') {
+        if (this._hass?.states[entity].attributes?.entity_id) {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
       });
