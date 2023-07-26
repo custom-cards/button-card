@@ -1,3 +1,17 @@
+## [4.0.0-dev.11](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.10...v4.0.0-dev.11) (2023-07-26)
+
+
+### Features
+
+* **templates:** new `relativeTime` function to display a relative time in a template and update it automatically ([965a3d7](https://github.com/custom-cards/button-card/commit/965a3d7b97b9fe1d155029dd6156f7a2f051f5a9)), closes [#701](https://github.com/custom-cards/button-card/issues/701)
+
+
+### Bug Fixes
+
+* ha-state-icon CSS selector was wrong ([a1bb39a](https://github.com/custom-cards/button-card/commit/a1bb39a71c55dca505d4b1a7d820229e26d4e0eb))
+* tooltip would show over everything ([1bc8f99](https://github.com/custom-cards/button-card/commit/1bc8f9950159a260536d6918b55c3cb15eb7bb04))
+* **templates:** don't use the `numeric_precision` from the card config for `localize` in js templates by default ([2cc384f](https://github.com/custom-cards/button-card/commit/2cc384f9dc5cb91a88a31b363db6083147092bb5))
+
 ## [4.0.0-dev.10](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.9...v4.0.0-dev.10) (2023-07-25)
 
 
