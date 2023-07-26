@@ -171,7 +171,7 @@ class ButtonCard extends LitElement {
     try {
       this._evaledVariables = this._config!.variables
         ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
-        : undefined;
+        : {};
       return this._cardHtml();
     } catch (e: any) {
       if (e.stack) console.error(e.stack);
