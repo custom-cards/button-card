@@ -1,3 +1,19 @@
+## [4.0.0-dev.14](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.13...v4.0.0-dev.14) (2023-07-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **helpers:** If you were using any of the beta before `4.0.0-dev14`. Please replace all the calls to helper functions with `helpers.xxx` for eg. `helpers.relativeTime(entity.state)` or `helpers.localize(entity)`
+
+### Features
+
+* **helpers:** all template functions are now available through the `helpers` object ([f22ed69](https://github.com/custom-cards/button-card/commit/f22ed6982f09d1ffbc303a14f81a9a6345acd274))
+
+
+### Bug Fixes
+
+* `group_expand` now works even if the entity is not a `group.xxx` ([f192ded](https://github.com/custom-cards/button-card/commit/f192ded67f092a47d4bafe2c0fec2d8ccc55dc44)), closes [#645](https://github.com/custom-cards/button-card/issues/645)
+
 ## [4.0.0-dev.13](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.12...v4.0.0-dev.13) (2023-07-26)
 
 
