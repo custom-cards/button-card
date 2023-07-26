@@ -1,3 +1,10 @@
+## [4.0.0-dev.12](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.11...v4.0.0-dev.12) (2023-07-26)
+
+
+### Bug Fixes
+
+* icon would be cut with card height defined ([19f8393](https://github.com/custom-cards/button-card/commit/19f83931939a8c15bd9e1174f11c0e52dd451bf8)), closes [#731](https://github.com/custom-cards/button-card/issues/731)
+
 ## [4.0.0-dev.11](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.10...v4.0.0-dev.11) (2023-07-26)
 
 
