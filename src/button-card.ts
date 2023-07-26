@@ -334,6 +334,20 @@ class ButtonCard extends LitElement {
     return formatDateTimeNumeric(new Date(date), this._hass!.locale, this._hass!.config);
   }
 
+  private _relativeTime(date: string | undefined) {
+    if (date) {
+      return html`
+        <ha-relative-time
+          id="relative-time"
+          class="ellipsis"
+          .hass="${this._hass}"
+          .datetime="${date}"
+        ></ha-relative-time>
+      `;
+    }
+    return '';
+  }
+
   private _evalTemplate(state: HassEntity | undefined, func: any): any {
     /* eslint no-new-func: 0 */
     try {
@@ -350,6 +364,7 @@ class ButtonCard extends LitElement {
         `formatShortDateTime`,
         `formatDateTimeWithSeconds`,
         `formatDateTimeNumeric`,
+        `relativeTime`,
         `'use strict'; ${func}`,
       ).call(
         this,
@@ -365,6 +380,7 @@ class ButtonCard extends LitElement {
         this._formatShortDateTime.bind(this),
         this._formatDateTimeWithSeconds.bind(this),
         this._formatDateTimeNumeric.bind(this),
+        this._relativeTime.bind(this),
       );
     } catch (e: any) {
       const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;

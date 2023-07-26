@@ -342,6 +342,7 @@ Inside the javascript code, you'll have access to those variables:
   - `units` (string): Will force the units to be the value of that parameter.
   - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
 - `formatDateTime(date)`, `formatShortDateTimeWithYear(date)`, `formatShortDateTime(date)`, `formatDateTimeWithSeconds(date)`, `formatDateTimeNumeric(date)`: Some helper functions to format a date time string or Date object. Name are pretty explicit. Example: `return formatDateTime(entity.attribute.last_changed)`
+- `relativeTime(date)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. Usage for eg.: `return relativeTime(entity.last_changed)`
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
