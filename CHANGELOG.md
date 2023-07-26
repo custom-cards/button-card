@@ -1,3 +1,10 @@
+## [4.0.0-dev.15](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.14...v4.0.0-dev.15) (2023-07-26)
+
+
+### Features
+
+* **templates:** New date and time format helpers ([9b4fb05](https://github.com/custom-cards/button-card/commit/9b4fb05e4e5b3d70fa4c1f8f7f5778ca55e551f6))
+
 ## [4.0.0-dev.14](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.13...v4.0.0-dev.14) (2023-07-26)
 
 
