@@ -983,6 +983,7 @@ class ButtonCard extends LitElement {
     const haIconStyle: StyleInfo = {
       color,
       width: this._config!.size,
+      '--ha-icon-display': haCardStyleFromConfig.height ? 'inline' : undefined,
       position: !this._config!.aspect_ratio && !haCardStyleFromConfig.height ? 'relative' : 'absolute',
       ...haIconStyleFromConfig,
     };
