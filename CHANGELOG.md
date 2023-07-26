@@ -1,3 +1,10 @@
+## [4.0.0-dev.13](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.12...v4.0.0-dev.13) (2023-07-26)
+
+
+### Bug Fixes
+
+* **templates:** `variables` was `undefined` if none where provided. ([fad332b](https://github.com/custom-cards/button-card/commit/fad332b80d0fe910fa99e13e1e291ffa4b65188e)), closes [#718](https://github.com/custom-cards/button-card/issues/718)
+
 ## [4.0.0-dev.12](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.11...v4.0.0-dev.12) (2023-07-26)
 
 
