@@ -1247,13 +1247,14 @@ class ButtonCard extends LitElement {
     if (configDuplicate[action]?.data?.entity_id === 'entity') {
       configDuplicate[action].data.entity_id = config.entity;
     }
-    if (configDuplicate[action]?.entity) {
-      configDuplicate.entity = this._getTemplateOrValue(this._stateObj, configDuplicate[action].entity);
-    }
     configDuplicate[action] = __evalObject(configDuplicate[action]);
     if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
       configDuplicate[action].confirmation = __evalObject(configDuplicate.confirmation);
     }
+    if (configDuplicate[action]?.entity) {
+      configDuplicate.entity = configDuplicate[action].entity;
+    }
+
     return configDuplicate;
   }
 
