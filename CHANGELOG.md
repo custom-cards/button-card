@@ -1,3 +1,10 @@
+## [4.0.0-dev.16](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.15...v4.0.0-dev.16) (2023-07-27)
+
+
+### Bug Fixes
+
+* *_action more-info entity as a template was not evaluated ([02441b2](https://github.com/custom-cards/button-card/commit/02441b29820bc84816bb480a94307291c20028d4)), closes [#734](https://github.com/custom-cards/button-card/issues/734)
+
 ## [4.0.0-dev.15](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.14...v4.0.0-dev.15) (2023-07-26)
 
 
