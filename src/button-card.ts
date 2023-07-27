@@ -701,7 +701,11 @@ class ButtonCard extends LitElement {
         if (!(value as CustomFieldCard).card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
+          if ((value as CustomFieldCard).do_not_eval) {
+            cards[key] = copy((value as CustomFieldCard).card);
+          } else {
+            cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
+          }
         }
       });
     }
@@ -711,7 +715,11 @@ class ButtonCard extends LitElement {
         if (!(value as CustomFieldCard)!.card) {
           fields[key] = this._getTemplateOrValue(state, value);
         } else {
-          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
+          if ((value as CustomFieldCard).do_not_eval) {
+            cards[key] = copy((value as CustomFieldCard).card);
+          } else {
+            cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
+          }
         }
       });
     }

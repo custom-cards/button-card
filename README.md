@@ -760,7 +760,9 @@ Examples are better than a long text, so here you go:
         ]]]
   ```
 
-- <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card. This is what the `style` inside the embedded card is for):
+- <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card.
+
+- This is what the `style` inside the embedded card is for):
 
   ![custom_fields_3](examples/custom_fields_card.png)
 
@@ -793,6 +795,39 @@ Examples are better than a long text, so here you go:
     hold_action:
       action: more-info
   ```
+
+To skip evaluating the templates in a custom_field (eg. you embed a `custom:button-card` inside a Custom Field), then you have to set `do_not_eval` to `true`.
+
+```yaml
+type: custom:button-card
+styles:
+  grid:
+    - grid-template-areas: "'test1' 'test2'"
+variables:
+  b: 42
+custom_fields:
+  test1:
+    card:
+      type: custom:button-card
+      variables:
+        c: 42
+      ## This will return: B: 42 / C: undefined
+      ## as it is evaluated in the context of the
+      ## main card (which doesn't know about c)
+      name: '[[[ return `B: ${variables.b} / C: ${variables.c}` ]]]'
+  test2:
+    ## This stops the evaluation of js templates
+    ## for the card object in this custom field
+    do_not_eval: true
+    card:
+      type: custom:button-card
+      variables:
+        c: 42
+      ## This will return: B: undefined / C: 42
+      ## as it is evaluated in the context of the local button-card
+      ## inside the custom_field (which doesn't know about b)
+      name: '[[[ return `B: ${variables.b} / C: ${variables.c}` ]]]'
+```
 
 ### Configuration Templates
 
