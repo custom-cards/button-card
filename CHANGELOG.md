@@ -1,3 +1,10 @@
+## [4.0.0-dev.17](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.16...v4.0.0-dev.17) (2023-07-27)
+
+
+### Features
+
+* **variables:** A variable can depend on another variable based on their name's alphabetical order ([8cddccb](https://github.com/custom-cards/button-card/commit/8cddccb83466d2db29f832085e2c701bdef6b254)), closes [#656](https://github.com/custom-cards/button-card/issues/656)
+
 ## [4.0.0-dev.16](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.15...v4.0.0-dev.16) (2023-07-27)
 
 
