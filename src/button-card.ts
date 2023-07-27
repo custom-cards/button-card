@@ -181,9 +181,16 @@ class ButtonCard extends LitElement {
     if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._evaledVariables = this._config!.variables
-        ? this._objectEvalTemplate(this._stateObj, this._config!.variables)
-        : {};
+      this._evaledVariables = {};
+      if (this._config?.variables) {
+        const variablesNameOrdered = Object.keys(this._config.variables).sort();
+        variablesNameOrdered.forEach((variable) => {
+          this._evaledVariables[variable] = this._getTemplateOrValue(
+            this._stateObj,
+            this._config!.variables![variable],
+          );
+        });
+      }
       return this._cardHtml();
     } catch (e: any) {
       if (e.stack) console.error(e.stack);

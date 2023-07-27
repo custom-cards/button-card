@@ -922,7 +922,9 @@ state:
 
 #### Variables
 
-You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change. An example below:
+You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
+
+An example below:
 
 ```yaml
 button_card_templates:
@@ -945,6 +947,22 @@ button_card_templates:
   variables:
     var_name: "My local Value"
  # name will be "My local Value"
+```
+
+Variables are evaluated in their alphabetical order based on their name. That means a variable named `b` can depend on a variable named `a`, but variable named `a` can't depend on a variable named `b`.
+
+```yaml
+### This works
+variables:
+  index: 2
+  value: '[[[ return variables.index + 2; ]]]'
+name: '[[[ return variable.value; ]]]' # would return 4
+
+### This doesn't work
+variables:
+  z_index: 2
+  value: '[[[ return variables.z_index + 2; ]]]' # This would fail because z comes after v in the alphabet.
+name: '[[[ return variable.value; ]]]'
 ```
 
 ## Installation
