@@ -1248,7 +1248,7 @@ class ButtonCard extends LitElement {
       configDuplicate[action].data.entity_id = config.entity;
     }
     if (configDuplicate[action]?.entity) {
-      configDuplicate.entity = configDuplicate[action].entity;
+      configDuplicate.entity = this._getTemplateOrValue(this._stateObj, configDuplicate[action].entity);
     }
     configDuplicate[action] = __evalObject(configDuplicate[action]);
     if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
