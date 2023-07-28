@@ -1,3 +1,15 @@
+## [4.0.0-dev.18](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.17...v4.0.0-dev.18) (2023-07-28)
+
+
+### Features
+
+* **custom_fields:** Add `do_not_eval` to stop evaluating js templates in an embedded card ([1638cf8](https://github.com/custom-cards/button-card/commit/1638cf81217ef696a6b0967550cbbb9f3849c813))
+
+
+### Bug Fixes
+
+* relativeTime didn't support to set the first letter uppercase ([f8b9b09](https://github.com/custom-cards/button-card/commit/f8b9b0916964495c3b0b9341b5c6751a9a99a1c8)), closes [#735](https://github.com/custom-cards/button-card/issues/735)
+
 ## [4.0.0-dev.17](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.16...v4.0.0-dev.17) (2023-07-27)
 
 
