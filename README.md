@@ -368,7 +368,7 @@ Inside the javascript code, you'll have access to those variables:
     - `helpers.formatShortDateTime(datetime)`: August 9, 2021, 8:23:15 AM
     - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
     - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
-  - `helpers.relativeTime(date)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
+  - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 

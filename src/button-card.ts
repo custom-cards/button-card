@@ -337,7 +337,7 @@ class ButtonCard extends LitElement {
     );
   }
 
-  private _relativeTime(date: string | undefined) {
+  private _relativeTime(date: string | undefined, capitalize: boolean = false) {
     if (date) {
       return html`
         <ha-relative-time
@@ -345,6 +345,7 @@ class ButtonCard extends LitElement {
           class="ellipsis"
           .hass="${this._hass}"
           .datetime="${date}"
+          .capitalize="${capitalize}"
         ></ha-relative-time>
       `;
     }
