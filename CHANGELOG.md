@@ -1,3 +1,10 @@
+## [4.0.0-dev.19](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.18...v4.0.0-dev.19) (2023-07-29)
+
+
+### Bug Fixes
+
+* variable which were objects were only evaluated once ([e40bda9](https://github.com/custom-cards/button-card/commit/e40bda9da67008cbca8f18fc0ef4d65c7b8f08b5))
+
 ## [4.0.0-dev.18](https://github.com/custom-cards/button-card/compare/v4.0.0-dev.17...v4.0.0-dev.18) (2023-07-28)
 
 
