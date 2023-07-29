@@ -185,7 +185,7 @@ class ButtonCard extends LitElement {
       if (this._config?.variables) {
         const variablesNameOrdered = Object.keys(this._config.variables).sort();
         variablesNameOrdered.forEach((variable) => {
-          this._evaledVariables[variable] = this._getTemplateOrValue(
+          this._evaledVariables[variable] = this._objectEvalTemplate(
             this._stateObj,
             this._config!.variables![variable],
           );
