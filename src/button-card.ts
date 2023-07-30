@@ -213,10 +213,10 @@ class ButtonCard extends LitElement {
         });
       } else if (typeof this._config!.triggers_update === 'string') {
         const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
-        if (result !== 'all') {
+        if (result && result !== 'all') {
           this._entities.push(result);
         } else {
-          this._config.triggers_update = 'all';
+          this._config.triggers_update = result;
         }
       }
       if (this._config!.triggers_update !== 'all') {
