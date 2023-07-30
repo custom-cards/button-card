@@ -1,11 +1,12 @@
 /** Return an color representing a state. */
 import { HassEntity } from 'home-assistant-js-websocket';
-import { UNAVAILABLE } from './const';
+import { OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE, OVERRIDE_CARD_BACKGROUND_COLOR_COLORS, UNAVAILABLE } from './const';
 import { computeGroupDomain, GroupEntity } from '../helpers';
 import { computeCssVariable } from '../helpers';
 import { computeDomain, slugify } from '../helpers';
 import { batteryStateColorProperty } from '../helpers';
 import { stateActive } from '../helpers';
+import { ColorType } from '../types/types';
 
 const STATE_COLORED_DOMAIN = new Set([
   'alarm_control_panel',
@@ -37,13 +38,13 @@ const STATE_COLORED_DOMAIN = new Set([
   'vacuum',
 ]);
 
-export const stateColorCss = (stateObj: HassEntity, state?: string): undefined | string => {
+export const stateColorCss = (stateObj: HassEntity, state?: string, cardColorType?: ColorType): undefined | string => {
   const compareState = state !== undefined ? state : stateObj?.state;
   if (compareState === UNAVAILABLE) {
     return `var(--state-unavailable-color)`;
   }
 
-  const properties = stateColorProperties(stateObj, state);
+  const properties = stateColorProperties(stateObj, state, cardColorType);
   if (properties) {
     return computeCssVariable(properties);
   }
@@ -51,7 +52,12 @@ export const stateColorCss = (stateObj: HassEntity, state?: string): undefined |
   return undefined;
 };
 
-export const domainStateColorProperties = (domain: string, stateObj: HassEntity, state?: string): string[] => {
+export const domainStateColorProperties = (
+  domain: string,
+  stateObj: HassEntity,
+  state?: string,
+  cardColorType?: ColorType,
+): string[] => {
   const compareState = state !== undefined ? state : stateObj.state;
   const active = stateActive(stateObj, state);
 
@@ -59,6 +65,10 @@ export const domainStateColorProperties = (domain: string, stateObj: HassEntity,
 
   const stateKey = slugify(compareState, '_');
   const activeKey = active ? 'active' : 'inactive';
+
+  if (cardColorType && OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE.includes(cardColorType) && activeKey == 'inactive') {
+    return OVERRIDE_CARD_BACKGROUND_COLOR_COLORS;
+  }
 
   const dc = stateObj.attributes.device_class;
 
@@ -75,7 +85,11 @@ export const domainStateColorProperties = (domain: string, stateObj: HassEntity,
   return properties;
 };
 
-export const stateColorProperties = (stateObj: HassEntity, state?: string): string[] | undefined => {
+export const stateColorProperties = (
+  stateObj: HassEntity,
+  state?: string,
+  cardColorType?: ColorType,
+): string[] | undefined => {
   const compareState = state !== undefined ? state : stateObj?.state;
   const domain = computeDomain(stateObj.entity_id);
   const dc = stateObj.attributes.device_class;
@@ -92,14 +106,17 @@ export const stateColorProperties = (stateObj: HassEntity, state?: string): stri
   if (domain === 'group') {
     const groupDomain = computeGroupDomain(stateObj as GroupEntity);
     if (groupDomain && STATE_COLORED_DOMAIN.has(groupDomain)) {
-      return domainStateColorProperties(groupDomain, stateObj, state);
+      return domainStateColorProperties(groupDomain, stateObj, state, cardColorType);
     }
   }
 
   if (STATE_COLORED_DOMAIN.has(domain)) {
-    return domainStateColorProperties(domain, stateObj, state);
+    return domainStateColorProperties(domain, stateObj, state, cardColorType);
   }
 
+  if (cardColorType && OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE.includes(cardColorType)) {
+    return OVERRIDE_CARD_BACKGROUND_COLOR_COLORS;
+  }
   return undefined;
 };
 

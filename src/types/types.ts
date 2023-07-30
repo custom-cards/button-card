@@ -10,7 +10,7 @@ export interface ButtonCardConfig {
   entity?: string;
   name?: string;
   icon?: string;
-  color_type: 'icon' | 'card' | 'label-card' | 'blank-card';
+  color_type: ColorType;
   color?: 'auto' | 'auto-no-temperature' | string;
   size: string;
   aspect_ratio?: string;
@@ -36,7 +36,6 @@ export interface ButtonCardConfig {
   confirmation?: string;
   layout: Layout;
   entity_picture_style?: CssStyleConfig[];
-  default_color: string;
   custom_fields?: CustomFields;
   variables?: Variables;
   extra_styles?: string;
@@ -92,6 +91,8 @@ export type Layout =
   | 'icon_name_state2nd'
   | 'icon_state_name2nd'
   | 'icon_label';
+
+export type ColorType = 'icon' | 'card' | 'label-card' | 'blank-card';
 
 export interface LockConfig {
   enabled: boolean;

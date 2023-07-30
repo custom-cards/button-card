@@ -19,3 +19,8 @@ export const isOffState = arrayLiteralIncludes(OFF_STATES);
 export const DOMAINS_TOGGLE = new Set(['fan', 'input_boolean', 'light', 'switch', 'group', 'automation', 'humidifier']);
 
 export const AUTO_COLORS = ['auto', 'auto-no-temperature'];
+
+export const OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE = ['card', 'label-card'];
+export const OVERRIDE_CARD_BACKGROUND_COLOR_COLORS = ['--ha-card-background', '--card-background-color'];
+
+export const DEFAULT_COLOR = 'var(--primary-text-color)';

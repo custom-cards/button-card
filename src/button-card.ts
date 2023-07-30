@@ -19,6 +19,7 @@ import {
   CustomFieldCard,
   ButtonCardEmbeddedCards,
   ButtonCardEmbeddedCardsConfig,
+  ColorType,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -37,6 +38,7 @@ import {
   durationToSeconds,
   computeStateDomain,
   stateActive,
+  computeCssVariable,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -45,7 +47,13 @@ import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 import { stateColorCss } from './common/state_color';
-import { AUTO_COLORS, DOMAINS_TOGGLE } from './common/const';
+import {
+  AUTO_COLORS,
+  DEFAULT_COLOR,
+  DOMAINS_TOGGLE,
+  OVERRIDE_CARD_BACKGROUND_COLOR_COLORS,
+  OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE,
+} from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
 import { HomeAssistant } from './types/homeassistant';
@@ -468,40 +476,43 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _getColorForLightEntity(state: HassEntity | undefined, useTemperature: boolean): string {
-    let color: string = this._config!.default_color;
+  private _getColorForLightEntity(
+    state: HassEntity | undefined,
+    useTemperature: boolean,
+    cardColorType?: ColorType,
+  ): string {
+    let color: string = DEFAULT_COLOR;
+    if (OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE.includes(color)) {
+      color = computeCssVariable(OVERRIDE_CARD_BACKGROUND_COLOR_COLORS)!;
+    }
     if (state) {
+      // we have en entity
       if (stateActive(state)) {
+        // entity is on
         if (state.attributes.rgb_color) {
+          // entity has RGB attributes
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
-          }
         } else if (
           useTemperature &&
           state.attributes.color_temp &&
           state.attributes.min_mireds &&
           state.attributes.max_mireds
         ) {
+          // entity has color temperature and we want it
           color = getLightColorBasedOnTemperature(
             state.attributes.color_temp,
             state.attributes.min_mireds,
             state.attributes.max_mireds,
           );
-          if (state.attributes.brightness) {
-            color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
-          }
-        } else if (state.attributes.brightness) {
-          color = applyBrightnessToColor(
-            this,
-            stateColorCss(state, state.state) || this._config!.default_color,
-            (state.attributes.brightness + 245) / 5,
-          );
         } else {
-          color = stateColorCss(state, state.state) || this._config!.default_color;
+          // all the other lights
+          color = stateColorCss(state, state.state, cardColorType) || DEFAULT_COLOR;
+        }
+        if (state.attributes.brightness) {
+          color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
         }
       } else {
-        color = stateColorCss(state, state.state) || this._config!.default_color;
+        color = stateColorCss(state, state.state, cardColorType) || DEFAULT_COLOR;
       }
     }
     return color;
@@ -516,13 +527,21 @@ class ButtonCard extends LitElement {
       colorValue = this._config!.color;
     }
     if (AUTO_COLORS.includes(colorValue)) {
-      color = this._getColorForLightEntity(state, colorValue !== 'auto-no-temperature');
+      if (!state || (state && !(computeDomain(state.entity_id) !== 'light'))) {
+        colorValue = '';
+      }
+    }
+    if (AUTO_COLORS.includes(colorValue)) {
+      // I'm a light
+      color = this._getColorForLightEntity(state, colorValue !== 'auto-no-temperature', this._config?.color_type);
     } else if (colorValue) {
+      // Color is forced but not auto
       color = colorValue;
     } else if (state) {
-      color = stateColorCss(state, state.state) || this._config!.default_color;
+      // based on state
+      color = stateColorCss(state, state.state, this._config?.color_type) || DEFAULT_COLOR;
     } else {
-      color = this._config!.default_color;
+      color = DEFAULT_COLOR;
     }
     return color;
   }
@@ -1157,7 +1176,6 @@ class ButtonCard extends LitElement {
       show_live_stream: false,
       card_size: 3,
       ...template,
-      default_color: 'DUMMY',
       lock: {
         enabled: false,
         duration: 5,
@@ -1181,7 +1199,6 @@ class ButtonCard extends LitElement {
         ...this._config,
       };
     }
-    this._config!.default_color = 'var(--primary-text-color)';
 
     const jsonConfig = JSON.stringify(this._config);
     this._entities = [];
