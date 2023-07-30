@@ -1,3 +1,10 @@
+### [4.0.1](https://github.com/custom-cards/button-card/compare/v4.0.0...v4.0.1) (2023-07-30)
+
+
+### Bug Fixes
+
+* color: auto/auto-no-temperature was broken ([a63f9a9](https://github.com/custom-cards/button-card/commit/a63f9a96a5e4d4582ca90095c49464b0462a451a)), closes [#737](https://github.com/custom-cards/button-card/issues/737)
+
 ## [4.0.0](https://github.com/custom-cards/button-card/compare/v3.5.0...v4.0.0) (2023-07-29)
 
 
