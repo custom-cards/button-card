@@ -128,7 +128,11 @@ class ButtonCard extends LitElement {
 
   private _entities: string[] = [];
 
-  private _initial_setup_complete = false;
+  private _initialSetupComplete = false;
+
+  private get _doIHaveEverything(): boolean {
+    return !!this._hass && !!this._config && this.isConnected;
+  }
 
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
@@ -136,8 +140,8 @@ class ButtonCard extends LitElement {
       const el = this._cards[element];
       el.hass = this._hass;
     });
-    if (!this._initial_setup_complete) {
-      this._initConnected();
+    if (!this._initialSetupComplete) {
+      this._finishSetup();
     }
   }
 
@@ -148,19 +152,92 @@ class ButtonCard extends LitElement {
 
   public connectedCallback(): void {
     super.connectedCallback();
-    if (!this._initial_setup_complete) {
-      this._initConnected();
+    if (!this._initialSetupComplete) {
+      this._finishSetup();
     } else {
       this._startTimerCountdown();
     }
   }
 
-  private _initConnected(): void {
-    if (this._hass === undefined) return;
-    if (this._config === undefined) return;
-    if (!this.isConnected) return;
-    this._initial_setup_complete = true;
-    this._startTimerCountdown();
+  private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
+    this._evaledVariables = {};
+    if (this._config?.variables) {
+      const variablesNameOrdered = Object.keys(this._config.variables).sort();
+      variablesNameOrdered.forEach((variable) => {
+        try {
+          this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
+        } catch (e) {}
+      });
+    }
+  }
+
+  private _finishSetup(): void {
+    if (!this._initialSetupComplete && this._doIHaveEverything) {
+      this._evaluateVariablesSkipError();
+
+      if (this._config!.entity) {
+        const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
+        this._config!.entity = entityEvaled;
+        this._stateObj = this._hass!.states[entityEvaled];
+      }
+
+      this._evaluateVariablesSkipError(this._stateObj);
+
+      if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
+        this._config = {
+          tap_action: { action: 'toggle' },
+          ...this._config!,
+        };
+      } else if (this._config!.entity) {
+        this._config = {
+          tap_action: { action: 'more-info' },
+          ...this._config!,
+        };
+      } else {
+        this._config = {
+          tap_action: { action: 'none' },
+          ...this._config!,
+        };
+      }
+
+      const jsonConfig = JSON.stringify(this._config);
+      this._entities = [];
+      if (Array.isArray(this._config!.triggers_update)) {
+        this._config!.triggers_update.forEach((entry) => {
+          try {
+            const evaluatedEntry = this._getTemplateOrValue(this._stateObj, entry);
+            if (evaluatedEntry !== undefined && evaluatedEntry !== null && !this._entities.includes(evaluatedEntry)) {
+              this._entities.push(evaluatedEntry);
+            }
+          } catch (e) {}
+        });
+      } else if (typeof this._config!.triggers_update === 'string') {
+        const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
+        if (result && result !== 'all') {
+          this._entities.push(result);
+        } else {
+          this._config.triggers_update = result;
+        }
+      }
+      if (this._config!.triggers_update !== 'all') {
+        const entitiesRxp = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'gm');
+        const entitiesRxp2 = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'm');
+        const matched = jsonConfig.match(entitiesRxp);
+        matched?.forEach((match) => {
+          const res = match.match(entitiesRxp2);
+          if (res && !this._entities.includes(res[2])) this._entities.push(res[2]);
+        });
+      }
+      if (this._config!.entity && !this._entities.includes(this._config!.entity))
+        this._entities.push(this._config!.entity);
+      this._expandTriggerGroups();
+
+      const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'm');
+      this._hasTemplate = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
+
+      this._startTimerCountdown();
+      this._initialSetupComplete = true;
+    }
   }
 
   private _startTimerCountdown(): void {
@@ -1153,6 +1230,9 @@ class ButtonCard extends LitElement {
     if (!config) {
       throw new Error('Invalid configuration');
     }
+    if (this._initialSetupComplete) {
+      this._initialSetupComplete = false;
+    }
 
     this._cards = {};
     this._cardsConfig = {};
@@ -1183,46 +1263,9 @@ class ButtonCard extends LitElement {
         ...template.lock,
       },
     };
-    if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
-      this._config = {
-        tap_action: { action: 'toggle' },
-        ...this._config,
-      };
-    } else if (this._config!.entity) {
-      this._config = {
-        tap_action: { action: 'more-info' },
-        ...this._config,
-      };
-    } else {
-      this._config = {
-        tap_action: { action: 'none' },
-        ...this._config,
-      };
-    }
 
-    const jsonConfig = JSON.stringify(this._config);
-    this._entities = [];
-    if (Array.isArray(this._config.triggers_update)) {
-      this._entities = [...this._config.triggers_update];
-    } else if (typeof this._config.triggers_update === 'string' && this._config.triggers_update !== 'all') {
-      this._entities.push(this._config.triggers_update);
-    }
-    if (this._config.triggers_update !== 'all') {
-      const entitiesRxp = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'gm');
-      const entitiesRxp2 = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'm');
-      const matched = jsonConfig.match(entitiesRxp);
-      matched?.forEach((match) => {
-        const res = match.match(entitiesRxp2);
-        if (res && !this._entities.includes(res[2])) this._entities.push(res[2]);
-      });
-    }
-    if (this._config.entity && !this._entities.includes(this._config.entity)) this._entities.push(this._config.entity);
-    this._expandTriggerGroups();
-
-    const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'm');
-    this._hasTemplate = this._config.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
-    if (!this._initial_setup_complete) {
-      this._initConnected();
+    if (!this._initialSetupComplete) {
+      this._finishSetup();
     }
   }
 
@@ -1245,7 +1288,7 @@ class ButtonCard extends LitElement {
   private _expandTriggerGroups(): void {
     if (this._hass && this._config?.group_expand && this._entities) {
       this._entities.forEach((entity) => {
-        if (this._hass?.states[entity].attributes?.entity_id) {
+        if (this._hass?.states[entity]?.attributes?.entity_id) {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
       });
