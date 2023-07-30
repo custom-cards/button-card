@@ -45,7 +45,7 @@ import copy from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 import { stateColorCss } from './common/state_color';
-import { DOMAINS_TOGGLE } from './common/const';
+import { AUTO_COLORS, DOMAINS_TOGGLE } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
 import { HomeAssistant } from './types/homeassistant';
@@ -515,7 +515,7 @@ class ButtonCard extends LitElement {
     } else if (this._config!.color) {
       colorValue = this._config!.color;
     }
-    if (colorValue == 'auto' || colorValue == 'auto-no-temperature') {
+    if (AUTO_COLORS.includes(colorValue)) {
       color = this._getColorForLightEntity(state, colorValue !== 'auto-no-temperature');
     } else if (colorValue) {
       color = colorValue;
@@ -827,9 +827,9 @@ class ButtonCard extends LitElement {
   private _cardHtml(): TemplateResult {
     const configState = this._getMatchingConfigState(this._stateObj);
     let color: string = 'var(--state-inactive-color)';
-    if (!!configState?.color) {
+    if (!!configState?.color && !AUTO_COLORS.includes(configState.color)) {
       color = configState.color;
-    } else if (!!this._config?.color) {
+    } else if (!!this._config?.color && !AUTO_COLORS.includes(this._config.color)) {
       if (this._stateObj) {
         if (stateActive(this._stateObj)) {
           color = this._config?.color || color;

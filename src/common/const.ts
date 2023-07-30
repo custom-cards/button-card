@@ -17,3 +17,5 @@ export const isUnavailableState = arrayLiteralIncludes(UNAVAILABLE_STATES);
 export const isOffState = arrayLiteralIncludes(OFF_STATES);
 
 export const DOMAINS_TOGGLE = new Set(['fan', 'input_boolean', 'light', 'switch', 'group', 'automation', 'humidifier']);
+
+export const AUTO_COLORS = ['auto', 'auto-no-temperature'];
