@@ -159,19 +159,21 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _evaluateVariablesNoError() {}
+  private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
+    this._evaledVariables = {};
+    if (this._config?.variables) {
+      const variablesNameOrdered = Object.keys(this._config.variables).sort();
+      variablesNameOrdered.forEach((variable) => {
+        try {
+          this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
+        } catch (e) {}
+      });
+    }
+  }
 
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._evaledVariables = {};
-      if (this._config?.variables) {
-        const variablesNameOrdered = Object.keys(this._config.variables).sort();
-        variablesNameOrdered.forEach((variable) => {
-          try {
-            this._evaledVariables[variable] = this._objectEvalTemplate(undefined, this._config!.variables![variable]);
-          } catch (e) {}
-        });
-      }
+      this._evaluateVariablesSkipError();
 
       if (this._config!.entity) {
         const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
@@ -179,15 +181,7 @@ class ButtonCard extends LitElement {
         this._stateObj = this._hass!.states[entityEvaled];
       }
 
-      this._evaledVariables = {};
-      if (this._config?.variables) {
-        const variablesNameOrdered = Object.keys(this._config.variables).sort();
-        variablesNameOrdered.forEach((variable) => {
-          try {
-            this._evaledVariables[variable] = this._objectEvalTemplate(undefined, this._config!.variables![variable]);
-          } catch (e) {}
-        });
-      }
+      this._evaluateVariablesSkipError(this._stateObj);
 
       if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
         this._config = {
@@ -205,14 +199,25 @@ class ButtonCard extends LitElement {
           ...this._config!,
         };
       }
-      this._config!.default_color = 'var(--primary-text-color)';
 
       const jsonConfig = JSON.stringify(this._config);
       this._entities = [];
       if (Array.isArray(this._config!.triggers_update)) {
-        this._entities = [...this._config!.triggers_update];
-      } else if (typeof this._config!.triggers_update === 'string' && this._config!.triggers_update !== 'all') {
-        this._entities.push(this._config!.triggers_update);
+        this._config!.triggers_update.forEach((entry) => {
+          try {
+            const evaluatedEntry = this._getTemplateOrValue(this._stateObj, entry);
+            if (evaluatedEntry !== undefined && evaluatedEntry !== null && !this._entities.includes(evaluatedEntry)) {
+              this._entities.push(evaluatedEntry);
+            }
+          } catch (e) {}
+        });
+      } else if (typeof this._config!.triggers_update === 'string') {
+        const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
+        if (result !== 'all') {
+          this._entities.push(result);
+        } else {
+          this._config.triggers_update = 'all';
+        }
       }
       if (this._config!.triggers_update !== 'all') {
         const entitiesRxp = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'gm');
@@ -1283,7 +1288,7 @@ class ButtonCard extends LitElement {
   private _expandTriggerGroups(): void {
     if (this._hass && this._config?.group_expand && this._entities) {
       this._entities.forEach((entity) => {
-        if (this._hass?.states[entity].attributes?.entity_id) {
+        if (this._hass?.states[entity]?.attributes?.entity_id) {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
       });
