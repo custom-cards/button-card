@@ -332,6 +332,32 @@ Those are the configuration fields which support templating:
 - all the `card` parameters in a `custom_field`
 - all the `variables`
 
+Special fields which do support templating but are **only evaluated once**, when the configuration is loaded. Error in those templates will only be visible in the javascript console and the card will not display in that case:
+
+- `entity`: You can use JS templates for the `entity` of the card configuration. It is mainly useful when you define your entity in as an entry in `variables`. This is evaluated once only when the configuration is loaded.
+
+  ```yaml
+  type: custom:button-card
+  variables:
+    my_entity: switch.skylight
+  entity: '[[[ return variables.my_entity; ]]]'
+  ```
+
+- `triggers_update`: Useful when you define multiple entities in `variables` to use throughout the card. Eg:
+
+  ```yaml
+  type: custom:button-card
+  variables:
+    my_entity: switch.skylight
+    my_other_entity: light.bedroom
+  entity: '[[[ return variables.my_entity; ]]]'
+  label: '[[[ return localize(variables.my_other_entity) ]]]'
+  show_label: true
+  triggers_update:
+    - '[[[ return variables.my_entity; ]]]'
+    - '[[[ return variables.my_other_entity; ]]]'
+  ```
+
 Inside the javascript code, you'll have access to those variables:
 
 - `this`: The button-card element itself (advanced stuff, don't mess with it)
