@@ -1,3 +1,15 @@
+## [4.1.0-dev.1](https://github.com/custom-cards/button-card/compare/v4.0.1...v4.1.0-dev.1) (2023-07-30)
+
+
+### Features
+
+* **templates:** Support for one time evaluation of js templates in `triggers_update` and `entity` ([#741](https://github.com/custom-cards/button-card/issues/741)) ([b372642](https://github.com/custom-cards/button-card/commit/b372642253c890b08c7de7395d138b01fb90120b)), closes [#618](https://github.com/custom-cards/button-card/issues/618) [#558](https://github.com/custom-cards/button-card/issues/558) [#368](https://github.com/custom-cards/button-card/issues/368)
+
+
+### Bug Fixes
+
+* Keep default background color for color_type: card when off ([41dea3f](https://github.com/custom-cards/button-card/commit/41dea3f72a607ea0fc1c71269bb0122f27970a6e)), closes [#737](https://github.com/custom-cards/button-card/issues/737)
+
 ### [4.0.1](https://github.com/custom-cards/button-card/compare/v4.0.0...v4.0.1) (2023-07-30)
 
 
