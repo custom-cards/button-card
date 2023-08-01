@@ -209,10 +209,6 @@ export const styles = css`
     justify-self: center;
   }
 
-  #container.vertical div#img-cell + div,
-  #container.name_state div#img-cell + div {
-    margin-top: 8px;
-  }
   #container.vertical {
     grid-template-areas: 'i' 'n' 's' 'l';
     grid-template-columns: 1fr;
