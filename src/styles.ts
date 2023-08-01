@@ -75,9 +75,6 @@ export const styles = css`
     white-space: nowrap;
     overflow: hidden;
   }
-  #aspect-ratio {
-    position: relative;
-  }
 
   #overlay {
     align-items: flex-start;
