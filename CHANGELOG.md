@@ -1,3 +1,10 @@
+## [4.1.0-dev.3](https://github.com/custom-cards/button-card/compare/v4.1.0-dev.2...v4.1.0-dev.3) (2023-08-01)
+
+
+### Bug Fixes
+
+* lock would not display on many browsers ([245441b](https://github.com/custom-cards/button-card/commit/245441b69fad5f56f43ea1b5d189b4ddbbab2ebb)), closes [#740](https://github.com/custom-cards/button-card/issues/740)
+
 ## [4.1.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.1.0-dev.1...v4.1.0-dev.2) (2023-08-01)
 
 
