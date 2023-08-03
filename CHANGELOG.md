@@ -1,3 +1,10 @@
+### [4.1.1](https://github.com/custom-cards/button-card/compare/v4.1.0...v4.1.1) (2023-08-03)
+
+
+### Bug Fixes
+
+* **color:** color wouldn't follow light color with `color: auto` ([b63f0db](https://github.com/custom-cards/button-card/commit/b63f0db220b8a9c72383c4288546112625fdff04)), closes [#737](https://github.com/custom-cards/button-card/issues/737)
+
 ## [4.1.0](https://github.com/custom-cards/button-card/compare/v4.0.1...v4.1.0) (2023-08-03)
 
 
