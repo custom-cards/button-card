@@ -604,7 +604,7 @@ class ButtonCard extends LitElement {
       colorValue = this._config!.color;
     }
     if (AUTO_COLORS.includes(colorValue)) {
-      if (!state || (state && !(computeDomain(state.entity_id) !== 'light'))) {
+      if (!state || (state && computeDomain(state.entity_id) !== 'light')) {
         colorValue = '';
       }
     }
