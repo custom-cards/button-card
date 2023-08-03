@@ -1,3 +1,17 @@
+## [4.1.0](https://github.com/custom-cards/button-card/compare/v4.0.1...v4.1.0) (2023-08-03)
+
+
+### Features
+
+* **templates:** Support for one time evaluation of js templates in `triggers_update` and `entity` ([#741](https://github.com/custom-cards/button-card/issues/741)) ([b372642](https://github.com/custom-cards/button-card/commit/b372642253c890b08c7de7395d138b01fb90120b)), closes [#618](https://github.com/custom-cards/button-card/issues/618) [#558](https://github.com/custom-cards/button-card/issues/558) [#368](https://github.com/custom-cards/button-card/issues/368)
+
+
+### Bug Fixes
+
+* Keep default background color for color_type: card when off ([41dea3f](https://github.com/custom-cards/button-card/commit/41dea3f72a607ea0fc1c71269bb0122f27970a6e)), closes [#737](https://github.com/custom-cards/button-card/issues/737)
+* lock would not display on many browsers ([245441b](https://github.com/custom-cards/button-card/commit/245441b69fad5f56f43ea1b5d189b4ddbbab2ebb)), closes [#740](https://github.com/custom-cards/button-card/issues/740)
+* remove margin-top on name/label/state introduced with 4.0.0 which broke many cards ([53fee75](https://github.com/custom-cards/button-card/commit/53fee75c163b72df42b859705af536c4c7dffac6)), closes [#742](https://github.com/custom-cards/button-card/issues/742) [#744](https://github.com/custom-cards/button-card/issues/744)
+
 ## [4.1.0-dev.3](https://github.com/custom-cards/button-card/compare/v4.1.0-dev.2...v4.1.0-dev.3) (2023-08-01)
 
 
