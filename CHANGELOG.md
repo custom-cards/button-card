@@ -1,3 +1,10 @@
+### [4.1.2-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2-dev.1) (2023-08-20)
+
+
+### Bug Fixes
+
+* card would sometimes not be clickable ([56c3f44](https://github.com/custom-cards/button-card/commit/56c3f44066c6bd08fb8a7d8bb8fa679920dc5992)), closes [#738](https://github.com/custom-cards/button-card/issues/738) [#759](https://github.com/custom-cards/button-card/issues/759)
+
 ### [4.1.1](https://github.com/custom-cards/button-card/compare/v4.1.0...v4.1.1) (2023-08-03)
 
 
