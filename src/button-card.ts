@@ -20,6 +20,7 @@ import {
   ButtonCardEmbeddedCards,
   ButtonCardEmbeddedCardsConfig,
   ColorType,
+  CustomFields,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -868,38 +869,26 @@ class ButtonCard extends LitElement {
     return result;
   }
 
+  private _hasChildCards(customFields: CustomFields | undefined): boolean {
+    if (!customFields) return false;
+    return Object.keys(customFields).some((key) => {
+      const value = customFields![key];
+      if ((value as CustomFieldCard)!.card) {
+        return true;
+      }
+      return false;
+    });
+  }
+
   private _isClickable(state: HassEntity | undefined, configState: StateConfig | undefined): boolean {
-    let clickable = true;
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
-    let hasChildCards = false;
-    if (this._config!.custom_fields) {
-      hasChildCards = Object.keys(this._config!.custom_fields).some((key) => {
-        const value = this._config!.custom_fields![key];
-        if ((value as CustomFieldCard)!.card) {
-          return true;
-        }
-        return false;
-      });
-    }
-    if (!hasChildCards && configState) {
-      if (configState.custom_fields) {
-        return (hasChildCards = Object.keys(configState.custom_fields).some((key) => {
-          const value = configState.custom_fields![key];
-          if ((value as CustomFieldCard)!.card) {
-            return true;
-          }
-          return false;
-        }));
-      }
-    }
-    if (tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards) {
-      clickable = true;
-    } else {
-      clickable = false;
-    }
-    return clickable;
+    const hasChildCards =
+      this._hasChildCards(this._config!.custom_fields) ||
+      !!(configState && this._hasChildCards(configState.custom_fields));
+
+    return tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards;
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
