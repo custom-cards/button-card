@@ -1045,6 +1045,8 @@ name: '[[[ return variable.value; ]]]'
 
 ### Installation and tracking with `hacs`
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=custom-cards&repository=button-card&category=lovelace)
+
 1. Make sure the [HACS](https://github.com/custom-components/hacs) component is installed and working.
 2. Search for `button-card` and add it through HACS
 3. Add the configuration to your `ui-lovelace.yaml`
