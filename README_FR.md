@@ -1110,7 +1110,7 @@ Entité légère avec icône personnalisée et fenêtre pop-up "plus d'informati
 
 ---
 
-Light card with card color type, name, and automatic color:
+Carte lumineuse avec le type de couleur de la carte, le nom et la couleur automatique :
 
 ![color](examples/color.gif)
 
@@ -1131,12 +1131,12 @@ Light card with card color type, name, and automatic color:
 
 ---
 
-Horizontal stack with :
+Pile horizontale avec :
 
-- 2x blank cards
-- 1x volume up button with service call
-- 1x volume down button with service call
-- 2x blank cards
+- 2x cartes vierges
+- 1x bouton d'augmentation du volume avec appel de service
+- 1x bouton de réduction du volume avec appel de service
+- 2 cartes vierges
 
 ![volume](examples/volume.png)
 
@@ -1173,15 +1173,15 @@ Horizontal stack with :
 
 ---
 
-Vertical Stack with :
+Pile verticale avec :
 
-- 1x label card
-- Horizontal Stack with :
-  - 1x Scene 1 Button
-  - 1x Scene 2 Button
-  - 1x Scene 3 Button
-  - 1x Scene 4 Button
-  - 1x Scene Off Button
+- 1x carte d'étiquettes
+- Pile horizontale avec :
+  - 1x bouton scène 1
+  - 1x bouton scène 2
+  - 1x bouton scène 3
+  - 1x bouton scène 4
+  - 1x bouton Scène Off
 
 ![scenes](examples/scenes.png)
 
@@ -1223,13 +1223,13 @@ Vertical Stack with :
 
 ### Configuration with states
 
-Input select card with select next service and custom color and icon for states. In the example below the icon `mdi:cube-outline` will be used when value is `sleeping` and `mdi:cube` in other cases.
+Carte de sélection d'entrée avec sélection du service suivant et couleur et icône personnalisées pour les états. Dans l'exemple ci-dessous, l'icône `mdi:cube-outline` sera utilisée lorsque la valeur est `sleeping` et `mdi:cube` dans les autres cas.
 
 ![cube](examples/cube.png)
 
 #### Default behavior
 
-If you don't specify any operator, `==` will be used to match the current state against the `value`
+Si vous ne spécifiez pas d'opérateur, `==` sera utilisé pour comparer l'état actuel avec `value`
 
 ```yaml
 - type: 'custom:button-card'
@@ -1253,7 +1253,7 @@ If you don't specify any operator, `==` will be used to match the current state 
 
 #### With Operator on state
 
-The definition order matters, the first item to match will be the one selected.
+L'ordre de définition est important, le premier élément à correspondre sera celui qui sera sélectionné.
 
 ```yaml
 - type: "custom:button-card"
@@ -1278,7 +1278,7 @@ The definition order matters, the first item to match will be the one selected.
 
 #### `tap_action` Navigate
 
-Buttons can link to different views using the `navigate` action:
+Les boutons peuvent renvoyer à différentes vues en utilisant l'action `navigate` :
 
 ```yaml
 - type: 'custom:button-card'
@@ -1290,11 +1290,11 @@ Buttons can link to different views using the `navigate` action:
     navigation_path: /lovelace/0
 ```
 
-The `navigation_path` also accepts any Home Assistant internal URL such as /dev-info or /hassio/dashboard for example.
+Le `navigation_path` accepte aussi n'importe quelle URL interne de Home Assistant comme /dev-info ou /hassio/dashboard par exemple.
 
 #### blink
 
-You can make the whole button blink:
+Vous pouvez faire clignoter l'ensemble du bouton :
 
 ![blink-animation](examples/blink-animation.gif)
 
@@ -1317,9 +1317,9 @@ You can make the whole button blink:
 
 ### Play with width, height and icon size
 
-Through the `styles` you can specify the `width` and `height` of the card, and also the icon size through the main `size` option. Playing with icon size will growth the card unless a `height` is specified.
+A travers les `styles` vous pouvez spécifier le `width` et `height` de la carte, ainsi que la taille de l'icône à travers l'option principale `size`. Jouer avec la taille de l'icône fera grossir la carte à moins que `height` ne soit spécifiée.
 
-If you specify a width for the card, it has to be in `px`. All the cards without a `width` defined will use the remaining space on the line.
+Si vous spécifiez une largeur pour la carte, elle doit être en `px`. Toutes les cartes sans largeur définie utiliseront l'espace restant sur la ligne.
 
 ![height-width](examples/width_height.png)
 
@@ -1421,9 +1421,9 @@ If you specify a width for the card, it has to be in `px`. All the cards without
 
 #### State Templates
 
-The javascript code inside `value` needs to return `true` of `false`.
+Le code javascript à l'intérieur de `value` doit retourner `true` ou `false`.
 
-Example with `template`:
+Exemple avec `template` :
 
 ```yaml
 - type: 'custom:button-card'
@@ -1602,9 +1602,9 @@ Example with `template`:
 
 ### Changing the feedback color during a click
 
-For dark cards, it can be usefull to change the feedback color when clicking the button. The ripple effect uses a `mwc-ripple` element so you can style it with the CSS variables it supports.
+Pour les cartes sombres, il peut être utile de changer la couleur du feedback lorsque l'on clique sur le bouton. L'effet d'ondulation utilise un élément `mwc-ripple` afin que vous puissiez le styler avec les variables CSS qu'il supporte.
 
-For example:
+Par exemple:
 
 ```yaml
 styles:
@@ -1615,9 +1615,9 @@ styles:
 
 ## Community guides
 
-- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Danish tutorial and how-to about using Lovelace Button card for your entities.
+- [robotnet.dk](https://robotnet.dk/2020/homekit-knapper-custom-buttons-home-assistant.html): Tutoriel danois et mode d'emploi sur l'utilisation de la carte Lovelace Button pour vos entités.
 
 ## Credits
 
-- [ciotlosm](https://github.com/ciotlosm) for the readme template and some awesome examples
-- [iantrich](https://github.com/iantrich), [LbDab](https://github.com/lbdab) and [jimz011](https://github.com/jimz011) for the inspiration and the awesome templates and cards you've created.
+- [ciotlosm](https://github.com/ciotlosm) pour le templatereadme et quelques exemples impressionnants
+- [iantrich](https://github.com/iantrich), [LbDab](https://github.com/lbdab) et [jimz011](https://github.com/jimz011) pour l'inspiration et les superbes modèles et cartes que vous avez créés.
