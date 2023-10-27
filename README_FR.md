@@ -454,21 +454,21 @@ Les membres de l'objet `style` sont :
           - yyyy: value
 ```
 
-This will render:
+Ceci rendra :
 
-- The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
-- Same for all the others.
+- La `carte` avec les styles `xxxx : valeur` **et** `yyyy : valeur` appliqués.
+- Idem pour tous les autres.
 
-See [styling](#styling) for a complete example.
+Voir [styling](#styling) pour un exemple complet.
 
 #### Light entity color variable
 
-If a light entity is assigned to the button, then:
+Si une entité lumineuse est assignée au bouton, alors :
 
-- the CSS variable `--button-card-light-color` will contain the current light color
-- the CSS variable `--button-card-light-color-no-temperature` will contain the current light without the temperature
+- la variable CSS `--button-card-light-color` contiendra la couleur actuelle de la lumière
+- la variable CSS `--button-card-light-color-no-temperature` contiendra la lumière actuelle sans la température.
 
-You can use them both in other parts of the button. When off, it will be set to `var(--paper-item-icon-color)`
+Vous pouvez les utiliser toutes les deux dans d'autres parties du bouton. Lorsqu'elle est désactivée, elle sera définie comme `var(--paper-item-icon-color)`
 
 ![css-var](examples/color-variable.gif)
 
@@ -483,33 +483,33 @@ styles:
 
 #### ADVANCED styling options
 
-For advanced styling, there are 2 other options in the `styles` config object:
+Pour un style avancé, il y a 2 autres options dans l'objet de configuration `styles` :
 
-- `grid`: mainly layout for the grid
-- `img_cell`: mainly how you position your icon in its cell
+- `grid` : principalement la disposition de la grille
+- `img_cell` : principalement la façon dont vous positionnez votre icône dans sa cellule
 
-This is how the button is constructed (HTML elements):
+Voici comment le bouton est construit (éléments HTML) :
 
 ![elements in the button](examples/button-card-elements.png)
 
-The `grid` element uses CSS grids to design the layout of the card:
+L'élément `grid` utilise les grilles CSS pour concevoir la mise en page de la carte :
 
-- `img_cell` element is going to the `grid-area: i` by default
-- `name` element is going to the `grid-area: n` by default
-- `state` element is going to the `grid-area: s` by default
-- `label` element is going to the `grid-area: l` by default
+- L'élément `img_cell` va dans la zone `grid-area : i` par défaut.
+- L'élément `name` est placé par défaut dans la zone `grid-area : n`.
+- L'élément `state` est placé par défaut dans la zone `grid-area : s`.
+- l'élément `label` va dans la zone `grid-area : l` par défaut
 
-You can see how the default layouts are constructed [here](./src/styles.ts#L152) and inspire yourself with it. We'll not support advanced layout questions here, please use [Home Assistant's community forum][forum] for that.
+Vous pouvez voir comment les mises en page par défaut sont construites [ici](./src/styles.ts#L152) et vous en inspirez. Nous ne répondrons pas ici aux questions de mise en page avancée, veuillez utiliser le [forum de la communauté francophone de Home Assistant](https://forum.hacf.fr) ou le [forum officiel (EN)](https://community.home-assistant.io/) pour cela.
 
-To learn more, please use Google and this [excellent guide about CSS Grids](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
+Pour en savoir plus, utilisez Google et cet [excellent guide sur les grilles CSS (EN)](https://css-tricks.com/snippets/css/complete-guide-grid/) :)
 
-For a quick overview on the grid-template-areas attribute, the following example should get you started:
+Pour un aperçu rapide de l'attribut grid-template-areas, l'exemple suivant devrait vous aider à démarrer :
 
 ```yaml
 - grid-template-areas: '"i n s" "i n s" "i n l"'
 ```
 
-If we take the value and orient it into rows and columns, you begin to see the end result.
+Si nous prenons la valeur et l'orientons en lignes et en colonnes, vous commencez à voir le résultat final.
 
 ```
 "i n s"
@@ -517,13 +517,13 @@ If we take the value and orient it into rows and columns, you begin to see the e
 "i n l"
 ```
 
-The end product will results in the following grid layout
+Le produit final se traduira par la grille suivante
 
 ![button card grid layout example with callouts](examples/button-card-grid-layout-example-with-callouts.png)
 
-Some examples:
+Quelques exemples:
 
-- label on top:
+- label sur le dessus:
 
   ```yaml
   styles:
@@ -533,7 +533,7 @@ Some examples:
       - grid-template-columns: 1fr
   ```
 
-- icon on the right side (by overloading an existing layout):
+- icon sur le côté droit (en surchargeant une mise en page existante):
 
   ```yaml
   - type: 'custom:button-card'
@@ -549,7 +549,7 @@ Some examples:
         - grid-template-columns: 1fr 40%
   ```
 
-- Apple Homekit-like buttons:
+- Boutons de type Apple Homekit:
 
   ![apple-like-buttons](examples/apple_style.gif)
 
@@ -589,11 +589,11 @@ Some examples:
 
 #### Injecting CSS with `extra_styles`
 
-**Note**: `extra_styles` **MUST NOT** be used on the first button-card of the current view, else it will be applied to all the cards in all Lovelace. **It is not possible to fix this behaviour.**
+**Note** : `extra_styles` **NE DOIT PAS** être utilisé sur la première carte-bouton de la vue courante, sinon il sera appliqué à toutes les cartes dans tous les Lovelace. **Il n'est pas possible de corriger ce comportement.**
 
-You can inject any CSS style you want using this config option. It is useful if you want to inject CSS animations for example. This field supports [templates](#javascript-templates).
+Vous pouvez injecter n'importe quel style CSS en utilisant cette option de configuration. Elle est utile si vous souhaitez injecter des animations CSS par exemple. Ce champ supporte les [templates](#javascript-templates).
 
-An example is better than words:
+Un exemple vaut mieux que des mots :
 
 ![change_background](examples/loop_background.gif)
 
@@ -629,11 +629,11 @@ An example is better than words:
 
 ### Custom Fields
 
-Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon). This is an advanced feature which leverages (if you require it) the CSS Grid.
+La prise en charge des champs personnalisés, à l'aide de l'objet `custom_fields`, vous permet de créer vos propres champs en plus des champs prédéfinis (nom, état, étiquette et icône). Il s'agit d'une fonctionnalité avancée qui exploite (si vous le souhaitez) la grille CSS.
 
-Custom fields also support embeded cards, see [example below](#custom_fields_card_example).
+Les champs personnalisés prennent également en charge les cartes intégrées, voir [l'exemple ci-dessous](#custom_fields_card_example).
 
-Each custom field supports its own styling config, the name needs to match between both objects needs to match:
+Chaque champ personnalisé supporte sa propre configuration de style, le nom doit correspondre entre les deux objets :
 
 ```yaml
 - type: custom:button-card
@@ -647,9 +647,9 @@ Each custom field supports its own styling config, the name needs to match betwe
         - font-size: 13px
 ```
 
-Examples are better than a long text, so here you go:
+Des exemples valent mieux qu'un long texte, alors voici :
 
-- Placing an element wherever you want (that means bypassing the grid). Set the grid to `position: relative` and set the element to `position: absolute`
+- Placer un élément où vous le souhaitez (c'est-à-dire en contournant la grille). Réglez la grille sur `position : relative` et réglez l'élément sur `position : absolute`
 
   ![custom_fields_1](examples/custom_fields_1.gif)
 
@@ -684,7 +684,7 @@ Examples are better than a long text, so here you go:
         [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
   ```
 
-- Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
+- Vous pouvez également utiliser la grille. Chaque élément aura son nom positionné comme `grid-area` :
 
   ![custom_fields_2](examples/custom_fields_2.png)
 
@@ -784,9 +784,9 @@ Examples are better than a long text, so here you go:
         ]]]
   ```
 
-- <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card.
+- <a name="custom_fields_card_example"></a> Ou vous pouvez intégrer une carte (ou plusieurs) à l'intérieur de la carte du bouton (notez que cette configuration utilise [card-mod](https://github.com/thomasloven/lovelace-card-mod) pour supprimer le `box-shadow` de la carte du capteur.
 
-- This is what the `style` inside the embedded card is for):
+- C'est à cela que sert le `style` à l'intérieur de la carte intégrée) :
 
   ![custom_fields_3](examples/custom_fields_card.png)
 
@@ -820,7 +820,7 @@ Examples are better than a long text, so here you go:
       action: more-info
   ```
 
-To skip evaluating the templates in a custom_field (eg. you embed a `custom:button-card` inside a Custom Field), then you have to set `do_not_eval` to `true`.
+Pour ne pas évaluer les templates dans un custom_field (par exemple, vous intégrez un `custom:button-card` à l'intérieur d'un Custom Field), vous devez mettre `do_not_eval` à `true`.
 
 ```yaml
 type: custom:button-card
@@ -857,11 +857,11 @@ custom_fields:
 
 #### General
 
-- Define your config template in the main lovelace configuration and then use it in your button-card. This will avoid a lot of repetitions! It's basically YAML anchors, but without using YAML anchors and is very useful if you split your config in multiple files 😄
-- You can overload any parameter with a new one
-- You can merge states together **by `id`** when using templates. The states you want to merge have to have the same `id`. This `id` parameter is new and can be anything (string, number, ...). States without `id` will be appended to the state array. Styles embedded in a state are merged together as usual. See [here](#merging-state-by-id) for an example.
-- You can also inherit another template from within a template.
-- You can inherit multiple templates at once by making it an array. In this case, the templates will be merged together with the current configuration in the order they are defined. This happens recursively.
+- Définissez votre modèle de configuration dans la configuration principale de lovelace et utilisez-le ensuite dans votre carte-bouton. Cela évitera de nombreuses répétitions ! Il s'agit essentiellement d'ancres YAML, mais sans utiliser d'ancres YAML et c'est très utile si vous divisez votre configuration en plusieurs fichiers 😄.
+- Vous pouvez surcharger n'importe quel paramètre avec un nouveau paramètre
+- Vous pouvez fusionner des états **par `id`** lors de l'utilisation de modèles. Les états que vous voulez fusionner doivent avoir le même `id`. Ce paramètre `id` est nouveau et peut être n'importe quoi (chaîne, nombre, ...). Les états sans `id` seront ajoutés au tableau des états. Les styles intégrés dans un état sont fusionnés comme d'habitude. Voir [ici](#merging-state-by-id) pour un exemple.
+- Vous pouvez également hériter d'un autre modèle à l'intérieur d'un modèle.
+- Vous pouvez hériter de plusieurs modèles à la fois en en faisant un tableau. Dans ce cas, les modèles seront fusionnés avec la configuration actuelle dans l'ordre où ils sont définis. Ce processus est récursif.
 
   ```yaml
   type: custom:button-card
@@ -870,15 +870,15 @@ custom_fields:
     - template2
   ```
 
-  The button templates will be applied in the order they are defined: `template2` will be merged with `template1` and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).
+  Les modèles de boutons seront appliqués dans l'ordre où ils sont définis : `template2` sera fusionné avec `template1` et ensuite la configuration locale sera fusionnée avec le résultat. Vous pouvez toujours enchaîner des templates ensemble (par exemple, définir un template dans un template de carte-bouton. Il suivra le chemin récursivement).
 
-Make sure which type of lovelace dashboard you are using before changing the main lovelace configuration:
+Assurez-vous du type de tableau de bord lovelace que vous utilisez avant de modifier la configuration principale de lovelace :
 
-- **`managed`** changes are managed by lovelace ui - add the template configuration to configuration in raw editor
-  - go to your dashboard
-  - click three dots and `Edit dashboard` button
-  - click three dots again and click `Raw configuration editor` button
-- **`yaml`** - add template configuration to your `ui-lovelace.yaml`
+- **`managed`** les changements sont gérés par l'interface utilisateur de lovelace - ajoutez la configuration du template à la configuration dans l'éditeur brut
+  - allez dans votre tableau de bord
+  - cliquez sur les trois points et sur le bouton `Editer le tableau de bord`.
+  - cliquez à nouveau sur les trois points et cliquez sur le bouton `Editeur de configuration brute`.
+- **`yaml`** - ajoutez la configuration du modèle à votre `ui-lovelace.yaml`
 
 ```yaml
 button_card_templates:
@@ -907,7 +907,7 @@ button_card_templates:
   my_little_template: [...]
 ```
 
-And then where you use button-card, you can apply this template, and/or overload it:
+Lorsque vous utilisez la carte-bouton, vous pouvez appliquer ce modèle et/ou le surcharger :
 
 ```yaml
 - type: custom:button-card
@@ -917,7 +917,7 @@ And then where you use button-card, you can apply this template, and/or overload
 
 #### Merging state by id
 
-Example to merge state by `id`:
+Exemple de fusion de l'État par `id`:
 
 ```yaml
 button_card_templates:
@@ -961,7 +961,7 @@ button_card_templates:
     show_entity_picture: true
 ```
 
-Will result in this state object for your button (styles, operator and color are overridden for the `id: my_id` as you can see):
+Vous obtiendrez cet objet d'état pour votre bouton (les styles, l'opérateur et la couleur sont surchargés pour l'`id : my_id` comme vous pouvez le voir) :
 
 ```yaml
 state:
@@ -981,9 +981,9 @@ state:
 
 #### Variables
 
-You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
+Vous pouvez ajouter des variables à vos modèles et les surcharger dans l'instance de votre carte bouton. Cela vous permet de travailler facilement avec les modèles sans avoir à tout redéfinir pour un petit changement.
 
-An example below:
+Un exemple ci-dessous :
 
 ```yaml
 button_card_templates:
@@ -1008,7 +1008,7 @@ button_card_templates:
  # name will be "My local Value"
 ```
 
-Variables are evaluated in their alphabetical order based on their name. That means a variable named `b` can depend on a variable named `a`, but variable named `a` can't depend on a variable named `b`.
+Les variables sont évaluées dans l'ordre alphabétique de leur nom. Cela signifie qu'une variable nommée `b` peut dépendre d'une variable nommée `a`, mais qu'une variable nommée `a` ne peut pas dépendre d'une variable nommée `b`.
 
 ```yaml
 ### This works
@@ -1028,9 +1028,9 @@ name: '[[[ return variable.value; ]]]'
 
 ### Manual Installation
 
-1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
-2. Place the file in your `config/www` folder
-3. Include the card code in your `ui-lovelace-card.yaml`
+1. Télécharger [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
+2. Placez le fichier dans votre dossier `config/www`
+3. Incluez le code de la carte dans votre fichier `ui-lovelace-card.yaml`
 
    ```yaml
    title: Home
@@ -1039,13 +1039,13 @@ name: '[[[ return variable.value; ]]]'
        type: module
    ```
 
-4. Write configuration for the card in your `ui-lovelace.yaml`
+4. Ecrire la configuration de la carte dans votre `ui-lovelace.yaml`
 
 ### Installation and tracking with `hacs`
 
-1. Make sure the [HACS](https://github.com/custom-components/hacs) component is installed and working.
-2. Search for `button-card` and add it through HACS
-3. Add the configuration to your `ui-lovelace.yaml`
+1. Assurez-vous que le composant [HACS](https://github.com/custom-components/hacs) est installé et fonctionnel.
+2. Recherchez `button-card` et ajoutez-le via HACS.
+3. Ajoutez la configuration à votre `ui-lovelace.yaml`
 
    ```yaml
    resources:
@@ -1053,11 +1053,11 @@ name: '[[[ return variable.value; ]]]'
        type: module
    ```
 
-4. Refresh home-assistant.
+4. Recharger Home Assistant.
 
 ## Examples
 
-Show a button for the air conditioner (blue when on, `var(--disabled-text-color)` when off):
+Afficher un bouton pour le climatiseur (bleu lorsqu'il est en marche, `var(--disabled-text-color)` lorsqu'il est éteint) :
 
 ![ac](examples/ac.png)
 
@@ -1068,7 +1068,7 @@ Show a button for the air conditioner (blue when on, `var(--disabled-text-color)
   color: rgb(28, 128, 199)
 ```
 
-Redefine the color when the state if off to red:
+Redéfinir la couleur lorsque l'état est éteint en rouge :
 
 ```yaml
 - type: 'custom:button-card'
@@ -1082,7 +1082,7 @@ Redefine the color when the state if off to red:
 
 ---
 
-Show an ON/OFF button for the home_lights group:
+Afficher un bouton ON/OFF pour le groupe `home_lights` :
 
 ![no-icon](examples/no_icon.png)
 
@@ -1095,7 +1095,7 @@ Show an ON/OFF button for the home_lights group:
 
 ---
 
-Light entity with custom icon and "more info" pop-in:
+Entité légère avec icône personnalisée et fenêtre pop-up "plus d'informations" 
 
 ![sofa](examples/sofa.png)
 
