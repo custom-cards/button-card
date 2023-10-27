@@ -2,7 +2,7 @@
 
 [![Stable][releases-shield]][releases] [![Beta][releases-dev-shield]][releases-dev] [![HACS Badge][hacs-badge]][hacs-link] ![Project Maintenance][maintenance-shield] <br/> ![Downloads][downloads] [![GitHub Activity][commits-shield]][commits] [![License][license-shield]](LICENSE.md) [![Discord][discord-shield]][discord] [![Community Forum][forum-shield]][forum]
 
-:FR: For French translation [here](README_FR.md) :FR:
+*For French translation [here](README_FR.md)*
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/custom-cards/button-card.svg
 [commits]: https://github.com/custom-cards/button-card/commits/master
