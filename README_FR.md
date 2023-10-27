@@ -136,32 +136,32 @@ Cartes Lovelace Button-card pour vos entités.
 
 ### Action
 
-All the fields support templates, see [templates](#javascript-templates).
+Tous les champs sont compatibles avec les modèles, voir [templates](#javascript-templates).
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url`, `assist` | Action to perform |
-| `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
-| `target` | object | none |  | Only works with `call-service`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
-| `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
-| `url_path` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
-| `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
-| `data` or `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `data` requires an `entity_id`, you can use the keywork `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
-| `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
-| `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
-| `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. |
-| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url`, `assist` | Action à effectuer |
+| `entity` | string | none | Any entity id | **Uniquement valable pour `action : more-info`** pour surcharger l'entité sur laquelle vous voulez appeler `more-info` |
+| `target` | object | none |  | Ne fonctionne qu'avec `call-service`. Suit la [syntaxe de Home Assistant](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
+| `navigation_path` | string | none | Ex: `/lovelace/0/` | Chemin vers lequel naviguer (par exemple `/lovelace/0/`) quand l'action est définie comme `navigate` |
+| `url_path` | string | none | Ex: `https://www.google.fr` | URL à ouvrir en cas de clic lorsque l'action est `url`. L'URL s'ouvrira dans un nouvel onglet. |
+| `service` | string | none | Any service | Service à appeler (par exemple `media_player.media_play_pause`) lorsque `action` est définie comme `call-service`  |
+| `data` or `service_data` | object | none | Any service data | Données de service à inclure (par exemple `entity_id : media_player.bedroom`) quand `action` est définie comme `call-service`. Si vos `data` nécessitent un `entity_id`, vous pouvez utiliser le keywork `entity`, qui appellera le service sur l'entité définie dans la configuration principale de cette carte. Utile pour les [configuration templates](#configuration-templates) |
+| `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Retour d'information haptique pour l'application [Beta IOS](http://home-assistant.io/ios/beta) |
+| `repeat` | number | none | eg: `500` | Pour une action de maintien, vous pouvez optionnellement configurer l'action pour qu'elle se répète tant que le bouton est maintenu enfoncé (par exemple, pour augmenter de manière répétée le volume d'un lecteur multimédia). Définissez ici le nombre de millisecondes entre les actions répétées. |
+| `repeat_limit` | number | none | Ex: `5` | Pour l'action Hold et si `repeat` est défini, l'action cessera d'être appelée lorsque la `repeat_limit` aura été atteinte. |
+| `confirmation` | object | none | See [confirmation](#confirmation) | Affiche une fenêtre popup de confirmation, remplace l'objet par défaut `confirmation`. |
 
 ### Confirmation
 
-This will popup a dialog box before running the action.
+Une boîte de dialogue s'ouvre alors avant l'exécution de l'action.
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `text` | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#javascript-templates) |
-| `exemptions` | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
+| `text` | string | none | Any text | Ce texte sera affiché dans la fenêtre contextuelle. Supporte les modèles, voir [templates](#javascript-templates) |
+| `exemptions` | array of users | none | `user: USER_ID` | Tout utilisateur déclaré dans cette liste ne verra pas la boîte de dialogue de confirmation. |
 
-Example:
+Exemple:
 
 ```yaml
 confirmation:
@@ -172,16 +172,16 @@ confirmation:
 
 ### Lock Object
 
-This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for `delay` seconds (5 by default).
+Un bouton normal s'affiche avec un symbole de verrouillage dans le coin. En cliquant sur le bouton, le verrou disparaît et le bouton peut être manœuvré pendant un délai de quelques secondes (5 par défaut).
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `enabled` | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#javascript-templates) |
-| `duration` | number | `5` | any number | Duration of the unlocked state in seconds |
-| `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
-| `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
+| `enabled` | boolean | `false` | `true` \| `false` | Active ou désactive le verrou. Prend en charge les modèles, voir [templates](#javascript-templates) |
+| `duration` | number | `5` | any number | Durée de l'état déverrouillé en secondes |
+| `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Tout utilisateur déclaré dans cette liste ne verra pas la boîte de dialogue de confirmation. Il peut s'agir d'un identifiant (`user`) ou d'un nom d'utilisateur (`username`). |
+| `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | Le type de clic qui déverrouillera le bouton |
 
-Example:
+Exemple:
 
 ```yaml
 lock:
@@ -193,7 +193,7 @@ lock:
     - user: befc8496799848bda1824f2a8111e30a
 ```
 
-If you want to lock the button for everyone and disable the unlocking possibility, set the exemptions object to `[]`:
+Si vous souhaitez verrouiller le bouton pour tout le monde et désactiver la possibilité de déverrouillage, définissez l'objet "exemptions" comme suit `[]`:
 
 ```yaml
 lock:
@@ -201,7 +201,7 @@ lock:
   exemptions: []
 ```
 
-By default the lock is visible in the upper-right corner. If you want to move the position of the lock to for example the bottom-right corner you can use this code:
+Par défaut, le verrou est visible dans le coin supérieur droit. Si vous souhaitez déplacer la position du verrou, par exemple dans le coin inférieur droit, vous pouvez utiliser ce code :
 
 ```yaml
 styles:
@@ -214,59 +214,59 @@ styles:
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `operator` | string | `==` | See [Available Operators](#Available-operators) | The operator used to compare the current state against the `value` |
-| `value` | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity |
-| `name` | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If defined uses the general config `name` and if undefined uses the entity name. Supports templates, see [templates](#javascript-templates) |
-| `icon` | string | optional | `mdi:battery` | The icon to display for this state - Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
-| `color` | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
-| `styles` | string | optional |  | See [styles](#styles) |
-| `spin` | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
-| `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. Supports templates, see [templates](#javascript-templates) |
-| `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
-| `state_display` | string | optional | `On` | If defined, override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
+| `operator` | string | `==` | See [Available Operators](#Available-operators) | L'opérateur utilisé pour comparer l'état actuel à la `value` |
+| `value` | string/number | **required** (unless operator is `default`) | Si votre entité est un capteur avec des nombres, utilisez un nombre directement, sinon utilisez une string | La valeur qui sera comparée à l'état actuel de l'entité |
+| `name` | string | optional | N'importe quelle chaîne de caractères, `'Alerte'`, `'Mon petit interrupteur est allumé'`, ...  | Si `show_name` est `true`, le nom à afficher pour cet état. S'il est défini, il utilise le nom de la configuration générale `name` et s'il n'est pas défini, il utilise le nom de l'entité. Supporte les modèles, voir [templates](#javascript-templates) |
+| `icon` | string | optional | `mdi:battery` | L'icône à afficher pour cet état - La valeur par défaut est l'icône de l'entité. Cacher avec `show_icon : false`. Supporte les modèles, voir [templates](#javascript-templates) |
+| `color` | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | La couleur de l'icône (si `color_type : icon`) ou de l'arrière-plan (si `color_type : card`) |
+| `styles` | string | optional |  | Voir [styles](#styles) |
+| `spin` | boolean | `false` | `true` \| `false` | L'icône doit-elle tourner pour cet état ? |
+| `entity_picture` | string | optional | Peut être n'importe quel fichier `/local/*` ou une URL | Remplacera l'icône/l'image d'entité par défaut par votre propre image pour cet état. Le mieux est d'utiliser une image carrée. Supporte les modèles, voir [templates](#javascript-templates) |
+| `label` | string | optional | Any string that you want | Affiche un label en dessous de la carte. Voir [Layouts](#layout) pour plus d'informations. Supporte les modèles, voir [templates](#javascript-templates) |
+| `state_display` | string | optional | `On` | Si défini, surcharge la façon dont l'état est affiché. Supporte les modèles, voir [templates](#javascript-templates) |
 
 ### Available operators
 
-The order of your elements in the `state` object matters. The first one which is `true` will match. The `value` field for all operators except `regex` support templating, see [templates](#javascript-templates)
+L'ordre des éléments dans l'objet `state` est important. Le premier qui est `true` sera pris en compte. Le champ `value` de tous les opérateurs sauf `regex` supporte le templating, voir [templates](#javascript-templates)
 
 | Operator | `value` example | Description |
 | :-: | --- | --- |
-| `<` | `5` | Current state is inferior to `value` |
-| `<=` | `4` | Current state is inferior or equal to `value` |
-| `==` | `42` or `'on'` | **This is the default if no operator is specified.** Current state is equal (`==` javascript) to `value` |
-| `>=` | `32` | Current state is superior or equal to `value` |
-| `>` | `12` | Current state is superior to `value` |
-| `!=` | `'normal'` | Current state is not equal (`!=` javascript) to `value` |
-| `regex` | `'^norm.*$'` | `value` regex applied to current state does match |
-| `template` |  | See [templates](#javascript-templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
-| `default` | N/A | If nothing matches, this is used |
+| `<` | `5` | L'état actuel est inférieur à `value` |
+| `<=` | `4` | L'état actuel est inférieur ou égal à `value` |
+| `==` | `42` or `'on'` | **C'est la valeur par défaut si aucun opérateur n'est spécifié.** L'état actuel est égal (`==` javascript) à`value` |
+| `>=` | `32` | L'état actuel est supérieur ou égal à `value` |
+| `>` | `12` | L'état actuel est supérieur à `value` |
+| `!=` | `'normal'` | L'état actuel n'est pas égal (`!=` javascript) à `value` |
+| `regex` | `'^norm.*$'` | `value` l'expression regex appliquée à l'état actuel correspond à |
+| `template` |  | Voir [templates](#javascript-templates) par exemple. `value` doit être une expression javascript qui retourne un booléen. Si le booléen est vrai, il correspondra à cet état |
+| `default` | N/A | Si rien ne correspond, c'est cette valeur qui est utilisée |
 
 ### Layout
 
-This option enables you to modify the layout of the card.
+Cette option vous permet de modifier la présentation de la carte.
 
-It is fully compatible with every `show_*` option. Make sure you set `show_state: true` if you want to show the state
+Elle est entièrement compatible avec toutes les options de `show_*`. Assurez-vous de mettre `show_state : true` si vous voulez afficher l'état de la carte.
 
-Multiple values are possible, see the image below for examples:
+Plusieurs valeurs sont possibles, voir l'image ci-dessous pour des exemples :
 
-- `vertical` (default value if nothing is provided): Everything is centered vertically on top of each other
-- `icon_name_state`: Everything is aligned horizontally, name and state are concatenated, label is centered below
-- `name_state`: Icon sits on top of name and state concatenated on one line, label below
-- `icon_name`: Icon and name are horizontally aligned, state and label are centered below
-- `icon_state`: Icon and state are horizontally aligned, name and label are centered below
-- `icon_label`: Icon and label are horizontally aligned, name and state are centered below
-- `icon_name_state2nd`: Icon, name and state are horizontally aligned, name is above state, label below name and state
-- `icon_state_name2nd`: Icon, name and state are horizontally aligned, state is above name, label below name and state
+- `vertical` (valeur par défaut si rien n'est fourni) : Tout est centré verticalement les uns sur les autres.
+- `icon_name_state` : Tout est aligné horizontalement, le nom et l'état sont concaténés, l'étiquette est centrée en dessous.
+- `name_state` : L'icône se trouve au-dessus du nom et de l'état concaténés sur une ligne, l'étiquette se trouve en dessous.
+- `icon_name` : L'icône et le nom sont alignés horizontalement, l'état et l'étiquette sont centrés en dessous.
+- `icon_state` : L'icône et l'état sont alignés horizontalement, le nom et l'étiquette sont centrés en dessous.
+- `icon_label` : L'icône et l'étiquette sont alignées horizontalement, le nom et l'état sont centrés en dessous.
+- `icon_name_state2nd` : L'icône, le nom et l'état sont alignés horizontalement, le nom est au-dessus de l'état, l'étiquette est en dessous du nom et de l'état.
+- `icon_state_name2nd` : L'icône, le nom et l'état sont alignés horizontalement, l'état est au-dessus du nom, l'étiquette est en dessous du nom et de l'état.
 
 ![layout_image](examples/layout.png)
 
 ### `triggers_update`
 
-This field defines which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in custom_fields as they are always updated with the latest state. This is expected and fast!). This was introduced in 3.3.0 to reduce the load on the frontend.
+Ce champ définit les entités qui doivent déclencher une mise à jour de la carte elle-même (cette règle ne s'applique pas aux cartes imbriquées dans les champs personnalisés, car elles sont toujours mises à jour avec le dernier état. C'est prévu et rapide !) Ceci a été introduit dans la version 3.3.0 pour réduire la charge sur le frontend.
 
-If you don't have javascript `[[[ ]]]` templates in your config, you don't need to do anything, else read further.
+Si vous n'avez pas de modèles javascript `[[[ ]]]` dans votre configuration, vous n'avez rien à faire, sinon lisez la suite.
 
-By default, the card will update itself when the main entity in the configuration is updated. In any case, the card will parse your code and look for entities that it can match (**it only matches `states['ENTITY_ID']`**) so:
+Par défaut, la carte se met à jour lorsque l'entité principale de la configuration est mise à jour. Dans tous les cas, la carte va analyser votre code et chercher des entités qu'elle peut faire correspondre (**elle ne fait que correspondre à `states['ENTITY_ID']`**) :
 
 ```js
 return states['switch.myswitch'].state // will match switch.myswitch
@@ -275,15 +275,15 @@ return states['switch.myswitch'].state // will match switch.myswitch
  return states[test].state // will not match anything
 ```
 
-In this second case, you have 2 options:
+Dans ce deuxième cas, deux possibilités s'offrent à vous :
 
-- Set the value of `triggers_update` to `all` (This was the behavior of button-card < 3.3.0)
+- Fixer la valeur de `triggers_update` à `all` (C'était le comportement de button-card < 3.3.0)
 
   ```yaml
   triggers_update: all
   ```
 
-- Set the value of `triggers_update` to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant `* templates` integration (see [here](https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id) for example):
+- Fixe la valeur de `triggers_update` à une liste d'entités. Lorsque l'une des entités de cette liste est mise à jour, la carte est mise à jour. La logique est la même que celle de l'intégration interne des `* templates` de l'aide à domicile (voir [ici](https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id) par exemple):
 
   ```yaml
   type: custom:button-card
@@ -293,13 +293,13 @@ In this second case, you have 2 options:
     - light.mylight
   ```
 
-If your entity, any entity in the `triggers_update` field or any entity matched from your templates are a group and you want to update the card if any of the nested entity in that group update its state, then you can set `group_expand` to `true`. It will do the work for you and you won't have to specify manually the full list of entities in `triggers_update`.
+Si votre entité, n'importe quelle entité dans le champ `triggers_update` ou n'importe quelle entité correspondant à vos templates sont un groupe et que vous voulez mettre à jour la carte si l'une des entités imbriquées dans ce groupe met à jour son état, alors vous pouvez mettre `group_expand` à `true`. Cela fera le travail pour vous et vous n'aurez pas à spécifier manuellement la liste complète des entités dans `triggers_update`.
 
 ### Javascript Templates
 
-The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brackets: `[[[ javascript function here ]]]`
+Le rendu du modèle utilise un format spécial. Tous les champs où les modèles sont pris en charge supportent également le texte brut. Pour activer la fonction de template pour un tel champ, vous devez placer la fonction javascript entre 3 crochets : `[[[ fonction javascript ici ]]]`
 
-Don't forget to quote if it's on one line:
+N'oubliez pas de mettre la fonction entre guillemets si elle tient sur une seule ligne :
 
 ```yaml
 name: '[[[ if (entity.state > 42) return "Above 42"; else return "Below 42" ]]]'
@@ -311,30 +311,30 @@ name: >
       return "Below 42";
   ]]]
 ```
+Voici les champs de configuration qui supportent la création de modèles :
 
-Those are the configuration fields which support templating:
 
-- `name` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-- `state_display` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-- `label` (Supports also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-- `entity_picture`: This needs to return a path to a file or a url as a string.
-- `icon`: This needs to return a string in the format `mdi:icon`
-- All the styles in the style object: This needs to return a string
-- All the value of the state object, apart from when the operator is `regex`
-  - `operator: template`: The function for `value` needs to return a boolean
-  - Else: The function for `value` needs to return a string or a number
-- All the `custom_fields` (Support also HTML rendering): This needs to return a string or an `` html`<elt></elt>` `` object
-- All the `styles`: Each entry needs to return a string (See [here](#custom-fields) for some examples)
-- The `extra_styles` field
-- Everything field in `*_action`
-- The confirmation text (`confirmation.text`)
-- The lock being enabled or not (`lock.enabled`)
-- all the `card` parameters in a `custom_field`
-- all the `variables`
+- `name` (supporte aussi le rendu HTML) : Ce champ doit retourner une chaîne de caractères ou un objet `` html`<elt></elt>`.
+- `state_display` (Supporte aussi le rendu HTML) : Ceci doit retourner une chaîne ou un objet `` html`<elt></elt>`.
+- `label` (Supporte aussi le rendu HTML) : Ceci doit retourner une chaîne ou un objet `` html`<elt></elt>` `.
+- `entity_picture` : Ceci doit retourner un chemin vers un fichier ou une url sous forme de chaîne de caractères.
+- `icon` : Cet objet doit retourner une chaîne de caractères au format `mdi:icon`
+- Tous les styles de l'objet style : Ceci doit retourner une chaîne de caractères
+- Toutes les valeurs de l'objet state, sauf lorsque l'opérateur est `regex`
+  - `operator : template` : La fonction pour `value` doit retourner un booléen.
+  - Else : La fonction pour `value` doit retourner une chaîne de caractères ou un nombre.
+- Tous les `custom_fields` (supportent aussi le rendu HTML) : Cette fonction doit retourner une chaîne de caractères ou un objet `` html`<elt></elt>`.
+- Tous les `styles` : Chaque entrée doit retourner une chaîne (Voir [ici](#custom-fields) pour quelques exemples)
+- Le champ `extra_styles`.
+- Tous les champs de `*_action`
+- Le texte de confirmation (`confirmation.text`)
+- Le verrou activé ou non (`lock.enabled`)
+- tous les paramètres `card` dans un `custom_field`
+- toutes les `variables`
 
-Special fields which do support templating but are **only evaluated once**, when the configuration is loaded. Error in those templates will only be visible in the javascript console and the card will not display in that case:
+Champs spéciaux qui supportent les modèles mais qui ne sont **évalués qu'une seule fois**, lorsque la configuration est chargée. Les erreurs dans ces modèles ne seront visibles que dans la console javascript et la carte ne s'affichera pas dans ce cas :
 
-- `entity`: You can use JS templates for the `entity` of the card configuration. It is mainly useful when you define your entity in as an entry in `variables`. This is evaluated once only when the configuration is loaded.
+- `entity` : Vous pouvez utiliser des modèles JS pour l'entité (`entity`) de la configuration de la carte. C'est principalement utile lorsque vous définissez votre entité comme une entrée dans `variables`. Celle-ci est évaluée une seule fois lors du chargement de la configuration.
 
   ```yaml
   type: custom:button-card
@@ -343,7 +343,7 @@ Special fields which do support templating but are **only evaluated once**, when
   entity: '[[[ return variables.my_entity; ]]]'
   ```
 
-- `triggers_update`: Useful when you define multiple entities in `variables` to use throughout the card. Eg:
+- `triggers_update` : Utile lorsque vous définissez plusieurs entités dans `variables` pour les utiliser dans la carte. Par exemple :
 
   ```yaml
   type: custom:button-card
@@ -358,70 +358,68 @@ Special fields which do support templating but are **only evaluated once**, when
     - '[[[ return variables.my_other_entity; ]]]'
   ```
 
-Inside the javascript code, you'll have access to those variables:
+Dans le code javascript, vous aurez accès à ces variables :
 
-- `this`: The button-card element itself (advanced stuff, don't mess with it)
-- `entity`: The current entity object, if the entity is defined in the card
-- `states`: An object with all the states of all the entities (equivalent to `hass.states`)
-- `user`: The user object (equivalent to `hass.user`)
-- `hass`: The complete `hass` object
-- `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
-- Helper functions availble through the object `helpers`:
-  - `helpers.localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state to your language (eg. `helpers.localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments. Works with numerical states also.
-    - If `state` is not provided, it localizes the state of the `entity` (Eg. `helpers.localize(entity)` or `helpers.localize(states['weather.your_city'])`).
-    - If `state` is provided, it localizes `state` in the context of the `entity` (eg. : `helpers.localize(entity, entity.attributes.forecast[0].condition)` or `helpers.localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
-    - `numeric_precision` (number or `'card'`. Default is `undefined`): For state which are numbers, force the precision instead of letting HA decide for you. If the value is set to `'card'`, it will use the `numeric_precision` from the main config. If `undefined`, it will use the default value for the entity you're willing to display. The latter is the default.
-    - `show_units` (boolean. Default is `true`): Will display units or not. Default is to display them.
-    - `units` (string): Will force the units to be the value of that parameter.
-    - To skip one or multiple parameter while calling the function, use `undefined`. Eg. `helpers.localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
-  - Date, Time and Date Time format helpers, all localized (takes a string or a `Date` object as input):
-    - `helpers.formatTime(time)`: 21:15 / 9:15
-    - `helpers.formatTimeWithSeconds(time)`: 9:15:24 PM || 21:15:24
-    - `helpers.formatTimeWeekday(time)`: Tuesday 7:00 PM || Tuesday 19:00
-    - `helpers.formatTime24h(time)`: 21:15
-    - `helpers.formatDateWeekdayDay(date)`: Tuesday, August 10
-    - `helpers.formatDate(date)`: August 10, 2021
-    - `helpers.formatDateNumeric(date)`: 10/08/2021
-    - `helpers.formatDateShort(date)`: Aug 10
-    - `helpers.formatDateMonthYear(date)`: August 2021
-    - `helpers.formatDateMonth(date)`: August
-    - `helpers.formatDateYear(date)`: 2021
-    - `helpers.formatDateWeekday(date)`: Monday
-    - `helpers.formatDateWeekdayShort(date)`: Mon
-    - `helpers.formatDateTime(datetime)`: August 9, 2021, 8:23 AM
-    - `helpers.formatDateTimeNumeric(datetime)`: Aug 9, 2021, 8:23 AM
-    - `helpers.formatDateTimeWithSeconds(datetime)`: Aug 9, 8:23 AM
-    - `helpers.formatShortDateTime(datetime)`: August 9, 2021, 8:23:15 AM
-    - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
-    - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
-  - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
 
-See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
+- `this` : L'élément "carte-bouton" lui-même (c'est un truc avancé, n'y touchez pas)
+- `entity` : L'objet de l'entité courante, si l'entité est définie dans la carte
+- `states` : Un objet avec tous les états de toutes les entités (équivalent à `hass.states`)
+- `user` : L'objet utilisateur (équivalent à `hass.user`)
+- `hass` : L'objet `hass` complet
+- `variables` : un objet contenant toutes les variables définies dans la configuration. Voir [Variables](#variables)
+- Fonctions d'aide disponibles à travers l'objet `helpers` :
+  - `helpers.localize(entity, state ?, numeric_precision ?, show_units ?, units ?)` : une fonction qui localise un état dans votre langue (par exemple `helpers.localize(entity)`) et retourne une chaîne de caractères. Prend un objet entité comme argument (pas l'état de l'entité car nous avons besoin du contexte) et prend des arguments optionnels. Fonctionne également avec les états numériques.
+    - Si `state` n'est pas fourni, il localise l'état de l'entité (ex : `helpers.localize(entity)` ou `helpers.localize(states['weather.your_city'])`).
+    - Si `state` est fourni, il localise `state` dans le contexte de l'entité (ex : `helpers.localize(entity, entity.attributes.forecast[0].condition)` ou `helpers.localize(states['weather.your_city'], states['weather.your_city'].attributes.forecast[0].condition)`)
+    - `numeric_precision` (nombre ou `'card'`. La valeur par défaut est `undefined`) : Pour les états qui sont des nombres, forcer la précision au lieu de laisser HA décider pour vous. Si la valeur est `'card'`, il utilisera la `precision_numérique` de la configuration principale. Si `undefined`, il utilisera la valeur par défaut de l'entité que vous souhaitez afficher. Cette dernière est la valeur par défaut.
+    - `show_units` (booléen. La valeur par défaut est `true`) : Affiche ou non les unités. La valeur par défaut est de les afficher.
+    - `units` (chaîne de caractères) : Force les unités à être la valeur de ce paramètre.
+    - Pour sauter un ou plusieurs paramètres lors de l'appel de la fonction, utilisez `undefined`. Par exemple, `helpers.localize(states['sensor.temperature'], undefined, 1, undefined, 'Celcius')`
+  - Aides au formatage de la date, de l'heure et de la date et de l'heure, toutes localisées (prend une chaîne de caractères ou un objet `Date` en entrée) :
+    - `helpers.formatTime24h(time)` : 21:15
+    - `helpers.formatDateWeekdayDay(date)` : Mardi 10 août
+    - `helpers.formatDate(date)` : 10 août 2021
+    - `helpers.formatDateNumeric(date)` : 10/08/2021
+    - `helpers.formatDateShort(date)` : Aug 10
+    - `helpers.formatDateMonthYear(date)` : Août 2021
+    - `helpers.formatDateMonth(date)` : Août
+    - `helpers.formatDateYear(date)` : 2021
+    - `helpers.formatDateWeekday(date)` : Lundi
+    - `helpers.formatDateWeekdayShort(date)` : Mon
+    - `helpers.formatDateTime(datetime)` : 9 août 2021, 8:23 AM
+    - `helpers.formatDateTimeNumeric(datetime)` : Aug 9, 2021, 8:23 AM
+    - `helpers.formatDateTimeWithSeconds(datetime)` : Aug 9, 8:23 AM
+    - `helpers.formatShortDateTime(datetime)` : 9 août 2021, 8:23:15 AM
+    - `helpers.formatShortDateTimeWithYear(datetime)` : 9/8/2021, 8:23 AM
+    - Exemple : `return helpers.formatDateTime(entity.attribute.last_changed)`
+  - `helpers.relativeTime(date, capitalize ? = false)` : Retourne un modèle lit-html qui rendra une heure relative et la mettra à jour automatiquement. `date` doit être une chaîne de caractères. `capitalize` est un booléen optionnel, s'il vaut `true`, la première lettre sera en majuscule. Utilisation par exemple : `return helpers.relativeTime(entity.last_changed)`
+
+Voir [ici](#templates-support) pour quelques exemples ou [ici](#custom-fields) pour des trucs avancés utilisant les templates !
 
 ### Styles
 
-All the styles entries, support Templating, see [here](#custom-fields) for some examples.
+Toutes les entrées de style prennent en charge le Templating, voir [ici](#custom-fields) pour quelques exemples.
 
 #### Easy styling options
 
-For each element in the card, styles can be defined in 2 places:
+Pour chaque élément de la carte, les styles peuvent être définis à deux endroits :
 
-- in the main part of the config
-- in each state
+- dans la partie principale de la configuration
+- dans chaque état
 
-Styles defined in each state are **additive** with the ones defined in the main part of the config. In the `state` part, just define the ones specific to your current state and keep the common ones in the main part of the config.
+Les styles définis dans chaque état sont **additifs** à ceux définis dans la partie principale de la configuration. Dans la partie `state`, définissez simplement les styles spécifiques à votre état actuel et gardez les styles communs dans la partie principale de la configuration.
 
-The `style` object members are:
+Les membres de l'objet `style` sont :
 
-- `card`: styles for the card itself. Styles that are defined here will be applied to the whole card and its content, unless redefined in elements below.
-- `icon`: styles for the icon
-- `entity_picture`: styles for the picture (if any)
-- `name`: styles for the name
-- `state`: styles for the state
-- `label`: styles for the label
-- `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L73-L86) for the default style)
-- `tooltip`: styles for the tooltip overlay (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L30-L46))
-- `custom_fields`: styles for each of your custom fields. See [Custom Fields](#custom-fields)
+- `card` : styles pour la carte elle-même. Les styles définis ici seront appliqués à l'ensemble de la carte et à son contenu, à moins qu'ils ne soient redéfinis dans les éléments ci-dessous.
+- `icon` : styles pour l'icône
+- `entity_picture` : styles pour l'image (si elle existe)
+- `name` : styles pour le nom
+- `state` : styles pour l'état
+- `label` : styles pour le label
+- `lock` : styles pour l'icône du verrou (voir [ici](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L73-L86) pour le style par défaut)
+- `tooltip`: styles pour la superposition de l'info-bulle (voir [ici](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L30-L46))
+- `custom_fields`: styles pour chacun de vos champs personnalisés. Voir [Custom Fields](#custom-fields)
 
 ```yaml
 - type: custom:button-card
