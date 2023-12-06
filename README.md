@@ -1017,13 +1017,13 @@ Variables are evaluated in their alphabetical order based on their name. That me
 variables:
   index: 2
   value: '[[[ return variables.index + 2; ]]]'
-name: '[[[ return variable.value; ]]]' # would return 4
+name: '[[[ return variables.value; ]]]' # would return 4
 
 ### This doesn't work
 variables:
   z_index: 2
   value: '[[[ return variables.z_index + 2; ]]]' # This would fail because z comes after v in the alphabet.
-name: '[[[ return variable.value; ]]]'
+name: '[[[ return variables.value; ]]]'
 ```
 
 ## Installation
