@@ -424,36 +424,36 @@ The `style` object members are:
 - `custom_fields`: styles for each of your custom fields. See [Custom Fields](#custom-fields)
 
 ```yaml
-- type: custom:button-card
-  [...]
-  styles:
-    card:
-      - xxxx: value
-    icon:
-      - xxxx: value
-    entity_picture:
-      - xxxx: value
-    name:
-      - xxxx: value
-    state:
-      - xxxx: value
-    label:
-      - xxxx: value
+type: custom:button-card
+[...]
+styles:
+  card:
+    - xxxx: value
+  icon:
+    - xxxx: value
+  entity_picture:
+    - xxxx: value
+  name:
+    - xxxx: value
   state:
-    - value: 'on'
-      styles:
-        card:
-          - yyyy: value
-        icon:
-          - yyyy: value
-        entity_picture:
-          - yyyy: value
-        name:
-          - yyyy: value
-        state:
-          - yyyy: value
-        label:
-          - yyyy: value
+    - xxxx: value
+  label:
+    - xxxx: value
+state:
+  - value: 'on'
+    styles:
+      card:
+        - yyyy: value
+      icon:
+        - yyyy: value
+      entity_picture:
+        - yyyy: value
+      name:
+        - yyyy: value
+      state:
+        - yyyy: value
+      label:
+        - yyyy: value
 ```
 
 This will render:
@@ -538,17 +538,17 @@ Some examples:
 - icon on the right side (by overloading an existing layout):
 
   ```yaml
-  - type: 'custom:button-card'
-    entity: sensor.sensor1
-    layout: icon_state_name2nd
-    show_state: true
-    show_name: true
-    show_label: true
-    label: label
-    styles:
-      grid:
-        - grid-template-areas: '"n i" "s i" "l i"'
-        - grid-template-columns: 1fr 40%
+  type: 'custom:button-card'
+  entity: sensor.sensor1
+  layout: icon_state_name2nd
+  show_state: true
+  show_name: true
+  show_label: true
+  label: label
+  styles:
+    grid:
+      - grid-template-areas: '"n i" "s i" "l i"'
+      - grid-template-columns: 1fr 40%
   ```
 
 - Apple Homekit-like buttons:
@@ -556,37 +556,37 @@ Some examples:
   ![apple-like-buttons](examples/apple_style.gif)
 
   ```yaml
-  - type: custom:button-card
-    entity: switch.skylight
-    name: <3 Apple
-    icon: mdi:fire
-    show_state: true
-    styles:
-      card:
-        - width: 100px
-        - height: 100px
-      grid:
-        - grid-template-areas: '"i" "n" "s"'
-        - grid-template-columns: 1fr
-        - grid-template-rows: 1fr min-content min-content
-      img_cell:
-        - align-self: start
-        - text-align: start
-      name:
-        - justify-self: start
-        - padding-left: 10px
-        - font-weight: bold
-        - text-transform: lowercase
-      state:
-        - justify-self: start
-        - padding-left: 10px
+  type: custom:button-card
+  entity: switch.skylight
+  name: <3 Apple
+  icon: mdi:fire
+  show_state: true
+  styles:
+    card:
+      - width: 100px
+      - height: 100px
+    grid:
+      - grid-template-areas: '"i" "n" "s"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: 1fr min-content min-content
+    img_cell:
+      - align-self: start
+      - text-align: start
+    name:
+      - justify-self: start
+      - padding-left: 10px
+      - font-weight: bold
+      - text-transform: lowercase
     state:
-      - value: 'off'
-        styles:
-          card:
-            - filter: opacity(50%)
-          icon:
-            - filter: grayscale(100%)
+      - justify-self: start
+      - padding-left: 10px
+  state:
+    - value: 'off'
+      styles:
+        card:
+          - filter: opacity(50%)
+        icon:
+          - filter: grayscale(100%)
   ```
 
 #### Injecting CSS with `extra_styles`
@@ -600,33 +600,33 @@ An example is better than words:
 ![change_background](examples/loop_background.gif)
 
 ```yaml
-- type: custom:button-card
-  name: Change Background
-  aspect_ratio: 2/1
-  extra_styles: |
-    @keyframes bgswap1 {
-      0% {
-        background-image: url("/local/background1.jpg");
-      }
-      25% {
-        background-image: url("/local/background1.jpg");
-      }
-      50% {
-        background-image: url("/local/background2.jpg");
-      }
-      75% {
-        background-image: url("/local/background2.jpg");
-      }
-      100% {
-        background-image: url("/local/background1.jpg");
-      }
+type: custom:button-card
+name: Change Background
+aspect_ratio: 2/1
+extra_styles: |
+  @keyframes bgswap1 {
+    0% {
+      background-image: url("/local/background1.jpg");
     }
-  styles:
-    card:
-      - animation: bgswap1 10s linear infinite
-      - background-size: cover
-    name:
-      - color: white
+    25% {
+      background-image: url("/local/background1.jpg");
+    }
+    50% {
+      background-image: url("/local/background2.jpg");
+    }
+    75% {
+      background-image: url("/local/background2.jpg");
+    }
+    100% {
+      background-image: url("/local/background1.jpg");
+    }
+  }
+styles:
+  card:
+    - animation: bgswap1 10s linear infinite
+    - background-size: cover
+  name:
+    - color: white
 ```
 
 ### Custom Fields
@@ -638,15 +638,15 @@ Custom fields also support embeded cards, see [example below](#custom_fields_car
 Each custom field supports its own styling config, the name needs to match between both objects needs to match:
 
 ```yaml
-- type: custom:button-card
-  [...]
+type: custom:button-card
+[...]
+custom_fields:
+  test_element: My test element
+styles:
   custom_fields:
-    test_element: My test element
-  styles:
-    custom_fields:
-      test_element:
-        - color: red
-        - font-size: 13px
+    test_element:
+      - color: red
+      - font-size: 13px
 ```
 
 Examples are better than a long text, so here you go:
@@ -656,34 +656,34 @@ Examples are better than a long text, so here you go:
   ![custom_fields_1](examples/custom_fields_1.gif)
 
   ```yaml
-  - type: custom:button-card
-    icon: mdi:lightbulb
-    aspect_ratio: 1/1
-    name: Nb lights on
-    styles:
-      grid:
-        - position: relative
-      custom_fields:
-        notification:
-          - background-color: >
-              [[[
-                if (states['input_number.test'].state == 0)
-                  return "green";
-                return "red";
-              ]]]
-
-
-          - border-radius: 50%
-          - position: absolute
-          - left: 60%
-          - top: 10%
-          - height: 20px
-          - width: 20px
-          - font-size: 8px
-          - line-height: 20px
+  type: custom:button-card
+  icon: mdi:lightbulb
+  aspect_ratio: 1/1
+  name: Nb lights on
+  styles:
+    grid:
+      - position: relative
     custom_fields:
-      notification: >
-        [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
+      notification:
+        - background-color: >
+            [[[
+              if (states['input_number.test'].state == 0)
+                return "green";
+              return "red";
+            ]]]
+
+
+        - border-radius: 50%
+        - position: absolute
+        - left: 60%
+        - top: 10%
+        - height: 20px
+        - width: 20px
+        - font-size: 8px
+        - line-height: 20px
+  custom_fields:
+    notification: >
+      [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
   ```
 
 - Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
@@ -691,99 +691,99 @@ Examples are better than a long text, so here you go:
   ![custom_fields_2](examples/custom_fields_2.png)
 
   ```yaml
-  - type: custom:button-card
-    entity: 'sensor.raspi_temp'
-    icon: 'mdi:raspberry-pi'
-    aspect_ratio: 1/1
-    name: HassOS
-    styles:
-      card:
-        - background-color: '#000044'
-        - border-radius: 10%
-        - padding: 10%
-        - color: ivory
-        - font-size: 10px
-        - text-shadow: 0px 0px 5px black
-        - text-transform: capitalize
-      grid:
-        - grid-template-areas: '"i temp" "n n" "cpu cpu" "ram ram" "sd sd"'
-        - grid-template-columns: 1fr 1fr
-        - grid-template-rows: 1fr min-content min-content min-content min-content
-      name:
-        - font-weight: bold
-        - font-size: 13px
-        - color: white
+  type: custom:button-card
+  entity: 'sensor.raspi_temp'
+  icon: 'mdi:raspberry-pi'
+  aspect_ratio: 1/1
+  name: HassOS
+  styles:
+    card:
+      - background-color: '#000044'
+      - border-radius: 10%
+      - padding: 10%
+      - color: ivory
+      - font-size: 10px
+      - text-shadow: 0px 0px 5px black
+      - text-transform: capitalize
+    grid:
+      - grid-template-areas: '"i temp" "n n" "cpu cpu" "ram ram" "sd sd"'
+      - grid-template-columns: 1fr 1fr
+      - grid-template-rows: 1fr min-content min-content min-content min-content
+    name:
+      - font-weight: bold
+      - font-size: 13px
+      - color: white
+      - align-self: middle
+      - justify-self: start
+      - padding-bottom: 4px
+    img_cell:
+      - justify-content: start
+      - align-items: start
+      - margin: none
+    icon:
+      - color: >
+          [[[
+            if (entity.state < 60) return 'lime';
+            if (entity.state >= 60 && entity.state < 80) return 'orange';
+            else return 'red';
+          ]]]
+
+
+      - width: 70%
+      - margin-top: -10%
+    custom_fields:
+      temp:
+        - align-self: start
+        - justify-self: end
+      cpu:
+        - padding-bottom: 2px
         - align-self: middle
         - justify-self: start
-        - padding-bottom: 4px
-      img_cell:
-        - justify-content: start
-        - align-items: start
-        - margin: none
-      icon:
-        - color: >
-            [[[
-              if (entity.state < 60) return 'lime';
-              if (entity.state >= 60 && entity.state < 80) return 'orange';
-              else return 'red';
-            ]]]
+        - --text-color-sensor: '[[[ if (states["sensor.raspi_cpu"].state > 80) return "red"; ]]]'
+      ram:
+        - padding-bottom: 2px
+        - align-self: middle
+        - justify-self: start
+        - --text-color-sensor: '[[[ if (states["sensor.raspi_ram"].state > 80) return "red"; ]]]'
+      sd:
+        - align-self: middle
+        - justify-self: start
+        - --text-color-sensor: '[[[ if (states["sensor.raspi_sd"].state > 80) return "red"; ]]]'
+  custom_fields:
+    temp: >
+      [[[
+        return `<ha-icon
+          icon="mdi:thermometer"
+          style="width: 12px; height: 12px; color: yellow;">
+          </ha-icon><span>${entity.state}°C</span>`
+      ]]]
 
 
-        - width: 70%
-        - margin-top: -10%
-      custom_fields:
-        temp:
-          - align-self: start
-          - justify-self: end
-        cpu:
-          - padding-bottom: 2px
-          - align-self: middle
-          - justify-self: start
-          - --text-color-sensor: '[[[ if (states["sensor.raspi_cpu"].state > 80) return "red"; ]]]'
-        ram:
-          - padding-bottom: 2px
-          - align-self: middle
-          - justify-self: start
-          - --text-color-sensor: '[[[ if (states["sensor.raspi_ram"].state > 80) return "red"; ]]]'
-        sd:
-          - align-self: middle
-          - justify-self: start
-          - --text-color-sensor: '[[[ if (states["sensor.raspi_sd"].state > 80) return "red"; ]]]'
-    custom_fields:
-      temp: >
-        [[[
-          return `<ha-icon
-            icon="mdi:thermometer"
-            style="width: 12px; height: 12px; color: yellow;">
-            </ha-icon><span>${entity.state}°C</span>`
-        ]]]
+    cpu: >
+      [[[
+        return `<ha-icon
+          icon="mdi:server"
+          style="width: 12px; height: 12px; color: deepskyblue;">
+          </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
+      ]]]
 
 
-      cpu: >
-        [[[
-          return `<ha-icon
-            icon="mdi:server"
-            style="width: 12px; height: 12px; color: deepskyblue;">
-            </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
-        ]]]
+    ram: >
+      [[[
+        return `<ha-icon
+          icon="mdi:memory"
+          style="width: 12px; height: 12px; color: deepskyblue;">
+          </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
+      ]]]
 
 
-      ram: >
-        [[[
-          return `<ha-icon
-            icon="mdi:memory"
-            style="width: 12px; height: 12px; color: deepskyblue;">
-            </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
-        ]]]
-
-
-      sd: >
-        [[[
-          return `<ha-icon
-            icon="mdi:harddisk"
-            style="width: 12px; height: 12px; color: deepskyblue;">
-            </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
-        ]]]
+    sd: >
+      [[[
+        return `<ha-icon
+          icon="mdi:harddisk"
+          style="width: 12px; height: 12px; color: deepskyblue;">
+          </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
+      ]]]
   ```
 
 - <a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card.
@@ -793,33 +793,33 @@ Examples are better than a long text, so here you go:
   ![custom_fields_3](examples/custom_fields_card.png)
 
   ```yaml
-  - type: custom:button-card
-    aspect_ratio: 1/1
+  type: custom:button-card
+  aspect_ratio: 1/1
+  custom_fields:
+    graph:
+      card:
+        type: sensor
+        entity: sensor.sensor1
+        graph: line
+        style: |
+          ha-card {
+            box-shadow: none;
+          }
+  styles:
     custom_fields:
       graph:
-        card:
-          type: sensor
-          entity: sensor.sensor1
-          graph: line
-          style: |
-            ha-card {
-              box-shadow: none;
-            }
-    styles:
-      custom_fields:
-        graph:
-          - filter: opacity(50%)
-          - overflow: unset
-      card:
+        - filter: opacity(50%)
         - overflow: unset
-      grid:
-        - grid-template-areas: '"i" "n" "graph"'
-        - grid-template-columns: 1fr
-        - grid-template-rows: 1fr min-content min-content
+    card:
+      - overflow: unset
+    grid:
+      - grid-template-areas: '"i" "n" "graph"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: 1fr min-content min-content
 
-    entity: light.test_light
-    hold_action:
-      action: more-info
+  entity: light.test_light
+  hold_action:
+    action: more-info
   ```
 
 To skip evaluating the templates in a custom_field (eg. you embed a `custom:button-card` inside a Custom Field), then you have to set `do_not_eval` to `true`.
@@ -912,9 +912,9 @@ button_card_templates:
 And then where you use button-card, you can apply this template, and/or overload it:
 
 ```yaml
-- type: custom:button-card
-  template: header_red
-  name: My Test Header
+type: custom:button-card
+template: header_red
+name: My Test Header
 ```
 
 #### Merging state by id
