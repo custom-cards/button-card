@@ -1,3 +1,10 @@
+### [4.1.2-dev.2](https://github.com/custom-cards/button-card/compare/v4.1.2-dev.1...v4.1.2-dev.2) (2024-02-01)
+
+
+### Bug Fixes
+
+* support for new ha-state-icon in 2024.02 ([ab2b393](https://github.com/custom-cards/button-card/commit/ab2b3939bcce504125853d2ca9312d32f9a3f6d6))
+
 ### [4.1.2-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2-dev.1) (2023-08-20)
 
 
