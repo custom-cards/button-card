@@ -1,3 +1,11 @@
+### [4.1.2](https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2) (2024-02-01)
+
+
+### Bug Fixes
+
+* card would sometimes not be clickable ([56c3f44](https://github.com/custom-cards/button-card/commit/56c3f44066c6bd08fb8a7d8bb8fa679920dc5992)), closes [#738](https://github.com/custom-cards/button-card/issues/738) [#759](https://github.com/custom-cards/button-card/issues/759)
+* support for new ha-state-icon in 2024.02 ([ab2b393](https://github.com/custom-cards/button-card/commit/ab2b3939bcce504125853d2ca9312d32f9a3f6d6))
+
 ### [4.1.2-dev.2](https://github.com/custom-cards/button-card/compare/v4.1.2-dev.1...v4.1.2-dev.2) (2024-02-01)
 
 
