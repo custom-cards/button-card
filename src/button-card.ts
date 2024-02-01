@@ -1154,6 +1154,8 @@ class ButtonCard extends LitElement {
             ? html`
                 <ha-state-icon
                   .state=${state}
+                  .stateObj=${state}
+                  .hass=${this._hass}
                   ?data-domain=${domain}
                   data-state=${ifDefined(state?.state)}
                   style=${styleMap(haIconStyle)}
