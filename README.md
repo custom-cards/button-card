@@ -1491,7 +1491,7 @@ Example with `template`:
     name:
       - text-transform: uppercase
       - letter-spacing: 0.5em
-      - font-familly: cursive
+      - font-family: cursive
       - justify-self: start
       - padding: 0px 5px
     state:
