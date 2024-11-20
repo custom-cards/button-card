@@ -1011,7 +1011,7 @@ class ButtonCard extends LitElement {
       ${this._config?.tooltip
         ? html`
             <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}>
-              ${this._getTemplateOrValue(this._stateObj, this._config.tooltip)}
+              ${this._unsafeHTMLorNot(this._getTemplateOrValue(this._stateObj, this._config.tooltip))}
             </span>
           `
         : ''}
