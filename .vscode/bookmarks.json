@@ -1,0 +1,44 @@
+{
+	"files": [
+		{
+			"path": "dist/button-card.js",
+			"bookmarks": [
+				{
+					"line": 3841,
+					"column": 12,
+					"label": ""
+				},
+				{
+					"line": 3843,
+					"column": 20,
+					"label": ""
+				},
+				{
+					"line": 3926,
+					"column": 26,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "src/button-card.ts",
+			"bookmarks": [
+				{
+					"line": 539,
+					"column": 10,
+					"label": ""
+				},
+				{
+					"line": 1013,
+					"column": 40,
+					"label": ""
+				},
+				{
+					"line": 1103,
+					"column": 47,
+					"label": ""
+				}
+			]
+		}
+	]
+}
