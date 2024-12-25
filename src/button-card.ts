@@ -980,6 +980,7 @@ class ButtonCard extends LitElement {
           </style>
         `
       : html``;
+    let tooltipValue: string | undefined = undefined;
     return html`
       ${extraStyles}
       <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
@@ -1008,10 +1009,11 @@ class ButtonCard extends LitElement {
         </ha-card>
         ${this._getLock(lockStyle)}
       </div>
-      ${this._config?.tooltip
+      ${this._config?.tooltip &&
+      (tooltipValue = this._getTemplateOrValue(this._stateObj, this._config.tooltip)) !== undefined
         ? html`
             <span class="tooltiptext" style=${styleMap(tooltipStyleFromConfig)}>
-              ${this._unsafeHTMLorNot(this._getTemplateOrValue(this._stateObj, this._config.tooltip))}
+              ${this._unsafeHTMLorNot(tooltipValue)}
             </span>
           `
         : ''}
