@@ -18,6 +18,7 @@ export interface ButtonCardConfig {
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
+  stop_propagation?: boolean;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
@@ -58,6 +59,7 @@ export interface ExternalButtonCardConfig {
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;
+  stop_propagation?: boolean;
   show_name?: boolean;
   show_state?: boolean;
   show_icon?: boolean;
