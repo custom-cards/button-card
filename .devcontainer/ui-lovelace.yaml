@@ -1496,7 +1496,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_name_state
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1511,7 +1511,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: name_state
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1519,7 +1519,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: vertical (default)
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1539,7 +1539,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_name
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1547,7 +1547,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_state
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1568,7 +1568,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_name with hidden state
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1576,7 +1576,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_state with hidden name
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1598,7 +1598,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_name_state2nd
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
@@ -1606,7 +1606,7 @@ views:
               - type: 'custom:button-card'
                 color_type: label-card
                 name: icon_state_name2nd
-                color: var(--paper-item-icon-color)
+                color: var(--state-icon-color)
                 styles:
                   card:
                     - font-weight: bold
