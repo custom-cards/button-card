@@ -4,7 +4,7 @@ export const styles = css`
   :host {
     position: relative;
     display: block;
-    --state-inactive-color: var(--paper-item-icon-color);
+    --state-inactive-color: var(--state-icon-color);
   }
   ha-card {
     cursor: pointer;
