@@ -179,6 +179,12 @@ class ActionHandler extends HTMLElement implements ActionHandler {
         }
         return;
       }
+
+      // Don't do anything else if touch event was cancelled
+      if (ev.type == 'touchcancel') {
+        return;
+      }
+
       const target = ev.target as HTMLElement;
       // Prevent mouse event if touch event
       if (ev.cancelable) {
