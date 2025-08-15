@@ -1043,7 +1043,7 @@ name: '[[[ return variable.value; ]]]'
 
 4. Write configuration for the card in your `ui-lovelace.yaml`
 
-> Note: Your browser may block the download link as the file is a javascript file. If the link seems to do nothing, copy the link address and use directly in your browser's address bar where you will most likely get pa rompt on whether to allow the download or not.
+> Note: Your browser may block the download link as the file is a javascript file. If the link seems to do nothing, copy the link address and use directly in your browser's address bar where you will most likely get prompt on whether to allow the download or not.
 
 ### Installation and tracking with `hacs`
 
