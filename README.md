@@ -1030,7 +1030,7 @@ name: '[[[ return variable.value; ]]]'
 
 ### Manual Installation
 
-1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js). 
+1. Download the [button-card](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
 2. Place the file in your `config/www` folder
 3. Include the card code in your `ui-lovelace-card.yaml`
 
