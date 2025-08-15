@@ -1,3 +1,11 @@
+### [4.1.3-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.2...v4.1.3-dev.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* Don't trigger action on touchcancel event ([#808](https://github.com/custom-cards/button-card/issues/808)) ([ebbbb31](https://github.com/custom-cards/button-card/commit/ebbbb318ebcfd73a32cae5a6defbcea9e1336ae0)), closes [#914](https://github.com/custom-cards/button-card/issues/914)
+* Replace deprecated --paper-item-icon-color ([#925](https://github.com/custom-cards/button-card/issues/925)) ([8e34b84](https://github.com/custom-cards/button-card/commit/8e34b841dde312b4b4fd5a535303e6b1800d8adb)), closes [#924](https://github.com/custom-cards/button-card/issues/924)
+
 ### [4.1.2](https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2) (2024-02-01)
 
 
