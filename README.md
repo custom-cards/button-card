@@ -9,7 +9,7 @@
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io/t/lovelace-button-card/65981
 [license-shield]: https://img.shields.io/github/license/custom-cards/button-card.svg
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
 [releases-shield]: https://img.shields.io/github/release/custom-cards/button-card.svg
 [releases]: https://github.com/custom-cards/button-card/releases/latest
 [releases-dev-shield]: https://img.shields.io/github/package-json/v/custom-cards/button-card/dev?label=release%40dev
