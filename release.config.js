@@ -10,6 +10,7 @@ module.exports = {
           types: [
             { type: 'feat', section: 'Features' },
             { type: 'fix', section: 'Bug Fixes' },
+            { type: 'Fix', section: 'Bug Fixes' },
             { type: 'doc', hidden: false, section: 'Documentation' },
             { type: 'docs', hidden: false, section: 'Documentation' },
             { type: 'chore', hidden: true, section: 'Chores' },
