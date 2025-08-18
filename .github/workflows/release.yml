@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16.x
       - name: Cache Node.js modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
           key: ${{ runner.OS }}-node-16.x-${{ hashFiles('**/yarn.lock') }}
