@@ -8,11 +8,12 @@ import json from '@rollup/plugin-json';
 import cleanup from 'rollup-plugin-cleanup';
 
 const dev = process.env.ROLLUP_WATCH;
+const port = process.env.PORT || 5000;
 
 const serveopts = {
   contentBase: ['./dist'],
   host: '0.0.0.0',
-  port: 5000,
+  port: port,
   allowCrossOrigin: true,
   headers: {
     'Access-Control-Allow-Origin': '*',
