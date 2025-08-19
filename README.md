@@ -121,6 +121,8 @@ Lovelace Button card for your entities.
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `show_live_stream` | boolean | `false` | `true` \| `false` | Display the camera stream (if the entity is a camera). Requires the `stream:` component to be enabled in home-assistant's config |
+| `live_stream_aspect_ratio` | string | optional | `16x9`, `50%`, `1.78` ... | See home-assistant Picture Entity card [aspect_ratio](https://www.home-assistant.io/dashboards/picture-entity/#aspect_ratio) for valid options | 
+| `live_stream_fit_mode` | string | optional | `cover`, `contain`, `fill` | See home-assistant Picture Entity card [fit_mod](https://www.home-assistant.io/dashboards/picture-entity/#fit_mode) for information on how each option works |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#javascript-templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
 | `styles` | object list | optional |  | See [styles](#styles) |
