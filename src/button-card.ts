@@ -185,13 +185,12 @@ class ButtonCard extends LitElement {
 
       this._evaluateVariablesSkipError(this._stateObj);
 
-      const entityDomain = computeDomain(this._config!.entity!);
-      if (this._config!.entity && DOMAINS_TOGGLE.has(entityDomain)) {
+      if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
         this._config = {
           tap_action: { action: 'toggle' },
           ...this._config!,
         };
-      } else if (this._config!.entity && DOMAINS_PRESS.has(entityDomain)) {
+      } else if (this._config!.entity && DOMAINS_PRESS.has(computeDomain(this._config!.entity))) {
         this._config = {
           tap_action: {
             action: 'call-service',
