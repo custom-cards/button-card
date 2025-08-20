@@ -52,6 +52,7 @@ import {
   AUTO_COLORS,
   DEFAULT_COLOR,
   DOMAINS_TOGGLE,
+  DOMAINS_PRESS,
   OVERRIDE_CARD_BACKGROUND_COLOR_COLORS,
   OVERRIDE_CARD_BACKGROUND_COLOR_COLOR_TYPE,
 } from './common/const';
@@ -184,9 +185,19 @@ class ButtonCard extends LitElement {
 
       this._evaluateVariablesSkipError(this._stateObj);
 
-      if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
+      const entityDomain = computeDomain(this._config!.entity!);
+      if (this._config!.entity && DOMAINS_TOGGLE.has(entityDomain)) {
         this._config = {
           tap_action: { action: 'toggle' },
+          ...this._config!,
+        };
+      } else if (this._config!.entity && DOMAINS_PRESS.has(entityDomain)) {
+        this._config = {
+          tap_action: {
+            action: 'call-service',
+            service: 'input_button.press',
+            target: { entity_id: this._config!.entity },
+          },
           ...this._config!,
         };
       } else if (this._config!.entity) {
