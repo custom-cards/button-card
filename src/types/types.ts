@@ -26,6 +26,8 @@ export interface ButtonCardConfig {
   show_last_changed?: boolean;
   show_label?: boolean;
   show_live_stream?: boolean;
+  live_stream_aspect_ratio?: string;
+  live_stream_fit_mode?: 'cover' | 'contain' | 'fill';
   label?: string;
   numeric_precision?: number;
   entity_picture?: string;

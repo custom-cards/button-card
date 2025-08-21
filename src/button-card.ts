@@ -1190,7 +1190,9 @@ class ButtonCard extends LitElement {
           .hass=${this._hass}
           .cameraImage=${this._config!.entity}
           .entity=${this._config!.entity}
-          cameraView="live"
+          .cameraView=${'live'}
+          .aspectRatio=${this._config!.live_stream_aspect_ratio}
+          .fitMode=${this._config!.live_stream_fit_mode}
           style=${styleMap(style)}
         ></hui-image>
       `;
