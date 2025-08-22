@@ -115,7 +115,7 @@ class ButtonCard extends LitElement {
 
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 
-  private _hasTemplate?: boolean;
+  private _triggersAll?: boolean;
 
   private _stateObj: HassEntity | undefined;
 
@@ -233,8 +233,8 @@ class ButtonCard extends LitElement {
         this._entities.push(this._config!.entity);
       this._expandTriggerGroups();
 
-      const rxp = new RegExp('\\[\\[\\[.*\\]\\]\\]', 'm');
-      this._hasTemplate = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
+      const rxp = new RegExp('(?:[^\\[]|^)\\[{3}[^\\[].*[^\\]]\\]{3}(?:[^\\]]|$)', 's');
+      this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
       this._initialSetupComplete = true;
@@ -292,7 +292,7 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    const forceUpdate = this._hasTemplate || changedProps.has('_timeRemaining') ? true : false;
+    const forceUpdate = this._triggersAll || changedProps.has('_timeRemaining') ? true : false;
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
       this._expandTriggerGroups();
       return true;
@@ -547,8 +547,16 @@ class ButtonCard extends LitElement {
       return value;
     }
     const trimmed = value.trim();
-    if (trimmed.substring(0, 3) === '[[[' && trimmed.slice(-3) === ']]]') {
-      return this._evalTemplate(state, trimmed.slice(3, -3));
+    const rx = new RegExp('(\\[{3,})(.*?)(\\]{3,})', 's');
+    const match = trimmed.match(rx);
+    if (match && match.length === 4) {
+      if (match[1].length === 3 && match[3].length === 3) {
+        return this._evalTemplate(state, match[2]);
+      } else if (match[1].length === match[3].length) {
+        return trimmed.slice(1, -1);
+      } else {
+        return value;
+      }
     } else {
       return value;
     }

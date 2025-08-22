@@ -301,6 +301,8 @@ If your entity, any entity in the `triggers_update` field or any entity matched 
 
 The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brackets: `[[[ javascript function here ]]]`
 
+If you are using a template in a nested `custom:button-card`, either in a custom field or config for an action (e.g. `custom:button-card` as content in `browser_mod.popup`) then you can include your template in extra enclosing `[]` pair. The template will then be rendered in the nested `custom:button-card` with the extra enclosing `[]` pair removed. Template nesting can be at multiple levels, just include another enclosing `[]` pair.
+
 Don't forget to quote if it's on one line:
 
 ```yaml
@@ -824,7 +826,7 @@ Examples are better than a long text, so here you go:
       action: more-info
   ```
 
-To skip evaluating the templates in a custom_field (eg. you embed a `custom:button-card` inside a Custom Field), then you have to set `do_not_eval` to `true`.
+To use nested templates in a custom_field (eg. you embed a `custom:button-card` inside a Custom Field and then template is for the `custom:button-card`), then use an extra `[]` pair around your template. You may also set `do_not_eval` to `true` to skip evaluating the template (DEPRECATED). See [javascript templates](#javascript-templates) for more information on using templates in nested `custom:button-card`.
 
 ```yaml
 type: custom:button-card
@@ -843,8 +845,18 @@ custom_fields:
       ## as it is evaluated in the context of the
       ## main card (which doesn't know about c)
       name: '[[[ return `B: ${variables.b} / C: ${variables.c}` ]]]'
-  test2:
-    ## This stops the evaluation of js templates
+  test3:
+    ## Nested template
+    card:
+      type: custom:button-card
+      variables:
+        c: 42
+      ## This will return: B: undefined / C: 42
+      ## as it is evaluated in the context of the local button-card
+      ## inside the custom_field (which doesn't know about b)
+      name: '[[[[ return `B: ${variables.b} / C: ${variables.c}` ]]]]'
+  test3:
+    ## (DEPRECATED) This stops the evaluation of js templates
     ## for the card object in this custom field
     do_not_eval: true
     card:
@@ -1464,6 +1476,27 @@ Example with `template`:
     - operator: default
       icon: mdi:white-balance-sunny
       label: Day Mode
+```
+
+#### Nested `custom:button-card`
+
+A simple nested example. This could be completed with a non-nested card, but the simplicity of this example is to show using templates in nested button cards. 
+
+```yaml
+type: custom:button-card
+custom_fields:
+  nested:
+    card:
+      type: custom:button-card
+      entity: light.bed_light
+      name: >
+        [[[[
+          // template has 4 opening and closing '[]'
+          return entity?.state === 'on' ? 'Light On' : 'Light Off';
+        ]]]]
+styles:
+  grid:
+    - grid-template-areas: '"nested"'
 ```
 
 ### Styling
