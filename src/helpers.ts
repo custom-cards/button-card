@@ -1,6 +1,6 @@
 import { PropertyValues } from 'lit';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
-import { HomeAssistant } from './types/homeassistant';
+import { HomeAssistant, ResolvedMediaSource } from './types/homeassistant';
 import { LovelaceConfig } from './types/lovelace';
 import { StateConfig } from './types/types';
 import { HassEntity, HassEntityAttributeBase, HassEntityBase } from 'home-assistant-js-websocket';
@@ -103,9 +103,9 @@ export function applyBrightnessToColor(elt: Element, color: string, brightness: 
   return color;
 }
 
-// Check if config or Entity changed
+// Check if config or Entity or picture changed
 export function myHasConfigOrEntityChanged(element: any, changedProps: PropertyValues): boolean {
-  if (changedProps.has('_config')) {
+  if (changedProps.has('_config') || changedProps.has('_picture')) {
     return true;
   }
 
@@ -361,3 +361,11 @@ export function secondsToDuration(d: number): string | null {
 export function isNumericFromAttributes(attributes: HassEntityAttributeBase): boolean {
   return !!attributes.unit_of_measurement || !!attributes.state_class;
 }
+
+export const isMediaSourceContentId = (mediaId: string) => mediaId.startsWith('media-source://');
+
+export const resolveMediaSource = (hass: HomeAssistant, media_content_id: string) =>
+  hass.callWS<ResolvedMediaSource>({
+    type: 'media_source/resolve_media',
+    media_content_id,
+  });

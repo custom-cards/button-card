@@ -40,6 +40,8 @@ import {
   computeStateDomain,
   stateActive,
   computeCssVariable,
+  isMediaSourceContentId,
+  resolveMediaSource,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -113,6 +115,8 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
+  @property() private _picture?: string;
+
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 
   private _hasTemplate?: boolean;
@@ -130,6 +134,8 @@ class ButtonCard extends LitElement {
   private _entities: string[] = [];
 
   private _initialSetupComplete = false;
+
+  private _rawPicture?: string;
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
@@ -1143,14 +1149,25 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    if (shouldShowIcon || entityPicture) {
+    if (entityPicture !== this._rawPicture) {
+      this._rawPicture = entityPicture;
+      if (this._rawPicture && isMediaSourceContentId(this._rawPicture)) {
+        resolveMediaSource(this._hass!, this._rawPicture)
+          .then((resolved) => (this._picture = resolved.url))
+          .catch(() => (this._picture = undefined));
+      } else {
+        this._picture = this._rawPicture;
+      }
+    }
+
+    if (shouldShowIcon || this._picture) {
       let domain: string | undefined = undefined;
       if (state) {
         domain = computeStateDomain(state);
       }
       return html`
         <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
-          ${shouldShowIcon && !entityPicture && !liveStream
+          ${shouldShowIcon && !this._picture && !liveStream
             ? html`
                 <ha-state-icon
                   .state=${state}
@@ -1166,10 +1183,10 @@ class ButtonCard extends LitElement {
               `
             : ''}
           ${liveStream ? liveStream : ''}
-          ${entityPicture && !liveStream
+          ${this._picture && !liveStream
             ? html`
                 <img
-                  src="${entityPicture}"
+                  src=${this._picture}
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
