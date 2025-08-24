@@ -803,10 +803,11 @@ Examples are better than a long text, so here you go:
           type: sensor
           entity: sensor.sensor1
           graph: line
-          style: |
-            ha-card {
-              box-shadow: none;
-            }
+          card_mod:
+            style: |
+              ha-card {
+                box-shadow: none;
+              }
     styles:
       custom_fields:
         graph:
