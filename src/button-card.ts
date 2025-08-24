@@ -3,6 +3,7 @@
 import { LitElement, html, TemplateResult, CSSResult, PropertyValues } from 'lit';
 import { customElement, property, queryAsync, eventOptions } from 'lit/decorators';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { until } from 'lit/directives/until.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
@@ -21,6 +22,7 @@ import {
   ButtonCardEmbeddedCardsConfig,
   ColorType,
   CustomFields,
+  EntityPicture,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -115,8 +117,6 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
-  @property() private _picture?: string;
-
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 
   private _hasTemplate?: boolean;
@@ -134,8 +134,6 @@ class ButtonCard extends LitElement {
   private _entities: string[] = [];
 
   private _initialSetupComplete = false;
-
-  private _rawPicture?: string;
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
@@ -645,7 +643,7 @@ class ButtonCard extends LitElement {
     return this._getTemplateOrValue(state, icon);
   }
 
-  private _buildEntityPicture(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
+  private _buildEntityPicture(state: HassEntity | undefined, configState: StateConfig | undefined): EntityPicture {
     if (!this._config!.show_entity_picture || (!state && !configState && !this._config!.entity_picture)) {
       return undefined;
     }
@@ -658,7 +656,13 @@ class ButtonCard extends LitElement {
     } else if (state) {
       entityPicture = state.attributes && state.attributes.entity_picture ? state.attributes.entity_picture : undefined;
     }
-    return this._getTemplateOrValue(state, entityPicture);
+    const entityPictureTemplate = this._getTemplateOrValue(state, entityPicture);
+    if (entityPictureTemplate && isMediaSourceContentId(entityPictureTemplate)) {
+      return resolveMediaSource(this._hass!, entityPictureTemplate)
+        .then((resolved) => resolved.url)
+        .catch(() => '');
+    }
+    return entityPictureTemplate;
   }
 
   private _buildStyleGeneric(
@@ -1149,25 +1153,14 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    if (entityPicture !== this._rawPicture) {
-      this._rawPicture = entityPicture;
-      if (this._rawPicture && isMediaSourceContentId(this._rawPicture)) {
-        resolveMediaSource(this._hass!, this._rawPicture)
-          .then((resolved) => (this._picture = resolved.url))
-          .catch(() => (this._picture = undefined));
-      } else {
-        this._picture = this._rawPicture;
-      }
-    }
-
-    if (shouldShowIcon || this._picture) {
+    if (shouldShowIcon || entityPicture) {
       let domain: string | undefined = undefined;
       if (state) {
         domain = computeStateDomain(state);
       }
       return html`
         <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
-          ${shouldShowIcon && !this._picture && !liveStream
+          ${shouldShowIcon && !entityPicture && !liveStream
             ? html`
                 <ha-state-icon
                   .state=${state}
@@ -1183,10 +1176,10 @@ class ButtonCard extends LitElement {
               `
             : ''}
           ${liveStream ? liveStream : ''}
-          ${this._picture && !liveStream
+          ${entityPicture && !liveStream
             ? html`
                 <img
-                  src=${this._picture}
+                  src=${until(entityPicture)}
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
