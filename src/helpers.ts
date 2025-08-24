@@ -103,7 +103,7 @@ export function applyBrightnessToColor(elt: Element, color: string, brightness: 
   return color;
 }
 
-// Check if config or Entity or picture changed
+// Check if config or Entity changed
 export function myHasConfigOrEntityChanged(element: any, changedProps: PropertyValues): boolean {
   if (changedProps.has('_config')) {
     return true;
