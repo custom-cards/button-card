@@ -3,6 +3,7 @@
 import { LitElement, html, TemplateResult, CSSResult, PropertyValues } from 'lit';
 import { customElement, property, queryAsync, eventOptions } from 'lit/decorators';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { until } from 'lit/directives/until.js';
 import { Ripple } from '@material/mwc-ripple';
 import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
@@ -21,6 +22,7 @@ import {
   ButtonCardEmbeddedCardsConfig,
   ColorType,
   CustomFields,
+  EntityPicture,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -40,6 +42,8 @@ import {
   computeStateDomain,
   stateActive,
   computeCssVariable,
+  isMediaSourceContentId,
+  resolveMediaSource,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -639,7 +643,7 @@ class ButtonCard extends LitElement {
     return this._getTemplateOrValue(state, icon);
   }
 
-  private _buildEntityPicture(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
+  private _buildEntityPicture(state: HassEntity | undefined, configState: StateConfig | undefined): EntityPicture {
     if (!this._config!.show_entity_picture || (!state && !configState && !this._config!.entity_picture)) {
       return undefined;
     }
@@ -652,7 +656,13 @@ class ButtonCard extends LitElement {
     } else if (state) {
       entityPicture = state.attributes && state.attributes.entity_picture ? state.attributes.entity_picture : undefined;
     }
-    return this._getTemplateOrValue(state, entityPicture);
+    const entityPictureTemplate = this._getTemplateOrValue(state, entityPicture);
+    if (entityPictureTemplate && isMediaSourceContentId(entityPictureTemplate)) {
+      return resolveMediaSource(this._hass!, entityPictureTemplate)
+        .then((resolved) => resolved.url)
+        .catch(() => '');
+    }
+    return entityPictureTemplate;
   }
 
   private _buildStyleGeneric(
@@ -1169,7 +1179,7 @@ class ButtonCard extends LitElement {
           ${entityPicture && !liveStream
             ? html`
                 <img
-                  src="${entityPicture}"
+                  src=${until(entityPicture)}
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
