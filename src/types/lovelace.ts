@@ -21,6 +21,7 @@ export interface LovelaceCard extends HTMLElement {
   hass?: HomeAssistant;
   isPanel?: boolean;
   editMode?: boolean;
+  preview?: boolean;
   getCardSize(): number | Promise<number>;
   setConfig(config: LovelaceCardConfig): void;
 }
@@ -211,7 +212,7 @@ export type ActionConfig =
   | NoActionConfig
   | CustomActionConfig;
 
-type LovelaceUpdatedEvent = HassEventBase & {
+export type LovelaceUpdatedEvent = HassEventBase & {
   event_type: 'lovelace_updated';
   data: {
     url_path: string | null;
