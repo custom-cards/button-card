@@ -1,3 +1,21 @@
+## [4.2.0-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.3-dev.1...v4.2.0-dev.1) (2025-08-27)
+
+### Features
+
+* Allow *_action to be a template string returning an object ([#945](https://github.com/custom-cards/button-card/issues/945)) ([b235a04](https://github.com/custom-cards/button-card/commit/b235a04bebe551585b6d4ab445be58483147bc7b)), closes [#850](https://github.com/custom-cards/button-card/issues/850) [#611](https://github.com/custom-cards/button-card/issues/611) [#543](https://github.com/custom-cards/button-card/issues/543) [#425](https://github.com/custom-cards/button-card/issues/425)
+* Support nested templates on nested button cards ([#942](https://github.com/custom-cards/button-card/issues/942)) ([795d3d6](https://github.com/custom-cards/button-card/commit/795d3d644d624d3b4d2d51a34d3fcc6e340c754c)), closes [#544](https://github.com/custom-cards/button-card/issues/544) [#620](https://github.com/custom-cards/button-card/issues/620) [#880](https://github.com/custom-cards/button-card/issues/880) [#879](https://github.com/custom-cards/button-card/issues/879) [#730](https://github.com/custom-cards/button-card/issues/730)
+
+### Bug Fixes
+
+* Fix camera live stream refresh and support aspect ratio & fit mode ([#944](https://github.com/custom-cards/button-card/issues/944)) ([bd9fa97](https://github.com/custom-cards/button-card/commit/bd9fa97665851ba93709a44398d076a2a805ee00)), closes [#913](https://github.com/custom-cards/button-card/issues/913)
+* input_button entity to default to input_button.press for tap_action ([#949](https://github.com/custom-cards/button-card/issues/949)) ([f8e19fd](https://github.com/custom-cards/button-card/commit/f8e19fdfbce89ab9d6daab36fe8dcf48708a8b6f)), closes [#531](https://github.com/custom-cards/button-card/issues/531) [#572](https://github.com/custom-cards/button-card/issues/572)
+* Update button-card error display ([#958](https://github.com/custom-cards/button-card/issues/958)) ([921b6eb](https://github.com/custom-cards/button-card/commit/921b6eb2ebd523ba3cc8f325537b1b5107aaddf1))
+
+### Documentation
+
+* Update card_mod example configuration in README.md ([#953](https://github.com/custom-cards/button-card/issues/953)) ([89dacd6](https://github.com/custom-cards/button-card/commit/89dacd6d6c138a52347d435a78a5a2909d2fa136)), closes [#817](https://github.com/custom-cards/button-card/issues/817)
+* Update installation instructions ([#943](https://github.com/custom-cards/button-card/issues/943)) ([c4c0be8](https://github.com/custom-cards/button-card/commit/c4c0be821b75f92d759c6e87f0cf97eede3675e3)), closes [#912](https://github.com/custom-cards/button-card/issues/912)
+
 ### [4.1.3-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.2...v4.1.3-dev.1) (2025-08-15)
 
 
