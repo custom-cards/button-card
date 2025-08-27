@@ -1483,6 +1483,17 @@ views:
               name: '[[[[ return (entity?.entity_id || "4[ ]: main button entity not known"); ]]]]'
               label: '[[[ return `3[ ]: ${(entity?.entity_id || "main button state not known")}`; ]]]'
               show_label: true
+
+      - type: custom:button-card
+        entity: switch.skylight
+        name: Should show more-info on click
+        tap_action: >
+          [[[ return {
+            action: 'more-info',
+            entity: entity.entity_id,
+          }; ]]]
+
+
   # second view
   - title: 2nd
     cards:

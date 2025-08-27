@@ -138,7 +138,7 @@ Lovelace Button card for your entities.
 
 ### Action
 
-All the fields support templates, see [templates](#javascript-templates).
+All the fields support templates, see [templates](#javascript-templates). You may also provide a single template for the action itself. Such a template needs to return a javascript object that includes the fields below.
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
@@ -153,6 +153,37 @@ All the fields support templates, see [templates](#javascript-templates).
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
 | `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. |
 | `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+
+Example - specifying fields directly:
+
+```yaml
+type: custom:button-card
+entity: light.bed_light
+tap_action:
+  action: call-service
+  service: light.turn_off
+  target:
+    entity_id: "[[[ return entity.entity_id ]]]"
+```
+
+Example - using a template for action:
+
+```yaml
+type: custom:button-card
+variables:
+  my_action_object: |
+    [[[
+      if (entity.state == "on") 
+        return { 
+          action: "call-service", 
+          service: "light.turn_off", 
+          target: { entity_id: entity.entity_id }
+        }
+      else return { action: "none" }
+    ]]]
+entity: light.bed_light
+tap_action: "[[[ return variables.my_action_object ]]]"
+```
 
 ### Confirmation
 

@@ -1309,6 +1309,9 @@ class ButtonCard extends LitElement {
       if (!configEval) {
         return configEval;
       }
+      if (typeof configEval === 'string') {
+        return this._getTemplateOrValue(this._stateObj, configEval);
+      }
       Object.keys(configEval).forEach((key) => {
         if (typeof configEval[key] === 'object') {
           configEval[key] = __evalObject(configEval[key]);
