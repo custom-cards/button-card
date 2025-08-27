@@ -32,6 +32,7 @@ Lovelace Button card for your entities.
   - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
+  - [Sections views](#sections-views)
   - [Layout](#layout)
   - [`triggers_update`](#triggers_update)
   - [Javascript Templates](#javascript-templates)
@@ -46,8 +47,8 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
     - [Variables](#variables)
 - [Installation](#installation)
+  - [Installation and tracking with `HACS`](#installation-and-tracking-with-hacs)
   - [Manual Installation](#manual-installation)
-  - [Installation and tracking with `hacs`](#installation-and-tracking-with-hacs)
 - [Examples](#examples)
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
@@ -58,6 +59,7 @@ Lovelace Button card for your entities.
   - [Templates Support](#templates-support)
     - [Playing with label templates](#playing-with-label-templates)
     - [State Templates](#state-templates)
+    - [Nested `custom:button-card`](#nested-custombutton-card)
   - [Styling](#styling)
   - [Lock](#lock)
   - [Aspect Ratio](#aspect-ratio)
@@ -99,6 +101,7 @@ Lovelace Button card for your entities.
 | `type` | string | **Required** | `custom:button-card` | Type of the card |
 | `template` | string | optional | any valid template from `button_card_templates` | See [configuration template](#Configuration-Templates) |
 | `entity` | string | optional | `switch.ac` | entity_id |
+| `section_mode` | boolean | optional | `true` \| `false` | Set it to `true` when the card is used in a sections view. See [Sections views](#sections-views) |
 | `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggers_update) |
 | `group_expand` | boolean | false | `true` \| `false` | When `true`, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See [triggers_update](#triggers_update) |
 | `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
@@ -121,7 +124,7 @@ Lovelace Button card for your entities.
 | `show_last_changed` | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
 | `show_entity_picture` | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `show_live_stream` | boolean | `false` | `true` \| `false` | Display the camera stream (if the entity is a camera). Requires the `stream:` component to be enabled in home-assistant's config |
-| `live_stream_aspect_ratio` | string | optional | `16x9`, `50%`, `1.78` ... | See home-assistant Picture Entity card [aspect_ratio](https://www.home-assistant.io/dashboards/picture-entity/#aspect_ratio) for valid options | 
+| `live_stream_aspect_ratio` | string | optional | `16x9`, `50%`, `1.78` ... | See home-assistant Picture Entity card [aspect_ratio](https://www.home-assistant.io/dashboards/picture-entity/#aspect_ratio) for valid options |
 | `live_stream_fit_mode` | string | optional | `cover`, `contain`, `fill` | See home-assistant Picture Entity card [fit_mod](https://www.home-assistant.io/dashboards/picture-entity/#fit_mode) for information on how each option works |
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see [templates](#javascript-templates) |
 | `units` | string | optional | `Kb/s`, `lux`, ... | Override or define the units to display after the state of the entity. If omitted, it's using the entity's units |
@@ -163,7 +166,7 @@ tap_action:
   action: call-service
   service: light.turn_off
   target:
-    entity_id: "[[[ return entity.entity_id ]]]"
+    entity_id: '[[[ return entity.entity_id ]]]'
 ```
 
 Example - using a template for action:
@@ -173,16 +176,16 @@ type: custom:button-card
 variables:
   my_action_object: |
     [[[
-      if (entity.state == "on") 
-        return { 
-          action: "call-service", 
-          service: "light.turn_off", 
+      if (entity.state == "on")
+        return {
+          action: "call-service",
+          service: "light.turn_off",
           target: { entity_id: entity.entity_id }
         }
       else return { action: "none" }
     ]]]
 entity: light.bed_light
-tap_action: "[[[ return variables.my_action_object ]]]"
+tap_action: '[[[ return variables.my_action_object ]]]'
 ```
 
 ### Confirmation
@@ -273,6 +276,55 @@ The order of your elements in the `state` object matters. The first one which is
 | `regex` | `'^norm.*$'` | `value` regex applied to current state does match |
 | `template` |  | See [templates](#javascript-templates) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
 | `default` | N/A | If nothing matches, this is used |
+
+### Sections views
+
+You can use this card in [sections views](https://www.home-assistant.io/dashboards/sections/) (the default in home assistant since early 2024).
+
+To enabled compatibility with sections (meaning the card adjusts its size automatically and aligns with the other cards), you need to add `section_mode: true` to the configuration of your card. This will set the CSS card height to 100% and allow modification of its size using the default `grid_options` available with all cards used in sections.
+
+For users with heavily modified cards using `styles`, you might need to adjust your configuration once enabling `section_mode`.
+
+⚠️ While `section_mode` is enabled: using `aspect_ratio` or setting the card's `height` or `width` using CSS will probably the layout and is considered incompatible. There might be other incompatible options, if you find any, please update this documentation by submitting a PR.
+
+![section_mode_true](examples/section_mode.png)
+
+```yaml
+views:
+  - title: Grid
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 1
+            section_mode: true
+            grid_options:
+              rows: 4
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 2
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 3
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 4
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 12
+```
 
 ### Layout
 
@@ -1088,7 +1140,7 @@ name: '[[[ return variables.value; ]]]'
 
 1. Download [button-card.js](http://www.github.com/custom-cards/button-card/releases/latest/download/button-card.js)
 2. Place the file in your `config/www` folder
-3. Add `/local/button_card.js` as a [dashboard JavaScript module resource](https://developers.home-assistant.io/docs/frontend/custom-ui/registering-resources/). 
+3. Add `/local/button_card.js` as a [dashboard JavaScript module resource](https://developers.home-assistant.io/docs/frontend/custom-ui/registering-resources/).
 
 > Note: Your browser may block the download link as the file is a javascript file. If the link seems to do nothing, copy the link address and use directly in your browser's address bar where you will most likely get prompt on whether to allow the download or not.
 
@@ -1501,7 +1553,7 @@ Example with `template`:
 
 #### Nested `custom:button-card`
 
-A simple nested example. This could be completed with a non-nested card, but the simplicity of this example is to show using templates in nested button cards. 
+A simple nested example. This could be completed with a non-nested card, but the simplicity of this example is to show using templates in nested button cards.
 
 ```yaml
 type: custom:button-card
@@ -1515,6 +1567,8 @@ custom_fields:
           // template has 4 opening and closing '[]'
           return entity?.state === 'on' ? 'Light On' : 'Light Off';
         ]]]]
+
+
 styles:
   grid:
     - grid-template-areas: '"nested"'

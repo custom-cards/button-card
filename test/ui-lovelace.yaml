@@ -1874,6 +1874,39 @@ views:
               rows: 1
               columns: 6
 
+      - type: grid
+        cards:
+          - type: heading
+            heading: Demo README
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 1
+            section_mode: true
+            grid_options:
+              rows: 4
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 2
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 3
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 4
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 12
+
   # second view
   - title: 2nd
     cards:
