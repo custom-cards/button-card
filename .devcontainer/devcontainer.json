@@ -1,40 +1,45 @@
-// See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
   "name": "Button Card Development",
-  "image": "ghcr.io/ludeeus/devcontainer/generic:latest",
-  "context": "..",
-  "remoteUser": "vscode",
-  "appPort": ["5000:5000", "9123:8123"],
-  "postCreateCommand": "yarn install && sudo container install",
-  "runArgs": ["-v", "${localWorkspaceFolder}/.devcontainer/www:/config/www"],
-  "extensions": [
-    "github.vscode-pull-request-github",
-    "eamodio.gitlens",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "bierner.lit-html",
-    "runem.lit-plugin",
-    "davidanson.vscode-markdownlint",
-    "redhat.vscode-yaml",
-    "msjsdiag.debugger-for-chrome",
-    "yzhang.markdown-all-in-one"
+  "image": "thomasloven/hass-custom-devcontainer",
+  "runArgs": ["--env-file", "${localWorkspaceFolder}/test/.env"],
+  "appPort": ["8123:8123", "5000:5000"],
+  "postCreateCommand": "sudo --preserve-env=PATH -E uv pip install --upgrade --force-reinstall homeassistant && sudo --preserve-env=PATH -E uv pip show homeassistant | grep -i version: | cut -d ' ' -f 2 | sudo tee /config/.HA_VERSION && sudo --preserve-env=PATH -E container setup && yarn install --frozen-lockfile",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/config/www/workspace,type=bind",
+    "source=${localWorkspaceFolder}/test,target=/config/test,type=bind",
+    "source=${localWorkspaceFolder}/test/configuration.yaml,target=/config/configuration.yaml,type=bind"
   ],
-  "settings": {
-    "files.eol": "\n",
-    "editor.tabSize": 2,
-    "terminal.integrated.shell.linux": "/bin/bash",
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "markdown.extension.toc.githubCompatibility": true,
-    "files.watcherExclude": {
-      "**/.git/objects/**": true,
-      "**/.git/subtree-cache/**": true,
-      "**/node_modules/**": true,
-      "**/.hg/store/**": true,
-      "**/.rpt2_cache/**": true
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "dbaeumer.vscode-eslint",
+        "redhat.vscode-yaml",
+        "yzhang.markdown-all-in-one",
+        "esbenp.prettier-vscode",
+        "bierner.lit-html",
+        "cschleiden.vscode-github-actions"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 2,
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true,
+        "markdown.extension.toc.githubCompatibility": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.watcherExclude": {
+          "**/.git/objects/**": true,
+          "**/.git/subtree-cache/**": true,
+          "**/node_modules/**": true,
+          "**/.hg/store/**": true,
+          "**/.rpt2_cache/**": true
+        },
+        "markdown.extension.tableFormatter.enabled": false
+      }
     }
   }
 }

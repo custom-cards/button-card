@@ -8,7 +8,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
-      "url": "http://127.0.0.1:9123",
+      "url": "http://127.0.0.1:8123",
       "webRoot": "${workspaceFolder}/dist",
       "preLaunchTask": "debug",
       "postDebugTask": "devcontainer: stop debug",

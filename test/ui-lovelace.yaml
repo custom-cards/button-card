@@ -7,7 +7,7 @@ decluttering_templates:
   test_default:
     card:
       type: picture-elements
-      image: '/local/cast.jpg'
+      image: '/local/workspace/test/www/cast.jpg'
       elements:
         - type: state-label
           entity: '[[entity]]'
@@ -337,7 +337,7 @@ views:
         color_type: card
         show_entity_picture: true
         name: Entity Picture Cast
-        entity_picture: /local/cast.jpg
+        entity_picture: /local/workspace/test/www/cast.jpg
         tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
         styles:
           tooltip:
@@ -1326,10 +1326,9 @@ views:
                 color_type: icon
                 entity: light.test_light
                 label: >
-                  [[[
-                  var bri = states['light.test_light'].attributes.brightness;
-                  return 'Brightness: ' + (bri ? bri : '0') + '%';
-                  ]]]
+                  [[[ var bri = states['light.test_light'].attributes.brightness; return 'Brightness: ' + (bri ? bri : '0') + '%'; ]]]
+
+
                 show_label: true
                 show_state: true
                 size: 10%
@@ -1368,6 +1367,8 @@ views:
                 layout: icon_label
                 label: >
                   [[[ return 'Other State: ' + states['switch.skylight'].state; ]]]
+
+
                 show_label: true
                 show_name: false
                 size: 100%
@@ -1411,6 +1412,8 @@ views:
                         return states['light.test_light'].attributes
                         && (states['light.test_light'].attributes.brightness <= 100)
                       ]]]
+
+
                     icon: mdi:alert
                   - operator: default
                     icon: mdi:lightbulb
@@ -1425,6 +1428,8 @@ views:
                         return states['light.test_light'].attributes
                         && (!states['light.test_light'].attributes.brightness || states['light.test_light'].attributes.brightness <= 100)
                       ]]]
+
+
                     icon: mdi:weather-night
                     label: Night Mode
                   - operator: default
@@ -1951,16 +1956,14 @@ views:
             state:
               - operator: template
                 value: >
-                  var last_changed = new Date(entity.last_changed);
-                  var now = new Date();
-                  return (now - last_changed) / 1000 / 60 / 60 <= 1
+                  var last_changed = new Date(entity.last_changed); var now = new Date(); return (now - last_changed) / 1000 / 60 / 60 <= 1
+
+
                 color: '#FF0000'
                 label: >
-                  [[[
-                  var last_changed = new Date(entity.last_changed);
-                  var now = new Date();
-                  return `${now} <br/>- ${last_changed}`
-                  ]]]
+                  [[[ var last_changed = new Date(entity.last_changed); var now = new Date(); return `${now} <br/>- ${last_changed}` ]]]
+
+
           - type: custom:button-card
             entity: input_number.test
             show_state: true
@@ -2000,9 +2003,9 @@ views:
                 - margin: auto
                 - grid-gap: 0px 10px
             label: >
-              [[[
-              return "Windows: " + 1;
-              ]]]
+              [[[ return "Windows: " + 1; ]]]
+
+
             state:
               - value: 'on'
                 color: rgb(71,39,45) #Red
@@ -2036,6 +2039,8 @@ views:
                 - border-radius: 10px
             label: >
               [[[return 'Windows: ' + 1;]]]
+
+
             state:
               - value: 'on'
                 color: rgb(71,39,45) #Red
@@ -2455,6 +2460,8 @@ views:
                 notification:
                   - background-color: >
                       [[[ if (states['input_number.test'].state == 0) return "green"; return "red" ]]]
+
+
                   - border-radius: 50%
                   - position: absolute
                   - left: 60%
@@ -2466,6 +2473,8 @@ views:
             custom_fields:
               notification: >
                 [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
+
+
           - type: custom:button-card
             icon: >
               [[[
@@ -2473,6 +2482,8 @@ views:
                   return "mdi:fire"
                 return "mdi:lightbulb"
               ]]]
+
+
             entity: switch.skylight
             tap_action:
               action: call-service
@@ -2482,6 +2493,8 @@ views:
                     return "input_number.increment"
                   return "input_number.decrement"
                 ]]]
+
+
               service_data:
                 command: popup
                 title: 'Weather'
@@ -2515,10 +2528,16 @@ views:
                     style="height: 100%; padding-bottom: 2px;">
                   </ha-icon>`
                 ]]]
+
+
               temperature: >
                 [[[ return states['input_number.test'].state ]]]
+
+
               my_state: >
                 [[[ return `My State is: ${entity.state}` ]]]
+
+
             styles:
               grid:
                 - grid-template-areas: '"i temperature_icon temperature" "my_state my_state my_state"'
@@ -2579,6 +2598,8 @@ views:
                       if (entity.state >= 60 && entity.state < 80) return 'orange';
                       else return 'red';
                     ]]]
+
+
                 - width: 70%
                 - margin-top: -10%
               custom_fields:
@@ -2607,6 +2628,8 @@ views:
                     style="width: 12px; height: 12px; color: yellow;">
                     </ha-icon><span>${entity.state}°C</span>`
                 ]]]
+
+
               cpu: >
                 [[[
                   return `<ha-icon
@@ -2614,6 +2637,8 @@ views:
                     style="width: 12px; height: 12px; color: deepskyblue;">
                     </ha-icon><span>CPU: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_cpu'].state}%</span></span>`
                 ]]]
+
+
               ram: >
                 [[[
                   return `<ha-icon
@@ -2621,6 +2646,8 @@ views:
                     style="width: 12px; height: 12px; color: deepskyblue;">
                     </ha-icon><span>RAM: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_ram'].state}%</span></span>`
                 ]]]
+
+
               sd: >
                 [[[
                   return `<ha-icon
@@ -2628,6 +2655,8 @@ views:
                     style="width: 12px; height: 12px; color: deepskyblue;">
                     </ha-icon><span>SD: <span style="color: var(--text-color-sensor);">${states['sensor.raspi_sd'].state}%</span></span>`
                 ]]]
+
+
             #template: button_good
           - type: custom:button-card
             aspect_ratio: 1/1
@@ -2693,8 +2722,9 @@ views:
             return test.value
           ]]]
 
+
         # - type: picture-elements
-        #   image: '/local/cast.jpg'
+        #   image: '/local/workspace/test/www/cast.jpg'
         #   elements:
         #     - type: state-label
         #       entity: switch.skylight
@@ -2735,6 +2765,8 @@ views:
           [[[
             return states['switch.skylight'].state
           ]]]
+
+
         aspect_ratio: 16/10
         tap_action:
           action: none

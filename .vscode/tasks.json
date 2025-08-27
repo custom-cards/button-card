@@ -27,7 +27,7 @@
     {
       "type": "shell",
       "label": "devcontainer: Start HA",
-      "command": "sh -c 'sudo --preserve-env=PATH container start'",
+      "command": "echo 'Starting Home Assistant' && sh -c 'sudo --preserve-env=PATH -E container start'",
       "problemMatcher": {
         "pattern": [
           {
@@ -40,7 +40,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": ".",
-          "endsPattern": "^Start Home Assistant$"
+          "endsPattern": "."
         }
       },
       "group": "test",
