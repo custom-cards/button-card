@@ -978,7 +978,11 @@ class ButtonCard extends LitElement {
     const classList: ClassInfo = {
       'button-card-main': true,
       disabled: !this._isClickable(this._stateObj, configState),
+      section: !!this._config?.section_mode,
     };
+    if (this._config?.section_mode) {
+      this.classList.add('section');
+    }
     if (this._config?.tooltip) {
       this.classList.add('tooltip');
     }
@@ -1335,6 +1339,18 @@ class ButtonCard extends LitElement {
   // distribute all cards over the available columns.
   public getCardSize(): number {
     return this._config?.card_size || 3;
+  }
+
+  public getGridOptions() {
+    if (!this._config?.section_mode) {
+      return undefined;
+    }
+    return {
+      rows: 2,
+      columns: 6,
+      min_rows: 1,
+      min_columns: 1,
+    };
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {

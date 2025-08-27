@@ -1494,6 +1494,25 @@ views:
           }; ]]]
 
 
+  - title: Grid
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: New section
+          - type: button
+            entity: switch.skylight
+            grid_options:
+              rows: 6
+              columns: 3
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 6
+              columns: 3
+
   # second view
   - title: 2nd
     cards:

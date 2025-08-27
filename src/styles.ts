@@ -6,6 +6,11 @@ export const styles = css`
     display: block;
     --state-inactive-color: var(--state-icon-color);
   }
+
+  :host(.section) {
+    display: unset;
+  }
+
   ha-card {
     cursor: pointer;
     overflow: hidden;
@@ -27,6 +32,9 @@ export const styles = css`
   ha-card.disabled {
     pointer-events: none;
     cursor: default;
+  }
+  ha-card.section {
+    height: 100%;
   }
   :host(.tooltip) .tooltiptext {
     pointer-events: none;
@@ -157,6 +165,9 @@ export const styles = css`
     text-align: center;
     align-items: center;
   }
+  .section #container {
+    align-content: center;
+  }
   #img-cell {
     display: flex;
     grid-area: i;
@@ -210,6 +221,12 @@ export const styles = css`
     grid-template-areas: 'i' 'n' 's' 'l';
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content min-content;
+  }
+  .section #container.vertical {
+    grid-template-rows: min-content min-content min-content min-content;
+  }
+  .section #container.vertical:not(.no-icon) #name {
+    margin-top: 8px;
   }
   /* Vertical No Icon */
   #container.vertical.no-icon {

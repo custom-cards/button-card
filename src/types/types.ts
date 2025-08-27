@@ -43,6 +43,7 @@ export interface ButtonCardConfig {
   extra_styles?: string;
   card_size: number;
   tooltip?: string;
+  section_mode?: boolean;
 }
 
 export interface ExternalButtonCardConfig {
