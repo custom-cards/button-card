@@ -10,20 +10,24 @@ on:
 
 jobs:
   lint:
+    strategy:
+      matrix:
+        node-version: [22.x]
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Use Node.js 16.x
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 16.x
+          node-version: ${{ matrix.node-version }}
       - name: Cache Node.js modules
         uses: actions/cache@v4
         with:
           path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-16.x-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-16.x
+            ${{ runner.OS }}-node-${{ matrix.node-version }}
             ${{ runner.OS }}-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -34,7 +38,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v5
