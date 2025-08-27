@@ -223,7 +223,7 @@ export const styles = css`
     grid-template-rows: 1fr min-content min-content min-content;
   }
   .section #container.vertical {
-    grid-template-rows: min-content min-content min-content min-content;
+    grid-template-rows: auto min-content min-content min-content;
   }
   .section #container.vertical:not(.no-icon) #name {
     margin-top: 8px;
@@ -323,17 +323,25 @@ export const styles = css`
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
   }
-
+  .section #container.icon_name {
+    grid-template-rows: auto min-content min-content;
+  }
   #container.icon_state {
     grid-template-areas: 'i s' 'n n' 'l l';
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+  .section #container.icon_state {
+    grid-template-rows: auto min-content min-content;
   }
 
   #container.name_state {
     grid-template-areas: 'i' 'n' 'l';
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+  .section #container.name_state {
+    grid-template-rows: auto min-content min-content;
   }
   #container.name_state.no-icon {
     grid-template-areas: 'n' 'l';
@@ -342,6 +350,9 @@ export const styles = css`
   }
   #container.name_state.no-icon #name {
     align-self: end;
+  }
+  .section #container.name_state:not(.no-icon) #name {
+    margin-top: 8px;
   }
   #container.name_state.no-icon #label {
     align-self: start;
