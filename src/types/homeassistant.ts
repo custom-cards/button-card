@@ -276,3 +276,8 @@ export interface Themes {
   // Currently globally active theme name
   theme: string;
 }
+
+export interface ResolvedMediaSource {
+  url: string;
+  mime_type: string;
+}

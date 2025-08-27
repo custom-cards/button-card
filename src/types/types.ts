@@ -238,3 +238,5 @@ export type ActionConfig =
   | CustomActionConfig;
 
 export type Constructor<T = any> = new (...args: any[]) => T;
+
+export type EntityPicture = Promise<string> | string | undefined;
