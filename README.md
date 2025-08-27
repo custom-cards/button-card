@@ -1568,7 +1568,6 @@ custom_fields:
           return entity?.state === 'on' ? 'Light On' : 'Light Off';
         ]]]]
 
-
 styles:
   grid:
     - grid-template-areas: '"nested"'
