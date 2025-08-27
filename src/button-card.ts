@@ -114,6 +114,8 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
+  @property({ type: Boolean, reflect: true }) preview = false;
+
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
 
   private _triggersAll?: boolean;
@@ -292,10 +294,11 @@ class ButtonCard extends LitElement {
       if (e.stack) console.error(e.stack);
       else console.error(e);
       const errorCard = document.createElement('hui-error-card') as LovelaceCard;
+      errorCard.preview = this.preview;
       errorCard.setConfig({
         type: 'error',
-        error: e.toString(),
-        origConfig: this._config,
+        error: e.name,
+        message: e.message,
       });
       return html` ${errorCard} `;
     }
@@ -306,8 +309,19 @@ class ButtonCard extends LitElement {
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
       this._expandTriggerGroups();
       return true;
+    } else if (changedProps.has('preview')) {
+      return true;
     }
     return false;
+  }
+
+  protected willUpdate(changedProps: PropertyValues): void {
+    if (changedProps.has('preview')) {
+      Object.keys(this._cards).forEach((element) => {
+        const el = this._cards[element];
+        el.preview = this.preview;
+      });
+    }
   }
 
   protected updated(changedProps: PropertyValues): void {
@@ -860,6 +874,7 @@ class ButtonCard extends LitElement {
         let thing;
         if (!deepEqual(this._cardsConfig[key], cards[key])) {
           thing = this._createCard(cards[key]);
+          thing.preview = this.preview;
           this._cards[key] = thing;
           this._cardsConfig[key] = copy(cards[key]);
         } else {
