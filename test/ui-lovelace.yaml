@@ -1465,6 +1465,24 @@ views:
                 name: Always
                 entity: switch.skylight
 
+  - title: Nested Templates
+    cards:
+      - type: custom:button-card
+        entity: switch.skylight
+        show_icon: false
+        name: '[[[ return `Main entity: ${entity.entity_id || "unknown entity"}`; ]]]'
+        styles:
+          grid:
+            - grid-template-areas: '"n" "nested"'
+            - grid-template-columns: 1fr
+            - grid-template-rows: auto auto
+        custom_fields:
+          nested:
+            card:
+              type: 'custom:button-card'
+              name: '[[[[ return (entity?.entity_id || "4[ ]: main button entity not known"); ]]]]'
+              label: '[[[ return `3[ ]: ${(entity?.entity_id || "main button state not known")}`; ]]]'
+              show_label: true
   # second view
   - title: 2nd
     cards:
