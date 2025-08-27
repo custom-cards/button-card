@@ -10,7 +10,8 @@
     "lint": "eslint src/*.ts",
     "watch": "rollup -c --watch",
     "postversion": "npm run build",
-    "audit-fix": "npx yarn-audit-fix"
+    "audit-fix": "npx yarn-audit-fix",
+    "debug": "rollup -c --watch --sourcemap"
   },
   "repository": {
     "type": "git",
