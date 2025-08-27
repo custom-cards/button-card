@@ -980,7 +980,7 @@ class ButtonCard extends LitElement {
       disabled: !this._isClickable(this._stateObj, configState),
       section: !!this._config?.section_mode,
     };
-    if (this._config?.section_mode) {
+    if (!!this._config?.section_mode) {
       this.classList.add('section');
     }
     if (this._config?.tooltip) {
