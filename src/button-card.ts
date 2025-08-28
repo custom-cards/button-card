@@ -44,6 +44,8 @@ import {
   computeCssVariable,
   isMediaSourceContentId,
   resolveMediaSource,
+  findEntities,
+  lovelaceViewIsSection,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -140,6 +142,25 @@ class ButtonCard extends LitElement {
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
+  }
+
+  static getStubConfig(hass: HomeAssistant, entities: string[], entitiesFallback: string[]): ExternalButtonCardConfig {
+    const maxEntities = 1;
+    const foundEntities = findEntities(hass, maxEntities, entities, entitiesFallback, ['light', 'switch']);
+    if (lovelaceViewIsSection()) {
+      return {
+        entity: foundEntities[0] || '',
+        section_mode: true,
+        grid_options: {
+          rows: 2,
+          columns: 6,
+        },
+      };
+    }
+    return {
+      entity: foundEntities[0] || '',
+      section_mode: false,
+    };
   }
 
   public set hass(hass: HomeAssistant) {
