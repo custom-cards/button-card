@@ -102,15 +102,15 @@ console.info(
   'color: white; font-weight: bold; background: dimgray',
 );
 
-let llCreateCardSource: string | undefined = undefined;
+let llCreateCardIsSection: boolean | undefined;
 window.addEventListener(
   'll-create-card',
   (ev) => {
     const composedPath: EventTarget[] = ev.composedPath();
     if (composedPath && composedPath.length > 0) {
-      llCreateCardSource = (composedPath[0] as Element).localName;
+      llCreateCardIsSection = !!composedPath.find((el) => (el as Element).localName === 'hui-grid-section');
     } else {
-      llCreateCardSource = undefined;
+      llCreateCardIsSection = false;
     }
   },
   { capture: true },
@@ -160,7 +160,7 @@ class ButtonCard extends LitElement {
   static getStubConfig(hass: HomeAssistant, entities: string[], entitiesFallback: string[]): ExternalButtonCardConfig {
     const maxEntities = 1;
     const foundEntities = findEntities(hass, maxEntities, entities, entitiesFallback, ['light', 'switch']);
-    if (llCreateCardSource === 'hui-grid-section') {
+    if (llCreateCardIsSection) {
       return {
         entity: foundEntities[0] || '',
         section_mode: true,
