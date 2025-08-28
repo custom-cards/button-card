@@ -112,6 +112,7 @@ export interface LovelaceViewConfig {
     options?: Record<string, unknown>;
   };
   cards?: LovelaceCardConfig[];
+  sections?: LovelaceSectionConfig[];
   path?: string;
   icon?: string;
   theme?: string;
@@ -126,6 +127,7 @@ export interface LovelaceViewElement extends HTMLElement {
   narrow?: boolean;
   index?: number;
   cards?: Array<LovelaceCard>;
+  sections?: Array<LovelaceCard>;
   isStrategy: boolean;
   setConfig(config: LovelaceViewConfig): void;
 }
@@ -146,6 +148,19 @@ export interface LovelaceCardConfig {
   type: string;
   [key: string]: any;
 }
+
+export interface LovelaceSectionConfig {
+  type?: string;
+  cards?: LovelaceCardConfig[];
+}
+
+export const MASONRY_VIEW_LAYOUT = 'masonry';
+export const PANEL_VIEW_LAYOUT = 'panel';
+export const SIDEBAR_VIEW_LAYOUT = 'sidebar';
+export const SECTIONS_VIEW_LAYOUT = 'sections';
+
+export const CARD_LAYOUTS = [MASONRY_VIEW_LAYOUT, PANEL_VIEW_LAYOUT, SIDEBAR_VIEW_LAYOUT];
+export const SECTION_VIEW_LAYOUTS = [SECTIONS_VIEW_LAYOUT];
 
 export interface ToggleActionConfig extends BaseActionConfig {
   action: 'toggle';

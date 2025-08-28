@@ -45,6 +45,7 @@ import {
   isMediaSourceContentId,
   resolveMediaSource,
   findEntities,
+  lovelaceViewIsSection,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -102,20 +103,6 @@ console.info(
   'color: white; font-weight: bold; background: dimgray',
 );
 
-let llCreateCardIsSection: boolean | undefined;
-window.addEventListener(
-  'll-create-card',
-  (ev) => {
-    const composedPath: EventTarget[] = ev.composedPath();
-    if (composedPath && composedPath.length > 0) {
-      llCreateCardIsSection = !!composedPath.find((el) => (el as Element).localName === 'hui-grid-section');
-    } else {
-      llCreateCardIsSection = false;
-    }
-  },
-  { capture: true },
-);
-
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
   type: 'button-card',
@@ -160,15 +147,13 @@ class ButtonCard extends LitElement {
   static getStubConfig(hass: HomeAssistant, entities: string[], entitiesFallback: string[]): ExternalButtonCardConfig {
     const maxEntities = 1;
     const foundEntities = findEntities(hass, maxEntities, entities, entitiesFallback, ['light', 'switch']);
-    if (llCreateCardIsSection) {
+    if (lovelaceViewIsSection()) {
       return {
         entity: foundEntities[0] || '',
         section_mode: true,
         grid_options: {
           rows: 2,
           columns: 6,
-          min_rows: 1,
-          min_columns: 1,
         },
       };
     }

@@ -49,8 +49,6 @@ export interface ButtonCardConfig {
 export interface GridOptions {
   rows?: number;
   columns?: number;
-  min_rows?: number;
-  min_columns?: number;
 }
 
 export interface ExternalButtonCardConfig {

@@ -1,7 +1,14 @@
 import { PropertyValues } from 'lit';
 import tinycolor, { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, ResolvedMediaSource } from './types/homeassistant';
-import { LovelaceConfig } from './types/lovelace';
+import {
+  LovelaceConfig,
+  LovelaceViewConfig,
+  MASONRY_VIEW_LAYOUT,
+  PANEL_VIEW_LAYOUT,
+  SECTION_VIEW_LAYOUTS,
+  SECTIONS_VIEW_LAYOUT,
+} from './types/lovelace';
 import { StateConfig } from './types/types';
 import { HassEntity, HassEntityAttributeBase, HassEntityBase } from 'home-assistant-js-websocket';
 import { OFF, UNAVAILABLE, isUnavailableState } from './common/const';
@@ -182,7 +189,7 @@ export function getLovelaceCast(): any {
   root = root && (root.querySelector('hui-view') || root.querySelector('hui-panel-view'));
   if (root) {
     const ll = root.lovelace;
-    ll.current_view = root.___curView;
+    ll.current_view = root?._curView ?? 0;
     return ll;
   }
   return null;
@@ -201,11 +208,38 @@ export function getLovelace(): LovelaceConfig | null {
   root = root && root.querySelector('hui-root');
   if (root) {
     const ll = root.lovelace;
-    ll.current_view = root.___curView;
+    ll.current_view = root?._curView ?? 0;
     return ll;
   }
   return null;
 }
+
+export function getLovelaceView(): LovelaceViewConfig | undefined {
+  const ll = getLovelace() || getLovelaceCast();
+  return ll?.current_view ? ll.config?.views[ll.current_view] : undefined;
+}
+
+export const getLovelaceViewType = (config?: LovelaceViewConfig): string => {
+  if (config?.type) {
+    return config.type;
+  }
+  if (config?.panel) {
+    return PANEL_VIEW_LAYOUT;
+  }
+  if (config?.sections) {
+    return SECTIONS_VIEW_LAYOUT;
+  }
+  if (config?.cards) {
+    return MASONRY_VIEW_LAYOUT;
+  }
+  return SECTIONS_VIEW_LAYOUT;
+};
+
+export const lovelaceViewIsSection = () => {
+  const llView = getLovelaceView();
+  const llViewType = getLovelaceViewType(llView);
+  return SECTION_VIEW_LAYOUTS.includes(llViewType);
+};
 
 export function slugify(value: string, delimiter = '_'): string {
   const a = 'àáäâãåăæąçćčđďèéěėëêęğǵḧìíïîįłḿǹńňñòóöôœøṕŕřßşśšșťțùúüûǘůűūųẃẍÿýźžż·/_,:;';
