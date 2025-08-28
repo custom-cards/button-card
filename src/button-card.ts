@@ -44,6 +44,7 @@ import {
   computeCssVariable,
   isMediaSourceContentId,
   resolveMediaSource,
+  findEntities,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -101,6 +102,20 @@ console.info(
   'color: white; font-weight: bold; background: dimgray',
 );
 
+let llCreateCardSource: string | undefined = undefined;
+window.addEventListener(
+  'll-create-card',
+  (ev) => {
+    const composedPath: EventTarget[] = ev.composedPath();
+    if (composedPath && composedPath.length > 0) {
+      llCreateCardSource = (composedPath[0] as Element).localName;
+    } else {
+      llCreateCardSource = undefined;
+    }
+  },
+  { capture: true },
+);
+
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
   type: 'button-card',
@@ -140,6 +155,27 @@ class ButtonCard extends LitElement {
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
+  }
+
+  static getStubConfig(hass: HomeAssistant, entities: string[], entitiesFallback: string[]): ExternalButtonCardConfig {
+    const maxEntities = 1;
+    const foundEntities = findEntities(hass, maxEntities, entities, entitiesFallback, ['light', 'switch']);
+    if (llCreateCardSource === 'hui-grid-section') {
+      return {
+        entity: foundEntities[0] || '',
+        section_mode: true,
+        grid_options: {
+          rows: 2,
+          columns: 6,
+          min_rows: 1,
+          min_columns: 1,
+        },
+      };
+    }
+    return {
+      entity: foundEntities[0] || '',
+      section_mode: false,
+    };
   }
 
   public set hass(hass: HomeAssistant) {
