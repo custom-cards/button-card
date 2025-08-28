@@ -281,7 +281,7 @@ The order of your elements in the `state` object matters. The first one which is
 
 You can use this card in [sections views](https://www.home-assistant.io/dashboards/sections/) (the default in home assistant since early 2024).
 
-To enabled compatibility with sections (meaning the card adjusts its size automatically and aligns with the other cards), you need to add `section_mode: true` to the configuration of your card. This will set the CSS card height to 100% and allow modification of its size using the default `grid_options` available with all cards used in sections.
+To enable compatibility with sections (meaning the card adjusts its size automatically and aligns with the other cards), you need to add `section_mode: true` to the configuration of your card. This will set the CSS card height to 100% and allow modification of its size using the default `grid_options` available with all cards used in sections.
 
 For users with heavily modified cards using `styles`, you might need to adjust your configuration once enabling `section_mode`.
 
@@ -1567,6 +1567,7 @@ custom_fields:
           // template has 4 opening and closing '[]'
           return entity?.state === 'on' ? 'Light On' : 'Light Off';
         ]]]]
+
 
 styles:
   grid:
