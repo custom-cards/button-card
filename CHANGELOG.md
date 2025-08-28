@@ -1,3 +1,9 @@
+## [4.2.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.2.0-dev.1...v4.2.0-dev.2) (2025-08-28)
+
+### Features
+
+* Support for sections using `section_mode: true` ([#959](https://github.com/custom-cards/button-card/issues/959)) ([92dd6d2](https://github.com/custom-cards/button-card/commit/92dd6d2f49171b995a8f1f940c27e326045a7a86)), closes [#854](https://github.com/custom-cards/button-card/issues/854)
+
 ## [4.2.0-dev.1](https://github.com/custom-cards/button-card/compare/v4.1.3-dev.1...v4.2.0-dev.1) (2025-08-27)
 
 ### Features
