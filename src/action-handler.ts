@@ -23,6 +23,7 @@ export interface ActionHandlerOptions {
   hasHold?: boolean;
   hasDoubleClick?: boolean;
   disabled?: boolean;
+  stopPropagation?: boolean;
   repeat?: number;
   repeatLimit?: number;
 }
@@ -138,6 +139,9 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     }
 
     element.actionHandler.start = (ev: Event) => {
+      if (options.stopPropagation) {
+        ev.stopPropagation();
+      }
       this.cancelled = false;
       let x;
       let y;
@@ -171,6 +175,9 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     };
 
     element.actionHandler.end = (ev: Event) => {
+      if (options.stopPropagation) {
+        ev.stopPropagation();
+      }
       // Don't respond when moved or scrolled while touch
       if (['touchend', 'touchcancel'].includes(ev.type) && this.cancelled) {
         if (this.isRepeating && this.repeatTimeout) {
