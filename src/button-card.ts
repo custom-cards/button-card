@@ -44,6 +44,8 @@ import {
   computeCssVariable,
   isMediaSourceContentId,
   resolveMediaSource,
+  findEntities,
+  lovelaceViewIsSection,
 } from './helpers';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
@@ -140,6 +142,25 @@ class ButtonCard extends LitElement {
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
+  }
+
+  static getStubConfig(hass: HomeAssistant, entities: string[], entitiesFallback: string[]): ExternalButtonCardConfig {
+    const maxEntities = 1;
+    const foundEntities = findEntities(hass, maxEntities, entities, entitiesFallback, ['light', 'switch']);
+    if (lovelaceViewIsSection()) {
+      return {
+        entity: foundEntities[0] || '',
+        section_mode: true,
+        grid_options: {
+          rows: 2,
+          columns: 6,
+        },
+      };
+    }
+    return {
+      entity: foundEntities[0] || '',
+      section_mode: false,
+    };
   }
 
   public set hass(hass: HomeAssistant) {
@@ -978,7 +999,11 @@ class ButtonCard extends LitElement {
     const classList: ClassInfo = {
       'button-card-main': true,
       disabled: !this._isClickable(this._stateObj, configState),
+      section: !!this._config?.section_mode,
     };
+    if (!!this._config?.section_mode) {
+      this.classList.add('section');
+    }
     if (this._config?.tooltip) {
       this.classList.add('tooltip');
     }
@@ -1335,6 +1360,18 @@ class ButtonCard extends LitElement {
   // distribute all cards over the available columns.
   public getCardSize(): number {
     return this._config?.card_size || 3;
+  }
+
+  public getGridOptions() {
+    if (!this._config?.section_mode) {
+      return undefined;
+    }
+    return {
+      rows: 2,
+      columns: 6,
+      min_rows: 1,
+      min_columns: 1,
+    };
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {

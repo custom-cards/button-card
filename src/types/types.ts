@@ -43,6 +43,12 @@ export interface ButtonCardConfig {
   extra_styles?: string;
   card_size: number;
   tooltip?: string;
+  section_mode?: boolean;
+}
+
+export interface GridOptions {
+  rows?: number;
+  columns?: number;
 }
 
 export interface ExternalButtonCardConfig {
@@ -82,6 +88,8 @@ export interface ExternalButtonCardConfig {
   extra_styles?: string;
   card_size?: number;
   tooltip?: string;
+  section_mode?: boolean;
+  grid_options?: GridOptions;
 }
 
 export type Layout =

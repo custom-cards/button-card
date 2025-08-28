@@ -1494,6 +1494,419 @@ views:
           }; ]]]
 
 
+  - title: Grid
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Default section
+          - type: button
+            entity: switch.skylight
+            name: Default button
+            grid_options:
+              rows: 4
+              columns: 3
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: button-card
+            section_mode: true
+            grid_options:
+              rows: 4
+              columns: 3
+          - type: heading
+            heading: horizontal-stack in section
+          - type: horizontal-stack
+            grid_options:
+              rows: 2
+              columns: 12
+            cards:
+              - type: button
+                entity: switch.skylight
+                name: Default button
+              - type: 'custom:button-card'
+                name: button-card
+                entity: switch.skylight
+                section_mode: true
+      - type: grid
+        cards:
+          - type: heading
+            heading: Vertical sections (full width cards)
+          - type: button
+            entity: switch.skylight
+            name: Default button
+            grid_options:
+              rows: 3
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: button-card
+            section_mode: true
+            grid_options:
+              rows: 3
+              columns: 12
+      - type: grid
+        cards:
+          - type: heading
+            heading: 'Layout section_mode: false'
+          - type: vertical-stack
+            grid_options:
+              rows: 12
+              columns: 12
+            cards:
+              - type: vertical-stack
+                cards:
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_name_state
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: icon_name_state
+
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: name_state
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: vertical (default)
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: name_state
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_name
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_state
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: icon_name
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: icon_state
+
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_name with hidden state
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_state with hidden name
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: false
+                    layout: icon_name
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    show_name: false
+                    layout: icon_state
+
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_name_state2nd
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+                  - type: 'custom:button-card'
+                    color_type: label-card
+                    name: icon_state_name2nd
+                    color: var(--state-icon-color)
+                    styles:
+                      card:
+                        - font-weight: bold
+                        - padding: 5px 0px
+              - type: horizontal-stack
+                cards:
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: icon_name_state2nd
+                  - type: 'custom:button-card'
+                    entity: sensor.sensor1
+                    show_state: true
+                    layout: icon_state_name2nd
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: 'Layout section_mode: true'
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_name_state
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: icon_name_state
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 12
+
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: name_state
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: vertical (default)
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: name_state
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_name
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_state
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: icon_name
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: icon_state
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_name with hidden state
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_state with hidden name
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: false
+            layout: icon_name
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            show_name: false
+            layout: icon_state
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_name_state2nd
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: icon_state_name2nd
+            color: var(--state-icon-color)
+            styles:
+              card:
+                - font-weight: bold
+                - padding: 5px 0px
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: icon_name_state2nd
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+          - type: 'custom:button-card'
+            entity: sensor.sensor1
+            show_state: true
+            layout: icon_state_name2nd
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 6
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Demo README
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 1
+            section_mode: true
+            grid_options:
+              rows: 4
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 2
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 3
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 6
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Button 4
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 12
+
   # second view
   - title: 2nd
     cards:
