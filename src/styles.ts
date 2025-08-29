@@ -9,6 +9,7 @@ export const styles = css`
 
   :host(.section) {
     display: unset;
+    position: static;
   }
 
   ha-card {
@@ -429,6 +430,10 @@ export const styles = css`
     grid-template-areas: 'i l' 'n n' 's s';
     grid-template-columns: 40% 1fr;
     grid-template-rows: 1fr min-content min-content;
+  }
+
+  #aspect-ratio {
+    position: relative;
   }
 
   [style*='--aspect-ratio'] > :first-child {

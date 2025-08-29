@@ -1514,6 +1514,10 @@ views:
             grid_options:
               rows: 4
               columns: 3
+            lock:
+              enabled: true
+              duration: 7
+              unlock: tap
           - type: heading
             heading: horizontal-stack in section
           - type: horizontal-stack
