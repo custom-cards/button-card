@@ -431,6 +431,10 @@ export const styles = css`
     grid-template-rows: 1fr min-content min-content;
   }
 
+  #aspect-ratio {
+    position: relative;
+  }
+
   [style*='--aspect-ratio'] > :first-child {
     width: 100%;
   }
