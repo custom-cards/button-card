@@ -1,3 +1,13 @@
+## [4.3.0-dev.1](https://github.com/custom-cards/button-card/compare/v4.2.0...v4.3.0-dev.1) (2025-08-29)
+
+### Features
+
+* **lock:** Option to keep the unlock icon displayed and define custom lock/unlock icon ([#966](https://github.com/custom-cards/button-card/issues/966)) ([3c42b7b](https://github.com/custom-cards/button-card/commit/3c42b7b7fc26097c04199025b20fd2697f69c34e)), closes [#842](https://github.com/custom-cards/button-card/issues/842)
+
+### Bug Fixes
+
+* **lock:** Lock not displayed on safari/IOS and lock sometimes misplaced ([#965](https://github.com/custom-cards/button-card/issues/965)) ([6c91651](https://github.com/custom-cards/button-card/commit/6c916518534e2dea75023bad3ef4f04827a62453)), closes [#963](https://github.com/custom-cards/button-card/issues/963)
+
 ## [4.2.0](https://github.com/custom-cards/button-card/compare/v4.1.2...v4.2.0) (2025-08-28)
 
 ### Features
