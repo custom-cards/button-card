@@ -2161,6 +2161,9 @@ views:
                 color_type: card
                 lock:
                   enabled: true
+                  keep_unlock_icon: true
+                  lock_icon: mdi:lightbulb
+                  unlock_icon: mdi:fire
                 color: black
                 entity: switch.skylight
                 show_label: true

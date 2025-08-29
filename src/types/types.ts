@@ -107,6 +107,9 @@ export type ColorType = 'icon' | 'card' | 'label-card' | 'blank-card';
 export interface LockConfig {
   enabled: boolean;
   duration: number;
+  keep_unlock_icon?: boolean;
+  lock_icon: string;
+  unlock_icon: string;
   unlock: 'tap' | 'double_tap' | 'hold';
   exemptions?: (ExemptionUserConfig | ExemptionUsernameConfig)[];
 }
