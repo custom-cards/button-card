@@ -156,6 +156,7 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
 | `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. |
 | `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+| `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
 
 Example - specifying fields directly:
 

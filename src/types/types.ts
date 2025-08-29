@@ -227,6 +227,7 @@ export interface BaseActionConfig {
   confirmation?: ConfirmationRestrictionConfig;
   repeat?: number;
   repeat_limit?: number;
+  sound?: string;
 }
 
 export interface ConfirmationRestrictionConfig {

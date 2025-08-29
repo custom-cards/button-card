@@ -2173,6 +2173,28 @@ views:
                 show_label: true
                 show_last_changed: true
 
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Sound
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: media-source://
+                tap_action:
+                  sound: media-source://media_source/localmedia/click2.wav
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: /local
+                tap_action:
+                  sound: /local/workspace/test/www/click.wav
+
   - title: overlay
     cards:
       - type: alarm-panel
