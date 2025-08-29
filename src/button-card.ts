@@ -1446,6 +1446,22 @@ class ButtonCard extends LitElement {
           if (!config) return;
           const action = ev.detail.action;
           const localAction = this._evalActions(config, `${action}_action`);
+          const soundUrl = localAction[`${action}_action`].sound;
+          if (soundUrl) {
+            if (isMediaSourceContentId(soundUrl)) {
+              resolveMediaSource(this._hass!, soundUrl)
+                .then((resolved) => {
+                  const sound = new Audio(resolved.url);
+                  sound.play();
+                })
+                .catch(() => {
+                  console.error(`button-card: Error loading media source: ${soundUrl}`);
+                });
+            } else {
+              const sound = new Audio(soundUrl);
+              sound.play();
+            }
+          }
           handleAction(this, this._hass!, localAction, action);
           break;
         default:

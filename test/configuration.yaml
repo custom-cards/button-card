@@ -20,6 +20,8 @@ homeassistant:
   customize:
     switch.skylight:
       device_class: switch
+  media_dirs:
+    localmedia: /config/www/workspace/test/www/media-source/
 
 switch:
   - platform: template
