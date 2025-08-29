@@ -208,7 +208,7 @@ confirmation:
 
 ### Lock Object
 
-This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for `delay` seconds (5 by default).
+This will display a normal button with a lock symbol in the corner. Clicking the button will make the lock go away and enable the button to be manoeuvred for `duration` seconds (5 by default).
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
@@ -216,6 +216,9 @@ This will display a normal button with a lock symbol in the corner. Clicking the
 | `duration` | number | `5` | any number | Duration of the unlocked state in seconds |
 | `exemptions` | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
 | `unlock` | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
+| `keep_unlock_icon` | boolean | `false` | `true` \| `false` | If `true`, the `unlock_icon` icon will stay visible when the card is unlocked |
+| `lock_icon` | string | `mdi:lock-outline` | any HA icon | The icon when the card is locked |
+| `unlock_icon` | string | `mdi:lock-open-outline` | any HA icon | The icon displayed when the card is unlocked |
 
 Example:
 

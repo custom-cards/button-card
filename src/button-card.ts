@@ -85,6 +85,7 @@ import {
   formatDateWeekdayShort,
   formatDateYear,
 } from './common/format_date';
+import { DEFAULT_LOCK_DURATION, DEFAULT_LOCK_ICON, DEFAULT_UNLOCK_ICON } from './const';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -1099,7 +1100,7 @@ class ButtonCard extends LitElement {
           })}
           .config="${this._config}"
         >
-          <ha-icon id="lock" icon="mdi:lock-outline"></ha-icon>
+          <ha-icon id="lock" icon=${this._config!.lock.lock_icon}></ha-icon>
         </div>
       `;
     }
@@ -1319,8 +1320,10 @@ class ButtonCard extends LitElement {
       ...template,
       lock: {
         enabled: false,
-        duration: 5,
+        duration: DEFAULT_LOCK_DURATION,
         unlock: 'tap',
+        lock_icon: DEFAULT_LOCK_ICON,
+        unlock_icon: DEFAULT_UNLOCK_ICON,
         ...template.lock,
       },
     };
@@ -1487,18 +1490,18 @@ class ButtonCard extends LitElement {
     overlay.style.setProperty('pointer-events', 'none');
 
     if (lock) {
-      const icon = document.createAttribute('icon');
-      icon.value = 'mdi:lock-open-outline';
-      lock.attributes.setNamedItem(icon);
-      lock.classList.add('hidden');
+      (lock as any).icon = this._config!.lock.unlock_icon;
+      if (!this._config?.lock?.keep_unlock_icon) {
+        lock.classList.add('hidden');
+      }
     }
     window.setTimeout(() => {
       overlay.style.setProperty('pointer-events', '');
       if (lock) {
-        lock.classList.remove('hidden');
-        const icon = document.createAttribute('icon');
-        icon.value = 'mdi:lock-outline';
-        lock.attributes.setNamedItem(icon);
+        if (!this._config?.lock?.keep_unlock_icon) {
+          lock.classList.remove('hidden');
+        }
+        (lock as any).icon = this._config!.lock!.lock_icon;
       }
     }, this._config!.lock!.duration! * 1000);
   }
