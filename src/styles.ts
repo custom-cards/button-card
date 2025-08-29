@@ -9,6 +9,7 @@ export const styles = css`
 
   :host(.section) {
     display: unset;
+    position: static;
   }
 
   ha-card {
