@@ -2161,8 +2161,6 @@ views:
                     - color: red
                     - align-items: flex-end
                     - justify-content: flex-start
-                tap_action:
-                  sound: media-source://media_source/localmedia/click2.wav
               - type: 'custom:button-card'
                 color_type: card
                 lock:
@@ -2174,8 +2172,6 @@ views:
                 entity: switch.skylight
                 show_label: true
                 show_last_changed: true
-                tap_action:
-                  sound: /local/workspace/test/www/click.wav
 
       - type: vertical-stack
         cards:
