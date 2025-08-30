@@ -1116,7 +1116,7 @@ class ButtonCard extends LitElement {
     const stateDisplayActual = configState?.state_display || this._config!.state_display || undefined;
     const stateDisplay =
       this._config!.show_state && stateDisplayActual ? this._getTemplateOrValue(state, stateDisplayActual) : undefined;
-    const stateString = stateDisplay ? stateDisplay : this._buildStateString(state);
+    const stateString = stateDisplay !== undefined ? stateDisplay : this._buildStateString(state);
     const nameStateString = buildNameStateConcat(name, stateString);
 
     switch (this._config!.layout) {
