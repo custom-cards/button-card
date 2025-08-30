@@ -17,4 +17,4 @@ jobs:
           days-before-pr-close: -1
           days-before-pr-stale: -1
           exempt-issue-labels: 'released on @dev'
-          only-labels: 'waiting for reply'
+          only-labels: 'waiting for reply,wontfix'
