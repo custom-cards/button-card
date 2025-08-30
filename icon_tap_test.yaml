@@ -1,0 +1,47 @@
+- title: Icon Tap Action Test
+  cards:
+    - type: vertical-stack
+      cards:
+        - type: 'custom:button-card'
+          color_type: label-card
+          styles:
+            card:
+              - font-weight: bold
+              - text-transform: uppercase
+          name: Icon Tap Action Tests
+        - type: horizontal-stack
+          cards:
+            - type: 'custom:button-card'
+              entity: switch.skylight
+              name: Card Tap Toggle
+              tap_action:
+                action: toggle
+              icon_tap_action:
+                action: more-info
+            - type: 'custom:button-card'
+              entity: switch.skylight
+              name: Card More-Info
+              tap_action:
+                action: more-info
+              icon_tap_action:
+                action: toggle
+            - type: 'custom:button-card'
+              entity: switch.skylight
+              name: Icon Only Action
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: call-service
+                service: switch.toggle
+                service_data:
+                  entity_id: switch.skylight
+        - type: horizontal-stack
+          cards:
+            - type: 'custom:button-card'
+              entity: light.test_light
+              name: Light Icon Tap
+              color: auto
+              tap_action:
+                action: toggle
+              icon_tap_action:
+                action: more-info
