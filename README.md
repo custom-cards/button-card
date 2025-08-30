@@ -71,6 +71,7 @@ Lovelace Button card for your entities.
 
 - works with any toggleable entity
 - 6 available actions on **tap** and/or **hold** and/or **double click**: `none`, `toggle`, `more-info`, `navigate`, `url`, `assist` and `call-service`
+- separate **icon tap action** support for more refined user interaction
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
@@ -112,6 +113,7 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
+| `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on click of the icon specifically. If undefined, this action will be `none` and won't interfere with the main tap_action. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
@@ -1196,6 +1198,21 @@ Light entity with custom icon and "more info" pop-in:
   icon: mdi:sofa
   color: auto
   tap_action:
+    action: more-info
+```
+
+---
+
+Icon tap action example - different actions for card vs icon:
+
+```yaml
+- type: 'custom:button-card'
+  entity: light.living_room_lights
+  icon: mdi:sofa
+  color: auto
+  tap_action:
+    action: toggle
+  icon_tap_action:
     action: more-info
 ```
 
