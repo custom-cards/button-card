@@ -1,3 +1,16 @@
+## [4.3.0](https://github.com/custom-cards/button-card/compare/v4.2.0...v4.3.0) (2025-08-31)
+
+### Features
+
+* **lock:** Option to keep the unlock icon displayed and define custom lock/unlock icon ([#966](https://github.com/custom-cards/button-card/issues/966)) ([3c42b7b](https://github.com/custom-cards/button-card/commit/3c42b7b7fc26097c04199025b20fd2697f69c34e)), closes [#842](https://github.com/custom-cards/button-card/issues/842)
+* Support to play a sound in the browser on any *_action ([#968](https://github.com/custom-cards/button-card/issues/968)) ([1855013](https://github.com/custom-cards/button-card/commit/18550139e6518bc5c384f31dce28ce72f49d35b1)), closes [#574](https://github.com/custom-cards/button-card/issues/574)
+
+### Bug Fixes
+
+* **lock:** Lock not displayed on safari/IOS and lock sometimes misplaced ([#965](https://github.com/custom-cards/button-card/issues/965)) ([6c91651](https://github.com/custom-cards/button-card/commit/6c916518534e2dea75023bad3ef4f04827a62453)), closes [#963](https://github.com/custom-cards/button-card/issues/963)
+* **lock:** Lock would not display on firefox ([#983](https://github.com/custom-cards/button-card/issues/983)) ([72d2c82](https://github.com/custom-cards/button-card/commit/72d2c82453bd079950317a066f26a2040fc57d19)), closes [#980](https://github.com/custom-cards/button-card/issues/980)
+* **state_display:** Allow empty string or null to override state ([#976](https://github.com/custom-cards/button-card/issues/976)) ([0e40cdc](https://github.com/custom-cards/button-card/commit/0e40cdc4b025104808207f3f0bfb74f601f7b832)), closes [#435](https://github.com/custom-cards/button-card/issues/435)
+
 ## [4.3.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.3.0-dev.1...v4.3.0-dev.2) (2025-08-31)
 
 ### Features
