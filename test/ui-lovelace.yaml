@@ -1072,6 +1072,107 @@ views:
               card:
                 - font-weight: bold
                 - text-transform: uppercase
+            name: Test icon_hold_action
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon hold more-info
+                tap_action:
+                  action: toggle
+                icon_hold_action:
+                  action: more-info
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon hold navigate
+                tap_action:
+                  action: toggle
+                icon_hold_action:
+                  action: navigate
+                  navigation_path: /lovelace/1
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon hold service
+                tap_action:
+                  action: toggle
+                icon_hold_action:
+                  action: call-service
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.test
+
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Test icon_double_tap_action
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon dbl more-info
+                tap_action:
+                  action: toggle
+                icon_double_tap_action:
+                  action: more-info
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon dbl navigate
+                tap_action:
+                  action: toggle
+                icon_double_tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/1
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon dbl service
+                tap_action:
+                  action: toggle
+                icon_double_tap_action:
+                  action: call-service
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.test
+
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Test combined icon actions
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: all icon actions
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: more-info
+                icon_hold_action:
+                  action: navigate
+                  navigation_path: /lovelace/1
+                icon_double_tap_action:
+                  action: call-service
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.test
+
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
             name: Test conditional card
           - type: conditional
             conditions:

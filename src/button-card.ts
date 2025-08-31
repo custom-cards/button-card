@@ -950,6 +950,8 @@ class ButtonCard extends LitElement {
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
     const icon_tap_action = this._getTemplateOrValue(state, this._config!.icon_tap_action!.action);
+    const icon_hold_action = this._getTemplateOrValue(state, this._config!.icon_hold_action!.action);
+    const icon_double_tap_action = this._getTemplateOrValue(state, this._config!.icon_double_tap_action!.action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
@@ -959,6 +961,8 @@ class ButtonCard extends LitElement {
       hold_action != 'none' ||
       double_tap_action != 'none' ||
       icon_tap_action != 'none' ||
+      icon_hold_action != 'none' ||
+      icon_double_tap_action != 'none' ||
       hasChildCards
     );
   }
@@ -1219,8 +1223,11 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    // Check if icon tap action is configured
-    const hasIconTapAction = this._config!.icon_tap_action!.action !== 'none';
+    // Check if any icon actions are configured
+    const hasIconActions =
+      this._config!.icon_tap_action!.action !== 'none' ||
+      this._config!.icon_hold_action!.action !== 'none' ||
+      this._config!.icon_double_tap_action!.action !== 'none';
 
     if (shouldShowIcon || entityPicture) {
       let domain: string | undefined = undefined;
@@ -1241,12 +1248,12 @@ class ButtonCard extends LitElement {
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                  ${hasIconTapAction
+                  ${hasIconActions
                     ? html`
-                        @action=${this._handleIconAction}
+                        @action=${this._handleAction}
                         .actionHandler=${actionHandler({
-                          hasDoubleClick: false,
-                          hasHold: false,
+                          hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                          hasHold: this._config!.icon_hold_action!.action !== 'none',
                         })}
                       `
                     : ''}
@@ -1261,12 +1268,12 @@ class ButtonCard extends LitElement {
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                  ${hasIconTapAction
+                  ${hasIconActions
                     ? html`
-                        @action=${this._handleIconAction}
+                        @action=${this._handleAction}
                         .actionHandler=${actionHandler({
-                          hasDoubleClick: false,
-                          hasHold: false,
+                          hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                          hasHold: this._config!.icon_hold_action!.action !== 'none',
                         })}
                       `
                     : ''}
@@ -1335,6 +1342,8 @@ class ButtonCard extends LitElement {
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
       icon_tap_action: { action: 'none' },
+      icon_hold_action: { action: 'none' },
+      icon_double_tap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -1467,6 +1476,9 @@ class ButtonCard extends LitElement {
 
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
+      // Check if this action came from an icon by looking at the target
+      const isIconAction = ev.target?.id === 'icon' || ev.target?.closest('#icon');
+
       switch (ev.detail.action) {
         case 'tap':
         case 'hold':
@@ -1474,8 +1486,22 @@ class ButtonCard extends LitElement {
           const config = this._config;
           if (!config) return;
           const action = ev.detail.action;
-          const localAction = this._evalActions(config, `${action}_action`);
-          const soundUrl = localAction[`${action}_action`].sound;
+
+          // Stop propagation for icon actions to prevent card action from also triggering
+          if (isIconAction) {
+            ev.stopPropagation();
+          }
+
+          // Determine the action key based on whether it's an icon action
+          const actionKey = isIconAction ? `icon_${action}_action` : `${action}_action`;
+          const localAction = this._evalActions(config, actionKey);
+
+          // Check if the action is configured (not 'none')
+          if (!localAction[actionKey] || localAction[actionKey].action === 'none') {
+            return;
+          }
+
+          const soundUrl = localAction[actionKey].sound;
           if (soundUrl) {
             if (isMediaSourceContentId(soundUrl)) {
               resolveMediaSource(this._hass!, soundUrl)
@@ -1496,33 +1522,6 @@ class ButtonCard extends LitElement {
         default:
           break;
       }
-    }
-  }
-
-  private _handleIconAction(ev: any): void {
-    ev.stopPropagation(); // Prevent card action from also being triggered
-    if (ev.detail?.action === 'tap') {
-      const config = this._config;
-      if (!config) return;
-      const localAction = this._evalActions(config, 'icon_tap_action');
-      if (!localAction.icon_tap_action) return;
-      const soundUrl = localAction.icon_tap_action.sound;
-      if (soundUrl) {
-        if (isMediaSourceContentId(soundUrl)) {
-          resolveMediaSource(this._hass!, soundUrl)
-            .then((resolved) => {
-              const sound = new Audio(resolved.url);
-              sound.play();
-            })
-            .catch(() => {
-              console.error(`button-card: Error loading media source: ${soundUrl}`);
-            });
-        } else {
-          const sound = new Audio(soundUrl);
-          sound.play();
-        }
-      }
-      handleAction(this, this._hass!, localAction, 'tap');
     }
   }
 
