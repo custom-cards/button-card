@@ -135,6 +135,8 @@ class ButtonCard extends LitElement {
 
   private _interval?: number;
 
+  private _updateTimeout: number | undefined;
+
   private _cards: ButtonCardEmbeddedCards = {};
 
   private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
@@ -180,6 +182,7 @@ class ButtonCard extends LitElement {
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clearInterval();
+    this._updateTimerCancel();
   }
 
   public connectedCallback(): void {
@@ -1364,19 +1367,30 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _updateTimerCancel(): void {
+    if (this._updateTimeout) {
+      window.clearTimeout(this._updateTimeout);
+    }
+  }
+
   private _updateTimer(): void {
+    if (this._updateTimeout) {
+      window.clearTimeout(this._updateTimeout);
+      this._updateTimeout = undefined;
+    }
     if (this._config?.update_timer) {
       const updateIntervalMS = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
       if (typeof updateIntervalMS === 'number' && updateIntervalMS >= 100) {
-        window.setTimeout(() => {
-          this._updateTimeout();
+        this._updateTimeout = window.setTimeout(() => {
+          this._updateRefresh();
         }, updateIntervalMS);
       }
     }
   }
 
-  private _updateTimeout(): void {
+  private _updateRefresh(): void {
     this._updateTimerMS = Date.now();
+    this._updateTimeout = undefined;
   }
 
   // The height of your card. Home Assistant uses this to automatically
