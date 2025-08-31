@@ -1,3 +1,14 @@
+## [4.3.0-dev.2](https://github.com/custom-cards/button-card/compare/v4.3.0-dev.1...v4.3.0-dev.2) (2025-08-31)
+
+### Features
+
+* Support to play a sound in the browser on any *_action ([#968](https://github.com/custom-cards/button-card/issues/968)) ([1855013](https://github.com/custom-cards/button-card/commit/18550139e6518bc5c384f31dce28ce72f49d35b1)), closes [#574](https://github.com/custom-cards/button-card/issues/574)
+
+### Bug Fixes
+
+* **lock:** Lock would not display on firefox ([#983](https://github.com/custom-cards/button-card/issues/983)) ([72d2c82](https://github.com/custom-cards/button-card/commit/72d2c82453bd079950317a066f26a2040fc57d19)), closes [#980](https://github.com/custom-cards/button-card/issues/980)
+* **state_display:** Allow empty string or null to override state ([#976](https://github.com/custom-cards/button-card/issues/976)) ([0e40cdc](https://github.com/custom-cards/button-card/commit/0e40cdc4b025104808207f3f0bfb74f601f7b832)), closes [#435](https://github.com/custom-cards/button-card/issues/435)
+
 ## [4.3.0-dev.1](https://github.com/custom-cards/button-card/compare/v4.2.0...v4.3.0-dev.1) (2025-08-29)
 
 ### Features
