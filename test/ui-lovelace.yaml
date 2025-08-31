@@ -1464,6 +1464,38 @@ views:
                 color: black
                 name: Always
                 entity: switch.skylight
+      - type: vertical-stack
+        cards:
+          - type: "custom:button-card"
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Update Timer
+          - type: horizontal-stack
+            cards:
+              - type: "custom:button-card"
+                entity: light.bed_light
+                name: Update timer 1000
+                show_label: true
+                update_timer: 1000
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
+              - type: "custom:button-card"
+                entity: light.bed_light
+                name: Update timer template
+                show_label: true
+                update_timer: |
+                  [[[
+                    return states[entity.entity_id].state === 'on' ? 100 : 0;
+                  ]]]
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
 
   - title: Nested Templates
     cards:
