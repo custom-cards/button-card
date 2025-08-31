@@ -385,7 +385,7 @@ In this second case, you have 2 options:
 
 If your entity, any entity in the `triggers_update` field or any entity matched from your templates are a group and you want to update the card if any of the nested entity in that group update its state, then you can set `group_expand` to `true`. It will do the work for you and you won't have to specify manually the full list of entities in `triggers_update`.
 
-If not entity is suitable for `triggers_update` you may consider to use `update_timer`.
+If no entity is suitable for `triggers_update` you may consider to use `update_timer`.
 
 ### Javascript Templates
 
