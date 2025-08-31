@@ -121,6 +121,8 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
+  @property() private _updateTimerMS?: number;
+
   @property({ type: Boolean, reflect: true }) preview = false;
 
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
@@ -331,7 +333,8 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    const forceUpdate = this._triggersAll || changedProps.has('_timeRemaining') ? true : false;
+    const forceUpdate =
+      this._triggersAll || changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') ? true : false;
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
       this._expandTriggerGroups();
       return true;
@@ -369,6 +372,8 @@ class ButtonCard extends LitElement {
         this._clearInterval();
       }
     }
+
+    this._updateTimer();
   }
 
   private _clearInterval(): void {
@@ -1357,6 +1362,21 @@ class ButtonCard extends LitElement {
         }
       });
     }
+  }
+
+  private _updateTimer(): void {
+    if (this._config?.update_timer) {
+      const updateIntervalMS = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
+      if (typeof updateIntervalMS === 'number' && updateIntervalMS >= 100) {
+        window.setTimeout(() => {
+          this._updateTimeout();
+        }, updateIntervalMS);
+      }
+    }
+  }
+
+  private _updateTimeout(): void {
+    this._updateTimerMS = Date.now();
   }
 
   // The height of your card. Home Assistant uses this to automatically

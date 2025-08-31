@@ -103,6 +103,7 @@ Lovelace Button card for your entities.
 | `entity` | string | optional | `switch.ac` | entity_id |
 | `section_mode` | boolean | optional | `true` \| `false` | Set it to `true` when the card is used in a sections view. See [Sections views](#sections-views) |
 | `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggers_update) |
+| `update_timer` | number | optional | number >= 100 | Set to a number greater than or equal to 100 to update the card at this refresh rate (ms). This should only be used when the card has no entity and there is no appropriate [triggers_update](#triggers_update) strategy. Supports templates, see [templates](#javascript-templates). The template is evaluated on each refresh of the card, be it from the `update_timer` timeout or trigger update. |
 | `group_expand` | boolean | false | `true` \| `false` | When `true`, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See [triggers_update](#triggers_update) |
 | `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
@@ -383,6 +384,8 @@ In this second case, you have 2 options:
   ```
 
 If your entity, any entity in the `triggers_update` field or any entity matched from your templates are a group and you want to update the card if any of the nested entity in that group update its state, then you can set `group_expand` to `true`. It will do the work for you and you won't have to specify manually the full list of entities in `triggers_update`.
+
+If not entity is suitable for `triggers_update` you may consider to use `update_timer`.
 
 ### Javascript Templates
 
