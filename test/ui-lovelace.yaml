@@ -1035,6 +1035,43 @@ views:
               card:
                 - font-weight: bold
                 - text-transform: uppercase
+            name: Test icon_tap_action
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon more-info
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: more-info
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon navigate
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: navigate
+                  navigation_path: /lovelace/1
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                name: icon call-service
+                tap_action:
+                  action: toggle
+                icon_tap_action:
+                  action: call-service
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.test
+
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
             name: Test conditional card
           - type: conditional
             conditions:

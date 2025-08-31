@@ -949,11 +949,18 @@ class ButtonCard extends LitElement {
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
+    const icon_tap_action = this._getTemplateOrValue(state, this._config!.icon_tap_action!.action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
-    return tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards;
+    return (
+      tap_action != 'none' ||
+      hold_action != 'none' ||
+      double_tap_action != 'none' ||
+      icon_tap_action != 'none' ||
+      hasChildCards
+    );
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
@@ -1212,6 +1219,9 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
+    // Check if icon tap action is configured
+    const hasIconTapAction = this._config!.icon_tap_action!.action !== 'none';
+
     if (shouldShowIcon || entityPicture) {
       let domain: string | undefined = undefined;
       if (state) {
@@ -1231,6 +1241,15 @@ class ButtonCard extends LitElement {
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
+                  ${hasIconTapAction
+                    ? html`
+                        @action=${this._handleIconAction}
+                        .actionHandler=${actionHandler({
+                          hasDoubleClick: false,
+                          hasHold: false,
+                        })}
+                      `
+                    : ''}
                 ></ha-state-icon>
               `
             : ''}
@@ -1242,6 +1261,15 @@ class ButtonCard extends LitElement {
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
+                  ${hasIconTapAction
+                    ? html`
+                        @action=${this._handleIconAction}
+                        .actionHandler=${actionHandler({
+                          hasDoubleClick: false,
+                          hasHold: false,
+                        })}
+                      `
+                    : ''}
                 />
               `
             : ''}
@@ -1306,6 +1334,7 @@ class ButtonCard extends LitElement {
       group_expand: false,
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
+      icon_tap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -1467,6 +1496,33 @@ class ButtonCard extends LitElement {
         default:
           break;
       }
+    }
+  }
+
+  private _handleIconAction(ev: any): void {
+    ev.stopPropagation(); // Prevent card action from also being triggered
+    if (ev.detail?.action === 'tap') {
+      const config = this._config;
+      if (!config) return;
+      const localAction = this._evalActions(config, 'icon_tap_action');
+      if (!localAction.icon_tap_action) return;
+      const soundUrl = localAction.icon_tap_action.sound;
+      if (soundUrl) {
+        if (isMediaSourceContentId(soundUrl)) {
+          resolveMediaSource(this._hass!, soundUrl)
+            .then((resolved) => {
+              const sound = new Audio(resolved.url);
+              sound.play();
+            })
+            .catch(() => {
+              console.error(`button-card: Error loading media source: ${soundUrl}`);
+            });
+        } else {
+          const sound = new Audio(soundUrl);
+          sound.play();
+        }
+      }
+      handleAction(this, this._hass!, localAction, 'tap');
     }
   }
 

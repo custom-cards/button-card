@@ -8,6 +8,7 @@ export type ActionConfigParams = {
   hold_action?: ActionConfig;
   tap_action?: ActionConfig;
   double_tap_action?: ActionConfig;
+  icon_tap_action?: ActionConfig;
 };
 
 export const handleAction = async (
