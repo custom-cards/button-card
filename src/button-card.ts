@@ -190,6 +190,7 @@ class ButtonCard extends LitElement {
     if (!this._initialSetupComplete) {
       this._finishSetup();
     } else {
+      this._updateTimer();
       this._startTimerCountdown();
     }
   }
@@ -280,6 +281,7 @@ class ButtonCard extends LitElement {
       this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
+      this._updateTimer();
       this._initialSetupComplete = true;
     }
   }
