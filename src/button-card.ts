@@ -99,7 +99,7 @@ const helperPromise = new Promise<void>(async (resolve) => {
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  BUTTON-CARD  \n%c Version ${pjson.version} `,
+  `%c BUTTON-CARD %c v${pjson.version} `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
