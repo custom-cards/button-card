@@ -103,6 +103,7 @@ Lovelace Button card for your entities.
 | `entity` | string | optional | `switch.ac` | entity_id |
 | `section_mode` | boolean | optional | `true` \| `false` | Set it to `true` when the card is used in a sections view. See [Sections views](#sections-views) |
 | `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggers_update) |
+| `update_timer` | number or string | optional | number >= 100 (ms), string duration in english supported by `helpers.parseDuration` >= 100 (ms) | Set to a duration greater than or equal to 100ms to update the card at this refresh rate. This should only be used when the card has no entity and there is no appropriate [triggers_update](#triggers_update) strategy. Supports templates, see [templates](#javascript-templates). The template is evaluated on each refresh of the card, be it from the `update_timer` timeout or trigger update. To maintan dashboard compatability when user locale changes, the duration must be specified in english locale. |
 | `group_expand` | boolean | false | `true` \| `false` | When `true`, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See [triggers_update](#triggers_update) |
 | `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
@@ -353,6 +354,8 @@ Multiple values are possible, see the image below for examples:
 
 This field defines which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in custom_fields as they are always updated with the latest state. This is expected and fast!). This was introduced in 3.3.0 to reduce the load on the frontend.
 
+If you are using `update_timer` you can set `triggers_update: update_timer` which will **ONLY** update at the timer interval. If `update_timer` is a template, the template is checked whenever hass entities update.
+
 If you don't have javascript `[[[ ]]]` templates in your config, you don't need to do anything, else read further.
 
 By default, the card will update itself when the main entity in the configuration is updated. In any case, the card will parse your code and look for entities that it can match (**it only matches `states['ENTITY_ID']`**) so:
@@ -383,6 +386,8 @@ In this second case, you have 2 options:
   ```
 
 If your entity, any entity in the `triggers_update` field or any entity matched from your templates are a group and you want to update the card if any of the nested entity in that group update its state, then you can set `group_expand` to `true`. It will do the work for you and you won't have to specify manually the full list of entities in `triggers_update`.
+
+If no entity is suitable for `triggers_update` you may consider to use `update_timer`.
 
 ### Javascript Templates
 
@@ -486,6 +491,7 @@ Inside the javascript code, you'll have access to those variables:
     - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
     - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
   - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
+  - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`. If a locale is specified `en` is also used as a fallback.
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
