@@ -489,7 +489,7 @@ Inside the javascript code, you'll have access to those variables:
     - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
     - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
   - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
-  - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`.
+  - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`. If a locale is specified `en` is also used as a fallback.
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
