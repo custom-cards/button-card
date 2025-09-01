@@ -115,6 +115,8 @@ Lovelace Button card for your entities.
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
 | `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. |
+| `icon_hold_action` | object | optional | See [Action](#Action) | Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. |
+| `icon_double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
