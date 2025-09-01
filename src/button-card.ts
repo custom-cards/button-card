@@ -86,6 +86,7 @@ import {
   formatDateYear,
 } from './common/format_date';
 import { DEFAULT_LOCK_DURATION, DEFAULT_LOCK_ICON, DEFAULT_UNLOCK_ICON } from './const';
+import { parseDuration } from './common/parse-duration';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -558,6 +559,9 @@ class ButtonCard extends LitElement {
       },
       formatDateWeekdayShort: (date) => {
         return formatDateWeekdayShort(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      parseDuration: (duration, format = 'ms', locale = this._hass!.locale?.language) => {
+        return parseDuration(duration, format, locale);
       },
     };
   }
@@ -1381,8 +1385,9 @@ class ButtonCard extends LitElement {
       this._updateTimeout = undefined;
     }
     if (this._config?.update_timer) {
-      const updateIntervalMS = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
-      if (typeof updateIntervalMS === 'number' && updateIntervalMS >= 100) {
+      const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
+      const updateIntervalMS = parseDuration(updateInterval, 'ms', this._hass!.locale?.language);
+      if (updateIntervalMS && updateIntervalMS >= 100) {
         this._updateTimeout = window.setTimeout(() => {
           this._updateRefresh();
         }, updateIntervalMS);

@@ -103,7 +103,7 @@ Lovelace Button card for your entities.
 | `entity` | string | optional | `switch.ac` | entity_id |
 | `section_mode` | boolean | optional | `true` \| `false` | Set it to `true` when the card is used in a sections view. See [Sections views](#sections-views) |
 | `triggers_update` | string or array | optional | `switch.ac` | entity_id list that would trigger a card update, see [triggers_update](#triggers_update) |
-| `update_timer` | number | optional | number >= 100 | Set to a number greater than or equal to 100 to update the card at this refresh rate (ms). This should only be used when the card has no entity and there is no appropriate [triggers_update](#triggers_update) strategy. Supports templates, see [templates](#javascript-templates). The template is evaluated on each refresh of the card, be it from the `update_timer` timeout or trigger update. |
+| `update_timer` | number or string | optional | number >= 100 (ms), string duration supported by `helpers.parseDuration` >= 100 (ms) | Set to a duration greater than or equal to 100ms to update the card at this refresh rate. This should only be used when the card has no entity and there is no appropriate [triggers_update](#triggers_update) strategy. Supports templates, see [templates](#javascript-templates). The template is evaluated on each refresh of the card, be it from the `update_timer` timeout or trigger update. |
 | `group_expand` | boolean | false | `true` \| `false` | When `true`, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See [triggers_update](#triggers_update) |
 | `icon` | string | optional | `mdi:air-conditioner` | Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with `show_icon: false`. Supports templates, see [templates](#javascript-templates) |
 | `color_type` | string | `icon` | `icon` \| `card` \| `blank-card` \| `label-card` | Color either the background of the card or the icon inside the card. Setting this to `card` enable automatic `font` and `icon` color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options `blank-card` and `label-card` can be used for organisation (see examples). |
@@ -489,6 +489,7 @@ Inside the javascript code, you'll have access to those variables:
     - `helpers.formatShortDateTimeWithYear(datetime)`: 9/8/2021, 8:23 AM
     - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
   - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
+  - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`.
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 

@@ -1477,20 +1477,20 @@ views:
             cards:
               - type: "custom:button-card"
                 entity: light.bed_light
-                name: Update timer 1000
+                name: 1s
                 show_label: true
-                update_timer: 1000
+                update_timer: 1s
                 label: |
                   [[[
                     return Date.now()
                   ]]]
               - type: "custom:button-card"
                 entity: light.bed_light
-                name: Update timer template
+                name: (off=5s, on=100)
                 show_label: true
                 update_timer: |
                   [[[
-                    return states[entity.entity_id].state === 'on' ? 100 : 0;
+                    return states[entity.entity_id].state === 'on' ? 100 : "5s";
                   ]]]
                 label: |
                   [[[
