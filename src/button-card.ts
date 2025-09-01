@@ -138,6 +138,8 @@ class ButtonCard extends LitElement {
 
   private _updateTimeout: number | undefined;
 
+  private _updateTimerDuration: number | undefined;
+
   private _cards: ButtonCardEmbeddedCards = {};
 
   private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
@@ -191,7 +193,7 @@ class ButtonCard extends LitElement {
     if (!this._initialSetupComplete) {
       this._finishSetup();
     } else {
-      this._updateTimer();
+      this._updateTimerStart();
       this._startTimerCountdown();
     }
   }
@@ -282,7 +284,7 @@ class ButtonCard extends LitElement {
       this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
-      this._updateTimer();
+      this._updateTimerStart();
       this._initialSetupComplete = true;
     }
   }
@@ -339,6 +341,13 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
+    if (this._config?.triggers_update === 'update_timer') {
+      if (changedProps.has('_updateTimerMS')) {
+        return true;
+      } else {
+        return this._updateTimerChanged();
+      }
+    }
     const forceUpdate =
       this._triggersAll || changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') ? true : false;
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
@@ -1373,10 +1382,26 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _updateTimerStart(): void {
+    this._updateTimerMS = Date.now();
+    this._updateTimer();
+  }
+
   private _updateTimerCancel(): void {
     if (this._updateTimeout) {
       window.clearTimeout(this._updateTimeout);
     }
+  }
+
+  private _updateTimerChanged(): boolean {
+    if (this._config?.update_timer) {
+      const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
+      const updateIntervalMS = parseDuration(updateInterval, 'ms', 'en');
+      if (updateIntervalMS && updateIntervalMS >= 100 && updateIntervalMS !== this._updateTimerDuration) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private _updateTimer(): void {
@@ -1388,6 +1413,7 @@ class ButtonCard extends LitElement {
       const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
       const updateIntervalMS = parseDuration(updateInterval, 'ms', 'en');
       if (updateIntervalMS && updateIntervalMS >= 100) {
+        this._updateTimerDuration = updateIntervalMS;
         this._updateTimeout = window.setTimeout(() => {
           this._updateRefresh();
         }, updateIntervalMS);

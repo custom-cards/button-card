@@ -354,6 +354,8 @@ Multiple values are possible, see the image below for examples:
 
 This field defines which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in custom_fields as they are always updated with the latest state. This is expected and fast!). This was introduced in 3.3.0 to reduce the load on the frontend.
 
+If you are using `update_timer` you can set `triggers_update: update_timer` which will **ONLY** update at the timer interval. If `update_timer` is a template, the template is checked whenever hass entities update.
+
 If you don't have javascript `[[[ ]]]` templates in your config, you don't need to do anything, else read further.
 
 By default, the card will update itself when the main entity in the configuration is updated. In any case, the card will parse your code and look for entities that it can match (**it only matches `states['ENTITY_ID']`**) so:

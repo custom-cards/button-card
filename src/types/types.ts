@@ -4,7 +4,7 @@ import { HassServiceTarget } from 'home-assistant-js-websocket';
 
 export interface ButtonCardConfig {
   template?: string | string[];
-  triggers_update?: string[] | 'all';
+  triggers_update?: string[] | 'all' | 'update_timer';
   group_expand: boolean;
   type: string;
   entity?: string;
@@ -54,7 +54,7 @@ export interface GridOptions {
 
 export interface ExternalButtonCardConfig {
   template?: string | string[];
-  triggers_update?: string[] | 'all';
+  triggers_update?: string[] | 'all' | 'update_timer';
   group_expand?: boolean;
   entity?: string;
   name?: string;
