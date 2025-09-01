@@ -1386,7 +1386,7 @@ class ButtonCard extends LitElement {
     }
     if (this._config?.update_timer) {
       const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
-      const updateIntervalMS = parseDuration(updateInterval, 'ms', this._hass!.locale?.language);
+      const updateIntervalMS = parseDuration(updateInterval, 'ms', 'en');
       if (updateIntervalMS && updateIntervalMS >= 100) {
         this._updateTimeout = window.setTimeout(() => {
           this._updateRefresh();
