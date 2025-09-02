@@ -10,9 +10,9 @@ import { AttributePart, Directive, DirectiveParameters, directive } from 'lit-ht
 // @ts-ignore
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
 
-interface ActionHandler extends HTMLElement {
+interface ActionHandlerType extends HTMLElement {
   holdTime: number;
-  bind(element: Element, options): void;
+  bind(element: Element, options: ActionHandlerOptions): void;
 }
 
 export interface ActionHandlerDetail {
@@ -25,6 +25,8 @@ export interface ActionHandlerOptions {
   disabled?: boolean;
   repeat?: number;
   repeatLimit?: number;
+  isIcon?: boolean;
+  cardHasHold?: boolean;
 }
 
 interface ActionHandlerElement extends HTMLElement {
@@ -32,20 +34,20 @@ interface ActionHandlerElement extends HTMLElement {
     options: ActionHandlerOptions;
     start?: (ev: Event) => void;
     end?: (ev: Event) => void;
-    handleEnter?: (ev: KeyboardEvent) => void;
+    handleKeyDown?: (ev: KeyboardEvent) => void;
   };
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'action-handler': ActionHandler;
+    'action-handler': ActionHandlerType;
   }
   interface HASSDomEvents {
     action: ActionHandlerDetail;
   }
 }
 
-class ActionHandler extends HTMLElement implements ActionHandler {
+class ActionHandlerType extends HTMLElement implements ActionHandlerType {
   public holdTime = 500;
 
   public ripple: Ripple;
@@ -102,7 +104,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     });
   }
 
-  public bind(element: ActionHandlerElement, options: ActionHandlerOptions): void {
+  public bind(element: ActionHandlerElement, options: ActionHandlerOptions = {}): void {
     if (element.actionHandler && deepEqual(options, element.actionHandler.options)) {
       return;
     }
@@ -115,7 +117,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       element.removeEventListener('mousedown', element.actionHandler.start!);
       element.removeEventListener('click', element.actionHandler.end!);
 
-      element.removeEventListener('keyup', element.actionHandler.handleEnter!);
+      element.removeEventListener('keydown', element.actionHandler.handleKeyDown!);
     } else {
       element.addEventListener('contextmenu', (ev: Event) => {
         const e = ev || window.event;
@@ -138,6 +140,12 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     }
 
     element.actionHandler.start = (ev: Event) => {
+      if (options.cardHasHold && !options.hasHold) {
+        return;
+      }
+      if (options.isIcon) {
+        ev.stopPropagation();
+      }
       this.cancelled = false;
       let x;
       let y;
@@ -171,6 +179,9 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     };
 
     element.actionHandler.end = (ev: Event) => {
+      if (options.isIcon) {
+        ev.stopPropagation();
+      }
       // Don't respond when moved or scrolled while touch
       if (['touchend', 'touchcancel'].includes(ev.type) && this.cancelled) {
         if (this.isRepeating && this.repeatTimeout) {
@@ -219,8 +230,8 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       }
     };
 
-    element.actionHandler.handleEnter = (ev: KeyboardEvent) => {
-      if (ev.keyCode !== 13) {
+    element.actionHandler.handleKeyDown = (ev: KeyboardEvent) => {
+      if (!['Enter', ' '].includes(ev.key)) {
         return;
       }
       (ev.currentTarget as ActionHandlerElement).actionHandler!.end!(ev);
@@ -237,7 +248,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     });
     element.addEventListener('click', element.actionHandler.end);
 
-    element.addEventListener('keyup', element.actionHandler.handleEnter);
+    element.addEventListener('keydown', element.actionHandler.handleKeyDown);
   }
 
   private startAnimation(x: number, y: number): void {
@@ -258,22 +269,22 @@ class ActionHandler extends HTMLElement implements ActionHandler {
   }
 }
 
-customElements.define('button-card-action-handler', ActionHandler);
+customElements.define('button-card-action-handler', ActionHandlerType);
 
-const getActionHandler = (): ActionHandler => {
+const getActionHandler = (): ActionHandlerType => {
   const body = document.body;
   if (body.querySelector('button-card-action-handler')) {
-    return body.querySelector('button-card-action-handler') as ActionHandler;
+    return body.querySelector('button-card-action-handler') as ActionHandlerType;
   }
 
   const actionhandler = document.createElement('button-card-action-handler');
   body.appendChild(actionhandler);
 
-  return actionhandler as ActionHandler;
+  return actionhandler as ActionHandlerType;
 };
 
 export const actionHandlerBind = (element: ActionHandlerElement, options?: ActionHandlerOptions) => {
-  const actionhandler: ActionHandler = getActionHandler();
+  const actionhandler: ActionHandlerType = getActionHandler();
   if (!actionhandler) {
     return;
   }

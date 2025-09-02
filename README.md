@@ -54,6 +54,7 @@ Lovelace Button card for your entities.
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
     - [`tap_action` Navigate](#tap_action-navigate)
+    - [`icon_tap_action`](#icon_tap_action)
     - [blink](#blink)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
@@ -71,6 +72,7 @@ Lovelace Button card for your entities.
 
 - works with any toggleable entity
 - 6 available actions on **tap** and/or **hold** and/or **double click**: `none`, `toggle`, `more-info`, `navigate`, `url`, `assist` and `call-service`
+- **icon tap action**: Separate action when clicking the icon specifically
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
@@ -112,6 +114,9 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
+| `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. |
+| `icon_hold_action` | object | optional | See [Action](#Action) | Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. |
+| `icon_double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
@@ -1386,6 +1391,27 @@ Buttons can link to different views using the `navigate` action:
 ```
 
 The `navigation_path` also accepts any Home Assistant internal URL such as /dev-info or /hassio/dashboard for example.
+
+#### `icon_tap_action`
+
+You can configure a separate action for when clicking the icon specifically, while the card itself has a different action:
+
+```yaml
+- type: 'custom:button-card'
+  entity: light.living_room
+  name: Living Room Light
+  tap_action:
+    action: toggle
+  icon_tap_action:
+    action: more-info
+```
+
+This allows for elegant UX patterns like:
+- Card tap to toggle the light
+- Icon tap to open more-info dialog
+- Or any other combination of actions
+
+The icon becomes visually clickable when `icon_tap_action` is configured and not set to `none`.
 
 #### blink
 

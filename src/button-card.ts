@@ -949,11 +949,22 @@ class ButtonCard extends LitElement {
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
+    const icon_tap_action = this._getTemplateOrValue(state, this._config!.icon_tap_action!.action);
+    const icon_hold_action = this._getTemplateOrValue(state, this._config!.icon_hold_action!.action);
+    const icon_double_tap_action = this._getTemplateOrValue(state, this._config!.icon_double_tap_action!.action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
-    return tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards;
+    return (
+      tap_action != 'none' ||
+      hold_action != 'none' ||
+      double_tap_action != 'none' ||
+      icon_tap_action != 'none' ||
+      icon_hold_action != 'none' ||
+      icon_double_tap_action != 'none' ||
+      hasChildCards
+    );
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
@@ -1231,6 +1242,15 @@ class ButtonCard extends LitElement {
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
+                  @action=${this._handleIconAction}
+                  .actionHandler=${actionHandler({
+                    hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                    hasHold: this._config!.icon_hold_action!.action !== 'none',
+                    repeat: this._config!.icon_hold_action!.repeat,
+                    repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                    isIcon: true,
+                    cardHasHold: this._config!.hold_action!.action !== 'none',
+                  })}
                 ></ha-state-icon>
               `
             : ''}
@@ -1242,6 +1262,13 @@ class ButtonCard extends LitElement {
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
+                  @action=${this._handleIconAction}
+                  .actionHandler=${actionHandler({
+                    hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                    hasHold: this._config!.icon_hold_action!.action !== 'none',
+                    repeat: this._config!.icon_hold_action!.repeat,
+                    repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                  })}
                 />
               `
             : ''}
@@ -1306,6 +1333,9 @@ class ButtonCard extends LitElement {
       group_expand: false,
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
+      icon_tap_action: { action: 'none' },
+      icon_hold_action: { action: 'none' },
+      icon_double_tap_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -1436,38 +1466,57 @@ class ButtonCard extends LitElement {
     this._ripple.then((r) => r && typeof r.endFocus === 'function' && this._rippleHandlers.endFocus());
   }
 
+  private _handleIconAction(ev: any): void {
+    if (ev.detail?.action) {
+      const config = this._config;
+      if (!config) return;
+      const action = ev.detail.action;
+      const actionKey = `icon_${action}_action`;
+      const localAction = this._evalActions(config, actionKey);
+      if (localAction[actionKey]?.action !== 'none') {
+        ev.stopPropagation();
+        this._runAction(ev.detail.action, true);
+      }
+      // will bubble up to ha-card triggering its action if none is defined on the icon
+    }
+  }
+
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
-      switch (ev.detail.action) {
-        case 'tap':
-        case 'hold':
-        case 'double_tap':
-          const config = this._config;
-          if (!config) return;
-          const action = ev.detail.action;
-          const localAction = this._evalActions(config, `${action}_action`);
-          const soundUrl = localAction[`${action}_action`].sound;
-          if (soundUrl) {
-            if (isMediaSourceContentId(soundUrl)) {
-              resolveMediaSource(this._hass!, soundUrl)
-                .then((resolved) => {
-                  const sound = new Audio(resolved.url);
-                  sound.play();
-                })
-                .catch(() => {
-                  console.error(`button-card: Error loading media source: ${soundUrl}`);
-                });
-            } else {
-              const sound = new Audio(soundUrl);
-              sound.play();
-            }
-          }
-          handleAction(this, this._hass!, localAction, action);
-          break;
-        default:
-          break;
+      this._runAction(ev.detail.action, false);
+    }
+  }
+
+  private _runAction(action: string, isIcon: boolean): void {
+    const config = this._config;
+    if (!config) return;
+    const actionKey = isIcon ? `icon_${action}_action` : `${action}_action`;
+    const localAction = this._evalActions(config, actionKey);
+    // Check if the action is configured (not 'none')
+    if (!localAction[actionKey] || localAction[actionKey].action === 'none') {
+      return;
+    }
+
+    const soundUrl = localAction[actionKey].sound;
+    if (soundUrl) {
+      if (isMediaSourceContentId(soundUrl)) {
+        resolveMediaSource(this._hass!, soundUrl)
+          .then((resolved) => {
+            const sound = new Audio(resolved.url);
+            sound.play();
+          })
+          .catch(() => {
+            console.error(`button-card: Error loading media source: ${soundUrl}`);
+          });
+      } else {
+        const sound = new Audio(soundUrl);
+        sound.play();
       }
     }
+    if (isIcon) {
+      localAction[`${action}_action`] = localAction[`icon_${action}_action`];
+    }
+    handleAction(this, this._hass!, localAction, action);
   }
 
   private _handleUnlockType(ev): void {
