@@ -1223,12 +1223,6 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    // Check if any icon actions are configured
-    const hasIconActions =
-      this._config!.icon_tap_action!.action !== 'none' ||
-      this._config!.icon_hold_action!.action !== 'none' ||
-      this._config!.icon_double_tap_action!.action !== 'none';
-
     if (shouldShowIcon || entityPicture) {
       let domain: string | undefined = undefined;
       if (state) {
@@ -1254,6 +1248,8 @@ class ButtonCard extends LitElement {
                     hasHold: this._config!.icon_hold_action!.action !== 'none',
                     repeat: this._config!.icon_hold_action!.repeat,
                     repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                    isIcon: true,
+                    cardHasHold: this._config!.hold_action!.action !== 'none',
                   })}
                 ></ha-state-icon>
               `
