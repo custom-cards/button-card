@@ -1248,15 +1248,13 @@ class ButtonCard extends LitElement {
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                  ${hasIconActions
-                    ? html`
-                        @action=${this._handleAction}
-                        .actionHandler=${actionHandler({
-                          hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
-                          hasHold: this._config!.icon_hold_action!.action !== 'none',
-                        })}
-                      `
-                    : ''}
+                  @action=${this._handleIconAction}
+                  .actionHandler=${actionHandler({
+                    hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                    hasHold: this._config!.icon_hold_action!.action !== 'none',
+                    repeat: this._config!.icon_hold_action!.repeat,
+                    repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                  })}
                 ></ha-state-icon>
               `
             : ''}
@@ -1268,15 +1266,13 @@ class ButtonCard extends LitElement {
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                  ${hasIconActions
-                    ? html`
-                        @action=${this._handleAction}
-                        .actionHandler=${actionHandler({
-                          hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
-                          hasHold: this._config!.icon_hold_action!.action !== 'none',
-                        })}
-                      `
-                    : ''}
+                  @action=${this._handleIconAction}
+                  .actionHandler=${actionHandler({
+                    hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
+                    hasHold: this._config!.icon_hold_action!.action !== 'none',
+                    repeat: this._config!.icon_hold_action!.repeat,
+                    repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                  })}
                 />
               `
             : ''}
@@ -1474,55 +1470,57 @@ class ButtonCard extends LitElement {
     this._ripple.then((r) => r && typeof r.endFocus === 'function' && this._rippleHandlers.endFocus());
   }
 
+  private _handleIconAction(ev: any): void {
+    if (ev.detail?.action) {
+      const config = this._config;
+      if (!config) return;
+      const action = ev.detail.action;
+      const actionKey = `icon_${action}_action`;
+      const localAction = this._evalActions(config, actionKey);
+      if (localAction[actionKey]?.action !== 'none') {
+        ev.stopPropagation();
+        this._runAction(ev.detail.action, true);
+      }
+      // will bubble up to ha-card triggering its action if none is defined on the icon
+    }
+  }
+
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
-      // Check if this action came from an icon by looking at the target
-      const isIconAction = ev.target?.id === 'icon' || ev.target?.closest('#icon');
+      this._runAction(ev.detail.action, false);
+    }
+  }
 
-      switch (ev.detail.action) {
-        case 'tap':
-        case 'hold':
-        case 'double_tap':
-          const config = this._config;
-          if (!config) return;
-          const action = ev.detail.action;
+  private _runAction(action: string, isIcon: boolean): void {
+    const config = this._config;
+    if (!config) return;
+    const actionKey = isIcon ? `icon_${action}_action` : `${action}_action`;
+    const localAction = this._evalActions(config, actionKey);
+    // Check if the action is configured (not 'none')
+    if (!localAction[actionKey] || localAction[actionKey].action === 'none') {
+      return;
+    }
 
-          // Stop propagation for icon actions to prevent card action from also triggering
-          if (isIconAction) {
-            ev.stopPropagation();
-          }
-
-          // Determine the action key based on whether it's an icon action
-          const actionKey = isIconAction ? `icon_${action}_action` : `${action}_action`;
-          const localAction = this._evalActions(config, actionKey);
-
-          // Check if the action is configured (not 'none')
-          if (!localAction[actionKey] || localAction[actionKey].action === 'none') {
-            return;
-          }
-
-          const soundUrl = localAction[actionKey].sound;
-          if (soundUrl) {
-            if (isMediaSourceContentId(soundUrl)) {
-              resolveMediaSource(this._hass!, soundUrl)
-                .then((resolved) => {
-                  const sound = new Audio(resolved.url);
-                  sound.play();
-                })
-                .catch(() => {
-                  console.error(`button-card: Error loading media source: ${soundUrl}`);
-                });
-            } else {
-              const sound = new Audio(soundUrl);
-              sound.play();
-            }
-          }
-          handleAction(this, this._hass!, localAction, action);
-          break;
-        default:
-          break;
+    const soundUrl = localAction[actionKey].sound;
+    if (soundUrl) {
+      if (isMediaSourceContentId(soundUrl)) {
+        resolveMediaSource(this._hass!, soundUrl)
+          .then((resolved) => {
+            const sound = new Audio(resolved.url);
+            sound.play();
+          })
+          .catch(() => {
+            console.error(`button-card: Error loading media source: ${soundUrl}`);
+          });
+      } else {
+        const sound = new Audio(soundUrl);
+        sound.play();
       }
     }
+    if (isIcon) {
+      localAction[`${action}_action`] = localAction[`icon_${action}_action`];
+    }
+    handleAction(this, this._hass!, localAction, action);
   }
 
   private _handleUnlockType(ev): void {

@@ -968,211 +968,6 @@ views:
               card:
                 - font-weight: bold
                 - text-transform: uppercase
-            name: Test tap_action
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: navigate
-                tap_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: toggle
-                tap_action:
-                  action: toggle
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: more-info
-                tap_action:
-                  action: more-info
-                  entity: light.test_light
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: call-service
-                tap_action:
-                  action: call-service
-                  service: switch.toggle
-                  service_data:
-                    entity_id: switch.skylight
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: call-service
-                tap_action:
-                  action: call-service
-                  service: timer.start
-                  target:
-                    entity_id: timer.laundry
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: assist
-                tap_action:
-                  action: assist
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: none
-                tap_action:
-                  action: none
-              - type: 'custom:button-card'
-                icon: mdi:link
-                name: url
-                confirmation:
-                  text: '[[[ return "main" ]]]'
-                tap_action:
-                  action: url
-                  url_path: https://www.google.com
-                  # confirmation:
-                  #   text: '[[[ return "pouet" ]]]'
-                  # exemptions:
-                  #   - user: befc8496799848bda1824f2a8111e30a
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
-            name: Test icon_tap_action
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon more-info
-                tap_action:
-                  action: toggle
-                icon_tap_action:
-                  action: more-info
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon navigate
-                tap_action:
-                  action: toggle
-                icon_tap_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon call-service
-                tap_action:
-                  action: toggle
-                icon_tap_action:
-                  action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.test
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
-            name: Test icon_hold_action
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon hold more-info
-                tap_action:
-                  action: toggle
-                icon_hold_action:
-                  action: more-info
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon hold navigate
-                tap_action:
-                  action: toggle
-                icon_hold_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon hold service
-                tap_action:
-                  action: toggle
-                icon_hold_action:
-                  action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.test
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
-            name: Test icon_double_tap_action
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon dbl more-info
-                tap_action:
-                  action: toggle
-                icon_double_tap_action:
-                  action: more-info
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon dbl navigate
-                tap_action:
-                  action: toggle
-                icon_double_tap_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: icon dbl service
-                tap_action:
-                  action: toggle
-                icon_double_tap_action:
-                  action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.test
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
-            name: Test combined icon actions
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: all icon actions
-                tap_action:
-                  action: toggle
-                icon_tap_action:
-                  action: more-info
-                icon_hold_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-                icon_double_tap_action:
-                  action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.test
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
             name: Test conditional card
           - type: conditional
             conditions:
@@ -1192,53 +987,6 @@ views:
                     - type: entities
                       entities:
                         - switch.skylight
-
-      - type: vertical-stack
-        cards:
-          - type: 'custom:button-card'
-            color_type: label-card
-            styles:
-              card:
-                - font-weight: bold
-                - text-transform: uppercase
-            name: Test hold_action
-          - type: horizontal-stack
-            cards:
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: navigate
-                hold_action:
-                  action: navigate
-                  navigation_path: /lovelace/1
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: toggle
-                hold_action:
-                  action: toggle
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: more-info
-                hold_action:
-                  action: more-info
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: call-service
-                hold_action:
-                  action: call-service
-                  service: switch.toggle
-                  service_data:
-                    entity_id: switch.skylight
-              - type: 'custom:button-card'
-                entity: switch.skylight
-                name: none
-                hold_action:
-                  action: none
-              - type: 'custom:button-card'
-                icon: mdi:link
-                name: url
-                hold_action:
-                  action: url
-                  url_path: https://www.google.com
 
       - type: vertical-stack
         cards:
@@ -1602,6 +1350,477 @@ views:
                 color: black
                 name: Always
                 entity: switch.skylight
+
+  - title: Actions
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test tap_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: navigate
+            tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: toggle
+            tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: more-info
+            tap_action:
+              action: more-info
+              entity: light.test_light
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: call-service
+            tap_action:
+              action: call-service
+              service: switch.toggle
+              service_data:
+                entity_id: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: call-service
+            tap_action:
+              action: call-service
+              service: timer.start
+              target:
+                entity_id: timer.laundry
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: assist
+            tap_action:
+              action: assist
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: none
+            tap_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            icon: mdi:link
+            name: url
+            confirmation:
+              text: '[[[ return "main" ]]]'
+            tap_action:
+              action: url
+              url_path: https://www.google.com
+              # confirmation:
+              #   text: '[[[ return "pouet" ]]]'
+              # exemptions:
+              #   - user: befc8496799848bda1824f2a8111e30a
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test hold_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: navigate
+            tap_action:
+              action: none
+            hold_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: toggle
+            tap_action:
+              action: more-info
+            hold_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: more-info
+            tap_action:
+              action: none
+            hold_action:
+              action: more-info
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: call-service
+            tap_action:
+              action: none
+            hold_action:
+              action: call-service
+              service: switch.toggle
+              service_data:
+                entity_id: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: none
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            icon: mdi:link
+            name: url
+            tap_action:
+              action: none
+            hold_action:
+              action: url
+              url_path: https://www.google.com
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test double_tap_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: navigate
+            tap_action:
+              action: none
+            double_tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: toggle
+            tap_action:
+              action: none
+            double_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: more-info
+            tap_action:
+              action: none
+            double_tap_action:
+              action: more-info
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: call-service
+            tap_action:
+              action: none
+            double_tap_action:
+              action: call-service
+              service: switch.toggle
+              service_data:
+                entity_id: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: none
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            icon: mdi:link
+            name: url
+            tap_action:
+              action: none
+            double_tap_action:
+              action: url
+              url_path: https://www.google.com
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test icon_tap_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon more-info
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: more-info
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon navigate
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon call-service
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: call-service
+              service: input_number.increment
+              target:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test icon_hold_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon hold more-info
+            tap_action:
+              action: toggle
+            icon_hold_action:
+              action: more-info
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon hold navigate
+            tap_action:
+              action: toggle
+            icon_hold_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon hold service
+            tap_action:
+              action: toggle
+            icon_hold_action:
+              action: call-service
+              service: input_number.increment
+              target:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: tile
+            entity: switch.skylight
+            grid_options:
+              rows: 2
+              columns: 4
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: toggle
+            icon_hold_action:
+              action: more-info
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test icon_double_tap_action
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon dbl more-info
+            tap_action:
+              action: toggle
+            icon_double_tap_action:
+              action: more-info
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon dbl navigate
+            tap_action:
+              action: toggle
+            icon_double_tap_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: icon dbl service
+            tap_action:
+              action: toggle
+            icon_double_tap_action:
+              action: call-service
+              service: input_number.increment
+              target:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test combined icon actions
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: all icon actions
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: more-info
+            icon_hold_action:
+              action: navigate
+              navigation_path: /lovelace/1
+            icon_double_tap_action:
+              action: call-service
+              service: input_number.increment
+              target:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
 
   - title: Nested Templates
     cards:
