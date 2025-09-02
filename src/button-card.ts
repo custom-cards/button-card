@@ -86,6 +86,7 @@ import {
   formatDateYear,
 } from './common/format_date';
 import { DEFAULT_LOCK_DURATION, DEFAULT_LOCK_ICON, DEFAULT_UNLOCK_ICON } from './const';
+import { forwardHaptic } from './forward-haptic';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -1436,6 +1437,20 @@ class ButtonCard extends LitElement {
     this._ripple.then((r) => r && typeof r.endFocus === 'function' && this._rippleHandlers.endFocus());
   }
 
+  private _hapticIntercept(): void {
+    window.addEventListener('haptic', this._hapticInterceptHandler, { capture: true });
+    window.setTimeout(() => {
+      window.removeEventListener('haptic', this._hapticInterceptHandler, { capture: true });
+    }, 100);
+  }
+
+  private _hapticInterceptHandler(ev: Event): void {
+    if ((ev.composedPath()[0] as HTMLElement).localName !== 'button-card') {
+      ev.stopImmediatePropagation();
+      ev.stopPropagation();
+    }
+  }
+
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
       switch (ev.detail.action) {
@@ -1461,6 +1476,11 @@ class ButtonCard extends LitElement {
               const sound = new Audio(soundUrl);
               sound.play();
             }
+          }
+          const haptic = localAction[`${action}_action`].haptic;
+          if (haptic) {
+            this._hapticIntercept();
+            forwardHaptic(this, haptic);
           }
           handleAction(this, this._hass!, localAction, action);
           break;

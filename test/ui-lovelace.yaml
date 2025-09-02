@@ -1465,6 +1465,34 @@ views:
                 name: Always
                 entity: switch.skylight
 
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Haptic
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                show_label: true
+                label: Heavy
+                color: darkorange
+                tap_action:
+                  action: toggle
+                  haptic: heavy
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                show_label: true
+                label: Failure
+                color: red
+                tap_action:
+                  action: toggle
+                  haptic: failure
+
   - title: Nested Templates
     cards:
       - type: custom:button-card
