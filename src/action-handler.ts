@@ -25,6 +25,8 @@ export interface ActionHandlerOptions {
   disabled?: boolean;
   repeat?: number;
   repeatLimit?: number;
+  isIcon?: boolean;
+  cardHasHold?: boolean;
 }
 
 interface ActionHandlerElement extends HTMLElement {
@@ -139,6 +141,12 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
     }
 
     element.actionHandler.start = (ev: Event) => {
+      if (options.cardHasHold && !options.hasHold) {
+        return;
+      }
+      if (options.isIcon) {
+        ev.stopPropagation();
+      }
       this.cancelled = false;
       let x;
       let y;
@@ -172,6 +180,9 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
     };
 
     element.actionHandler.end = (ev: Event) => {
+      if (options.isIcon) {
+        ev.stopPropagation();
+      }
       // Don't respond when moved or scrolled while touch
       if (['touchend', 'touchcancel'].includes(ev.type) && this.cancelled) {
         if (this.isRepeating && this.repeatTimeout) {
