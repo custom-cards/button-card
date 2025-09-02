@@ -983,6 +983,8 @@ class ButtonCard extends LitElement {
       if (this._stateObj) {
         if (stateActive(this._stateObj)) {
           color = this._config?.color || color;
+        } else {
+          color = stateColorCss(this._stateObj, this._stateObj.state, this._config?.color_type) || DEFAULT_COLOR;
         }
       } else {
         color = this._config.color;
