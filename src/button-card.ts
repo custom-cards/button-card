@@ -918,12 +918,12 @@ class ButtonCard extends LitElement {
           <div
             id=${key}
             @action=${this._stopPropagation}
-            @click=${this._stopPropagation}
-            @touchstart=${this._stopPropagation}
-            @mousedown=${this._stopPropagation}
-            @mouseup=${this._stopPropagation}
-            @touchend=${this._stopPropagation}
-            @touchcancel=${this._stopPropagation}
+            @click=${this._sendToParent}
+            @touchstart=${this._sendToParent}
+            @mousedown=${this._sendToParent}
+            @mouseup=${this._sendToParent}
+            @touchend=${this._sendToParent}
+            @touchcancel=${this._sendToParent}
             style=${styleMap(customStyle)}
           >
             ${thing}
@@ -1525,5 +1525,11 @@ class ButtonCard extends LitElement {
 
   private _stopPropagation(ev: Event): void {
     ev.stopPropagation();
+  }
+
+  private _sendToParent(ev: Event): void {
+    ev.stopPropagation();
+    const event = new CustomEvent(ev.type, ev);
+    this.parentElement?.dispatchEvent(event);
   }
 }
