@@ -33,6 +33,7 @@ interface ActionHandlerElement extends HTMLElement {
     start?: (ev: Event) => void;
     end?: (ev: Event) => void;
     handleEnter?: (ev: KeyboardEvent) => void;
+    handleTouchMove?: (ev: TouchEvent) => void;
   };
 }
 
@@ -219,6 +220,13 @@ class ActionHandler extends HTMLElement implements ActionHandler {
       }
     };
 
+    element.actionHandler.handleTouchMove = (ev: TouchEvent) => {
+      if (ev.type == 'touchmove' && options.hasHold && this.held) {
+        ev.stopPropagation();
+        ev.preventDefault();
+      }
+    };
+
     element.actionHandler.handleEnter = (ev: KeyboardEvent) => {
       if (ev.keyCode !== 13) {
         return;
@@ -229,6 +237,7 @@ class ActionHandler extends HTMLElement implements ActionHandler {
     element.addEventListener('touchstart', element.actionHandler.start, {
       passive: true,
     });
+    element.addEventListener('touchmove', element.actionHandler.handleTouchMove);
     element.addEventListener('touchend', element.actionHandler.end);
     element.addEventListener('touchcancel', element.actionHandler.end);
 
