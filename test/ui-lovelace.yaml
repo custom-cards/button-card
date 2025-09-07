@@ -861,6 +861,28 @@ views:
               card:
                 - font-weight: bold
                 - text-transform: uppercase
+            name: Color custom
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: switch.skylight
+                color_type: icon
+                color: lightpink
+                name: 'color_type: icon'
+              - type: 'custom:button-card'
+                color_type: card
+                color: lightpink
+                entity: switch.skylight
+                name: 'color_type: card'
+
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
             name: Redefine style with state
           - type: horizontal-stack
             cards:
