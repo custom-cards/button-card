@@ -1242,6 +1242,7 @@ class ButtonCard extends LitElement {
                   style=${styleMap(entityPictureStyle)}
                   id="icon"
                   ?rotating=${this._rotate(configState)}
+                  draggable="false"
                 />
               `
             : ''}
