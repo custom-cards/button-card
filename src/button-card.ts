@@ -253,7 +253,11 @@ class ButtonCard extends LitElement {
       } else if (typeof this._config!.triggers_update === 'string') {
         const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
         if (result && result !== 'all') {
-          this._entities.push(result);
+          if(Array.isArray(result)) {
+            result.forEach(entity => this._entities.push(entity));
+          } else {
+            this._entities.push(result);
+          }
         } else {
           this._config.triggers_update = result;
         }
