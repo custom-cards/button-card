@@ -1464,6 +1464,72 @@ views:
                 color: black
                 name: Always
                 entity: switch.skylight
+      - type: vertical-stack
+        cards:
+          - type: "custom:button-card"
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Update Timer
+          - type: horizontal-stack
+            cards:
+              - type: "custom:button-card"
+                entity: light.bed_light
+                name: Bed Lt 1s
+                show_label: true
+                update_timer: 1s
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
+              - type: "custom:button-card"
+                entity: light.bed_light
+                name: Bed Lt (off=5s, on=100)
+                show_label: true
+                update_timer: |
+                  [[[
+                    return states[entity.entity_id].state === 'on' ? 100 : "5s";
+                  ]]]
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
+      - type: vertical-stack
+        cards:
+          - type: "custom:button-card"
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Update Timer Only
+          - type: horizontal-stack
+            cards:
+              - type: "custom:button-card"
+                entity: switch.skylight
+                name: Skylight 1s
+                show_label: true
+                triggers_update: update_timer
+                update_timer: 1s
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
+              - type: "custom:button-card"
+                entity: switch.skylight
+                name: Skylight (Bed off=5s, on=100)
+                show_label: true
+                triggers_update: update_timer
+                update_timer: |
+                  [[[
+                    return states['light.bed_light'].state === 'on' ? 100 : "5s";
+                  ]]]
+                label: |
+                  [[[
+                    return Date.now()
+                  ]]]
 
   - title: Nested Templates
     cards:

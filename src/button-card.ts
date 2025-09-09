@@ -86,6 +86,7 @@ import {
   formatDateYear,
 } from './common/format_date';
 import { DEFAULT_LOCK_DURATION, DEFAULT_LOCK_ICON, DEFAULT_UNLOCK_ICON } from './const';
+import { parseDuration } from './common/parse-duration';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -121,6 +122,8 @@ class ButtonCard extends LitElement {
 
   @property() private _timeRemaining?: number;
 
+  @property() private _updateTimerMS?: number;
+
   @property({ type: Boolean, reflect: true }) preview = false;
 
   @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
@@ -132,6 +135,10 @@ class ButtonCard extends LitElement {
   private _evaledVariables: any | undefined;
 
   private _interval?: number;
+
+  private _updateTimeout: number | undefined;
+
+  private _updateTimerDuration: number | undefined;
 
   private _cards: ButtonCardEmbeddedCards = {};
 
@@ -178,6 +185,7 @@ class ButtonCard extends LitElement {
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this._clearInterval();
+    this._updateTimerCancel();
   }
 
   public connectedCallback(): void {
@@ -185,6 +193,7 @@ class ButtonCard extends LitElement {
     if (!this._initialSetupComplete) {
       this._finishSetup();
     } else {
+      this._updateTimerStart();
       this._startTimerCountdown();
     }
   }
@@ -275,6 +284,7 @@ class ButtonCard extends LitElement {
       this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
+      this._updateTimerStart();
       this._initialSetupComplete = true;
     }
   }
@@ -331,7 +341,15 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    const forceUpdate = this._triggersAll || changedProps.has('_timeRemaining') ? true : false;
+    if (this._config?.triggers_update === 'update_timer') {
+      if (changedProps.has('_updateTimerMS')) {
+        return true;
+      } else {
+        return this._updateTimerChanged();
+      }
+    }
+    const forceUpdate =
+      this._triggersAll || changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') ? true : false;
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
       this._expandTriggerGroups();
       return true;
@@ -369,6 +387,8 @@ class ButtonCard extends LitElement {
         this._clearInterval();
       }
     }
+
+    this._updateTimer();
   }
 
   private _clearInterval(): void {
@@ -548,6 +568,9 @@ class ButtonCard extends LitElement {
       },
       formatDateWeekdayShort: (date) => {
         return formatDateWeekdayShort(new Date(date), this._hass!.locale, this._hass!.config);
+      },
+      parseDuration: (duration, format = 'ms', locale = this._hass!.locale?.language) => {
+        return parseDuration(duration, format, locale);
       },
     };
   }
@@ -1358,6 +1381,50 @@ class ButtonCard extends LitElement {
         }
       });
     }
+  }
+
+  private _updateTimerStart(): void {
+    this._updateTimerMS = Date.now();
+    this._updateTimer();
+  }
+
+  private _updateTimerCancel(): void {
+    if (this._updateTimeout) {
+      window.clearTimeout(this._updateTimeout);
+    }
+  }
+
+  private _updateTimerChanged(): boolean {
+    if (this._config?.update_timer) {
+      const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
+      const updateIntervalMS = parseDuration(updateInterval, 'ms', 'en');
+      if (updateIntervalMS && updateIntervalMS >= 100 && updateIntervalMS !== this._updateTimerDuration) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private _updateTimer(): void {
+    if (this._updateTimeout) {
+      window.clearTimeout(this._updateTimeout);
+      this._updateTimeout = undefined;
+    }
+    if (this._config?.update_timer) {
+      const updateInterval = this._getTemplateOrValue(this._stateObj, this._config.update_timer);
+      const updateIntervalMS = parseDuration(updateInterval, 'ms', 'en');
+      if (updateIntervalMS && updateIntervalMS >= 100) {
+        this._updateTimerDuration = updateIntervalMS;
+        this._updateTimeout = window.setTimeout(() => {
+          this._updateRefresh();
+        }, updateIntervalMS);
+      }
+    }
+  }
+
+  private _updateRefresh(): void {
+    this._updateTimerMS = Date.now();
+    this._updateTimeout = undefined;
   }
 
   // The height of your card. Home Assistant uses this to automatically
