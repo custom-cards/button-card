@@ -720,6 +720,14 @@ An example is better than words:
       - color: white
 ```
 
+##### Usage with [configuration templates](#configuration-templates)
+
+- `extra_styles` definitions are **not merged**.
+- If inheriting from multiple templates with `extra_styles`, only the last one's `extra_styles` will be inherited.
+- If a direct `extra_styles` definition is used, **no** `extra_styles` will be inherited.
+
+If `extra_styles` are essential for the correct operation of a template, consider nesting them within the template's [custom fields](#custom-fields) as an embedded card.
+
 ### Custom Fields
 
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon). This is an advanced feature which leverages (if you require it) the CSS Grid.
