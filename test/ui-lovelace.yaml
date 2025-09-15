@@ -1471,6 +1471,9 @@ views:
         entity: switch.skylight
         show_icon: false
         name: '[[[ return `Main entity: ${entity.entity_id || "unknown entity"}`; ]]]'
+        label: Tap should toggle
+        tap_action:
+          action: toggle
         styles:
           grid:
             - grid-template-areas: '"n" "nested"'
@@ -1482,7 +1485,13 @@ views:
               type: 'custom:button-card'
               name: '[[[[ return (entity?.entity_id || "4[ ]: main button entity not known"); ]]]]'
               label: '[[[ return `3[ ]: ${(entity?.entity_id || "main button state not known")}`; ]]]'
+              show_state: true
+              state_display: Above should show "not known" <br/> below should show ¨switch.skylight".<br/>Tap should not trigger parent button action
               show_label: true
+              show_icon: false
+              tap_action:
+                action: more-info
+                entity: switch.skylight
 
       - type: custom:button-card
         entity: switch.skylight
