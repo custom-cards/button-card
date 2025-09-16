@@ -53,7 +53,7 @@ Lovelace Button card for your entities.
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-  - [blink](#blink)
+    - [blink](#blink)
   - [`tap_action` Navigate](#tap_action-navigate)
   - [`icon_*_action`](#icon__action)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
@@ -1378,7 +1378,7 @@ The definition order matters, the first item to match will be the one selected.
           - opacity: 0.5
 ```
 
-### blink
+#### blink
 
 You can make the whole button blink:
 
