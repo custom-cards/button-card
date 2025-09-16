@@ -1406,12 +1406,25 @@ You can configure a separate action for when clicking the icon specifically, whi
     action: more-info
 ```
 
+:warning: If any `icon_*_action` is defined, the icon will capture **all** the actions for its area. For eg. in the case below, clicking on the icon will not do anything unless you hold it. To execute `tap_action` you'll have to click outside of the icon area.
+
+```yaml
+type: 'custom:button-card'
+entity: light.living_room
+name: Living Room Light
+tap_action:
+  action: toggle
+icon_hold_action:
+  action: more-info
+```
+
 This allows for elegant UX patterns like:
+
 - Card tap to toggle the light
 - Icon tap to open more-info dialog
 - Or any other combination of actions
 
-The icon becomes visually clickable when `icon_tap_action` is configured and not set to `none`.
+The icon becomes clickable when `icon_*_action` is configured and not set to `none`.
 
 #### blink
 

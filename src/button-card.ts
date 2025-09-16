@@ -1120,6 +1120,14 @@ class ButtonCard extends LitElement {
     return html``;
   }
 
+  get _hasIconActions(): boolean {
+    return (
+      this._config!.icon_tap_action!.action !== 'none' ||
+      this._config!.icon_hold_action!.action !== 'none' ||
+      this._config!.icon_double_tap_action!.action !== 'none'
+    );
+  }
+
   private _buttonContent(
     state: HassEntity | undefined,
     configState: StateConfig | undefined,
@@ -1225,12 +1233,6 @@ class ButtonCard extends LitElement {
     const liveStream = this._buildLiveStream(entityPictureStyle);
     const shouldShowIcon = this._config!.show_icon && (icon || state);
 
-    // Check if any icon actions are configured
-    const hasIconActions =
-      this._config!.icon_tap_action!.action !== 'none' ||
-      this._config!.icon_hold_action!.action !== 'none' ||
-      this._config!.icon_double_tap_action!.action !== 'none';
-
     if (shouldShowIcon || entityPicture) {
       let domain: string | undefined = undefined;
       if (state) {
@@ -1251,6 +1253,12 @@ class ButtonCard extends LitElement {
                   id="icon"
                   ?rotating=${this._rotate(configState)}
                   @action=${this._handleIconAction}
+                  @click=${this._hasIconActions && this._sendToParent}
+                  @touchstart=${this._hasIconActions && this._sendToParent}
+                  @mousedown=${this._hasIconActions && this._sendToParent}
+                  @mouseup=${this._hasIconActions && this._sendToParent}
+                  @touchend=${this._hasIconActions && this._sendToParent}
+                  @touchcancel=${this._hasIconActions && this._sendToParent}
                   .actionHandler=${actionHandler({
                     hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
                     hasHold: this._config!.icon_hold_action!.action !== 'none',
@@ -1270,6 +1278,12 @@ class ButtonCard extends LitElement {
                   ?rotating=${this._rotate(configState)}
                   draggable="false"
                   @action=${this._handleIconAction}
+                  @click=${this._hasIconActions && this._sendToParent}
+                  @touchstart=${this._hasIconActions && this._sendToParent}
+                  @mousedown=${this._hasIconActions && this._sendToParent}
+                  @mouseup=${this._hasIconActions && this._sendToParent}
+                  @touchend=${this._hasIconActions && this._sendToParent}
+                  @touchcancel=${this._hasIconActions && this._sendToParent}
                   .actionHandler=${actionHandler({
                     hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
                     hasHold: this._config!.icon_hold_action!.action !== 'none',
@@ -1474,6 +1488,10 @@ class ButtonCard extends LitElement {
   }
 
   private _handleIconAction(ev: any): void {
+    if (this._hasIconActions && ev.stopPropagation) {
+      // stop event bubbling to avoid triggering card action
+      ev.stopPropagation();
+    }
     if (ev.detail?.action) {
       const config = this._config;
       if (!config) return;
@@ -1481,10 +1499,8 @@ class ButtonCard extends LitElement {
       const actionKey = `icon_${action}_action`;
       const localAction = this._evalActions(config, actionKey);
       if (localAction[actionKey]?.action !== 'none') {
-        ev.stopPropagation();
         this._runAction(ev.detail.action, true);
       }
-      // will bubble up to ha-card triggering its action if none is defined on the icon
     }
   }
 

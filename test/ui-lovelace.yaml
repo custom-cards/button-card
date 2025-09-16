@@ -1750,6 +1750,7 @@ views:
               columns: 4
           - type: tile
             entity: switch.skylight
+            name: Tile Card Test
             grid_options:
               rows: 2
               columns: 4
