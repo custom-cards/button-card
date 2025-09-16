@@ -72,7 +72,7 @@ Lovelace Button card for your entities.
 
 - works with any toggleable entity
 - 6 available actions on **tap** and/or **hold** and/or **double click**: `none`, `toggle`, `more-info`, `navigate`, `url`, `assist` and `call-service`
-- **icon tap action**: Separate action when clicking the icon specifically
+- **icon tap action**: Separate action when clicking the icon specifically which takes precedence over main card actions.
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
