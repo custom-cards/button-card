@@ -53,9 +53,9 @@ Lovelace Button card for your entities.
   - [Configuration with states](#configuration-with-states)
     - [Default behavior](#default-behavior)
     - [With Operator on state](#with-operator-on-state)
-    - [`tap_action` Navigate](#tap_action-navigate)
-    - [`icon_tap_action`](#icon_tap_action)
-    - [blink](#blink)
+  - [blink](#blink)
+  - [`tap_action` Navigate](#tap_action-navigate)
+  - [`icon_*_action`](#icon__action)
   - [Play with width, height and icon size](#play-with-width-height-and-icon-size)
   - [Templates Support](#templates-support)
     - [Playing with label templates](#playing-with-label-templates)
@@ -114,9 +114,9 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
-| `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. |
-| `icon_hold_action` | object | optional | See [Action](#Action) | Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. |
-| `icon_double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. |
+| `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. See note in [icon\_\*\_action](#icon__action) |
+| `icon_hold_action` | object | optional | See [Action](#Action) | Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. See note in [icon\_\*\_action](#icon__action) |
+| `icon_double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. See note in [icon\_\*\_action](#icon__action) |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
@@ -294,7 +294,9 @@ To enable compatibility with sections (meaning the card adjusts its size automat
 
 For users with heavily modified cards using `styles`, you might need to adjust your configuration once enabling `section_mode`.
 
-⚠️ While `section_mode` is enabled: using `aspect_ratio` or setting the card's `height` or `width` using CSS will probably the layout and is considered incompatible. There might be other incompatible options, if you find any, please update this documentation by submitting a PR.
+> [!IMPORTANT]
+>
+> While `section_mode` is enabled: using `aspect_ratio` or setting the card's `height` or `width` using CSS will probably the layout and is considered incompatible. There might be other incompatible options, if you find any, please update this documentation by submitting a PR.
 
 ![section_mode_true](examples/section_mode.png)
 
@@ -1376,57 +1378,7 @@ The definition order matters, the first item to match will be the one selected.
           - opacity: 0.5
 ```
 
-#### `tap_action` Navigate
-
-Buttons can link to different views using the `navigate` action:
-
-```yaml
-- type: 'custom:button-card'
-  color_type: label-card
-  icon: mdi:home
-  name: Go To Home
-  tap_action:
-    action: navigate
-    navigation_path: /lovelace/0
-```
-
-The `navigation_path` also accepts any Home Assistant internal URL such as /dev-info or /hassio/dashboard for example.
-
-#### `icon_tap_action`
-
-You can configure a separate action for when clicking the icon specifically, while the card itself has a different action:
-
-```yaml
-- type: 'custom:button-card'
-  entity: light.living_room
-  name: Living Room Light
-  tap_action:
-    action: toggle
-  icon_tap_action:
-    action: more-info
-```
-
-:warning: If any `icon_*_action` is defined, the icon will capture **all** the actions for its area. For eg. in the case below, clicking on the icon will not do anything unless you hold it. To execute `tap_action` you'll have to click outside of the icon area.
-
-```yaml
-type: 'custom:button-card'
-entity: light.living_room
-name: Living Room Light
-tap_action:
-  action: toggle
-icon_hold_action:
-  action: more-info
-```
-
-This allows for elegant UX patterns like:
-
-- Card tap to toggle the light
-- Icon tap to open more-info dialog
-- Or any other combination of actions
-
-The icon becomes clickable when `icon_*_action` is configured and not set to `none`.
-
-#### blink
+### blink
 
 You can make the whole button blink:
 
@@ -1447,6 +1399,64 @@ You can make the whole button blink:
     - operator: default
       color: green
       icon: mdi:shield-check
+```
+
+### `tap_action` Navigate
+
+Buttons can link to different views using the `navigate` action:
+
+```yaml
+- type: 'custom:button-card'
+  color_type: label-card
+  icon: mdi:home
+  name: Go To Home
+  tap_action:
+    action: navigate
+    navigation_path: /lovelace/0
+```
+
+The `navigation_path` also accepts any Home Assistant internal URL such as /dev-info or /hassio/dashboard for example.
+
+### `icon_*_action`
+
+You can configure a separate action for when clicking the icon specifically, while the card itself has a different action:
+
+```yaml
+- type: 'custom:button-card'
+  entity: light.living_room
+  name: Living Room Light
+  tap_action:
+    action: toggle
+  icon_tap_action:
+    action: more-info
+```
+
+> [!IMPORTANT]
+>
+> If any `icon_*_action` is defined, the icon will capture **all** the actions for its area. For eg. in the case below, clicking on the icon will not do anything unless you hold it. To execute `tap_action` you'll have to click outside of the icon area.
+
+```yaml
+type: 'custom:button-card'
+entity: light.living_room
+name: Living Room Light
+tap_action:
+  action: toggle
+icon_hold_action:
+  action: more-info
+```
+
+In this case, if you want to have the same action as the button also on the icon for `tap`, you'll have to define the `icon_tap_action` explicitely.
+
+```yaml
+type: 'custom:button-card'
+entity: light.living_room
+name: Living Room Light
+tap_action:
+  action: toggle
+icon_tap_action:
+  action: toggle
+icon_hold_action:
+  action: more-info
 ```
 
 ### Play with width, height and icon size
