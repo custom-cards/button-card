@@ -190,6 +190,11 @@ export const styles = css`
     max-height: 100%;
     position: absolute;
   }
+  ha-state-icon#icon.enabled,
+  img#icon.enabled {
+    pointer-events: auto;
+    cursor: pointer;
+  }
   img#icon {
     display: block;
     height: auto;
