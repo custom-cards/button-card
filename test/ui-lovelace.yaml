@@ -1524,7 +1524,7 @@ views:
                 triggers_update: update_timer
                 update_timer: |
                   [[[
-                    return states[entity.entity_id].state === 'on' ? 100 : "5s";
+                    return states["light.bed_light"].state === 'on' ? 100 : "5s";
                   ]]]
                 label: |
                   [[[
