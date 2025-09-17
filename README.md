@@ -289,7 +289,7 @@ To enable compatibility with sections (meaning the card adjusts its size automat
 
 For users with heavily modified cards using `styles`, you might need to adjust your configuration once enabling `section_mode`.
 
-⚠️ While `section_mode` is enabled: using `aspect_ratio` or setting the card's `height` or `width` using CSS will probably the layout and is considered incompatible. There might be other incompatible options, if you find any, please update this documentation by submitting a PR.
+⚠️ While `section_mode` is enabled: using `aspect_ratio` or setting the card's `height` or `width` using CSS will probably break the layout and is considered incompatible. There might be other incompatible options, if you find any, please update this documentation by submitting a PR.
 
 ![section_mode_true](examples/section_mode.png)
 
