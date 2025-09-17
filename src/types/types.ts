@@ -48,6 +48,7 @@ export interface ButtonCardConfig {
   tooltip?: string;
   section_mode?: boolean;
   update_timer?: number;
+  disabled?: string | boolean;
 }
 
 export interface GridOptions {

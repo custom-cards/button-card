@@ -144,6 +144,7 @@ Lovelace Button card for your entities.
 | `variables` | object | optional | See [Variables](#Variables) |
 | `card_size` | number | 3 | Any number | Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px) |
 | `tooltip` | string | optional | Any string | (Not supported on touchscreens) You can configure the tooltip displayed after hovering the card for 1.5 seconds . Supports templates, see [templates](#javascript-templates) |
+| `disabled` | boolean | optional | `false` | Available starting from HA 2025.10. Enables or disables the card. Supports templates. |
 
 ### Action
 
@@ -435,6 +436,7 @@ Those are the configuration fields which support templating:
 - The lock being enabled or not (`lock.enabled`)
 - all the `card` parameters in a `custom_field`
 - all the `variables`
+- `disabled`: should return a boolean
 
 Special fields which do support templating but are **only evaluated once**, when the configuration is loaded. Error in those templates will only be visible in the javascript console and the card will not display in that case:
 

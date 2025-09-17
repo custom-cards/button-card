@@ -177,6 +177,14 @@ class ButtonCard extends LitElement {
     };
   }
 
+  public get disabled(): boolean {
+    if (!this._initialSetupComplete || this._config?.disabled === undefined) {
+      return false;
+    } else {
+      return this._getTemplateOrValue(this._stateObj, this._config!.disabled);
+    }
+  }
+
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
     Object.keys(this._cards).forEach((element) => {
