@@ -7,6 +7,7 @@ import {
   HassServices,
   MessageBase,
 } from 'home-assistant-js-websocket';
+import { LitElement } from 'lit';
 
 export interface EntityRegistryDisplayEntry {
   entity_id: string;
@@ -280,4 +281,8 @@ export interface Themes {
 export interface ResolvedMediaSource {
   url: string;
   mime_type: string;
+}
+
+export interface HaRipple extends LitElement {
+  disabled: boolean;
 }

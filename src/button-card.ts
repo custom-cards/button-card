@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { LitElement, html, TemplateResult, CSSResult, PropertyValues } from 'lit';
-import { customElement, property, queryAsync, eventOptions } from 'lit/decorators';
+import { customElement, property, queryAsync } from 'lit/decorators';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { until } from 'lit/directives/until.js';
-import { Ripple } from '@material/mwc-ripple';
-import { RippleHandlers } from '@material/mwc-ripple/ripple-handlers';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
@@ -64,7 +62,7 @@ import {
 } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
-import { HomeAssistant } from './types/homeassistant';
+import { HaRipple, HomeAssistant } from './types/homeassistant';
 import { timerTimeRemaining } from './common/timer';
 import {
   formatDateTime,
@@ -126,7 +124,7 @@ class ButtonCard extends LitElement {
 
   @property({ type: Boolean, reflect: true }) preview = false;
 
-  @queryAsync('mwc-ripple') private _ripple!: Promise<Ripple | null>;
+  @queryAsync('ha-ripple') private _ripple!: Promise<HaRipple | null>;
 
   private _triggersAll?: boolean;
 
@@ -153,6 +151,8 @@ class ButtonCard extends LitElement {
   private _iconClickable = false;
 
   private _hasIconActions = false;
+
+  private _cardRipple = false;
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
@@ -985,9 +985,11 @@ class ButtonCard extends LitElement {
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
-    this._cardClickable = tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none' || hasChildCards;
+    const cardHasActions = tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none';
+    this._cardClickable = cardHasActions || hasChildCards;
     this._hasIconActions = icon_tap_action != 'none' || icon_hold_action != 'none' || icon_double_tap_action != 'none';
     this._iconClickable = this._cardClickable || this._hasIconActions;
+    this._cardRipple = cardHasActions || this._hasIconActions;
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
@@ -1080,6 +1082,7 @@ class ButtonCard extends LitElement {
       '--button-card-light-color-no-temperature',
       this._getColorForLightEntity(this._stateObj, false),
     );
+    this.style.setProperty('--button-card-ripple-color', buttonColor);
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
 
     const extraStyles = this._config!.extra_styles
@@ -1097,13 +1100,6 @@ class ButtonCard extends LitElement {
           class=${classMap(classList)}
           style=${styleMap(cardStyle)}
           @action=${this._handleAction}
-          @focus="${this.handleRippleFocus}"
-          @blur="${this.handleRippleBlur}"
-          @mousedown="${this.handleRippleActivate}"
-          @mouseup="${this.handleRippleDeactivate}"
-          @touchstart="${this.handleRippleActivate}"
-          @touchend="${this.handleRippleDeactivate}"
-          @touchcancel="${this.handleRippleDeactivate}"
           .actionHandler=${actionHandler({
             hasDoubleClick: this._config!.double_tap_action!.action !== 'none',
             hasHold: this._config!.hold_action!.action !== 'none',
@@ -1113,7 +1109,7 @@ class ButtonCard extends LitElement {
           .config="${this._config}"
         >
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
-          <mwc-ripple id="ripple"></mwc-ripple>
+          <ha-ripple .disabled=${!this._cardRipple}></ha-ripple>
         </ha-card>
         ${this._getLock(lockStyle)}
       </div>
@@ -1276,6 +1272,8 @@ class ButtonCard extends LitElement {
                   id="icon"
                   ?rotating=${this._rotate(configState)}
                   @action=${this._hasIconActions ? this._handleIconAction : undefined}
+                  @pointerenter=${this._hasIconActions ? this._handleRippleIcon : undefined}
+                  @pointerleave=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @click=${this._hasIconActions ? this._sendToParent : undefined}
                   @touchstart=${this._hasIconActions ? this._sendToParent : undefined}
                   @mousedown=${this._hasIconActions ? this._sendToParent : undefined}
@@ -1536,27 +1534,16 @@ class ButtonCard extends LitElement {
     return configDuplicate;
   }
 
-  private _rippleHandlers: RippleHandlers = new RippleHandlers(() => {
-    // this._shouldRenderRipple = true;
-    return this._ripple;
-  });
-
-  // backward compatibility
-  @eventOptions({ passive: true })
-  private handleRippleActivate(evt?: Event): void {
-    this._ripple.then((r) => r && typeof r.startPress === 'function' && this._rippleHandlers.startPress(evt));
-  }
-
-  private handleRippleDeactivate(): void {
-    this._ripple.then((r) => r && typeof r.endPress === 'function' && this._rippleHandlers.endPress());
-  }
-
-  private handleRippleFocus(): void {
-    this._ripple.then((r) => r && typeof r.startFocus === 'function' && this._rippleHandlers.startFocus());
-  }
-
-  private handleRippleBlur(): void {
-    this._ripple.then((r) => r && typeof r.endFocus === 'function' && this._rippleHandlers.endFocus());
+  private _handleRippleIcon(ev: PointerEvent): void {
+    this._ripple.then((r) => {
+      if (r) {
+        if (ev.type === 'pointerenter') {
+          r.setAttribute('icon', '');
+        } else if (ev.type === 'pointerleave') {
+          r.removeAttribute('icon');
+        }
+      }
+    });
   }
 
   private _handleIconAction(ev: any): void {
