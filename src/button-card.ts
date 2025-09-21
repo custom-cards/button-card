@@ -1661,5 +1661,12 @@ class ButtonCard extends LitElement {
     ev.stopPropagation();
     const event = new CustomEvent(ev.type, ev);
     this.parentElement?.dispatchEvent(event);
+    // Send non-bubbling event to ha-card to allow ripples
+    const rippleEvent = new CustomEvent(ev.type, { ...ev, bubbles: false, composed: false });
+    this._ripple.then((r) => {
+      if (r) {
+        r.parentElement?.dispatchEvent(rippleEvent);
+      }
+    });
   }
 }
