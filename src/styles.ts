@@ -23,6 +23,14 @@ export const styles = css`
     line-height: normal;
 
     --ha-ripple-color: var(--mdc-ripple-color, var(--button-card-ripple-color));
+    --ha-ripple-hover-color: var(
+      --mdc-ripple-hover-color,
+      var(--ha-ripple-color, var(--button-card-ripple-hover-color))
+    );
+    --ha-ripple-pressed-color: var(
+      --mdc-ripple-press-color,
+      var(--ha-ripple-color, var(--button-card-ripple-pressed-color))
+    );
     --ha-ripple-hover-opacity: var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, 0.08));
     --ha-ripple-pressed-opacity: var(--mdc-ripple-press-opacity, var(--button-card-ripple-pressed-opacity, 0.12));
 
@@ -44,25 +52,16 @@ export const styles = css`
   ha-ripple[icon] {
     inset: var(--button-card-ripple-icon-inset, 5px);
     border-radius: var(--button-card-ripple-icon-border-radius, 9999px);
-    --md-ripple-color: var(
-      --mdc-ripple-color,
-      var(--button-card-ripple-icon-color, var(--button-card-ripple-color, var(--ha-ripple-color)))
-    );
+    --md-ripple-color: var(--button-card-ripple-icon-color, var(--ha-ripple-color));
+    --md-ripple-hover-color: var(--button-card-ripple-icon-color, var(--ha-ripple-hover-color));
+    --md-ripple-pressed-color: var(--button-card-ripple-pressed-color, var(--ha-ripple-pressed-color));
     --md-ripple-hover-opacity: var(
       --button-card-ripple-icon-hover-opacity,
-      calc(
-        var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, var(--ha-ripple-hover-opacity, 0.08))) +
-          0.05
-      )
+      calc(var(--mdc-ripple-hover-opacity, var(--ha-ripple-hover-opacity, 0.08)) + 0.05)
     );
     --md-ripple-pressed-opacity: var(
       --button-card-ripple-icon-pressed-opacity,
-      calc(
-        var(
-            --mdc-ripple-press-opacity,
-            var(--button-card-ripple-pressed-opacity, var(--ha-ripple-pressed-opacity, 0.12))
-          ) + 0.05
-      )
+      calc(var(--mdc-ripple-press-opacity, var(--ha-ripple-pressed-opacity, 0.12)) + 0.05)
     );
   }
   :host(.tooltip) .tooltiptext {
