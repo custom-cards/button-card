@@ -2470,7 +2470,7 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
-            name: Color & opacity
+            name: Icon color & opacity
             icon_tap_action:
               action: toggle
             styles:
