@@ -2343,6 +2343,58 @@ views:
         cards:
           - type: 'custom:button-card'
             color_type: label-card
+            name: Test ripple override (ha)
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --ha-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --ha-ripple-hover-opacity: 0.3
+                - --ha-ripple-press-opacity: 0.6
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color & opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --ha-ripple-hover-opacity: 0.3
+                - --ha-ripple-press-opacity: 0.6
+                - --ha-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
             name: Test ripple override (button-card)
             styles:
               card:
