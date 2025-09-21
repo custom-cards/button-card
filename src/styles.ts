@@ -44,6 +44,7 @@ export const styles = css`
   ha-ripple[icon] {
     inset: var(--button-card-ripple-icon-inset, 5px);
     border-radius: var(--button-card-ripple-icon-border-radius, 9999px);
+    --ha-ripple-color: var(--mdc-ripple-color, var(--button-card-ripple-icon-color, var(--button-card-ripple-color)));
     --ha-ripple-hover-opacity: var(
       --button-card-ripple-icon-hover-opacity,
       calc(var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, 0.08)) + 0.05)
