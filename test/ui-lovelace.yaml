@@ -1890,7 +1890,7 @@ views:
               columns: 12
           - type: 'custom:button-card'
             entity: switch.skylight
-            name: icon dbl more-info
+            name: icon more-info
             tap_action:
               action: none
             icon_tap_action:
@@ -1901,7 +1901,7 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
-            name: icon dbl navigate
+            name: icon navigate
             tap_action:
               action: none
             icon_tap_action:
@@ -1913,7 +1913,7 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
-            name: icon dbl service
+            name: icon service
             tap_action:
               action: none
             icon_tap_action:
@@ -1954,6 +1954,505 @@ views:
               service: input_number.increment
               target:
                 entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+  - title: Ripples
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test standard ripple
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: No action
+            tap_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Tap action
+            tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Dbl tap action
+            tap_action:
+              action: none
+            double_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Hold action
+            hold_action:
+              action: more-info
+              entity: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Hold repeat action
+            hold_action:
+              action: call-service
+              repeat: 500
+              repeat_limit: 2
+              service: input_number.increment
+              service_data:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: custom:button-card
+            entity: input_number.test
+            show_label: true
+            show_icon: false
+            label: |
+              [[[
+                return entity.state;
+              ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test icon ripple
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: No action
+            tap_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon tap action
+            tap_action:
+              action: none
+            icon_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon dbl tap action
+            tap_action:
+              action: none
+            icon_double_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon hold action
+            tap_action:
+              action: none
+            icon_tap_action:
+              action: toggle
+            icon_hold_action:
+              action: more-info
+              entity: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon hold repeat action
+            tap_action:
+              action: none
+            icon_tap_action:
+              action: toggle
+            icon_hold_action:
+              action: call-service
+              repeat: 500
+              repeat_limit: 2
+              service: input_number.increment
+              service_data:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: custom:button-card
+            entity: input_number.test
+            show_label: true
+            show_icon: false
+            label: |
+              [[[
+                return entity.state;
+              ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test both ripple
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: No action
+            tap_action:
+              action: none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Tap actions
+            tap_action:
+              action: toggle
+            icon_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Dbl tap actions
+            tap_action:
+              action: none
+            double_tap_action:
+              action: toggle
+            icon_double_tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Hold actions
+            tap_action:
+              action: none
+            hold_action:
+              action: toggle
+            icon_hold_action:
+              action: more-info
+              entity: switch.skylight
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Hold repeat actions
+            tap_action:
+              action: none
+            hold_action:
+              action: call-service
+              repeat: 500
+              repeat_limit: 2
+              service: switch.toggle
+              service_data:
+                entity_id: switch.skylight
+            icon_hold_action:
+              action: call-service
+              repeat: 500
+              repeat_limit: 2
+              service: input_number.increment
+              service_data:
+                entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: custom:button-card
+            entity: input_number.test
+            show_label: true
+            show_icon: false
+            label: |
+              [[[
+                return entity.state;
+              ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test color ripple
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color icon
+            icon_tap_action:
+              action: toggle
+            color_type: icon
+            color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color card
+            icon_tap_action:
+              action: toggle
+            color_type: card
+            color: purple
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: light.living_room_rgbww_lights
+            name: Light std css
+            icon_tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+              entity: light.living_room_rgbww_lights
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: light.living_room_rgbww_lights
+            name: Light colored
+            icon_tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+              entity: light.living_room_rgbww_lights
+            styles:
+              icon:
+                - color: var(--button-card-light-color)
+              card:
+                - --button-card-ripple-color: var(--button-card-light-color)
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test ripple override (mdc)
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --mdc-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --mdc-ripple-hover-opacity: 0.3
+                - --mdc-ripple-press-opacity: 0.6
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color & opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --mdc-ripple-hover-opacity: 0.3
+                - --mdc-ripple-press-opacity: 0.6
+                - --mdc-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test ripple override (button-card)
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-hover-opacity: 0.3
+                - --button-card-ripple-press-opacity: 0.6
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color & opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-hover-opacity: 0.3
+                - --button-card-ripple-press-opacity: 0.6
+                - --button-card-ripple-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon color
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Icon opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-hover-opacity: 0.3
+                - --button-card-ripple-icon-press-opacity: 0.6
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Color & opacity
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-hover-opacity: 0.3
+                - --button-card-ripple-icon-press-opacity: 0.6
+                - --button-card-ripple-icon-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Inset 0 & color
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-inset: 0
+                - --button-card-ripple-icon-border-radius: var(--ha-card-border-radius, 12px)
+                - --button-card-ripple-icon-color: red
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Inset narrow
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-inset: 1em
+                - --button-card-ripple-icon-border-radius: var(--ha-card-border-radius, 12px)
             section_mode: true
             grid_options:
               rows: 2
