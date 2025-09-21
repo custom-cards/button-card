@@ -23,8 +23,8 @@ export const styles = css`
     line-height: normal;
 
     --ha-ripple-color: var(--mdc-ripple-color, var(--button-card-ripple-color));
-    --ha-ripple-hover-opacity: var(--mdc-ripple-hover-opacity, var(--ha-ripple-hover-opacity, 0.08));
-    --ha-ripple-pressed-opacity: var(--mdc-ripple-pressed-opacity, var(--ha-ripple-pressed-opacity, 0.12));
+    --ha-ripple-hover-opacity: var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, 0.08));
+    --ha-ripple-pressed-opacity: var(--mdc-ripple-pressed-opacity, var(--button-card-ripple-pressed-opacity, 0.12));
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -44,8 +44,14 @@ export const styles = css`
   ha-ripple[icon] {
     inset: var(--button-card-ripple-icon-inset, 5px);
     border-radius: var(--button-card-ripple-icon-border-radius, 9999px);
-    --ha-hover-opacity: calc(var(--ha-ripple-hover-opacity, 0.08) + 0.03);
-    --ha-pressed-opacity: calc(var(--ha-ripple-pressed-opacity, 0.12) + 0.05);
+    --ha-ripple-hover-opacity: var(
+      --button-card-ripple-icon-hover-opacity,
+      calc(var(--button-card-ripple-hover-opacity, 0.08) + 0.05)
+    );
+    --ha-ripple-pressed-opacity: var(
+      --button-card-ripple-icon-pressed-opacity,
+      calc(var(--button-card--ripple-pressed-opacity, 0.12) + 0.05)
+    );
   }
   :host(.tooltip) .tooltiptext {
     pointer-events: none;
