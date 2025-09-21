@@ -24,7 +24,7 @@ export const styles = css`
 
     --ha-ripple-color: var(--mdc-ripple-color, var(--button-card-ripple-color));
     --ha-ripple-hover-opacity: var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, 0.08));
-    --ha-ripple-pressed-opacity: var(--mdc-ripple-pressed-opacity, var(--button-card-ripple-pressed-opacity, 0.12));
+    --ha-ripple-pressed-opacity: var(--mdc-ripple-press-opacity, var(--button-card-ripple-pressed-opacity, 0.12));
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -46,11 +46,11 @@ export const styles = css`
     border-radius: var(--button-card-ripple-icon-border-radius, 9999px);
     --ha-ripple-hover-opacity: var(
       --button-card-ripple-icon-hover-opacity,
-      calc(var(--button-card-ripple-hover-opacity, 0.08) + 0.05)
+      calc(var(--mdc-ripple-hover-opacity, var(--button-card-ripple-hover-opacity, 0.08)) + 0.05)
     );
     --ha-ripple-pressed-opacity: var(
       --button-card-ripple-icon-pressed-opacity,
-      calc(var(--button-card--ripple-pressed-opacity, 0.12) + 0.05)
+      calc(var(--mdc-ripple-press-opacity, var(--button-card-ripple-pressed-opacity, 0.12)) + 0.05)
     );
   }
   :host(.tooltip) .tooltiptext {
