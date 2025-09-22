@@ -552,12 +552,16 @@ views:
                     name: icon_name_state_no_state
                     show_state: false
                     layout: icon_name_state
+                    icon_tap_action:
+                      action: more-info
 
               - type: 'custom:button-card'
                 entity: sensor.sensor1
                 name: icon_name_state
                 show_state: true
                 layout: icon_name_state
+                icon_tap_action:
+                  action: more-info
               - type: 'custom:button-card'
                 color_type: label-card
                 name: Testing default size
@@ -574,10 +578,14 @@ views:
                     show_state: false
                     show_name: false
                     layout: icon_name_state
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     show_name: false
                     show_state: false
+                    tap_action:
+                      action: more-info
               - type: horizontal-stack
                 cards:
                   - type: 'custom:button-card'
@@ -585,6 +593,8 @@ views:
                     name: icon_name
                     layout: icon_name
                     show_state: true
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     name: icon_state
@@ -592,18 +602,24 @@ views:
                     show_state: true
                     show_name: true
                     color_type: card
+                    icon_tap_action:
+                      action: more-info
               - type: horizontal-stack
                 cards:
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     name: icon_name
                     layout: icon_name
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     name: icon_state
                     layout: icon_state
                     show_state: true
                     show_name: false
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     color_type: card
@@ -612,6 +628,8 @@ views:
                     show_state: true
                     show_name: false
                     show_units: false
+                    icon_tap_action:
+                      action: more-info
               - type: horizontal-stack
                 cards:
                   - type: 'custom:button-card'
@@ -619,11 +637,15 @@ views:
                     layout: icon_name_state2nd
                     show_state: true
                     show_name: true
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     layout: icon_state_name2nd
                     show_state: true
                     show_name: true
+                    icon_tap_action:
+                      action: more-info
 
               - type: horizontal-stack
                 cards:
@@ -632,6 +654,8 @@ views:
                     name: name_state
                     layout: name_state
                     show_state: true
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     name: default state
@@ -639,11 +663,15 @@ views:
                     units: UNITS TOO LONNNNNNG
                     color_type: card
                     show_name: false
+                    icon_tap_action:
+                      action: more-info
                   - type: 'custom:button-card'
                     entity: sensor.sensor1
                     name: default name
                     show_state: false
                     show_name: true
+                    icon_tap_action:
+                      action: more-info
 
       - type: vertical-stack
         cards:
@@ -2490,7 +2518,6 @@ views:
             styles:
               card:
                 - --button-card-ripple-icon-inset: 0
-                - --button-card-ripple-icon-border-radius: var(--ha-card-border-radius, 12px)
                 - --button-card-ripple-icon-color: red
             section_mode: true
             grid_options:
@@ -2498,13 +2525,24 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
-            name: Inset narrow
+            name: Inset minimal (5px)
             icon_tap_action:
               action: toggle
             styles:
               card:
-                - --button-card-ripple-icon-inset: 1em
-                - --button-card-ripple-icon-border-radius: var(--ha-card-border-radius, 12px)
+                - --button-card-ripple-icon-inset: 5px
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Inset 0 padding
+            icon_tap_action:
+              action: toggle
+            styles:
+              card:
+                - --button-card-ripple-icon-inset-padding: 0
             section_mode: true
             grid_options:
               rows: 2
@@ -3010,7 +3048,8 @@ views:
                 entity: sensor.sensor1
                 show_state: true
                 layout: icon_name_state
-
+                icon_tap_action:
+                  action: more-info
           - type: horizontal-stack
             cards:
               - type: 'custom:button-card'
@@ -3035,9 +3074,13 @@ views:
                 entity: sensor.sensor1
                 show_state: true
                 layout: name_state
+                icon_tap_action:
+                  action: more-info
               - type: 'custom:button-card'
                 entity: sensor.sensor1
                 show_state: true
+                icon_tap_action:
+                  action: more-info
 
           - type: horizontal-stack
             cards:
@@ -3063,10 +3106,14 @@ views:
                 entity: sensor.sensor1
                 show_state: true
                 layout: icon_name
+                icon_tap_action:
+                  action: more-info
               - type: 'custom:button-card'
                 entity: sensor.sensor1
                 show_state: true
                 layout: icon_state
+                icon_tap_action:
+                  action: more-info
 
           - type: horizontal-stack
             cards:
@@ -3092,11 +3139,15 @@ views:
                 entity: sensor.sensor1
                 show_state: false
                 layout: icon_name
+                icon_tap_action:
+                  action: more-info
               - type: 'custom:button-card'
                 entity: sensor.sensor1
                 show_state: true
                 show_name: false
                 layout: icon_state
+                icon_tap_action:
+                  action: more-info
 
           - type: horizontal-stack
             cards:
@@ -3122,10 +3173,14 @@ views:
                 entity: sensor.sensor1
                 show_state: true
                 layout: icon_name_state2nd
+                icon_tap_action:
+                  action: more-info
               - type: 'custom:button-card'
                 entity: sensor.sensor1
                 show_state: true
                 layout: icon_state_name2nd
+                icon_tap_action:
+                  action: more-info
 
       - type: vertical-stack
         cards:
