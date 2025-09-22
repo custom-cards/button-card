@@ -1538,9 +1538,30 @@ class ButtonCard extends LitElement {
     this._ripple.then((r) => {
       if (r) {
         if (ev.type === 'pointerenter') {
+          const iconRect = (ev.target as HTMLElement)?.getBoundingClientRect() ?? null;
+          const cardRect = r.getBoundingClientRect();
+          const iconInset = { top: 0, left: 0, bottom: 0, right: 0 };
+          const iconComputedStyle = ev.target ? getComputedStyle(ev.target as HTMLElement) : null;
+          const iconInsetPadding = iconComputedStyle
+            ? parseInt(iconComputedStyle.getPropertyValue('--button-card-ripple-icon-inset-padding'))
+            : 12;
+          let insetStyle = '';
+          if (iconRect && cardRect) {
+            iconInset.top = iconRect.top - cardRect.top - iconInsetPadding;
+            iconInset.top = iconInset.top < 0 ? 0 : iconInset.top;
+            iconInset.left = iconRect.left - cardRect.left - iconInsetPadding;
+            iconInset.left = iconInset.left < 0 ? 0 : iconInset.left;
+            iconInset.bottom = cardRect.bottom - iconRect.bottom - iconInsetPadding;
+            iconInset.bottom = iconInset.bottom < 0 ? 0 : iconInset.bottom;
+            iconInset.right = cardRect.right - iconRect.right - iconInsetPadding;
+            iconInset.right = iconInset.right < 0 ? 0 : iconInset.right;
+            insetStyle = `${iconInset.top}px ${iconInset.right}px ${iconInset.bottom}px ${iconInset.left}px`;
+          }
           r.setAttribute('icon', '');
+          insetStyle != '' && r.style.setProperty('--dynamic-ripple-icon-inset', insetStyle);
         } else if (ev.type === 'pointerleave') {
           r.removeAttribute('icon');
+          r.style.removeProperty('--dynamic-ripple-icon-inset');
         }
       }
     });

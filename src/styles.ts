@@ -5,6 +5,7 @@ export const styles = css`
     position: relative;
     display: block;
     --state-inactive-color: var(--state-icon-color);
+    --button-card-ripple-icon-inset-padding: 12px;
   }
 
   :host(.section) {
@@ -50,8 +51,8 @@ export const styles = css`
     height: 100%;
   }
   ha-ripple[icon] {
-    inset: var(--button-card-ripple-icon-inset, 5px);
-    border-radius: var(--button-card-ripple-icon-border-radius, 9999px);
+    inset: var(--button-card-ripple-icon-inset, var(--dynamic-ripple-icon-inset, 5px));
+    border-radius: var(--button-card-ripple-icon-border-radius, var(--ha-card-border-radius, 12px));
     --md-ripple-color: var(--button-card-ripple-icon-color, var(--ha-ripple-color));
     --md-ripple-hover-color: var(--button-card-ripple-icon-color, var(--ha-ripple-hover-color));
     --md-ripple-pressed-color: var(--button-card-ripple-pressed-color, var(--ha-ripple-pressed-color));
