@@ -1302,6 +1302,8 @@ class ButtonCard extends LitElement {
                   ?rotating=${this._rotate(configState)}
                   draggable="false"
                   @action=${this._hasIconActions ? this._handleIconAction : undefined}
+                  @pointerenter=${this._hasIconActions ? this._handleRippleIcon : undefined}
+                  @pointerleave=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @click=${this._hasIconActions ? this._sendToParent : undefined}
                   @touchstart=${this._hasIconActions ? this._sendToParent : undefined}
                   @mousedown=${this._hasIconActions ? this._sendToParent : undefined}
