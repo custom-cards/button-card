@@ -131,6 +131,10 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
     }
 
     element.actionHandler.start = (ev: Event) => {
+      // ignore is set when event is re-dispatched to allow ripples
+      if ((ev as any).detail?.ignore) {
+        return;
+      }
       this.cancelled = false;
       let x;
       let y;
@@ -164,6 +168,10 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
     };
 
     element.actionHandler.end = (ev: Event) => {
+      // ignore is set when event is re-dispatched to allow ripples
+      if ((ev as any).detail?.ignore) {
+        return;
+      }
       // Don't respond when moved or scrolled while touch
       if (['touchend', 'touchcancel'].includes(ev.type) && this.cancelled) {
         if (this.isRepeating && this.repeatTimeout) {
