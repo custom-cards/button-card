@@ -148,6 +148,10 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
       }
 
       if (options.isMomentary) {
+        // ignore anything but left mouse button
+        if ((ev as any).button !== 0) {
+          return;
+        }
         fireEvent(element, 'action', { action: 'press' });
         return;
       }
