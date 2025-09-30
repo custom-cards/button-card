@@ -1742,6 +1742,31 @@ views:
         cards:
           - type: 'custom:button-card'
             color_type: label-card
+            name: Test momentary button
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: momentary toggle
+            press_action:
+              action: toggle
+            release_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
             name: Test icon_tap_action
             styles:
               card:
@@ -1898,6 +1923,31 @@ views:
               service: input_number.increment
               target:
                 entity_id: input_number.test
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+      - type: grid
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            name: Test momentary icon
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            section_mode: true
+            grid_options:
+              rows: 1
+              columns: 12
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: momentary toggle
+            icon_press_action:
+              action: toggle
+            icon_release_action:
+              action: toggle
             section_mode: true
             grid_options:
               rows: 2

@@ -13,7 +13,7 @@ interface ActionHandlerType extends HTMLElement {
 }
 
 export interface ActionHandlerDetail {
-  action: 'hold' | 'tap' | 'double_tap';
+  action: 'hold' | 'tap' | 'double_tap' | 'press' | 'release';
 }
 
 export interface ActionHandlerOptions {
@@ -22,6 +22,7 @@ export interface ActionHandlerOptions {
   disabled?: boolean;
   repeat?: number;
   repeatLimit?: number;
+  isMomentary?: boolean;
 }
 
 interface ActionHandlerElement extends HTMLElement {
@@ -146,6 +147,11 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
         y = (ev as MouseEvent).clientY;
       }
 
+      if (options.isMomentary) {
+        fireEvent(element, 'action', { action: 'press' });
+        return;
+      }
+
       if (options.hasHold) {
         this.held = false;
         this.timer = window.setTimeout(() => {
@@ -190,6 +196,10 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
       // Prevent mouse event if touch event
       if (ev.cancelable) {
         ev.preventDefault();
+      }
+      if (options.isMomentary) {
+        fireEvent(element, 'action', { action: 'release' });
+        return;
       }
       if (options.hasHold) {
         clearTimeout(this.timer);

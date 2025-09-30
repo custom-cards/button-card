@@ -152,6 +152,10 @@ class ButtonCard extends LitElement {
 
   private _hasIconActions = false;
 
+  private _cardMomentary = false;
+
+  private _iconMomentary = false;
+
   private _cardRipple = false;
 
   private get _doIHaveEverything(): boolean {
@@ -228,30 +232,66 @@ class ButtonCard extends LitElement {
 
       this._evaluateVariablesSkipError(this._stateObj);
 
-      if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
-        this._config = {
-          tap_action: { action: 'toggle' },
-          ...this._config!,
-        };
-      } else if (this._config!.entity && DOMAINS_PRESS.has(computeDomain(this._config!.entity))) {
-        this._config = {
-          tap_action: {
-            action: 'call-service',
-            service: 'input_button.press',
-            target: { entity_id: this._config!.entity },
-          },
-          ...this._config!,
-        };
-      } else if (this._config!.entity) {
-        this._config = {
-          tap_action: { action: 'more-info' },
-          ...this._config!,
-        };
+      if (this._config?.press_action?.action === 'none' && this._config?.release_action?.action === 'none') {
+        if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
+          this._config = {
+            tap_action: { action: 'toggle' },
+            ...this._config!,
+          };
+        } else if (this._config!.entity && DOMAINS_PRESS.has(computeDomain(this._config!.entity))) {
+          this._config = {
+            tap_action: {
+              action: 'call-service',
+              service: 'input_button.press',
+              target: { entity_id: this._config!.entity },
+            },
+            ...this._config!,
+          };
+        } else if (this._config!.entity) {
+          this._config = {
+            tap_action: { action: 'more-info' },
+            ...this._config!,
+          };
+        } else {
+          this._config = {
+            tap_action: { action: 'none' },
+            ...this._config!,
+          };
+        }
       } else {
         this._config = {
           tap_action: { action: 'none' },
           ...this._config!,
         };
+      }
+
+      if (this._config!.press_action?.action !== 'none' || this._config!.release_action?.action !== 'none') {
+        if (
+          typeof this._config!.tap_action === 'string' ||
+          this._config!.tap_action?.action !== 'none' ||
+          typeof this._config!.hold_action === 'string' ||
+          this._config!.hold_action?.action !== 'none' ||
+          typeof this._config!.double_tap_action === 'string' ||
+          this._config!.double_tap_action?.action !== 'none'
+        ) {
+          throw new Error(
+            'button-card: If you use press_action or release_action, then tap_action, hold_action and double_tap_action must be "none" or not set at all.',
+          );
+        }
+      }
+      if (this._config!.icon_press_action?.action !== 'none' || this._config!.icon_release_action?.action !== 'none') {
+        if (
+          typeof this._config!.icon_tap_action === 'string' ||
+          this._config!.icon_tap_action?.action !== 'none' ||
+          typeof this._config!.icon_hold_action === 'string' ||
+          this._config!.icon_hold_action?.action !== 'none' ||
+          typeof this._config!.icon_double_tap_action === 'string' ||
+          this._config!.icon_double_tap_action?.action !== 'none'
+        ) {
+          throw new Error(
+            'button-card: If you use icon_press_action or icon_release_action, then icon_tap_action, icon_hold_action and icon_double_tap_action must be "none" or not set at all.',
+          );
+        }
       }
 
       const jsonConfig = JSON.stringify(this._config);
@@ -270,7 +310,7 @@ class ButtonCard extends LitElement {
         if (result && result !== 'all') {
           this._entities.push(result);
         } else {
-          this._config.triggers_update = result;
+          this._config!.triggers_update = result;
         }
       }
       if (this._config!.triggers_update !== 'all') {
@@ -978,18 +1018,34 @@ class ButtonCard extends LitElement {
     const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
     const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
     const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
+    const press_action = this._getTemplateOrValue(state, this._config!.press_action!.action);
+    const release_action = this._getTemplateOrValue(state, this._config!.release_action!.action);
     const icon_tap_action = this._getTemplateOrValue(state, this._config!.icon_tap_action!.action);
     const icon_hold_action = this._getTemplateOrValue(state, this._config!.icon_hold_action!.action);
     const icon_double_tap_action = this._getTemplateOrValue(state, this._config!.icon_double_tap_action!.action);
+    const icon_press_action = this._getTemplateOrValue(state, this._config!.icon_press_action!.action);
+    const icon_release_action = this._getTemplateOrValue(state, this._config!.icon_release_action!.action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
-    const cardHasActions = tap_action != 'none' || hold_action != 'none' || double_tap_action != 'none';
+    const cardHasActions =
+      tap_action != 'none' ||
+      hold_action != 'none' ||
+      double_tap_action != 'none' ||
+      press_action != 'none' ||
+      release_action != 'none';
     this._cardClickable = cardHasActions || hasChildCards;
-    this._hasIconActions = icon_tap_action != 'none' || icon_hold_action != 'none' || icon_double_tap_action != 'none';
+    this._hasIconActions =
+      icon_tap_action != 'none' ||
+      icon_hold_action != 'none' ||
+      icon_double_tap_action != 'none' ||
+      icon_press_action != 'none' ||
+      icon_release_action != 'none';
     this._iconClickable = this._cardClickable || this._hasIconActions;
     this._cardRipple = cardHasActions || this._hasIconActions;
+    this._cardMomentary = press_action != 'none' || release_action != 'none';
+    this._iconMomentary = icon_press_action != 'none' || icon_release_action != 'none';
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
@@ -1105,6 +1161,7 @@ class ButtonCard extends LitElement {
             hasHold: this._config!.hold_action!.action !== 'none',
             repeat: this._config!.hold_action!.repeat,
             repeatLimit: this._config!.hold_action!.repeat_limit,
+            isMomentary: this._cardMomentary,
           })}
           .config="${this._config}"
         >
@@ -1286,6 +1343,7 @@ class ButtonCard extends LitElement {
                         hasHold: this._config!.icon_hold_action!.action !== 'none',
                         repeat: this._config!.icon_hold_action!.repeat,
                         repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                        isMomentary: this._iconMomentary,
                       })
                     : undefined}
                 ></ha-state-icon>
@@ -1316,6 +1374,7 @@ class ButtonCard extends LitElement {
                         hasHold: this._config!.icon_hold_action!.action !== 'none',
                         repeat: this._config!.icon_hold_action!.repeat,
                         repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                        isMomentary: this._iconMomentary,
                       })
                     : undefined}
                 />
@@ -1382,9 +1441,13 @@ class ButtonCard extends LitElement {
       group_expand: false,
       hold_action: { action: 'none' },
       double_tap_action: { action: 'none' },
+      press_action: { action: 'none' },
+      release_action: { action: 'none' },
       icon_tap_action: { action: 'none' },
       icon_hold_action: { action: 'none' },
       icon_double_tap_action: { action: 'none' },
+      icon_press_action: { action: 'none' },
+      icon_release_action: { action: 'none' },
       layout: 'vertical',
       size: '40%',
       color_type: 'icon',
@@ -1618,10 +1681,19 @@ class ButtonCard extends LitElement {
         sound.play();
       }
     }
+    let actionToExecute = action;
     if (options.isIcon) {
-      localAction[`${action}_action`] = localAction[`icon_${action}_action`];
+      if (['press', 'release'].includes(action)) {
+        localAction['tap_action'] = localAction[`icon_${action}_action`];
+        actionToExecute = 'tap';
+      } else {
+        localAction[`${action}_action`] = localAction[`icon_${action}_action`];
+      }
+    } else if (['press', 'release'].includes(action)) {
+      localAction['tap_action'] = localAction[`${action}_action`];
+      actionToExecute = 'tap';
     }
-    handleAction(this, this._hass!, localAction, action);
+    handleAction(this, this._hass!, localAction, actionToExecute);
   }
 
   private _handleUnlockType(ev): void {
