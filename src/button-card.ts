@@ -21,6 +21,7 @@ import {
   ColorType,
   CustomFields,
   EntityPicture,
+  ActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -1015,37 +1016,37 @@ class ButtonCard extends LitElement {
   }
 
   private _computeIsClickable(state: HassEntity | undefined, configState: StateConfig | undefined): void {
-    const tap_action = this._getTemplateOrValue(state, this._config!.tap_action!.action);
-    const hold_action = this._getTemplateOrValue(state, this._config!.hold_action!.action);
-    const double_tap_action = this._getTemplateOrValue(state, this._config!.double_tap_action!.action);
-    const press_action = this._getTemplateOrValue(state, this._config!.press_action!.action);
-    const release_action = this._getTemplateOrValue(state, this._config!.release_action!.action);
-    const icon_tap_action = this._getTemplateOrValue(state, this._config!.icon_tap_action!.action);
-    const icon_hold_action = this._getTemplateOrValue(state, this._config!.icon_hold_action!.action);
-    const icon_double_tap_action = this._getTemplateOrValue(state, this._config!.icon_double_tap_action!.action);
-    const icon_press_action = this._getTemplateOrValue(state, this._config!.icon_press_action!.action);
-    const icon_release_action = this._getTemplateOrValue(state, this._config!.icon_release_action!.action);
+    const tap_action: ActionConfig = this._getTemplateOrValue(state, this._config!.tap_action);
+    const hold_action: ActionConfig = this._getTemplateOrValue(state, this._config!.hold_action);
+    const double_tap_action: ActionConfig = this._getTemplateOrValue(state, this._config!.double_tap_action);
+    const press_action: ActionConfig = this._getTemplateOrValue(state, this._config!.press_action);
+    const release_action: ActionConfig = this._getTemplateOrValue(state, this._config!.release_action);
+    const icon_tap_action: ActionConfig = this._getTemplateOrValue(state, this._config!.icon_tap_action);
+    const icon_hold_action: ActionConfig = this._getTemplateOrValue(state, this._config!.icon_hold_action);
+    const icon_double_tap_action: ActionConfig = this._getTemplateOrValue(state, this._config!.icon_double_tap_action);
+    const icon_press_action: ActionConfig = this._getTemplateOrValue(state, this._config!.icon_press_action);
+    const icon_release_action: ActionConfig = this._getTemplateOrValue(state, this._config!.icon_release_action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
     const cardHasActions =
-      tap_action != 'none' ||
-      hold_action != 'none' ||
-      double_tap_action != 'none' ||
-      press_action != 'none' ||
-      release_action != 'none';
+      tap_action.action != 'none' ||
+      hold_action.action != 'none' ||
+      double_tap_action.action != 'none' ||
+      press_action.action != 'none' ||
+      release_action.action != 'none';
     this._cardClickable = cardHasActions || hasChildCards;
     this._hasIconActions =
-      icon_tap_action != 'none' ||
-      icon_hold_action != 'none' ||
-      icon_double_tap_action != 'none' ||
-      icon_press_action != 'none' ||
-      icon_release_action != 'none';
+      icon_tap_action.action != 'none' ||
+      icon_hold_action.action != 'none' ||
+      icon_double_tap_action.action != 'none' ||
+      icon_press_action.action != 'none' ||
+      icon_release_action.action != 'none';
     this._iconClickable = this._cardClickable || this._hasIconActions;
     this._cardRipple = cardHasActions || this._hasIconActions;
-    this._cardMomentary = press_action != 'none' || release_action != 'none';
-    this._iconMomentary = icon_press_action != 'none' || icon_release_action != 'none';
+    this._cardMomentary = press_action.action != 'none' || release_action.action != 'none';
+    this._iconMomentary = icon_press_action.action != 'none' || icon_release_action.action != 'none';
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
