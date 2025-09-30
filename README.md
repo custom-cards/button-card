@@ -47,6 +47,7 @@ Lovelace Button card for your entities.
     - [Merging state by id](#merging-state-by-id)
     - [Variables](#variables)
   - [Changing the feedback color during button/icon hover and click](#changing-the-feedback-color-during-buttonicon-hover-and-click)
+    - [Ripple and hover color CSS variables names](#ripple-and-hover-color-css-variables-names)
     - [Icon hover and click size \& shape](#icon-hover-and-click-size--shape)
 - [Installation](#installation)
   - [Installation and tracking with `HACS`](#installation-and-tracking-with-hacs)
@@ -1144,6 +1145,8 @@ name: '[[[ return variables.value; ]]]'
 ```
 
 ### Changing the feedback color during button/icon hover and click
+
+#### Ripple and hover color CSS variables names
 
 Buttons will provide hover feedback (ripple) when an action is available. When the icon also has an action, the hover opacity will be slightly less to indicate this. When button/icon is pressed, the opacity will be less to indicate the button/icon is pressed. You can style color and opacity for hover and pressed states using the following CSS variables for `card`.
 
