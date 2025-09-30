@@ -75,6 +75,7 @@ Lovelace Button card for your entities.
 - works with any toggleable entity
 - 6 available actions on **tap** and/or **hold** and/or **double click**: `none`, `toggle`, `more-info`, `navigate`, `url`, `assist` and `call-service`
 - **icon tap action**: Separate action when clicking the icon specifically which takes precedence over main card actions.
+- **momentary actions** for the card and/or icon: `press_action` and `release_action` (if used, replaces default actions)
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style (optional)
@@ -117,9 +118,13 @@ Lovelace Button card for your entities.
 | `tap_action` | object | optional | See [Action](#Action) | Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button. |
 | `hold_action` | object | optional | See [Action](#Action) | Define the type of action on hold, if undefined, nothing happens. |
 | `double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on double click, if undefined, nothing happens. |
+| `press_action` | object | optional | See [Action](#Action) | Define the type of action to execute immediately on button press. If defined, the only other card action allowed is `release_action` |
+| `release_action` | object | optional | See [Action](#Action) | Define the type of action to execute on button release. If defined, the only other card action allowed is `press_action` |
 | `icon_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. See note in [icon\_\*\_action](#icon__action) |
 | `icon_hold_action` | object | optional | See [Action](#Action) | Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. See note in [icon\_\*\_action](#icon__action) |
 | `icon_double_tap_action` | object | optional | See [Action](#Action) | Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. See note in [icon\_\*\_action](#icon__action) |
+| `icon_press_action` | object | optional | See [Action](#Action) | Define the type of action to execute immediately on icon press. If defined, the only other icon action allowed is `icon_release_action` |
+| `icon_release_action` | object | optional | See [Action](#Action) | Define the type of action to execute on icon release. If defined, the only other icon action allowed is `icon_press_action` |
 | `name` | string | optional | `Air conditioner` | Define an optional text to show below the icon. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | Override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
@@ -161,8 +166,8 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
 | `data` or `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `data` requires an `entity_id`, you can use the keyword `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
-| `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. |
-| `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. |
+| `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
+| `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
 | `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
 | `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
 
