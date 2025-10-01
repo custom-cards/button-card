@@ -1681,8 +1681,12 @@ class ButtonCard extends LitElement {
   }
 
   private _sendToParent(ev: Event): void {
+    const event = ev.type?.startsWith('touch')
+      ? new TouchEvent(ev.type, ev)
+      : ev.type?.startsWith('mouse')
+      ? new MouseEvent(ev.type, ev)
+      : new CustomEvent(ev.type, ev);
     ev.stopPropagation();
-    const event = new CustomEvent(ev.type, ev);
     this.parentElement?.dispatchEvent(event);
     // Send non-bubbling event to ha-card to allow ripples
     const rippleEvent = new CustomEvent(ev.type, { ...ev, bubbles: false, composed: false, detail: { ignore: true } });
