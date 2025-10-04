@@ -158,7 +158,7 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url`, `assist` | Action to perform |
+| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url`, `assist`, `javascript` | Action to perform |
 | `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
 | `target` | object | none |  | Only works with `call-service`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
 | `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
@@ -168,7 +168,8 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
 | `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
-| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object |
+| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. :warning: Not available for `javascript` actions |
+| `javascript` | string | none | A button card template which contains the javascript code to execute. |
 | `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
 
 Example - specifying fields directly:
@@ -200,6 +201,18 @@ variables:
     ]]]
 entity: light.bed_light
 tap_action: '[[[ return variables.my_action_object ]]]'
+```
+
+Example - Using a javascript action:
+
+```yaml
+type: custom:button-card
+icon: mdi:console
+name: Javascript Action
+tap_action:
+  action: javascript
+  javascript: |
+    [[[ alert("Hello from button card"); ]]]
 ```
 
 ### Confirmation

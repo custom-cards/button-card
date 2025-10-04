@@ -22,6 +22,7 @@ import {
   CustomFields,
   EntityPicture,
   ActionConfig,
+  ActionEventData,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -1018,38 +1019,41 @@ class ButtonCard extends LitElement {
     });
   }
 
+  private _isActionDoingSomething(state: HassEntity | undefined, actionConfig: any | undefined): boolean {
+    if (!actionConfig) return false;
+    if (typeof actionConfig === 'string') {
+      const evaledActionObj = this._getTemplateOrValue(state, actionConfig);
+      return !!(evaledActionObj && !['none', null, undefined].includes(evaledActionObj.action));
+    } else if (typeof actionConfig === 'object' && actionConfig.action) {
+      const evaledActionString = this._objectEvalTemplate(state, actionConfig.action);
+      return !['none', null, undefined].includes(evaledActionString);
+    }
+    return false;
+  }
+
   private _computeIsClickable(state: HassEntity | undefined, configState: StateConfig | undefined): void {
-    const tap_action: ActionConfig = this._objectEvalTemplate(state, this._config!.tap_action);
-    const hold_action: ActionConfig = this._objectEvalTemplate(state, this._config!.hold_action);
-    const double_tap_action: ActionConfig = this._objectEvalTemplate(state, this._config!.double_tap_action);
-    const press_action: ActionConfig = this._objectEvalTemplate(state, this._config!.press_action);
-    const release_action: ActionConfig = this._objectEvalTemplate(state, this._config!.release_action);
-    const icon_tap_action: ActionConfig = this._objectEvalTemplate(state, this._config!.icon_tap_action);
-    const icon_hold_action: ActionConfig = this._objectEvalTemplate(state, this._config!.icon_hold_action);
-    const icon_double_tap_action: ActionConfig = this._objectEvalTemplate(state, this._config!.icon_double_tap_action);
-    const icon_press_action: ActionConfig = this._objectEvalTemplate(state, this._config!.icon_press_action);
-    const icon_release_action: ActionConfig = this._objectEvalTemplate(state, this._config!.icon_release_action);
+    const tapActive = this._isActionDoingSomething(state, this._config!.tap_action);
+    const holdActive = this._isActionDoingSomething(state, this._config!.hold_action);
+    const doubleTapActive = this._isActionDoingSomething(state, this._config!.double_tap_action);
+    const pressActive = this._isActionDoingSomething(state, this._config!.press_action);
+    const releaseActive = this._isActionDoingSomething(state, this._config!.release_action);
+    const iconTapActive = this._isActionDoingSomething(state, this._config!.icon_tap_action);
+    const iconHoldActive = this._isActionDoingSomething(state, this._config!.icon_hold_action);
+    const iconDoubleTapActive = this._isActionDoingSomething(state, this._config!.icon_double_tap_action);
+    const iconPressActive = this._isActionDoingSomething(state, this._config!.icon_press_action);
+    const iconReleaseActive = this._isActionDoingSomething(state, this._config!.icon_release_action);
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
 
-    const cardHasActions =
-      tap_action?.action != 'none' ||
-      hold_action?.action != 'none' ||
-      double_tap_action?.action != 'none' ||
-      press_action?.action != 'none' ||
-      release_action?.action != 'none';
+    const cardHasActions = tapActive || holdActive || doubleTapActive || pressActive || releaseActive;
     this._cardClickable = cardHasActions || hasChildCards;
     this._hasIconActions =
-      icon_tap_action?.action != 'none' ||
-      icon_hold_action?.action != 'none' ||
-      icon_double_tap_action?.action != 'none' ||
-      icon_press_action?.action != 'none' ||
-      icon_release_action?.action != 'none';
+      iconTapActive || iconHoldActive || iconDoubleTapActive || iconPressActive || iconReleaseActive;
     this._iconClickable = this._cardClickable || this._hasIconActions;
     this._cardRipple = cardHasActions || this._hasIconActions;
-    this._cardMomentary = press_action?.action != 'none' || release_action?.action != 'none';
-    this._iconMomentary = icon_press_action?.action != 'none' || icon_release_action?.action != 'none';
+    this._cardMomentary = pressActive || releaseActive;
+    this._iconMomentary = iconPressActive || iconReleaseActive;
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
@@ -1567,8 +1571,7 @@ class ButtonCard extends LitElement {
     };
   }
 
-  private _evalActions(config: ButtonCardConfig, action: string): ButtonCardConfig {
-    const configDuplicate = copy(config);
+  private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
     /* eslint no-param-reassign: 0 */
     const __evalObject = (configEval: any): any => {
       if (!configEval) {
@@ -1586,21 +1589,40 @@ class ButtonCard extends LitElement {
       });
       return configEval;
     };
-    if (configDuplicate[action]?.service_data?.entity_id === 'entity') {
-      configDuplicate[action].service_data.entity_id = config.entity;
-    }
-    if (configDuplicate[action]?.data?.entity_id === 'entity') {
-      configDuplicate[action].data.entity_id = config.entity;
-    }
-    configDuplicate[action] = __evalObject(configDuplicate[action]);
-    if (!configDuplicate[action].confirmation && configDuplicate.confirmation) {
-      configDuplicate[action].confirmation = __evalObject(configDuplicate.confirmation);
-    }
-    if (configDuplicate[action]?.entity) {
-      configDuplicate.entity = configDuplicate[action].entity;
+
+    const actionEventData: ActionEventData = {};
+    if (typeof config[action] === 'string') {
+      actionEventData[action] = this._objectEvalTemplate(this._stateObj, config[action]);
+    } else {
+      actionEventData[action] = copy(config[action]);
     }
 
-    return configDuplicate;
+    // remove javascript string before evaluating and set it again after to avoid executing the JS right now.
+    let jsAction = undefined;
+    if (actionEventData[action]?.javascript) {
+      jsAction = actionEventData[action].javascript;
+      delete actionEventData[action].javascript;
+    }
+
+    actionEventData[action] = __evalObject(actionEventData[action]);
+    if (jsAction) actionEventData[action].javascript = jsAction;
+
+    if (actionEventData[action]?.service_data?.entity_id === 'entity') {
+      actionEventData[action].service_data.entity_id = config.entity;
+    }
+    if (actionEventData[action]?.data?.entity_id === 'entity') {
+      actionEventData[action].data.entity_id = config.entity;
+    }
+    if (!actionEventData[action].confirmation && config.confirmation) {
+      actionEventData[action].confirmation = __evalObject(copy(config.confirmation));
+    }
+    if (config[action]?.entity) {
+      actionEventData.entity = config[action].entity;
+    } else {
+      actionEventData.entity = config.entity;
+    }
+
+    return actionEventData;
   }
 
   private _handleRippleIcon(ev: PointerEvent): void {
@@ -1646,8 +1668,7 @@ class ButtonCard extends LitElement {
       if (!config) return;
       const action = ev.detail.action;
       const actionKey = `icon_${action}_action`;
-      const localAction = this._evalActions(config, actionKey);
-      if (localAction[actionKey]?.action !== 'none') {
+      if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
         this._runAction(ev.detail.action, { isIcon: true });
       }
     }
@@ -1655,7 +1676,13 @@ class ButtonCard extends LitElement {
 
   private _handleAction(ev: any): void {
     if (ev.detail?.action) {
-      this._runAction(ev.detail.action, { isIcon: false });
+      const config = this._config;
+      if (!config) return;
+      const action = ev.detail.action;
+      const actionKey = `${action}_action`;
+      if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
+        this._runAction(ev.detail.action, { isIcon: false });
+      }
     }
   }
 
@@ -1663,11 +1690,8 @@ class ButtonCard extends LitElement {
     const config = this._config;
     if (!config) return;
     const actionKey = options.isIcon ? `icon_${action}_action` : `${action}_action`;
+
     const localAction = this._evalActions(config, actionKey);
-    // Check if the action is configured (not 'none')
-    if (!localAction[actionKey] || localAction[actionKey].action === 'none') {
-      return;
-    }
 
     const soundUrl = localAction[actionKey].sound;
     if (soundUrl) {
@@ -1685,19 +1709,25 @@ class ButtonCard extends LitElement {
         sound.play();
       }
     }
-    let actionToExecute = action;
-    if (options.isIcon) {
-      if (['press', 'release'].includes(action)) {
-        localAction['tap_action'] = localAction[`icon_${action}_action`];
+
+    if (localAction[actionKey].action === 'javascript' && localAction[actionKey].javascript) {
+      // executes the javascript action.
+      this._getTemplateOrValue(this._stateObj, localAction[actionKey].javascript);
+    } else {
+      let actionToExecute = action;
+      if (options.isIcon) {
+        if (['press', 'release'].includes(action)) {
+          localAction['tap_action'] = localAction[`icon_${action}_action`];
+          actionToExecute = 'tap';
+        } else {
+          localAction[`${action}_action`] = localAction[`icon_${action}_action`];
+        }
+      } else if (['press', 'release'].includes(action)) {
+        localAction['tap_action'] = localAction[`${action}_action`];
         actionToExecute = 'tap';
-      } else {
-        localAction[`${action}_action`] = localAction[`icon_${action}_action`];
       }
-    } else if (['press', 'release'].includes(action)) {
-      localAction['tap_action'] = localAction[`${action}_action`];
-      actionToExecute = 'tap';
+      handleAction(this, this._hass!, localAction, actionToExecute);
     }
-    handleAction(this, this._hass!, localAction, actionToExecute);
   }
 
   private _handleUnlockType(ev): void {

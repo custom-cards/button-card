@@ -1567,6 +1567,21 @@ views:
             grid_options:
               rows: 2
               columns: 4
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: javascript action
+            tap_action:
+              action: javascript
+              javascript: >
+                [[[
+                  alert("Hello from button card");
+                ]]]
+
+
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
 
       - type: grid
         cards:
