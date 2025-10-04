@@ -21,7 +21,6 @@ import {
   ColorType,
   CustomFields,
   EntityPicture,
-  ActionConfig,
   ActionEventData,
 } from './types/types';
 import { actionHandler } from './action-handler';
