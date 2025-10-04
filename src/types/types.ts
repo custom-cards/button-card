@@ -245,7 +245,7 @@ export interface JavascriptActionConfig extends BaseActionConfig {
 
 export interface BaseActionConfig {
   action: string;
-  confirmation?: ConfirmationRestrictionConfig;
+  confirmation?: ConfirmationRestrictionConfig | string;
   repeat?: number;
   repeat_limit?: number;
   sound?: string;
@@ -269,7 +269,10 @@ export type ActionConfig =
   | AssistActionConfig
   | NoActionConfig
   | CustomActionConfig
-  | JavascriptActionConfig;
+  | JavascriptActionConfig
+  | string;
+
+export type EvaluatedActionConfig = Exclude<ActionConfig, string>;
 
 export type Constructor<T = any> = new (...args: any[]) => T;
 

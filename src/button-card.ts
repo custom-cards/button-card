@@ -22,6 +22,8 @@ import {
   CustomFields,
   EntityPicture,
   ActionEventData,
+  EvaluatedActionConfig,
+  ActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -236,7 +238,10 @@ class ButtonCard extends LitElement {
 
       this._evaluateVariablesSkipError(this._stateObj);
 
-      if (this._config?.press_action?.action === 'none' && this._config?.release_action?.action === 'none') {
+      if (
+        !this._isActionDoingSomething(this._stateObj, this._config!.press_action) &&
+        !this._isActionDoingSomething(this._stateObj, this._config!.release_action)
+      ) {
         if (this._config!.entity && DOMAINS_TOGGLE.has(computeDomain(this._config!.entity))) {
           this._config = {
             tap_action: { action: 'toggle' },
@@ -269,28 +274,28 @@ class ButtonCard extends LitElement {
         };
       }
 
-      if (this._config!.press_action?.action !== 'none' || this._config!.release_action?.action !== 'none') {
+      if (
+        this._isActionDoingSomething(this._stateObj, this._config!.press_action) ||
+        this._isActionDoingSomething(this._stateObj, this._config!.release_action)
+      ) {
         if (
-          typeof this._config!.tap_action === 'string' ||
-          this._config!.tap_action?.action !== 'none' ||
-          typeof this._config!.hold_action === 'string' ||
-          this._config!.hold_action?.action !== 'none' ||
-          typeof this._config!.double_tap_action === 'string' ||
-          this._config!.double_tap_action?.action !== 'none'
+          this._isActionDoingSomething(this._stateObj, this._config!.tap_action) ||
+          this._isActionDoingSomething(this._stateObj, this._config!.hold_action) ||
+          this._isActionDoingSomething(this._stateObj, this._config!.double_tap_action)
         ) {
           throw new Error(
             'button-card: If you use press_action or release_action, then tap_action, hold_action and double_tap_action must be "none" or not set at all.',
           );
         }
       }
-      if (this._config!.icon_press_action?.action !== 'none' || this._config!.icon_release_action?.action !== 'none') {
+      if (
+        this._isActionDoingSomething(this._stateObj, this._config!.icon_press_action) ||
+        this._isActionDoingSomething(this._stateObj, this._config!.icon_release_action)
+      ) {
         if (
-          typeof this._config!.icon_tap_action === 'string' ||
-          this._config!.icon_tap_action?.action !== 'none' ||
-          typeof this._config!.icon_hold_action === 'string' ||
-          this._config!.icon_hold_action?.action !== 'none' ||
-          typeof this._config!.icon_double_tap_action === 'string' ||
-          this._config!.icon_double_tap_action?.action !== 'none'
+          this._isActionDoingSomething(this._stateObj, this._config!.icon_tap_action) ||
+          this._isActionDoingSomething(this._stateObj, this._config!.icon_hold_action) ||
+          this._isActionDoingSomething(this._stateObj, this._config!.icon_double_tap_action)
         ) {
           throw new Error(
             'button-card: If you use icon_press_action or icon_release_action, then icon_tap_action, icon_hold_action and icon_double_tap_action must be "none" or not set at all.',
@@ -1155,6 +1160,7 @@ class ButtonCard extends LitElement {
           </style>
         `
       : html``;
+    const holdActionEvaluated = this._partialActionEval(this._config!.hold_action);
     return html`
       ${extraStyles}
       <div id="aspect-ratio" style=${styleMap(aspectRatio)}>
@@ -1164,10 +1170,10 @@ class ButtonCard extends LitElement {
           style=${styleMap(cardStyle)}
           @action=${this._handleAction}
           .actionHandler=${actionHandler({
-            hasDoubleClick: this._config!.double_tap_action!.action !== 'none',
-            hasHold: this._config!.hold_action!.action !== 'none',
-            repeat: this._config!.hold_action!.repeat,
-            repeatLimit: this._config!.hold_action!.repeat_limit,
+            hasDoubleClick: this._isActionDoingSomething(this._stateObj, this._config!.double_tap_action),
+            hasHold: this._isActionDoingSomething(this._stateObj, this._config!.hold_action),
+            repeat: holdActionEvaluated?.repeat,
+            repeatLimit: holdActionEvaluated?.repeat_limit,
             isMomentary: this._cardMomentary,
           })}
           .config="${this._config}"
@@ -1320,6 +1326,7 @@ class ButtonCard extends LitElement {
       if (state) {
         domain = computeStateDomain(state);
       }
+      const iconHoldActionEvaluated = this._partialActionEval(this._config!.icon_hold_action);
       return html`
         <div id="img-cell" style=${styleMap(imgCellStyleFromConfig)}>
           ${shouldShowIcon && !entityPicture && !liveStream
@@ -1346,10 +1353,10 @@ class ButtonCard extends LitElement {
                   @touchcancel=${this._hasIconActions ? this._sendToParent : undefined}
                   .actionHandler=${this._hasIconActions
                     ? actionHandler({
-                        hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
-                        hasHold: this._config!.icon_hold_action!.action !== 'none',
-                        repeat: this._config!.icon_hold_action!.repeat,
-                        repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                        hasDoubleClick: this._isActionDoingSomething(state, this._config!.icon_double_tap_action),
+                        hasHold: this._isActionDoingSomething(state, this._config!.icon_hold_action),
+                        repeat: iconHoldActionEvaluated?.repeat,
+                        repeatLimit: iconHoldActionEvaluated?.repeat_limit,
                         isMomentary: this._iconMomentary,
                       })
                     : undefined}
@@ -1377,10 +1384,10 @@ class ButtonCard extends LitElement {
                   @touchcancel=${this._hasIconActions ? this._sendToParent : undefined}
                   .actionHandler=${this._hasIconActions
                     ? actionHandler({
-                        hasDoubleClick: this._config!.icon_double_tap_action!.action !== 'none',
-                        hasHold: this._config!.icon_hold_action!.action !== 'none',
-                        repeat: this._config!.icon_hold_action!.repeat,
-                        repeatLimit: this._config!.icon_hold_action!.repeat_limit,
+                        hasDoubleClick: this._isActionDoingSomething(state, this._config!.icon_double_tap_action),
+                        hasHold: this._isActionDoingSomething(state, this._config!.icon_hold_action),
+                        repeat: iconHoldActionEvaluated?.repeat,
+                        repeatLimit: iconHoldActionEvaluated?.repeat_limit,
                         isMomentary: this._iconMomentary,
                       })
                     : undefined}
@@ -1568,6 +1575,20 @@ class ButtonCard extends LitElement {
       min_rows: 1,
       min_columns: 1,
     };
+  }
+
+  private _partialActionEval(actionConfig: ActionConfig | undefined): EvaluatedActionConfig {
+    if (!actionConfig) {
+      return { action: 'none' };
+    }
+    if (typeof actionConfig === 'string') {
+      return this._objectEvalTemplate(this._stateObj, actionConfig) as EvaluatedActionConfig;
+    }
+    const evaluatedAction: EvaluatedActionConfig = copy(actionConfig);
+    ['action', 'repeat', 'repeat_limit'].forEach((key) => {
+      evaluatedAction[key] = this._getTemplateOrValue(this._stateObj, evaluatedAction[key]);
+    });
+    return evaluatedAction;
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
