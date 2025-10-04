@@ -1029,7 +1029,7 @@ class ButtonCard extends LitElement {
       const evaledActionObj = this._getTemplateOrValue(state, actionConfig);
       return !!(evaledActionObj && !['none', null, undefined].includes(evaledActionObj.action));
     } else if (typeof actionConfig === 'object' && actionConfig.action) {
-      const evaledActionString = this._objectEvalTemplate(state, actionConfig.action);
+      const evaledActionString = this._getTemplateOrValue(state, actionConfig.action);
       return !['none', null, undefined].includes(evaledActionString);
     }
     return false;
@@ -1710,7 +1710,6 @@ class ButtonCard extends LitElement {
     const config = this._config;
     if (!config) return;
     const actionKey = options.isIcon ? `icon_${action}_action` : `${action}_action`;
-
     const localAction = this._evalActions(config, actionKey);
 
     const soundUrl = localAction[actionKey].sound;
