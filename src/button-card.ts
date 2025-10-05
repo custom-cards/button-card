@@ -1717,7 +1717,7 @@ class ButtonCard extends LitElement {
         break;
 
       default:
-        break;
+        return { [action]: { action: 'none' } as NoActionConfig };
     }
 
     actionData[action] = {
