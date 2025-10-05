@@ -210,9 +210,19 @@ export interface CallServiceActionConfig extends BaseActionConfig {
   data?: Record<string, unknown>;
 }
 
+export interface PerformActionActionConfig extends BaseActionConfig {
+  action: 'perform-action';
+  perform_action: string;
+  target?: HassServiceTarget;
+  // "service_data" is kept for backwards compatibility. Replaced by "data".
+  service_data?: Record<string, unknown>;
+  data?: Record<string, unknown>;
+}
+
 export interface NavigateActionConfig extends BaseActionConfig {
   action: 'navigate';
   navigation_path: string;
+  navigation_replace?: boolean;
 }
 
 export interface UrlActionConfig extends BaseActionConfig {
@@ -240,7 +250,7 @@ export interface AssistActionConfig extends BaseActionConfig {
 
 export interface JavascriptActionConfig extends BaseActionConfig {
   action: 'javascript';
-  javascript: string;
+  javascript?: string;
 }
 
 export interface BaseActionConfig {
@@ -249,6 +259,7 @@ export interface BaseActionConfig {
   repeat?: number;
   repeat_limit?: number;
   sound?: string;
+  haptic?: 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'warning' | 'error' | 'none';
 }
 
 export interface ConfirmationRestrictionConfig {
@@ -263,6 +274,7 @@ export interface RestrictionConfig {
 export type ActionConfig =
   | ToggleActionConfig
   | CallServiceActionConfig
+  | PerformActionActionConfig
   | NavigateActionConfig
   | UrlActionConfig
   | MoreInfoActionConfig
@@ -279,16 +291,16 @@ export type Constructor<T = any> = new (...args: any[]) => T;
 export type EntityPicture = Promise<string> | string | undefined;
 
 export interface ActionEventData {
-  tap_action?: ActionConfig;
-  hold_action?: ActionConfig;
-  double_tap_action?: ActionConfig;
-  press_action?: ActionConfig;
-  release_action?: ActionConfig;
-  icon_tap_action?: ActionConfig;
-  icon_hold_action?: ActionConfig;
-  icon_double_tap_action?: ActionConfig;
-  icon_press_action?: ActionConfig;
-  icon_release_action?: ActionConfig;
+  tap_action?: EvaluatedActionConfig;
+  hold_action?: EvaluatedActionConfig;
+  double_tap_action?: EvaluatedActionConfig;
+  press_action?: EvaluatedActionConfig;
+  release_action?: EvaluatedActionConfig;
+  icon_tap_action?: EvaluatedActionConfig;
+  icon_hold_action?: EvaluatedActionConfig;
+  icon_double_tap_action?: EvaluatedActionConfig;
+  icon_press_action?: EvaluatedActionConfig;
+  icon_release_action?: EvaluatedActionConfig;
   entity?: string;
-  confirmation?: string;
+  confirmation?: ConfirmationRestrictionConfig;
 }

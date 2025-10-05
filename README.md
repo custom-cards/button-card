@@ -158,18 +158,22 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `none`, `navigate`, `url`, `assist`, `javascript` | Action to perform |
-| `entity` | string | none | Any entity id | **Only valid for `action: more-info`** to override the entity on which you want to call `more-info` |
-| `target` | object | none |  | Only works with `call-service`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
-| `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as navigate |
+| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript` | Action to perform |
+| `entity` | string | none | Any entity id | **Only valid for `action: more-info` or `action: toggle`** to override the entity on which you want to call `more-info` |
+| `target` | object | none |  | Only works with `call-service` or `perform-action`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
+| `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as `navigate` |
+| `navigation_replace` | boolean | none | `true`, `false` | Whether to replace the current page in the the history with the new URL when the action is defined as `navigate` |
 | `url_path` | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
 | `service` | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
-| `data` or `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service`. If your `data` requires an `entity_id`, you can use the keyword `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
+| `perform_action` | string | none | Any action | Action to call (e.g. `media_player.media_play_pause`) when `action` defined as `perform-action` |
+| `data` or `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` or `perform-action`. If your `data` requires an `entity_id`, you can use the keyword `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](#configuration-templates) |
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
 | `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
 | `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. :warning: Not available for `javascript` actions |
-| `javascript` | string | none | A button card template which contains the javascript code to execute. |
+| `javascript` | string | none | any javascript template | A button card javascript template which contains the javascript code to execute. |
+| `pipeline_id` | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
+| `start_listening` | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
 | `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
 
 Example - specifying fields directly:

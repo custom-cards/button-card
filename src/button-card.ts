@@ -24,6 +24,16 @@ import {
   ActionEventData,
   EvaluatedActionConfig,
   ActionConfig,
+  JavascriptActionConfig,
+  NoActionConfig,
+  ToggleActionConfig,
+  MoreInfoActionConfig,
+  NavigateActionConfig,
+  UrlActionConfig,
+  CallServiceActionConfig,
+  PerformActionActionConfig,
+  AssistActionConfig,
+  CustomActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -1592,57 +1602,133 @@ class ButtonCard extends LitElement {
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
-    /* eslint no-param-reassign: 0 */
-    const __evalObject = (configEval: any): any => {
-      if (!configEval) {
-        return configEval;
-      }
-      if (typeof configEval === 'string') {
-        return this._getTemplateOrValue(this._stateObj, configEval);
-      }
-      Object.keys(configEval).forEach((key) => {
-        if (typeof configEval[key] === 'object') {
-          configEval[key] = __evalObject(configEval[key]);
-        } else {
-          configEval[key] = this._getTemplateOrValue(this._stateObj, configEval[key]);
-        }
-      });
-      return configEval;
-    };
-
-    const actionEventData: ActionEventData = {};
+    const localActionEventData: ActionEventData = {};
     if (typeof config[action] === 'string') {
-      actionEventData[action] = this._objectEvalTemplate(this._stateObj, config[action]);
+      localActionEventData[action] = this._objectEvalTemplate(this._stateObj, config[action]);
     } else {
-      actionEventData[action] = copy(config[action]);
+      localActionEventData[action] = copy(config[action]);
     }
 
-    // remove javascript string before evaluating and set it again after to avoid executing the JS right now.
-    let jsAction = undefined;
-    if (actionEventData[action]?.javascript) {
-      jsAction = actionEventData[action].javascript;
-      delete actionEventData[action].javascript;
+    const actionType = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.action);
+
+    if (actionType === 'none' || !actionType) {
+      const noAction: ActionEventData = {};
+      noAction[action] = { action: 'none' } as NoActionConfig;
+      return noAction;
     }
 
-    actionEventData[action] = __evalObject(actionEventData[action]);
-    if (jsAction) actionEventData[action].javascript = jsAction;
+    const repeat = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.repeat);
+    const repeat_limit = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.repeat_limit);
+    const sound = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.sound);
+    let confirmation = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.confirmation);
+    if (!confirmation && config.confirmation) {
+      confirmation = this._objectEvalTemplate(this._stateObj, config.confirmation);
+    }
+    const haptic = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.haptic);
 
-    if (actionEventData[action]?.service_data?.entity_id === 'entity') {
-      actionEventData[action].service_data.entity_id = config.entity;
-    }
-    if (actionEventData[action]?.data?.entity_id === 'entity') {
-      actionEventData[action].data.entity_id = config.entity;
-    }
-    if (!actionEventData[action].confirmation && config.confirmation) {
-      actionEventData[action].confirmation = __evalObject(copy(config.confirmation));
-    }
-    if (config[action]?.entity) {
-      actionEventData.entity = config[action].entity;
-    } else {
-      actionEventData.entity = config.entity;
+    const actionData: ActionEventData = {};
+    switch (actionType) {
+      case 'javascript':
+        actionData[action] = {
+          action: 'javascript',
+          javascript: localActionEventData[action].javascript,
+        } as JavascriptActionConfig;
+        break;
+
+      case 'toggle':
+        actionData.entity = this._getTemplateOrValue(this._stateObj, config[action]?.entity || config.entity);
+        actionData[action] = {
+          action: 'toggle',
+        } as ToggleActionConfig;
+        break;
+
+      case 'more-info':
+        actionData.entity = this._getTemplateOrValue(this._stateObj, config[action]?.entity || config.entity);
+        actionData[action] = {
+          action: 'more-info',
+        } as MoreInfoActionConfig;
+        break;
+
+      case 'navigate':
+        actionData[action] = {
+          action: 'navigate',
+          navigation_path: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.navigation_path),
+          navigation_replace: this._getTemplateOrValue(
+            this._stateObj,
+            localActionEventData[action]?.navigation_replace,
+          ),
+        } as NavigateActionConfig;
+        break;
+
+      case 'url':
+        actionData[action] = {
+          action: 'url',
+          url_path: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.url_path),
+        } as UrlActionConfig;
+        break;
+
+      case 'call-service':
+        actionData[action] = {
+          action: 'call-service',
+          service: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.service),
+          data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data),
+          target: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.target),
+          // kept for backward compatibility
+          service_data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
+        } as CallServiceActionConfig;
+        if (actionData[action].service_data?.entity_id === 'entity') {
+          actionData[action].service_data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        }
+        if (actionData[action].data?.entity_id === 'entity') {
+          actionData[action].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        }
+        break;
+
+      case 'perform-action':
+        actionData[action] = {
+          action: 'perform-action',
+          perform_action: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.perform_action),
+          data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data),
+          target: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.target),
+          // kept for backward compatibility
+          service_data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
+        } as PerformActionActionConfig;
+        if (actionData[action].service_data?.entity_id === 'entity') {
+          actionData[action].service_data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        }
+        if (actionData[action].data?.entity_id === 'entity') {
+          actionData[action].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        }
+        break;
+
+      case 'assist':
+        actionData[action] = {
+          action: 'assist',
+          pipeline_id: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.pipeline_id),
+          start_listening: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.start_listening),
+        } as AssistActionConfig;
+        break;
+
+      case 'fire-dom-event':
+        actionData[action] = {
+          action: 'fire-dom-event',
+          ...this._objectEvalTemplate(this._stateObj, localActionEventData[action]),
+        } as CustomActionConfig;
+        break;
+
+      default:
+        break;
     }
 
-    return actionEventData;
+    actionData[action] = {
+      ...actionData[action],
+      repeat,
+      repeat_limit,
+      sound,
+      haptic,
+    };
+    actionData.confirmation = confirmation;
+    return actionData;
   }
 
   private _handleRippleIcon(ev: PointerEvent): void {
@@ -1729,7 +1815,7 @@ class ButtonCard extends LitElement {
       }
     }
 
-    if (localAction[actionKey].action === 'javascript' && localAction[actionKey].javascript) {
+    if (localAction[actionKey].action === 'javascript') {
       // executes the javascript action.
       this._getTemplateOrValue(this._stateObj, localAction[actionKey].javascript);
     } else {
