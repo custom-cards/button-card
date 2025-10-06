@@ -77,7 +77,7 @@ import {
   DEFAULT_LOCK_ICON,
   DEFAULT_UNLOCK_ICON,
   DEFAULT_STATE_COLOR,
-  DEFAULT_PIN_FAILED_TOAST_MESSAGE,
+  DEFAULT_FAILED_TOAST_MESSAGE,
 } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
@@ -1754,7 +1754,7 @@ class ButtonCard extends LitElement {
     if (protect && (protect.password || protect.pin)) {
       this._protectedAction = {
         type: action,
-        data: actionData,
+        data: copy(actionData),
       };
     }
 
@@ -1828,14 +1828,20 @@ class ButtonCard extends LitElement {
     // always returns the action in `tap_action` for easier handling
     const localAction = this._evalActions(config, actionKey);
 
-    if (localAction['tap_action']?.protect) {
-      if (localAction['tap_action']?.protect.pin !== undefined) {
-        (window as any).cardHelpers.showEnterCodeDialog(this, {
-          submit: this._pinConfirmedCallback.bind(this),
-          cancel: this._pinCancelledCallback.bind(this),
-          codeFormat: 'number',
-        });
-      }
+    if (localAction['tap_action']?.protect?.pin !== undefined) {
+      (window as any).cardHelpers.showEnterCodeDialog(this, {
+        submit: (code: string) => this._protectedConfirmedCallback.bind(this)(code, 'pin'),
+        cancel: this._cancelledCallback.bind(this),
+        codeFormat: 'number',
+      });
+    } else if (localAction['tap_action']?.protect?.password !== undefined) {
+      (window as any).cardHelpers.showPromptDialog(this, {
+        title: 'Password',
+        inputLabel: 'Password',
+        inputType: 'password',
+        confirm: (password: string) => this._protectedConfirmedCallback.bind(this)(password, 'password'),
+        cancel: this._cancelledCallback.bind(this),
+      });
     } else {
       this._executeAction(localAction);
     }
@@ -1876,26 +1882,20 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _pinConfirmedCallback(code: string): void {
+  private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
-      const configPin = this._objectEvalTemplate(
-        this._stateObj,
-        this._config[this._protectedAction.type]?.protect,
-      )?.pin;
-      if (code === configPin) {
+      if (code === this._protectedAction.data.tap_action?.protect?.[type]) {
+        delete this._protectedAction.data.tap_action?.protect;
         this._executeAction(this._protectedAction.data);
       } else {
-        const message = this._getTemplateOrValue(
-          this._stateObj,
-          this._config[this._protectedAction.type]?.protect?.failed_message,
-        );
-        this._sendToastMessage(message || DEFAULT_PIN_FAILED_TOAST_MESSAGE);
+        const message = this._protectedAction.data.tap_action?.protect?.failure_message;
+        this._sendToastMessage(message || DEFAULT_FAILED_TOAST_MESSAGE[type]);
       }
     }
     this._protectedAction = undefined;
   }
 
-  private _pinCancelledCallback(): void {
+  private _cancelledCallback(): void {
     this._protectedAction = undefined;
   }
 

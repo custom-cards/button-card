@@ -1592,8 +1592,23 @@ views:
               rows: 2
               columns: 4
           - type: 'custom:button-card'
+            icon: mdi:lock
+            name: toggle password
+            tap_action:
+              protect:
+                password: '1234'
+                failure_message: 'Bad password!'
+              action: perform-action
+              perform_action: light.toggle
+              data:
+                entity_id: light.test_light
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
             icon: mdi:console
-            name: javascript action
+            name: js action pin
             tap_action:
               protect:
                 pin: '1234'
@@ -1608,7 +1623,7 @@ views:
               columns: 4
           - type: 'custom:button-card'
             icon: mdi:console
-            name: javascript confirm
+            name: js confirm
             tap_action:
               action: javascript
               confirmation:
