@@ -185,12 +185,7 @@ class ButtonCard extends LitElement {
 
   private _cardRipple = false;
 
-  private _protectedAction?:
-    | {
-        type: string;
-        data: ActionEventData;
-      }
-    | undefined = undefined;
+  private _protectedAction?: ActionEventData = undefined;
 
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
@@ -1752,10 +1747,7 @@ class ButtonCard extends LitElement {
     };
 
     if (protect && (protect.password || protect.pin)) {
-      this._protectedAction = {
-        type: action,
-        data: copy(actionData),
-      };
+      this._protectedAction = copy(actionData);
     }
 
     return actionData;
@@ -1884,11 +1876,11 @@ class ButtonCard extends LitElement {
 
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
-      if (code === this._protectedAction.data.tap_action?.protect?.[type]) {
-        delete this._protectedAction.data.tap_action?.protect;
-        this._executeAction(this._protectedAction.data);
+      if (code === this._protectedAction.tap_action?.protect?.[type]) {
+        delete this._protectedAction.tap_action?.protect;
+        this._executeAction(this._protectedAction);
       } else {
-        const message = this._protectedAction.data.tap_action?.protect?.failure_message;
+        const message = this._protectedAction.tap_action?.protect?.failure_message;
         this._sendToastMessage(message || DEFAULT_FAILED_TOAST_MESSAGE[type]);
       }
     }

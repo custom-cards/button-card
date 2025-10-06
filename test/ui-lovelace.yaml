@@ -1721,6 +1721,19 @@ views:
             grid_options:
               rows: 2
               columns: 4
+          - type: 'custom:button-card'
+            entity: light.test_light
+            name: hold toggle PIN
+            tap_action:
+              action: none
+            hold_action:
+              protect:
+                pin: '1234'
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
 
       - type: grid
         cards:
