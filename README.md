@@ -29,6 +29,7 @@ Lovelace Button card for your entities.
   - [Main Options](#main-options)
   - [Action](#action)
   - [Confirmation](#confirmation)
+  - [Protect](#protect)
   - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
@@ -94,6 +95,7 @@ Lovelace Button card for your entities.
 - [blink](#blink) animation support
 - rotating animation support
 - confirmation popup for sensitive items (optional) or [locking mecanism](#lock)
+- password or PIN protection for actions
 - haptic support for the [IOS companion App](https://companion.home-assistant.io/docs/integrations/haptics)
 - support for [custom_updater](https://github.com/custom-components/custom_updater) and [HACS](https://github.com/hacs/integration)
 
@@ -170,7 +172,8 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `haptic` | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
 | `repeat` | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
 | `repeat_limit` | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
-| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. :warning: Not available for `javascript` actions |
+| `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. |
+| `protect` | object | none | See [protect](#protect) | Display a password or PIN confirmation popup. |
 | `javascript` | string | none | any javascript template | A button card javascript template which contains the javascript code to execute. |
 | `pipeline_id` | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
 | `start_listening` | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
@@ -235,6 +238,38 @@ confirmation:
   text: '[[[ return `Are you sure you want to toggle ${entity.attributes.friendly_name}?` ]]]'
   exemptions:
     - user: befc8496799848bda1824f2a8111e30a
+```
+
+### Protect
+
+This will popup a dialog box with password or PIN confirmation before running the action.
+
+> [!WARNING]
+>
+> This is only running in your browser. This is **NOT** a real security feature. Anyone with a javascript console access to the UI or admin access can bypass this protection. Don't protect sensitive entities with this feature and use at your own risk.
+
+| Name | Type | Default | Supported options | Description |
+| --- | --- | --- | --- | --- |
+| `pin` | string | none | any string composed of digits only | This will prompt for a PIN before running the action. Make sure you set this as a **string** like so `"1234"` |
+| `password` | string | none | any string | Setting this field will prompt for a password before running the action. |
+| `failure_message` | string | Fixed failure message | any string | If password or PIN is wrong, a toast will popup with this `failure_message` inside. |
+
+This whole object supports templating.
+
+Eg:
+
+```yaml
+type: custom:button-card
+entity: light.aquarium
+tap_action:
+  action: toggle
+hold_action:
+  action: perform-action
+  perform_action: switch.toggle
+  target:
+    entity_id: switch.aquarium_pump
+  protect:
+    pin: '123456'
 ```
 
 ### Lock Object
