@@ -30,7 +30,6 @@ import {
   MoreInfoActionConfig,
   NavigateActionConfig,
   UrlActionConfig,
-  CallServiceActionConfig,
   PerformActionActionConfig,
   AssistActionConfig,
   CustomActionConfig,
@@ -1636,14 +1635,18 @@ class ButtonCard extends LitElement {
         break;
 
       case 'toggle':
-        actionData.entity = this._getTemplateOrValue(this._stateObj, config[action]?.entity || config.entity);
+        actionData.entity =
+          this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
+          this._getTemplateOrValue(this._stateObj, config.entity);
         actionData[action] = {
           action: 'toggle',
         } as ToggleActionConfig;
         break;
 
       case 'more-info':
-        actionData.entity = this._getTemplateOrValue(this._stateObj, config[action]?.entity || config.entity);
+        actionData.entity =
+          this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
+          this._getTemplateOrValue(this._stateObj, config.entity);
         actionData[action] = {
           action: 'more-info',
         } as MoreInfoActionConfig;
@@ -1667,35 +1670,19 @@ class ButtonCard extends LitElement {
         } as UrlActionConfig;
         break;
 
+      case 'perform-action':
       case 'call-service':
         actionData[action] = {
-          action: 'call-service',
-          service: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.service),
-          data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data),
-          target: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.target),
-          // kept for backward compatibility
-          service_data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
-        } as CallServiceActionConfig;
-        if (actionData[action].service_data?.entity_id === 'entity') {
-          actionData[action].service_data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
-        }
-        if (actionData[action].data?.entity_id === 'entity') {
-          actionData[action].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
-        }
-        break;
-
-      case 'perform-action':
-        actionData[action] = {
           action: 'perform-action',
-          perform_action: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.perform_action),
-          data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data),
+          perform_action:
+            // backward compatibility with old school service call
+            this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.perform_action) ||
+            this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.service),
+          data:
+            this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data) ||
+            this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
           target: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.target),
-          // kept for backward compatibility
-          service_data: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
         } as PerformActionActionConfig;
-        if (actionData[action].service_data?.entity_id === 'entity') {
-          actionData[action].service_data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
-        }
         if (actionData[action].data?.entity_id === 'entity') {
           actionData[action].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
         }
