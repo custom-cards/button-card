@@ -26,7 +26,7 @@ export const styles = css`
     --ha-ripple-color: var(--button-card-ripple-color);
     --ha-ripple-hover-color: var(--ha-ripple-color, var(--button-card-ripple-hover-color));
     --ha-ripple-pressed-color: var(--ha-ripple-color, var(--button-card-ripple-pressed-color));
-    --ha-ripple-hover-opacity: var(--button-card-ripple-hover-opacity, 0.08);
+    --ha-ripple-hover-opacity: var(--button-card-ripple-hover-opacity, 0.04);
     --ha-ripple-pressed-opacity: var(--button-card-ripple-pressed-opacity, 0.12);
 
     -webkit-touch-callout: none; /* iOS Safari */
@@ -52,7 +52,7 @@ export const styles = css`
     --md-ripple-pressed-color: var(--button-card-ripple-pressed-color, var(--ha-ripple-pressed-color));
     --md-ripple-hover-opacity: var(
       --button-card-ripple-icon-hover-opacity,
-      calc(var(--ha-ripple-hover-opacity, 0.08) + 0.05)
+      calc(var(--ha-ripple-hover-opacity, 0.04) + 0.05)
     );
     --md-ripple-pressed-opacity: var(
       --button-card-ripple-icon-pressed-opacity,

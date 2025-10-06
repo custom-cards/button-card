@@ -1177,7 +1177,7 @@ Buttons will provide hover feedback (ripple) when an action is available. When t
 | `--button-card-ripple-color` | Follows `color` of button card | Base color of main button background when hovering over a button with an action |
 | `--button-card-ripple-hover-color` | `--button-card-ripple-color` | Color of main button background when hovering over a button with an action |
 | `--button-card-ripple-pressed-color` | `--button-card-ripple-color` | Color of main button background when button with an action is pressed |
-| `--button-card-ripple-hover-opacity` | 0.08 | Opacity of main button backgrond when hovering over a button with an action |
+| `--button-card-ripple-hover-opacity` | 0.04 | Opacity of main button backgrond when hovering over a button with an action |
 | `--button-card-ripple-pressed-opacity` | 0.12 | Opacity of main button when a button with an action is pressed |
 | `--button-card-ripple-icon-color` | `--button-card-ripple-color` | Color of icon background when hovering over an icon with an action |
 | `--button-card-ripple-pressed-color` | `--button-card-ripple-hover-color` | Color of icon background when an icon with an action is pressed |
