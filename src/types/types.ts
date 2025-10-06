@@ -260,6 +260,11 @@ export interface BaseActionConfig {
   repeat_limit?: number;
   sound?: string;
   haptic?: 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'warning' | 'error' | 'none';
+  protect?: {
+    pin?: string;
+    password?: string;
+    failure_message?: string;
+  };
 }
 
 export interface ConfirmationRestrictionConfig {
@@ -292,14 +297,23 @@ export type EntityPicture = Promise<string> | string | undefined;
 
 export interface ActionEventData {
   tap_action?: EvaluatedActionConfig;
-  hold_action?: EvaluatedActionConfig;
-  double_tap_action?: EvaluatedActionConfig;
-  press_action?: EvaluatedActionConfig;
-  release_action?: EvaluatedActionConfig;
-  icon_tap_action?: EvaluatedActionConfig;
-  icon_hold_action?: EvaluatedActionConfig;
-  icon_double_tap_action?: EvaluatedActionConfig;
-  icon_press_action?: EvaluatedActionConfig;
-  icon_release_action?: EvaluatedActionConfig;
   entity?: string;
 }
+
+export interface ActionCustomEvent extends CustomEvent {
+  detail: {
+    buttonCardCustomAction: CustomButtonCardActionEvent;
+  };
+}
+
+export interface CustomActionBase {
+  callback: (ev: ActionCustomEvent) => void;
+  this?: any;
+}
+
+export interface CustomActionJavascript extends CustomActionBase {
+  type: 'javascript';
+  data?: any;
+}
+
+export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionPwOrPinConfirm;

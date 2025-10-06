@@ -24,7 +24,6 @@ import {
   ActionEventData,
   EvaluatedActionConfig,
   ActionConfig,
-  JavascriptActionConfig,
   NoActionConfig,
   ToggleActionConfig,
   MoreInfoActionConfig,
@@ -33,6 +32,9 @@ import {
   PerformActionActionConfig,
   AssistActionConfig,
   CustomActionConfig,
+  ActionCustomEvent,
+  JavascriptActionConfig,
+  CallServiceActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -75,6 +77,7 @@ import {
   DEFAULT_LOCK_ICON,
   DEFAULT_UNLOCK_ICON,
   DEFAULT_STATE_COLOR,
+  DEFAULT_PIN_FAILED_TOAST_MESSAGE,
 } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
@@ -110,6 +113,15 @@ const helperPromise = new Promise<void>(async (resolve) => {
     resolve();
   }
 });
+
+if (!(window as any).buttonCardCustomActionsHandler) {
+  (window as any).buttonCardCustomActionsHandler = function (ev: CustomEvent) {
+    if (ev.detail.buttonCardCustomAction) {
+      ev.detail.buttonCardCustomAction?.callback(ev);
+    }
+  };
+  document.body.addEventListener('ll-custom', (window as any).buttonCardCustomActionsHandler);
+}
 
 /* eslint no-console: 0 */
 console.info(
@@ -173,6 +185,13 @@ class ButtonCard extends LitElement {
 
   private _cardRipple = false;
 
+  private _protectedAction?:
+    | {
+        type: string;
+        data: ActionEventData;
+      }
+    | undefined = undefined;
+
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
   }
@@ -222,6 +241,8 @@ class ButtonCard extends LitElement {
       this._startTimerCountdown();
     }
   }
+
+  private _setupActionsCallback(): void {}
 
   private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
     this._evaledVariables = {};
@@ -1177,7 +1198,7 @@ class ButtonCard extends LitElement {
           id="card"
           class=${classMap(classList)}
           style=${styleMap(cardStyle)}
-          @action=${this._handleAction}
+          @action=${this._handleCardAction}
           .actionHandler=${actionHandler({
             hasDoubleClick: this._isActionDoingSomething(this._stateObj, this._config!.double_tap_action),
             hasHold: this._isActionDoingSomething(this._stateObj, this._config!.hold_action),
@@ -1601,44 +1622,53 @@ class ButtonCard extends LitElement {
   }
 
   private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
-    const localActionEventData: ActionEventData = {};
+    let evaledActionConfig: EvaluatedActionConfig | undefined;
+    const staticAction = 'tap_action';
     if (typeof config[action] === 'string') {
-      localActionEventData[action] = this._objectEvalTemplate(this._stateObj, config[action]);
+      evaledActionConfig = this._objectEvalTemplate(this._stateObj, config[action]);
     } else {
-      localActionEventData[action] = copy(config[action]);
+      evaledActionConfig = copy(config[action]);
     }
 
-    const actionType = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.action);
+    // force action to be tap_action for easier handling
+    const actionType = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.action);
 
     if (actionType === 'none' || !actionType) {
       const noAction: ActionEventData = {};
-      noAction[action] = { action: 'none' } as NoActionConfig;
+      noAction[staticAction] = { action: 'none' } as NoActionConfig;
       return noAction;
     }
-
-    const repeat = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.repeat);
-    const repeat_limit = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.repeat_limit);
-    const sound = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.sound);
-    let confirmation = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.confirmation);
+    const repeat = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.repeat);
+    const repeat_limit = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.repeat_limit);
+    const sound = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.sound);
+    let confirmation = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.confirmation);
     if (!confirmation && config.confirmation) {
       confirmation = this._objectEvalTemplate(this._stateObj, config.confirmation);
     }
-    const haptic = this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.haptic);
+    const haptic = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.haptic);
+    const protect = this._objectEvalTemplate(this._stateObj, evaledActionConfig?.protect);
 
     const actionData: ActionEventData = {};
     switch (actionType) {
       case 'javascript':
-        actionData[action] = {
-          action: 'javascript',
-          javascript: localActionEventData[action].javascript,
-        } as JavascriptActionConfig;
+        evaledActionConfig = evaledActionConfig as JavascriptActionConfig;
+        actionData[staticAction] = {
+          action: 'fire-dom-event',
+          buttonCardCustomAction: {
+            callback: this._customActionsCallback.bind(this),
+            type: 'javascript',
+            data: {
+              javascript: evaledActionConfig?.javascript,
+            },
+          },
+        } as CustomActionConfig;
         break;
 
       case 'toggle':
         actionData.entity =
           this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
-        actionData[action] = {
+        actionData[staticAction] = {
           action: 'toggle',
         } as ToggleActionConfig;
         break;
@@ -1647,74 +1677,87 @@ class ButtonCard extends LitElement {
         actionData.entity =
           this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
-        actionData[action] = {
+        actionData[staticAction] = {
           action: 'more-info',
         } as MoreInfoActionConfig;
         break;
 
       case 'navigate':
-        actionData[action] = {
+        evaledActionConfig = evaledActionConfig as NavigateActionConfig;
+        actionData[staticAction] = {
           action: 'navigate',
-          navigation_path: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.navigation_path),
-          navigation_replace: this._getTemplateOrValue(
-            this._stateObj,
-            localActionEventData[action]?.navigation_replace,
-          ),
+          navigation_path: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.navigation_path),
+          navigation_replace: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.navigation_replace),
         } as NavigateActionConfig;
         break;
 
       case 'url':
-        actionData[action] = {
+        evaledActionConfig = evaledActionConfig as UrlActionConfig;
+        actionData[staticAction] = {
           action: 'url',
-          url_path: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.url_path),
+          url_path: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.url_path),
         } as UrlActionConfig;
         break;
 
       case 'perform-action':
       case 'call-service':
-        actionData[action] = {
+        evaledActionConfig = evaledActionConfig as PerformActionActionConfig;
+        actionData[staticAction] = {
           action: 'perform-action',
           perform_action:
             // backward compatibility with old school service call
-            this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.perform_action) ||
-            this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.service),
+            this._getTemplateOrValue(this._stateObj, evaledActionConfig?.perform_action) ||
+            this._getTemplateOrValue(
+              this._stateObj,
+              (evaledActionConfig as unknown as CallServiceActionConfig)?.service,
+            ),
           data:
-            this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.data) ||
-            this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.service_data),
-          target: this._objectEvalTemplate(this._stateObj, localActionEventData[action]?.target),
+            this._objectEvalTemplate(this._stateObj, evaledActionConfig?.data) ||
+            this._objectEvalTemplate(this._stateObj, evaledActionConfig?.service_data),
+          target: this._objectEvalTemplate(this._stateObj, evaledActionConfig?.target),
         } as PerformActionActionConfig;
-        if (actionData[action].data?.entity_id === 'entity') {
-          actionData[action].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        if (actionData[staticAction].data?.entity_id === 'entity') {
+          actionData[staticAction].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
         }
         break;
 
       case 'assist':
-        actionData[action] = {
+        evaledActionConfig = evaledActionConfig as AssistActionConfig;
+        actionData[staticAction] = {
           action: 'assist',
-          pipeline_id: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.pipeline_id),
-          start_listening: this._getTemplateOrValue(this._stateObj, localActionEventData[action]?.start_listening),
+          pipeline_id: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.pipeline_id),
+          start_listening: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.start_listening),
         } as AssistActionConfig;
         break;
 
       case 'fire-dom-event':
-        actionData[action] = {
+        actionData[staticAction] = {
           action: 'fire-dom-event',
-          ...this._objectEvalTemplate(this._stateObj, localActionEventData[action]),
+          ...this._objectEvalTemplate(this._stateObj, evaledActionConfig),
         } as CustomActionConfig;
         break;
 
       default:
-        return { [action]: { action: 'none' } as NoActionConfig };
+        return { [staticAction]: { action: 'none' } as NoActionConfig };
     }
 
-    actionData[action] = {
-      ...actionData[action],
+    actionData[staticAction] = {
+      ...actionData[staticAction],
       repeat,
       repeat_limit,
       sound,
       haptic,
       confirmation,
+      protect,
     };
+
+    if (protect && (protect.password || protect.pin)) {
+      this._protectedAction = {
+        type: action,
+        data: actionData,
+      };
+    }
+
     return actionData;
   }
 
@@ -1762,30 +1805,44 @@ class ButtonCard extends LitElement {
       const action = ev.detail.action;
       const actionKey = `icon_${action}_action`;
       if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
-        this._runAction(ev.detail.action, { isIcon: true });
+        this._buildActionConfig(actionKey);
       }
     }
   }
 
-  private _handleAction(ev: any): void {
+  private _handleCardAction(ev: any): void {
     if (ev.detail?.action) {
       const config = this._config;
       if (!config) return;
       const action = ev.detail.action;
       const actionKey = `${action}_action`;
       if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
-        this._runAction(ev.detail.action, { isIcon: false });
+        this._buildActionConfig(actionKey);
       }
     }
   }
 
-  private _runAction(action: string, options: { isIcon: boolean }): void {
+  private _buildActionConfig(actionKey: string): void {
     const config = this._config;
     if (!config) return;
-    const actionKey = options.isIcon ? `icon_${action}_action` : `${action}_action`;
+    // always returns the action in `tap_action` for easier handling
     const localAction = this._evalActions(config, actionKey);
 
-    const soundUrl = localAction[actionKey].sound;
+    if (localAction['tap_action']?.protect) {
+      if (localAction['tap_action']?.protect.pin !== undefined) {
+        (window as any).cardHelpers.showEnterCodeDialog(this, {
+          submit: this._pinConfirmedCallback.bind(this),
+          cancel: this._pinCancelledCallback.bind(this),
+          codeFormat: 'number',
+        });
+      }
+    } else {
+      this._executeAction(localAction);
+    }
+  }
+
+  private _executeAction(actionData: ActionEventData): void {
+    const soundUrl = actionData['tap_action']?.sound;
     if (soundUrl) {
       if (isMediaSourceContentId(soundUrl)) {
         resolveMediaSource(this._hass!, soundUrl)
@@ -1802,24 +1859,56 @@ class ButtonCard extends LitElement {
       }
     }
 
-    if (localAction[actionKey].action === 'javascript') {
-      // executes the javascript action.
-      this._getTemplateOrValue(this._stateObj, localAction[actionKey].javascript);
-    } else {
-      let actionToExecute = action;
-      if (options.isIcon) {
-        if (['press', 'release'].includes(action)) {
-          localAction['tap_action'] = localAction[`icon_${action}_action`];
-          actionToExecute = 'tap';
-        } else {
-          localAction[`${action}_action`] = localAction[`icon_${action}_action`];
-        }
-      } else if (['press', 'release'].includes(action)) {
-        localAction['tap_action'] = localAction[`${action}_action`];
-        actionToExecute = 'tap';
-      }
-      handleAction(this, this._hass!, localAction, actionToExecute);
+    handleAction(this, this._hass!, actionData, 'tap');
+  }
+
+  private _customActionsCallback(ev: ActionCustomEvent): void {
+    if (!ev.detail || !ev.detail.buttonCardCustomAction) {
+      return;
     }
+    const customAction = ev.detail.buttonCardCustomAction;
+    switch (customAction.type) {
+      case 'javascript':
+        this._getTemplateOrValue(this._stateObj, customAction.data?.javascript);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private _pinConfirmedCallback(code: string): void {
+    if (this._protectedAction && this._config) {
+      const configPin = this._objectEvalTemplate(
+        this._stateObj,
+        this._config[this._protectedAction.type]?.protect,
+      )?.pin;
+      if (code === configPin) {
+        this._executeAction(this._protectedAction.data);
+      } else {
+        const message = this._getTemplateOrValue(
+          this._stateObj,
+          this._config[this._protectedAction.type]?.protect?.failed_message,
+        );
+        this._sendToastMessage(message || DEFAULT_PIN_FAILED_TOAST_MESSAGE);
+      }
+    }
+    this._protectedAction = undefined;
+  }
+
+  private _pinCancelledCallback(): void {
+    this._protectedAction = undefined;
+  }
+
+  private _sendToastMessage(message: string): void {
+    this.dispatchEvent(
+      new CustomEvent('hass-notification', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          message,
+        },
+      }),
+    );
   }
 
   private _handleUnlockType(ev): void {

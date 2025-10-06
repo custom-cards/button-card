@@ -1480,6 +1480,30 @@ views:
             grid_options:
               rows: 1
               columns: 12
+          - type: custom:button-card
+            entity: switch.skylight
+            name: Embedded
+            tap_action:
+              action: toggle
+            section_mode: true
+            styles:
+              custom_fields:
+                item1:
+                  - pointer-events: none !important
+
+            custom_fields:
+              item1:
+                card:
+                  styles:
+                    icon:
+                      - pointer-events: '[[[[ return window.getComputedStyle(this)?.getPropertyValue("pointer-events") || null ]]]]'
+                  type: custom:button-card
+                  entity: switch.skylight
+                  icon_tap_action:
+                    action: more-info
+            grid_options:
+              rows: 2
+              columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
             name: navigate
@@ -1571,13 +1595,28 @@ views:
             icon: mdi:console
             name: javascript action
             tap_action:
+              protect:
+                pin: '1234'
               action: javascript
-              javascript: >
+              javascript: |
                 [[[
-                  alert("Hello from button card");
+                  alert(`Hello from ${this._config.name}`);
                 ]]]
-
-
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: javascript confirm
+            tap_action:
+              action: javascript
+              confirmation:
+                text: '[[[ return "Are you sure you want to run JS from " + this._config.name + " ?" ]]]'
+              javascript: |
+                [[[
+                  alert(`Hello from ${this._config.name}`);
+                ]]]
             section_mode: true
             grid_options:
               rows: 2

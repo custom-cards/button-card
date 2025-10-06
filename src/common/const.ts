@@ -30,3 +30,5 @@ export const DEFAULT_STATE_COLOR = 'var(--state-inactive-color)';
 export const DEFAULT_LOCK_ICON = 'mdi:lock-outline';
 export const DEFAULT_UNLOCK_ICON = 'mdi:lock-open-outline';
 export const DEFAULT_LOCK_DURATION = 5;
+
+export const DEFAULT_PIN_FAILED_TOAST_MESSAGE = 'Incorrect PIN, action cancelled';
