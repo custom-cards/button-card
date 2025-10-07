@@ -337,6 +337,8 @@ export interface CustomActionMultiActions extends CustomActionBase {
 
 export interface CustomActionMultiActionsDelay {
   delay?: string | number;
+  wait_completion?: boolean;
+  timeout?: number | string;
 }
 
 export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionMultiActions;

@@ -1912,7 +1912,11 @@ class ButtonCard extends LitElement {
         const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
         if (Array.isArray(multiActions)) {
           this._spinnerActive = multiActions.some((actionConfig) => {
-            return typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay;
+            return (
+              typeof actionConfig !== 'string' &&
+              ((actionConfig as CustomActionMultiActionsDelay)?.delay ||
+                (actionConfig as CustomActionMultiActionsDelay)?.wait_completion)
+            );
           });
           for (const actionConfig of multiActions) {
             if (typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay) {
@@ -1922,6 +1926,22 @@ class ButtonCard extends LitElement {
               );
               delay = parseDuration(delay || '', 'ms', 'en');
               if (delay) await timer(delay);
+            } else if (
+              typeof actionConfig !== 'string' &&
+              (actionConfig as CustomActionMultiActionsDelay)?.wait_completion
+            ) {
+              const delayActionConfig = actionConfig as CustomActionMultiActionsDelay;
+              await timer(500);
+              const timeout = this._getTemplateOrValue(this._stateObj, delayActionConfig.timeout);
+              let waitTimeout = 0;
+              const timeoutS = parseDuration(timeout || '', 'ms', 'en') || 0;
+              while (
+                (waitTimeout < timeoutS || timeoutS === 0) &&
+                !this._getTemplateOrValue(this._stateObj, delayActionConfig.wait_completion)
+              ) {
+                await timer(500);
+                waitTimeout += 500;
+              }
             } else {
               const actionData = this._evalActions(this._config!, actionConfig as ActionConfig);
               delete actionData[NORMALISED_ACTION]?.repeat;

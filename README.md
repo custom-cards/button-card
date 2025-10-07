@@ -281,7 +281,7 @@ The `action: multi-actions` enables you to run several actions in a row with opt
 
 > [!IMPORTANT]
 >
-> This **only** runs in your browser.
+> This **only** runs in your browser so there are limitations.
 >
 > All the actions will be fired back to back without waiting for the previous action to finish.
 >
@@ -291,9 +291,17 @@ The `action: multi-actions` enables you to run several actions in a row with opt
 
 Each entry of the `actions` array should be an action. Note that `repeat`, `repeat_limit`, `sound`, `confirmation`, `protect` and `haptic` are not taken into account in the nested actions, if you set any of those properties, it will be ignored.
 
-There is a special entry which can be used in the array: `delay`. This entry takes a string (parsed with natural language, so you can use `3s` or `1min`) or a number (milliseconds) as an argument and is the delay to wait before firing the next action. It can be templated too.
+There are 2 special entries which can be used in the array:
 
-Let's go for an example:
+- `delay`: This entry takes a string (parsed with natural language, so you can use `3s` or `1min`) or a number (milliseconds) as an argument and is the delay to wait before firing the next action. It can be templated too.
+
+- `wait_completion`: This entry takes a button card JS template as an argument. The template needs to return `true` or `false`. It will run this template every 1/2 second until the template returns `true` and then run the next step.
+
+  With `wait_completion`, you can also specify a `timeout` value (same format as `delay`). If the timeout is exceeded, it will go to the next step.
+
+  Again, if the card disapears from the screen, it will stop working.
+
+Let's go for some examples:
 
 ```yaml
 type: 'custom:button-card'
@@ -317,6 +325,28 @@ tap_action:
       service: light.toggle
       service_data:
         entity_id: light.test_light
+```
+
+With `wait_completion`:
+
+```yaml
+type: 'custom:button-card'
+icon: mdi:console
+name: MA script completion
+variables:
+  delay: 3s
+tap_action:
+  action: multi-actions
+  actions:
+    - action: perform-action
+      perform_action: script.turn_on
+      target:
+        entity_id: script.delay_script # This script runs for 10 seconds, keeping its state to "on"
+    - wait_completion: '[[[ return states["script.delay_script"].state === "off" ]]]'
+      timeout: 15s # safeguard
+    # This will be called once the script has finished running (state will be "off")
+    - action: navigate
+      navigation_path: /lovalace/0
 ```
 
 ### Lock Object

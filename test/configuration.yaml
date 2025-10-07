@@ -13,7 +13,7 @@ script:
   delay_script:
     alias: Delay Script
     sequence:
-      - delay: '00:01:00'
+      - delay: '00:00:10'
 
 input_number:
   test:
