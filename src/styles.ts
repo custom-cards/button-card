@@ -78,6 +78,7 @@ export const styles = css`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: var(--ha-tooltip-z-index, 1000);
   }
   :host(.tooltip:hover) span.tooltiptext {
     opacity: 1;
