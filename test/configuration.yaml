@@ -9,6 +9,12 @@ lovelace:
 
 demo:
 
+script:
+  delay_script:
+    alias: Delay Script
+    sequence:
+      - delay: '00:01:00'
+
 input_number:
   test:
     icon: mdi:battery-charging-outline

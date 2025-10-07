@@ -154,6 +154,8 @@ class ButtonCard extends LitElement {
 
   @property({ type: Boolean, reflect: true }) preview = false;
 
+  @property({ type: Boolean }) private _spinnerActive = false;
+
   @queryAsync('ha-ripple') private _ripple!: Promise<HaRipple | null>;
 
   private _triggersAll?: boolean;
@@ -430,7 +432,12 @@ class ButtonCard extends LitElement {
       }
     }
     const forceUpdate =
-      this._triggersAll || changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') ? true : false;
+      this._triggersAll ||
+      changedProps.has('_timeRemaining') ||
+      changedProps.has('_updateTimerMS') ||
+      changedProps.has('_spinnerActive')
+        ? true
+        : false;
     if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
       this._expandTriggerGroups();
       return true;
@@ -1129,8 +1136,10 @@ class ButtonCard extends LitElement {
     let buttonColor = color;
     let cardStyle: any = {};
     let lockStyle: any = {};
+    let spinnerStyle: any = {};
     const aspectRatio: any = {};
     const lockStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'lock');
+    const spinnerStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'spinner');
     const configCardStyle = this._buildStyleGeneric(this._stateObj, configState, 'card');
     const tooltipStyleFromConfig = this._buildStyleGeneric(this._stateObj, configState, 'tooltip');
     const classList: ClassInfo = {
@@ -1177,7 +1186,9 @@ class ButtonCard extends LitElement {
       this._getColorForLightEntity(this._stateObj, false),
     );
     this.style.setProperty('--button-card-ripple-color', buttonColor);
+    this.style.setProperty('--button-card-color', buttonColor);
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
+    spinnerStyle = { ...spinnerStyle, ...spinnerStyleFromConfig };
 
     const extraStyles = this._config!.extra_styles
       ? html`
@@ -1208,7 +1219,7 @@ class ButtonCard extends LitElement {
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
           <ha-ripple .disabled=${!this._cardRipple}></ha-ripple>
         </ha-card>
-        ${this._getLock(lockStyle)}
+        ${this._getLock(lockStyle)} ${this._getSpinner(spinnerStyle)}
       </div>
       ${this._config?.tooltip
         ? html`
@@ -1218,6 +1229,19 @@ class ButtonCard extends LitElement {
           `
         : ''}
     `;
+  }
+
+  private _getSpinner(spinnerStyle: StyleInfo): TemplateResult {
+    if (this._spinnerActive) {
+      return html`
+        <div id="spinner" style=${styleMap(spinnerStyle)}>
+          <div id="spinner-background"></div>
+          <ha-spinner></ha-spinner>
+        </div>
+      `;
+    } else {
+      return html``;
+    }
   }
 
   private _getLock(lockStyle: StyleInfo): TemplateResult {
@@ -1887,6 +1911,7 @@ class ButtonCard extends LitElement {
         }
         const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
         if (Array.isArray(multiActions)) {
+          this._spinnerActive = true;
           for (const actionConfig of multiActions) {
             if (typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay) {
               let delay = this._getTemplateOrValue(
@@ -1906,6 +1931,7 @@ class ButtonCard extends LitElement {
               this._executeAction(actionData);
             }
           }
+          this._spinnerActive = false;
         }
         break;
       default:

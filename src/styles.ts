@@ -108,6 +108,32 @@ export const styles = css`
     overflow: hidden;
   }
 
+  #spinner {
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 8px 7px;
+    --ha-spinner-indicator-color: var(--button-card-spinner-color, var(--button-card-color));
+    --ha-spinner-size: 1.5vw;
+    /* DO NOT override items below */
+    pointer-events: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    /* --ha-spinner-size: 100%; */
+  }
+  #spinner-background {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0.3;
+    background: var(--button-card-background-spinner, var(--card-background-color, white));
+  }
+
   #overlay {
     align-items: flex-start;
     justify-content: flex-end;
