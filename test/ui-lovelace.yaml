@@ -1637,6 +1637,28 @@ views:
               rows: 2
               columns: 4
 
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: multi-actions
+            tap_action:
+              # protect:
+              #   pin: '1234'
+              action: multi-actions
+              actions:
+                - action: call-service
+                  service: light.toggle
+                  service_data:
+                    entity_id: light.test_light
+                - action: javascript
+                  javascript: |
+                    [[[
+                      this._sendToastMessage(`Hello from ${this._config.name}`);
+                    ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
       - type: grid
         cards:
           - type: 'custom:button-card'

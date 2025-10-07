@@ -35,6 +35,7 @@ import {
   ActionCustomEvent,
   JavascriptActionConfig,
   CallServiceActionConfig,
+  MultiActionsActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -1623,12 +1624,12 @@ class ButtonCard extends LitElement {
     return evaluatedAction;
   }
 
-  private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
+  private _evalActions(config: ButtonCardConfig, action: ActionConfig): ActionEventData {
     let evaledActionConfig: EvaluatedActionConfig | undefined;
-    if (typeof config[action] === 'string') {
-      evaledActionConfig = this._objectEvalTemplate(this._stateObj, config[action]);
+    if (typeof action === 'string') {
+      evaledActionConfig = this._objectEvalTemplate(this._stateObj, action);
     } else {
-      evaledActionConfig = copy(config[action]);
+      evaledActionConfig = copy(action);
     }
 
     const actionType = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.action);
@@ -1664,9 +1665,24 @@ class ButtonCard extends LitElement {
         } as CustomActionConfig;
         break;
 
+      case 'multi-actions':
+        evaledActionConfig = evaledActionConfig as MultiActionsActionConfig;
+        actionData[NORMALISED_ACTION] = {
+          action: 'fire-dom-event',
+          buttonCardCustomAction: {
+            callback: this._customActionsCallback.bind(this),
+            type: 'multi-actions',
+            data: {
+              multiActions: evaledActionConfig?.actions,
+            },
+          },
+        } as CustomActionConfig;
+        break;
+
       case 'toggle':
+        evaledActionConfig = evaledActionConfig as ToggleActionConfig;
         actionData.entity =
-          this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
+          this._getTemplateOrValue(this._stateObj, evaledActionConfig?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
         actionData[NORMALISED_ACTION] = {
           action: 'toggle',
@@ -1674,8 +1690,9 @@ class ButtonCard extends LitElement {
         break;
 
       case 'more-info':
+        evaledActionConfig = evaledActionConfig as MoreInfoActionConfig;
         actionData.entity =
-          this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
+          this._getTemplateOrValue(this._stateObj, evaledActionConfig?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
         actionData[NORMALISED_ACTION] = {
           action: 'more-info',
@@ -1811,7 +1828,7 @@ class ButtonCard extends LitElement {
     const config = this._config;
     if (!config) return;
     // always returns the action in NORMALISED_ACTION for easier handling
-    const localAction = this._evalActions(config, actionKey);
+    const localAction = this._evalActions(config, config[actionKey]);
 
     if (localAction[NORMALISED_ACTION]?.protect?.pin !== undefined) {
       (window as any).cardHelpers.showEnterCodeDialog(this, {
@@ -1861,6 +1878,24 @@ class ButtonCard extends LitElement {
     switch (customAction.type) {
       case 'javascript':
         this._getTemplateOrValue(this._stateObj, customAction.data?.javascript);
+        break;
+      case 'multi-actions':
+        let multiActions = customAction.data?.multiActions;
+        if (typeof multiActions === 'string') {
+          multiActions = this._objectEvalTemplate(this._stateObj, multiActions) as ActionConfig[];
+        }
+        if (Array.isArray(multiActions)) {
+          multiActions.forEach((actionConfig) => {
+            const actionData = this._evalActions(this._config!, actionConfig);
+            delete actionData[NORMALISED_ACTION]?.repeat;
+            delete actionData[NORMALISED_ACTION]?.repeat_limit;
+            delete actionData[NORMALISED_ACTION]?.sound;
+            delete actionData[NORMALISED_ACTION]?.haptic;
+            delete actionData[NORMALISED_ACTION]?.confirmation;
+            delete actionData[NORMALISED_ACTION]?.protect;
+            this._executeAction(actionData);
+          });
+        }
         break;
       default:
         break;

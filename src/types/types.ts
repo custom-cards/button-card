@@ -201,6 +201,7 @@ export interface ButtonCardEmbeddedCardsConfig {
 
 export interface ToggleActionConfig extends BaseActionConfig {
   action: 'toggle';
+  entity?: string;
 }
 
 export interface CallServiceActionConfig extends BaseActionConfig {
@@ -234,6 +235,7 @@ export interface UrlActionConfig extends BaseActionConfig {
 
 export interface MoreInfoActionConfig extends BaseActionConfig {
   action: 'more-info';
+  entity?: string;
 }
 
 export interface NoActionConfig extends BaseActionConfig {
@@ -253,6 +255,11 @@ export interface AssistActionConfig extends BaseActionConfig {
 export interface JavascriptActionConfig extends BaseActionConfig {
   action: 'javascript';
   javascript?: string;
+}
+
+export interface MultiActionsActionConfig extends BaseActionConfig {
+  action: 'multi-actions';
+  actions?: string;
 }
 
 export interface BaseActionConfig {
@@ -289,6 +296,7 @@ export type ActionConfig =
   | NoActionConfig
   | CustomActionConfig
   | JavascriptActionConfig
+  | MultiActionsActionConfig
   | string;
 
 export type EvaluatedActionConfig = Exclude<ActionConfig, string>;
@@ -315,7 +323,16 @@ export interface CustomActionBase {
 
 export interface CustomActionJavascript extends CustomActionBase {
   type: 'javascript';
-  data?: any;
+  data?: {
+    javascript?: string;
+  };
 }
 
-export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionPwOrPinConfirm;
+export interface CustomActionMultiActions extends CustomActionBase {
+  type: 'multi-actions';
+  data?: {
+    multiActions?: Array<ActionConfig>;
+  };
+}
+
+export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionMultiActions;
