@@ -30,6 +30,7 @@ Lovelace Button card for your entities.
   - [Action](#action)
   - [Confirmation](#confirmation)
   - [Protect](#protect)
+  - [Multi-actions](#multi-actions)
   - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
@@ -161,7 +162,7 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 
 | Name | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- |
-| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript` | Action to perform |
+| `action` | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript`, `multi-actions` | Action to perform |
 | `entity` | string | none | Any entity id | **Only valid for `action: more-info` or `action: toggle`** to override the entity on which you want to call `more-info` |
 | `target` | object | none |  | Only works with `call-service` or `perform-action`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
 | `navigation_path` | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as `navigate` |
@@ -176,6 +177,7 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `confirmation` | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. |
 | `protect` | object | none | See [protect](#protect) | Display a password or PIN confirmation popup. |
 | `javascript` | string | none | any javascript template | A button card javascript template which contains the javascript code to execute. |
+| `actions` | array of [Actions](#action) or delay | none | See [multi-actions](#multi-actions) | Only valid when `action` is set to `multi-actions`. Array of the actions you want to see executed in a row. |
 | `pipeline_id` | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
 | `start_listening` | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
 | `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
@@ -271,6 +273,50 @@ hold_action:
     entity_id: switch.aquarium_pump
   protect:
     pin: '123456'
+```
+
+### Multi-actions
+
+The `action: multi-actions` enables you to run several actions in a row with optional delay between them.
+
+> [!IMPORTANT]
+>
+> This **only** runs in your browser.
+>
+> All the actions will be fired back to back without waiting for the previous action to finish.
+>
+> Also, because it's running in the browser, it means that if you navigate away from the page where the button-card is displayed while there are still some actions queued, they won't be executed.
+>
+> This should only be used to run `navigate`, `javascript` or `fire-dom-event` actions alongside a normal service call and not as a replacement for a backend script !
+
+Each entry of the `actions` array should be an action. Note that `repeat`, `repeat_limit`, `sound`, `confirmation`, `protect` and `haptic` are not taken into account in the nested actions, if you set any of those properties, it will be ignored.
+
+There is a special entry which can be used in the array: `delay`. This entry takes a string (parsed with natural language, so you can use `3s` or `1min`) or a number (milliseconds) as an argument and is the delay to wait before firing the next action. It can be templated too.
+
+Let's go for an example:
+
+```yaml
+type: 'custom:button-card'
+icon: mdi:console
+name: multi-actions
+variables:
+  delay: 3s
+tap_action:
+  confirmation:
+    text: Do you want to run multiple-actions?
+  action: multi-actions
+  actions:
+    - action: call-service
+      service: light.toggle
+      service_data:
+        entity_id: light.test_light
+    - action: javascript
+      javascript: '[[[ this._sendToastMessage(`Waiting ${variables.delay}...`); ]]]'
+    - delay: '[[[ return variables.delay; ]]]'
+    - action: call-service
+      service: light.toggle
+      service_data:
+        entity_id: light.test_light
 ```
 
 ### Lock Object

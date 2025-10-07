@@ -1640,9 +1640,11 @@ views:
           - type: 'custom:button-card'
             icon: mdi:console
             name: multi-actions
+            variables:
+              delay: 3s
             tap_action:
-              # protect:
-              #   pin: '1234'
+              confirmation:
+                text: Do you want to run multiple-actions?
               action: multi-actions
               actions:
                 - action: call-service
@@ -1650,11 +1652,8 @@ views:
                   service_data:
                     entity_id: light.test_light
                 - action: javascript
-                  javascript: |
-                    [[[
-                      this._sendToastMessage(`Waiting 3s...`);
-                    ]]]
-                - delay: '[[[ return "3s" ]]]'
+                  javascript: '[[[ this._sendToastMessage(`Waiting ${variables.delay}...`); ]]]'
+                - delay: '[[[ return variables.delay; ]]]'
                 - action: call-service
                   service: light.toggle
                   service_data:
