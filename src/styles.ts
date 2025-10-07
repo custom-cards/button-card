@@ -131,7 +131,7 @@ export const styles = css`
     top: 0;
     bottom: 0;
     opacity: 0.3;
-    background: var(--button-card-background-spinner, var(--card-background-color, white));
+    background: var(--button-card-spinner-background, var(--card-background-color, white));
   }
 
   #overlay {
