@@ -1652,8 +1652,13 @@ views:
                 - action: javascript
                   javascript: |
                     [[[
-                      this._sendToastMessage(`Hello from ${this._config.name}`);
+                      this._sendToastMessage(`Waiting 3s...`);
                     ]]]
+                - delay: '[[[ return "3s" ]]]'
+                - action: call-service
+                  service: light.toggle
+                  service_data:
+                    entity_id: light.test_light
             section_mode: true
             grid_options:
               rows: 2

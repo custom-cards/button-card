@@ -36,6 +36,7 @@ import {
   JavascriptActionConfig,
   CallServiceActionConfig,
   MultiActionsActionConfig,
+  CustomActionMultiActionsDelay,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -1870,7 +1871,7 @@ class ButtonCard extends LitElement {
     handleAction(this, this._hass!, actionData, 'tap');
   }
 
-  private _customActionsCallback(ev: ActionCustomEvent): void {
+  private async _customActionsCallback(ev: ActionCustomEvent): Promise<void> {
     if (!ev.detail || !ev.detail.buttonCardCustomAction) {
       return;
     }
@@ -1884,17 +1885,27 @@ class ButtonCard extends LitElement {
         if (typeof multiActions === 'string') {
           multiActions = this._objectEvalTemplate(this._stateObj, multiActions) as ActionConfig[];
         }
+        const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
         if (Array.isArray(multiActions)) {
-          multiActions.forEach((actionConfig) => {
-            const actionData = this._evalActions(this._config!, actionConfig);
-            delete actionData[NORMALISED_ACTION]?.repeat;
-            delete actionData[NORMALISED_ACTION]?.repeat_limit;
-            delete actionData[NORMALISED_ACTION]?.sound;
-            delete actionData[NORMALISED_ACTION]?.haptic;
-            delete actionData[NORMALISED_ACTION]?.confirmation;
-            delete actionData[NORMALISED_ACTION]?.protect;
-            this._executeAction(actionData);
-          });
+          for (const actionConfig of multiActions) {
+            if (typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay) {
+              let delay = this._getTemplateOrValue(
+                this._stateObj,
+                (actionConfig as CustomActionMultiActionsDelay).delay,
+              );
+              delay = parseDuration(delay || '', 'ms', 'en');
+              if (delay) await timer(delay);
+            } else {
+              const actionData = this._evalActions(this._config!, actionConfig as ActionConfig);
+              delete actionData[NORMALISED_ACTION]?.repeat;
+              delete actionData[NORMALISED_ACTION]?.repeat_limit;
+              delete actionData[NORMALISED_ACTION]?.sound;
+              delete actionData[NORMALISED_ACTION]?.haptic;
+              delete actionData[NORMALISED_ACTION]?.confirmation;
+              delete actionData[NORMALISED_ACTION]?.protect;
+              this._executeAction(actionData);
+            }
+          }
         }
         break;
       default:

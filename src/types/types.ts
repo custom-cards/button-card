@@ -331,8 +331,12 @@ export interface CustomActionJavascript extends CustomActionBase {
 export interface CustomActionMultiActions extends CustomActionBase {
   type: 'multi-actions';
   data?: {
-    multiActions?: Array<ActionConfig>;
+    multiActions?: Array<ActionConfig | CustomActionMultiActionsDelay>;
   };
+}
+
+export interface CustomActionMultiActionsDelay {
+  delay?: string | number;
 }
 
 export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionMultiActions;
