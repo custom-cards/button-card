@@ -1630,15 +1630,27 @@ views:
           - type: 'custom:button-card'
             icon: mdi:lock
             name: toggle password
+            show_label: true
+            label: 'tap: 1234<br/>hold: 0000<br/>dbltap: none'
+            protect:
+              password: '1234'
+              failure_message: 'Bad password!'
+              success_message: 'Yay! Access granted!'
             tap_action:
-              protect:
-                password: '1234'
-                failure_message: 'Bad password!'
-                success_message: 'Yay! Access granted!'
               action: perform-action
               perform_action: light.toggle
               data:
                 entity_id: light.test_light
+            hold_action:
+              protect:
+                password: '0000'
+              action: more-info
+              entity: light.test_light
+            double_tap_action:
+              protect:
+                password: ''
+              action: more-info
+              entity: switch.skylight
             section_mode: true
             grid_options:
               rows: 2

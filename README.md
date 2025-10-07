@@ -157,6 +157,7 @@ Lovelace Button card for your entities.
 | `tooltip` | string | optional | Any string | (Not supported on touchscreens) You can configure the tooltip displayed after hovering the card for 1.5 seconds . Supports templates, see [templates](#javascript-templates) |
 | `disable_kbd` | boolean | `false` | `true` or `false` | Disable keyboard `enter` and `space` capture on the button itself. Usefull when you have input fields inside the button. |
 | `spinner` | boolean | `false` | `true` or `false` | See [spinner](#spinner). If `true`, it will lock the card and display a spinner. You'll need to use a template or `state` to make this variable. |
+| `protect` | object | none | See [protect](#protect) | Display a password or PIN confirmation popup. |
 
 ### Action
 
@@ -260,7 +261,7 @@ This will popup a dialog box with password or PIN confirmation before running th
 | `failure_message` | string | Fixed failure message | any string | If password or PIN is wrong, a toast will popup with this `failure_message` inside. |
 | `success_message` | string | none | any string | If password or PIN is valid, a toast will popup with the content of `success_message` inside. |
 
-This whole object supports templating.
+Protect can be defined at the card level, or at the action level. Both objects supports templating. The action level takes precedance over the card level, if both are defined, objects will be "merged" together (see eg. below).
 
 Eg:
 
@@ -276,6 +277,29 @@ hold_action:
     entity_id: switch.aquarium_pump
   protect:
     pin: '123456'
+```
+
+Defining a PIN for all actions but one:
+
+```yaml
+type: custom:button-card
+entity: light.aquarium
+protect: # globally enables the PIN for all actions
+  pin: '1234'
+  success_message: 'PIN is correct!'
+  failure_message: 'PIN is wrong!'
+tap_action:
+  action: toggle
+hold_action:
+  action: perform-action
+  perform_action: switch.toggle
+  target:
+    entity_id: switch.aquarium_pump
+icon_tap_action:
+  action: more-info
+  entity: sensor.aquarium_temperature
+  protect:
+    pin: '' # Setting this to an empty string disables the pin for this action only.
 ```
 
 ### Multi-actions

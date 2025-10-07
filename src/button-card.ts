@@ -1675,7 +1675,10 @@ class ButtonCard extends LitElement {
       confirmation = this._objectEvalTemplate(this._stateObj, config.confirmation);
     }
     const haptic = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.haptic);
-    const protect = this._objectEvalTemplate(this._stateObj, evaledActionConfig?.protect);
+    const protect = {
+      ...this._objectEvalTemplate(this._stateObj, config.protect),
+      ...this._objectEvalTemplate(this._stateObj, evaledActionConfig?.protect),
+    };
 
     const actionData: ActionEventData = {};
     switch (actionType) {
@@ -1858,13 +1861,13 @@ class ButtonCard extends LitElement {
     // always returns the action in NORMALISED_ACTION for easier handling
     const localAction = this._evalActions(config, config[actionKey]);
 
-    if (localAction[NORMALISED_ACTION]?.protect?.pin !== undefined) {
+    if (localAction[NORMALISED_ACTION]?.protect?.pin) {
       (window as any).cardHelpers.showEnterCodeDialog(this, {
         submit: (code: string) => this._protectedConfirmedCallback.bind(this)(code, 'pin'),
         cancel: this._cancelledCallback.bind(this),
         codeFormat: 'number',
       });
-    } else if (localAction[NORMALISED_ACTION]?.protect?.password !== undefined) {
+    } else if (localAction[NORMALISED_ACTION]?.protect?.password) {
       (window as any).cardHelpers.showPromptDialog(this, {
         title: 'Password',
         inputLabel: 'Password',

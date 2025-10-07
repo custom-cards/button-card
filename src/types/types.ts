@@ -54,6 +54,7 @@ export interface ButtonCardConfig {
   update_timer?: number;
   disable_kbd?: boolean;
   spinner?: boolean;
+  protect?: ButtonCardProtect;
 }
 
 export interface GridOptions {
@@ -110,6 +111,7 @@ export interface ExternalButtonCardConfig {
   update_timer?: number;
   disable_kbd?: boolean;
   spinner?: boolean;
+  protect?: ButtonCardProtect;
 }
 
 export type Layout =
@@ -202,6 +204,13 @@ export interface ButtonCardEmbeddedCardsConfig {
   [key: string]: string | undefined;
 }
 
+export interface ButtonCardProtect {
+  pin?: string;
+  password?: string;
+  failure_message?: string;
+  success_message?: string;
+}
+
 export interface ToggleActionConfig extends BaseActionConfig {
   action: 'toggle';
   entity?: string;
@@ -272,12 +281,7 @@ export interface BaseActionConfig {
   repeat_limit?: number;
   sound?: string;
   haptic?: 'light' | 'medium' | 'heavy' | 'selection' | 'success' | 'warning' | 'error' | 'none';
-  protect?: {
-    pin?: string;
-    password?: string;
-    failure_message?: string;
-    success_message?: string;
-  };
+  protect?: ButtonCardProtect;
 }
 
 export interface ConfirmationRestrictionConfig {
