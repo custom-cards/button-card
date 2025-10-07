@@ -35,3 +35,5 @@ export const DEFAULT_FAILED_TOAST_MESSAGE = {
   pin: 'Incorrect PIN, action cancelled',
   password: 'Incorrect password, action cancelled',
 };
+
+export const NORMALISED_ACTION = 'tap_action';

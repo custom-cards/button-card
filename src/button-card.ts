@@ -78,6 +78,7 @@ import {
   DEFAULT_UNLOCK_ICON,
   DEFAULT_STATE_COLOR,
   DEFAULT_FAILED_TOAST_MESSAGE,
+  NORMALISED_ACTION,
 } from './common/const';
 import { handleAction } from './handle-action';
 import { fireEvent } from './common/fire-event';
@@ -236,8 +237,6 @@ class ButtonCard extends LitElement {
       this._startTimerCountdown();
     }
   }
-
-  private _setupActionsCallback(): void {}
 
   private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
     this._evaledVariables = {};
@@ -1193,7 +1192,7 @@ class ButtonCard extends LitElement {
           id="card"
           class=${classMap(classList)}
           style=${styleMap(cardStyle)}
-          @action=${this._handleCardAction}
+          @action=${(ev: CustomEvent) => this._handleAction(ev, { isIcon: false })}
           .actionHandler=${actionHandler({
             hasDoubleClick: this._isActionDoingSomething(this._stateObj, this._config!.double_tap_action),
             hasHold: this._isActionDoingSomething(this._stateObj, this._config!.hold_action),
@@ -1367,7 +1366,9 @@ class ButtonCard extends LitElement {
                   .icon="${icon}"
                   id="icon"
                   ?rotating=${this._rotate(configState)}
-                  @action=${this._hasIconActions ? this._handleIconAction : undefined}
+                  @action=${this._hasIconActions
+                    ? (ev: CustomEvent) => this._handleAction(ev, { isIcon: true })
+                    : undefined}
                   @pointerenter=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @pointerleave=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @click=${this._hasIconActions ? this._sendToParent : undefined}
@@ -1398,7 +1399,9 @@ class ButtonCard extends LitElement {
                   id="icon"
                   ?rotating=${this._rotate(configState)}
                   draggable="false"
-                  @action=${this._hasIconActions ? this._handleIconAction : undefined}
+                  @action=${this._hasIconActions
+                    ? (ev: CustomEvent) => this._handleAction(ev, { isIcon: true })
+                    : undefined}
                   @pointerenter=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @pointerleave=${this._hasIconActions ? this._handleRippleIcon : undefined}
                   @click=${this._hasIconActions ? this._sendToParent : undefined}
@@ -1618,19 +1621,17 @@ class ButtonCard extends LitElement {
 
   private _evalActions(config: ButtonCardConfig, action: string): ActionEventData {
     let evaledActionConfig: EvaluatedActionConfig | undefined;
-    const staticAction = 'tap_action';
     if (typeof config[action] === 'string') {
       evaledActionConfig = this._objectEvalTemplate(this._stateObj, config[action]);
     } else {
       evaledActionConfig = copy(config[action]);
     }
 
-    // force action to be tap_action for easier handling
     const actionType = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.action);
 
     if (actionType === 'none' || !actionType) {
       const noAction: ActionEventData = {};
-      noAction[staticAction] = { action: 'none' } as NoActionConfig;
+      noAction[NORMALISED_ACTION] = { action: 'none' } as NoActionConfig;
       return noAction;
     }
     const repeat = this._getTemplateOrValue(this._stateObj, evaledActionConfig?.repeat);
@@ -1647,7 +1648,7 @@ class ButtonCard extends LitElement {
     switch (actionType) {
       case 'javascript':
         evaledActionConfig = evaledActionConfig as JavascriptActionConfig;
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'fire-dom-event',
           buttonCardCustomAction: {
             callback: this._customActionsCallback.bind(this),
@@ -1663,7 +1664,7 @@ class ButtonCard extends LitElement {
         actionData.entity =
           this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'toggle',
         } as ToggleActionConfig;
         break;
@@ -1672,14 +1673,14 @@ class ButtonCard extends LitElement {
         actionData.entity =
           this._getTemplateOrValue(this._stateObj, config[action]?.entity) ||
           this._getTemplateOrValue(this._stateObj, config.entity);
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'more-info',
         } as MoreInfoActionConfig;
         break;
 
       case 'navigate':
         evaledActionConfig = evaledActionConfig as NavigateActionConfig;
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'navigate',
           navigation_path: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.navigation_path),
           navigation_replace: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.navigation_replace),
@@ -1688,7 +1689,7 @@ class ButtonCard extends LitElement {
 
       case 'url':
         evaledActionConfig = evaledActionConfig as UrlActionConfig;
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'url',
           url_path: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.url_path),
         } as UrlActionConfig;
@@ -1697,7 +1698,7 @@ class ButtonCard extends LitElement {
       case 'perform-action':
       case 'call-service':
         evaledActionConfig = evaledActionConfig as PerformActionActionConfig;
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'perform-action',
           perform_action:
             // backward compatibility with old school service call
@@ -1711,14 +1712,14 @@ class ButtonCard extends LitElement {
             this._objectEvalTemplate(this._stateObj, evaledActionConfig?.service_data),
           target: this._objectEvalTemplate(this._stateObj, evaledActionConfig?.target),
         } as PerformActionActionConfig;
-        if (actionData[staticAction].data?.entity_id === 'entity') {
-          actionData[staticAction].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
+        if (actionData[NORMALISED_ACTION].data?.entity_id === 'entity') {
+          actionData[NORMALISED_ACTION].data.entity_id = this._getTemplateOrValue(this._stateObj, config.entity);
         }
         break;
 
       case 'assist':
         evaledActionConfig = evaledActionConfig as AssistActionConfig;
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'assist',
           pipeline_id: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.pipeline_id),
           start_listening: this._getTemplateOrValue(this._stateObj, evaledActionConfig?.start_listening),
@@ -1726,18 +1727,18 @@ class ButtonCard extends LitElement {
         break;
 
       case 'fire-dom-event':
-        actionData[staticAction] = {
+        actionData[NORMALISED_ACTION] = {
           action: 'fire-dom-event',
           ...this._objectEvalTemplate(this._stateObj, evaledActionConfig),
         } as CustomActionConfig;
         break;
 
       default:
-        return { [staticAction]: { action: 'none' } as NoActionConfig };
+        return { [NORMALISED_ACTION]: { action: 'none' } as NoActionConfig };
     }
 
-    actionData[staticAction] = {
-      ...actionData[staticAction],
+    actionData[NORMALISED_ACTION] = {
+      ...actionData[NORMALISED_ACTION],
       repeat,
       repeat_limit,
       sound,
@@ -1749,7 +1750,7 @@ class ButtonCard extends LitElement {
     if (protect && (protect.password || protect.pin)) {
       this._protectedAction = copy(actionData);
     }
-
+    // action will always be in NORMALISED_ACTION for easier handling
     return actionData;
   }
 
@@ -1786,8 +1787,8 @@ class ButtonCard extends LitElement {
     });
   }
 
-  private _handleIconAction(ev: any): void {
-    if (this._hasIconActions && ev.stopPropagation) {
+  private _handleAction(ev: CustomEvent, options: { isIcon: boolean }): void {
+    if (options.isIcon && this._hasIconActions && ev.stopPropagation) {
       // stop event bubbling to avoid triggering card action
       ev.stopPropagation();
     }
@@ -1795,19 +1796,7 @@ class ButtonCard extends LitElement {
       const config = this._config;
       if (!config) return;
       const action = ev.detail.action;
-      const actionKey = `icon_${action}_action`;
-      if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
-        this._buildActionConfig(actionKey);
-      }
-    }
-  }
-
-  private _handleCardAction(ev: any): void {
-    if (ev.detail?.action) {
-      const config = this._config;
-      if (!config) return;
-      const action = ev.detail.action;
-      const actionKey = `${action}_action`;
+      const actionKey = options.isIcon ? `icon_${action}_action` : `${action}_action`;
       if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
         this._buildActionConfig(actionKey);
       }
@@ -1817,16 +1806,16 @@ class ButtonCard extends LitElement {
   private _buildActionConfig(actionKey: string): void {
     const config = this._config;
     if (!config) return;
-    // always returns the action in `tap_action` for easier handling
+    // always returns the action in NORMALISED_ACTION for easier handling
     const localAction = this._evalActions(config, actionKey);
 
-    if (localAction['tap_action']?.protect?.pin !== undefined) {
+    if (localAction[NORMALISED_ACTION]?.protect?.pin !== undefined) {
       (window as any).cardHelpers.showEnterCodeDialog(this, {
         submit: (code: string) => this._protectedConfirmedCallback.bind(this)(code, 'pin'),
         cancel: this._cancelledCallback.bind(this),
         codeFormat: 'number',
       });
-    } else if (localAction['tap_action']?.protect?.password !== undefined) {
+    } else if (localAction[NORMALISED_ACTION]?.protect?.password !== undefined) {
       (window as any).cardHelpers.showPromptDialog(this, {
         title: 'Password',
         inputLabel: 'Password',
@@ -1840,7 +1829,7 @@ class ButtonCard extends LitElement {
   }
 
   private _executeAction(actionData: ActionEventData): void {
-    const soundUrl = actionData['tap_action']?.sound;
+    const soundUrl = actionData[NORMALISED_ACTION]?.sound;
     if (soundUrl) {
       if (isMediaSourceContentId(soundUrl)) {
         resolveMediaSource(this._hass!, soundUrl)
@@ -1876,11 +1865,11 @@ class ButtonCard extends LitElement {
 
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
-      if (code === this._protectedAction.tap_action?.protect?.[type]) {
-        delete this._protectedAction.tap_action?.protect;
+      if (code === this._protectedAction[NORMALISED_ACTION]?.protect?.[type]) {
+        delete this._protectedAction[NORMALISED_ACTION]?.protect;
         this._executeAction(this._protectedAction);
       } else {
-        const message = this._protectedAction.tap_action?.protect?.failure_message;
+        const message = this._protectedAction[NORMALISED_ACTION]?.protect?.failure_message;
         this._sendToastMessage(message || DEFAULT_FAILED_TOAST_MESSAGE[type]);
       }
     }
