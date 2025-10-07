@@ -1911,7 +1911,9 @@ class ButtonCard extends LitElement {
         }
         const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
         if (Array.isArray(multiActions)) {
-          this._spinnerActive = true;
+          this._spinnerActive = multiActions.some((actionConfig) => {
+            return typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay;
+          });
           for (const actionConfig of multiActions) {
             if (typeof actionConfig !== 'string' && (actionConfig as CustomActionMultiActionsDelay)?.delay) {
               let delay = this._getTemplateOrValue(
