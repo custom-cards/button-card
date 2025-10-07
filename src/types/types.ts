@@ -53,6 +53,7 @@ export interface ButtonCardConfig {
   section_mode?: boolean;
   update_timer?: number;
   disable_kbd?: boolean;
+  spinner?: boolean;
 }
 
 export interface GridOptions {
@@ -108,6 +109,7 @@ export interface ExternalButtonCardConfig {
   grid_options?: GridOptions;
   update_timer?: number;
   disable_kbd?: boolean;
+  spinner?: boolean;
 }
 
 export type Layout =
@@ -154,6 +156,7 @@ export interface StateConfig {
   label?: string;
   custom_fields?: CustomFields;
   state_display?: string;
+  spinner?: boolean;
 }
 
 export interface StylesConfig {

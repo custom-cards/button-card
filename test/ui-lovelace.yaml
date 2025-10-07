@@ -1463,6 +1463,42 @@ views:
                   [[[
                     return Date.now()
                   ]]]
+      - type: vertical-stack
+        cards:
+          - type: 'custom:button-card'
+            color_type: label-card
+            styles:
+              card:
+                - font-weight: bold
+                - text-transform: uppercase
+            name: Spinner
+          - type: horizontal-stack
+            cards:
+              - type: 'custom:button-card'
+                entity: script.delay_script
+                name: Spinner script main
+                tap_action:
+                  action: perform-action
+                  perform_action: script.delay_script
+                show_label: state
+                spinner: '[[[ return entity.state === "on" ]]]'
+              - type: 'custom:button-card'
+                entity: script.delay_script
+                name: Spinner script state
+                tap_action:
+                  action: perform-action
+                  perform_action: script.delay_script
+                show_label: state
+                styles:
+                  spinner:
+                    - pointer-events: none !important
+                    - --button-card-spinner-background-color: none
+                state:
+                  - value: 'on'
+                    spinner: true
+                    styles:
+                      spinner:
+                        - --button-card-spinner-color: red
 
   - title: Actions
     type: sections

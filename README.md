@@ -51,6 +51,7 @@ Lovelace Button card for your entities.
   - [Changing the feedback color during button/icon hover and click](#changing-the-feedback-color-during-buttonicon-hover-and-click)
     - [Ripple and hover color CSS variables names](#ripple-and-hover-color-css-variables-names)
     - [Icon hover and click size \& shape](#icon-hover-and-click-size--shape)
+  - [Spinner](#spinner)
 - [Installation](#installation)
   - [Installation and tracking with `HACS`](#installation-and-tracking-with-hacs)
   - [Manual Installation](#manual-installation)
@@ -155,6 +156,7 @@ Lovelace Button card for your entities.
 | `card_size` | number | 3 | Any number | Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px) |
 | `tooltip` | string | optional | Any string | (Not supported on touchscreens) You can configure the tooltip displayed after hovering the card for 1.5 seconds . Supports templates, see [templates](#javascript-templates) |
 | `disable_kbd` | boolean | `false` | `true` or `false` | Disable keyboard `enter` and `space` capture on the button itself. Usefull when you have input fields inside the button. |
+| `spinner` | boolean | `false` | `true` or `false` | See [spinner](#spinner). If `true`, it will lock the card and display a spinner. You'll need to use a template or `state` to make this variable. |
 
 ### Action
 
@@ -333,8 +335,6 @@ With `wait_completion`:
 type: 'custom:button-card'
 icon: mdi:console
 name: MA script completion
-variables:
-  delay: 3s
 tap_action:
   action: multi-actions
   actions:
@@ -406,6 +406,7 @@ styles:
 | `entity_picture` | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. Supports templates, see [templates](#javascript-templates) |
 | `label` | string | optional | Any string that you want | Display a label below the card. See [Layouts](#layout) for more information. Supports templates, see [templates](#javascript-templates) |
 | `state_display` | string | optional | `On` | If defined, override the way the state is displayed. Supports templates, see [templates](#javascript-templates) |
+| `spinner` | boolean | `false` | `true` or `false` | See [spinner](#spinner). If `true`, it will lock the card and display a spinner. You'll need to use a template or `state` to make this variable. |
 
 ### Available operators
 
@@ -662,6 +663,7 @@ The `style` object members are:
 - `label`: styles for the label
 - `lock`: styles for the lock icon (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L73-L86) for the default style)
 - `tooltip`: styles for the tooltip overlay (see [here](https://github.com/custom-cards/button-card/blob/master/src/styles.ts#L30-L46))
+- `spinner`: styles for the spinner overlay
 - `custom_fields`: styles for each of your custom fields. See [Custom Fields](#custom-fields)
 
 ```yaml
@@ -1360,6 +1362,56 @@ styles:
     - '--button-card-ripple-icon-border-radius': 9999px
     - '--button-card-ripple-icon-inset': 0% 20% 20% 20%
 ```
+
+### Spinner
+
+A spinner can be enabled on the card to give some feedback to the user. Eg: display the spinner while a script is running.
+
+By default, the spinner will overlay the whole card and disable actions while active.
+
+Multiple CSS variables are also available for its configuration and you can configure it using the `spinner` entry in `styles`.
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `--button-card-spinner-color` | Follows `color` of button card | Color of the spinner |
+| `--button-card-spinner-size` | `1.5vw` | The size of the spinner (it's a "font", so percentages are not accepted here) |
+| `--button-card-spinner-background-opacity` | `0.4` | The opacity of the overlay which sits on top of the card. |
+| `--button-card-spinner-background-color` | `--card-background-color` or white if undefined | The color of the overlay mask |
+
+Some examples:
+
+- Spinner displayed while a script is running, actions are locked
+
+  ```yaml
+  type: 'custom:button-card'
+  entity: script.delay_script
+  name: Spinner script main
+  tap_action:
+    action: perform-action
+    perform_action: script.delay_script
+  show_label: state
+  spinner: '[[[ return entity.state === "on" ]]]'
+  ```
+
+- Spinner displayed in `red` while a script is running using `state`, interactions are unlocked and overlay color is disabled.
+
+  ```yaml
+  type: 'custom:button-card'
+  entity: script.delay_script
+  name: Spinner script state
+  tap_action:
+    action: perform-action
+    perform_action: script.delay_script
+  show_label: state
+  state:
+    - value: 'on'
+      spinner: true
+      styles:
+        spinner:
+          - pointer-events: none !important # this unlocks the overlay
+          - --button-card-spinner-color: red
+          - --button-card-spinner-background-color: none
+  ```
 
 ## Installation
 

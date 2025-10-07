@@ -1219,7 +1219,7 @@ class ButtonCard extends LitElement {
           ${this._buttonContent(this._stateObj, configState, buttonColor)}
           <ha-ripple .disabled=${!this._cardRipple}></ha-ripple>
         </ha-card>
-        ${this._getLock(lockStyle)} ${this._getSpinner(spinnerStyle)}
+        ${this._getLock(lockStyle)} ${this._getSpinner(spinnerStyle, configState)}
       </div>
       ${this._config?.tooltip
         ? html`
@@ -1231,8 +1231,11 @@ class ButtonCard extends LitElement {
     `;
   }
 
-  private _getSpinner(spinnerStyle: StyleInfo): TemplateResult {
-    if (this._spinnerActive) {
+  private _getSpinner(spinnerStyle: StyleInfo, configState: StateConfig | undefined): TemplateResult {
+    const spinnerEnabled =
+      this._getTemplateOrValue(this._stateObj, configState?.spinner) ||
+      this._getTemplateOrValue(this._stateObj, this._config!.spinner);
+    if (this._spinnerActive || spinnerEnabled) {
       return html`
         <div id="spinner" style=${styleMap(spinnerStyle)}>
           <div id="spinner-background"></div>
