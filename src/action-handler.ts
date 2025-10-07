@@ -23,6 +23,7 @@ export interface ActionHandlerOptions {
   repeat?: number;
   repeatLimit?: number;
   isMomentary?: boolean;
+  disableKbd?: boolean;
 }
 
 interface ActionHandlerElement extends HTMLElement {
@@ -242,6 +243,7 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
     };
 
     element.actionHandler.handleKeyDown = (ev: KeyboardEvent) => {
+      if (options.disableKbd) return;
       if (!['Enter', ' '].includes(ev.key)) {
         return;
       }

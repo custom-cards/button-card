@@ -153,6 +153,7 @@ Lovelace Button card for your entities.
 | `variables` | object | optional | See [Variables](#Variables) |
 | `card_size` | number | 3 | Any number | Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px) |
 | `tooltip` | string | optional | Any string | (Not supported on touchscreens) You can configure the tooltip displayed after hovering the card for 1.5 seconds . Supports templates, see [templates](#javascript-templates) |
+| `disable_kbd` | boolean | `false` | `true` or `false` | Disable keyboard `enter` and `space` capture on the button itself. Usefull when you have input fields inside the button. |
 
 ### Action
 

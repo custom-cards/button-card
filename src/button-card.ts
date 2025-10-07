@@ -1199,6 +1199,7 @@ class ButtonCard extends LitElement {
             repeat: holdActionEvaluated?.repeat,
             repeatLimit: holdActionEvaluated?.repeat_limit,
             isMomentary: this._cardMomentary,
+            disableKbd: this._config?.disable_kbd,
           })}
           .config="${this._config}"
         >
@@ -1227,6 +1228,7 @@ class ButtonCard extends LitElement {
           .actionHandler=${actionHandler({
             hasDoubleClick: this._config!.lock!.unlock === 'double_tap',
             hasHold: this._config!.lock!.unlock === 'hold',
+            disableKbd: this._config?.disable_kbd,
           })}
           .config="${this._config}"
         >
@@ -1384,6 +1386,7 @@ class ButtonCard extends LitElement {
                         repeat: iconHoldActionEvaluated?.repeat,
                         repeatLimit: iconHoldActionEvaluated?.repeat_limit,
                         isMomentary: this._iconMomentary,
+                        disableKbd: this._config?.disable_kbd,
                       })
                     : undefined}
                 ></ha-state-icon>
@@ -1417,6 +1420,7 @@ class ButtonCard extends LitElement {
                         repeat: iconHoldActionEvaluated?.repeat,
                         repeatLimit: iconHoldActionEvaluated?.repeat_limit,
                         isMomentary: this._iconMomentary,
+                        disableKbd: this._config?.disable_kbd,
                       })
                     : undefined}
                 />

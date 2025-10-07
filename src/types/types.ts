@@ -52,6 +52,7 @@ export interface ButtonCardConfig {
   tooltip?: string;
   section_mode?: boolean;
   update_timer?: number;
+  disable_kbd?: boolean;
 }
 
 export interface GridOptions {
@@ -106,6 +107,7 @@ export interface ExternalButtonCardConfig {
   section_mode?: boolean;
   grid_options?: GridOptions;
   update_timer?: number;
+  disable_kbd?: boolean;
 }
 
 export type Layout =
