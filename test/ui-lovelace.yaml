@@ -1634,6 +1634,7 @@ views:
               protect:
                 password: '1234'
                 failure_message: 'Bad password!'
+                success_message: 'Yay! Access granted!'
               action: perform-action
               perform_action: light.toggle
               data:

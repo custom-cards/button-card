@@ -1967,6 +1967,7 @@ class ButtonCard extends LitElement {
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
       if (code === this._protectedAction[NORMALISED_ACTION]?.protect?.[type]) {
+        this._sendToastMessage(this._protectedAction[NORMALISED_ACTION]?.protect?.success_message);
         delete this._protectedAction[NORMALISED_ACTION]?.protect;
         this._executeAction(this._protectedAction);
       } else {
@@ -1981,7 +1982,8 @@ class ButtonCard extends LitElement {
     this._protectedAction = undefined;
   }
 
-  private _sendToastMessage(message: string): void {
+  private _sendToastMessage(message: string | undefined): void {
+    if (message === undefined) return;
     this.dispatchEvent(
       new CustomEvent('hass-notification', {
         bubbles: true,

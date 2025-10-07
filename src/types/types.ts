@@ -276,6 +276,7 @@ export interface BaseActionConfig {
     pin?: string;
     password?: string;
     failure_message?: string;
+    success_message?: string;
   };
 }
 

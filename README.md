@@ -258,6 +258,7 @@ This will popup a dialog box with password or PIN confirmation before running th
 | `pin` | string | none | any string composed of digits only | This will prompt for a PIN before running the action. Make sure you set this as a **string** like so `"1234"` |
 | `password` | string | none | any string | Setting this field will prompt for a password before running the action. |
 | `failure_message` | string | Fixed failure message | any string | If password or PIN is wrong, a toast will popup with this `failure_message` inside. |
+| `success_message` | string | none | any string | If password or PIN is valid, a toast will popup with the content of `success_message` inside. |
 
 This whole object supports templating.
 
