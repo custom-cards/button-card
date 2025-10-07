@@ -113,7 +113,7 @@ export const styles = css`
     justify-content: flex-start;
     padding: 8px 7px;
     --ha-spinner-indicator-color: var(--button-card-spinner-color, var(--button-card-color));
-    --ha-spinner-size: 1.5vw;
+    --ha-spinner-size: var(--button-card-spinner-size, 1.5vw);
     /* DO NOT override items below */
     pointer-events: auto;
     position: absolute;
