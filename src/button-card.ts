@@ -424,6 +424,9 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
+    if (changedProps.has('_config')) {
+      return true;
+    }
     if (this._config?.triggers_update === 'update_timer') {
       if (changedProps.has('_updateTimerMS')) {
         return true;
@@ -1016,10 +1019,18 @@ class ButtonCard extends LitElement {
         };
         let thing;
         if (!deepEqual(this._cardsConfig[key], cards[key])) {
-          thing = this._createCard(cards[key]);
-          thing.preview = this.preview;
-          this._cards[key] = thing;
-          this._cardsConfig[key] = copy(cards[key]);
+          if ((this._cardsConfig[key] as any)?.type === cards[key]?.type) {
+            // same type, different config
+            thing = this._cards[key];
+            thing.preview = this.preview;
+            this._cardsConfig[key] = copy(cards[key]);
+            thing.setConfig(cards[key]);
+          } else {
+            thing = this._createCard(cards[key]);
+            thing.preview = this.preview;
+            this._cards[key] = thing;
+            this._cardsConfig[key] = copy(cards[key]);
+          }
         } else {
           thing = this._cards[key];
         }

@@ -2822,6 +2822,28 @@ views:
           }; ]]]
 
 
+      - type: custom:button-card
+        entity: switch.skylight
+        name: Nested should not be recreated
+        tap_action:
+          action: toggle
+        styles:
+          grid:
+            - grid-template-areas: '"i" "n" "nested"'
+            - grid-template-rows: auto auto auto
+        custom_fields:
+          nested:
+            card:
+              type: custom:button-card
+              name: '[[[ return `Main card state: ${entity.state}`; ]]]'
+              styles:
+                name:
+                  - color: '[[[ return entity.state === "on" ? "green" : "red"; ]]]'
+              tap_action:
+                action: multi-actions
+                actions:
+                  - delay: 10000
+
   - title: Grid
     type: sections
     sections:
