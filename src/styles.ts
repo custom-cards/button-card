@@ -122,7 +122,6 @@ export const styles = css`
     top: 0;
     bottom: 0;
     display: flex;
-    /* --ha-spinner-size: 100%; */
   }
   #spinner-background {
     position: absolute;
