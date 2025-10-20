@@ -28,9 +28,14 @@ Lovelace Button card for your entities.
 - [Configuration](#configuration)
   - [Main Options](#main-options)
   - [Action](#action)
-  - [Confirmation](#confirmation)
-  - [Protect](#protect)
-  - [Multi-actions](#multi-actions)
+    - [Actions Configuration](#actions-configuration)
+    - [Confirmation](#confirmation)
+    - [Protect](#protect)
+    - [Multi-actions](#multi-actions)
+    - [Toast Message](#toast-message)
+      - [Configuration options](#configuration-options)
+      - [Toast Actions](#toast-actions)
+      - [Toast Helpers](#toast-helpers)
   - [Lock Object](#lock-object)
   - [State](#state)
   - [Available operators](#available-operators)
@@ -166,6 +171,8 @@ Lovelace Button card for your entities.
 
 ### Action
 
+#### Actions Configuration
+
 All the fields support templates, see [templates](#javascript-templates). You may also provide a single template for the action itself. Such a template needs to return a javascript object that includes the fields below.
 
 | Name | Type | Default | Supported options | Description |
@@ -189,6 +196,7 @@ All the fields support templates, see [templates](#javascript-templates). You ma
 | `pipeline_id` | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
 | `start_listening` | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
 | `sound` | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
+| `toast` | object | none | See [toast](#toast-message) | Only available when action is `toast`. An object describing the toast message to display on the bottom of the screen. |
 
 Example - specifying fields directly:
 
@@ -233,7 +241,7 @@ tap_action:
     [[[ alert("Hello from button card"); ]]]
 ```
 
-### Confirmation
+#### Confirmation
 
 This will popup a dialog box before running the action.
 
@@ -251,7 +259,7 @@ confirmation:
     - user: befc8496799848bda1824f2a8111e30a
 ```
 
-### Protect
+#### Protect
 
 This will popup a dialog box with password or PIN confirmation before running the action.
 
@@ -307,7 +315,7 @@ icon_tap_action:
     pin: '' # Setting this to an empty string disables the pin for this action only.
 ```
 
-### Multi-actions
+#### Multi-actions
 
 The `action: multi-actions` enables you to run several actions in a row with optional delay between them.
 
@@ -377,6 +385,128 @@ tap_action:
     # This will be called once the script has finished running (state will be "off")
     - action: navigate
       navigation_path: /lovalace/0
+```
+
+#### Toast Message
+
+##### Configuration options
+
+All options support templating.
+
+| Name | Type | Default | Supported options | Description |
+| --- | --- | --- | --- | --- |
+| `message` | string | Optional | any string | The toast message to display |
+| `duration` | number | Optional | any number | The message will be displayed for `duration` ms |
+| `dismissable` | boolean | Optional | `true` or `false` | If the toast message is dismissable |
+| `action` | object | Optional | See [toast actions](#toast-actions) | If defined, will display a button on the toast message and if clicked, an action will be triggered |
+
+Eg:
+
+- Simple toast messages:
+
+  ```yaml
+  type: 'custom:button-card'
+  icon: mdi:console
+  name: Toast action
+  tap_action:
+    action: toast
+    toast:
+      message: 'This is a toast message'
+  ```
+
+  ```yaml
+  type: 'custom:button-card'
+  icon: mdi:console
+  name: Toast action
+  tap_action:
+    action: toast
+    toast:
+      message: 'This is a toast message which is displayed for 20s and can be dismissed'
+      duration: 20000
+      dismissable: true
+  ```
+
+* Used in `action: multi-actions`
+
+  ```yaml
+  type: 'custom:button-card'
+  entity: light.skylight
+  tap_action:
+    action: multi-actions
+    actions:
+      - action: toggle
+      - action: toast
+        toast:
+          message: 'The light has been toggled'
+          duration: 20000
+          dismissable: true
+  ```
+
+##### Toast Actions
+
+All options support javascript templating. Mandatory for `action`.
+
+You can display a button on the toast message with an associated action.
+
+| Name | Type | Default | Supported options | Description |
+| --- | --- | --- | --- | --- |
+| `text` | string |  | any string | The action button text |
+| `action` | function |  | any javascript function | This needs to be a template and the template needs to return a function. The function is then called if the user clicks on the toast button |
+
+Eg:
+
+```yaml
+type: 'custom:button-card'
+icon: mdi:console
+name: Toast action
+tap_action:
+  action: toast
+  toast:
+    message: 'This is a toast with an undo button'
+    duration: 10000
+    dismissable: true
+    action:
+      text: 'Undo'
+      action: |
+        [[[
+          return () => setTimeout(
+              () => helpers.toastMessage("You clicked Undo!"),
+              500
+            );
+        ]]]
+```
+
+##### Toast Helpers
+
+2 helpers are available in javascript templates:
+
+- `helpers.toastMessage(message)`: Displays a toast message with the content of `message`.
+- `helpers.toast(toastParams)`: Displays a toast message with advanced options, see below.
+
+`helpers.toast(toastParams)` uses the same configuration options as the [toast action](#toast-actions). It takes an object as parameter.
+
+Eg (this produces exactly the same result as the example above from [toast actions](#toast-actions)):
+
+```yaml
+type: 'custom:button-card'
+icon: mdi:console
+name: Toast javascript
+tap_action:
+  action: javascript
+  javascript: |
+    [[[
+      helpers.toast(
+        {
+          message: "This is a toast from JS",
+          duration: 10000,
+          dismissable: true,
+          action: {
+            text: "Undo",
+            action: () => setTimeout(() => helpers.toastMessage("You clicked Undo!"), 500)
+          }
+        }
+      )
+    ]]]
 ```
 
 ### Lock Object
@@ -757,6 +887,7 @@ Inside the javascript code, you'll have access to those variables:
     - Example: `return helpers.formatDateTime(entity.attribute.last_changed)`
   - `helpers.relativeTime(date, capitalize? = false)`: Returns an lit-html template which will render a relative time and update automatically. `date` should be a string. `capitalize` is an optional boolean, if set to `true`, the first letter will be uppercase. Usage for eg.: `return helpers.relativeTime(entity.last_changed)`
   - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`. If a locale is specified `en` is also used as a fallback.
+  - `helpers.toastMessage(message)` and `helpers.toast(toastParams)`: See [toast helpers](#toast-helpers)
 
 See [here](#templates-support) for some examples or [here](#custom-fields) for some crazy advanced stuff using templates!
 
