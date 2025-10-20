@@ -38,6 +38,8 @@ import {
   MultiActionsActionConfig,
   CustomActionMultiActionsDelay,
   TooltipConfig,
+  ShowToastParams,
+  ToastActionConfig,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -702,6 +704,12 @@ class ButtonCard extends LitElement {
       },
       parseDuration: (duration, format = 'ms', locale = this._hass!.locale?.language) => {
         return parseDuration(duration, format, locale);
+      },
+      toastMessage: (message?: string) => {
+        return this._sendToastMessage.bind(this)({ message });
+      },
+      toast: (params: ShowToastParams) => {
+        return this._sendToastMessage.bind(this)(params);
       },
     };
   }
@@ -1789,6 +1797,20 @@ class ButtonCard extends LitElement {
         } as CustomActionConfig;
         break;
 
+      case 'toast':
+        evaledActionConfig = evaledActionConfig as ToastActionConfig;
+        actionData[NORMALISED_ACTION] = {
+          action: 'fire-dom-event',
+          buttonCardCustomAction: {
+            callback: this._customActionsCallback.bind(this),
+            type: 'toast',
+            data: {
+              toast: evaledActionConfig?.toast,
+            },
+          },
+        } as CustomActionConfig;
+        break;
+
       case 'toggle':
         evaledActionConfig = evaledActionConfig as ToggleActionConfig;
         actionData.entity =
@@ -2041,6 +2063,11 @@ class ButtonCard extends LitElement {
           this._spinnerActive = false;
         }
         break;
+      case 'toast':
+        let toast = customAction.data?.toast;
+        toast = this._objectEvalTemplate(this._stateObj, toast) as ShowToastParams;
+        this._sendToastMessage(toast);
+        break;
       default:
         break;
     }
@@ -2049,12 +2076,12 @@ class ButtonCard extends LitElement {
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
       if (code === this._protectedAction[NORMALISED_ACTION]?.protect?.[type]) {
-        this._sendToastMessage(this._protectedAction[NORMALISED_ACTION]?.protect?.success_message);
+        this._sendToastMessage({ message: this._protectedAction[NORMALISED_ACTION]?.protect?.success_message });
         delete this._protectedAction[NORMALISED_ACTION]?.protect;
         this._executeAction(this._protectedAction);
       } else {
         const message = this._protectedAction[NORMALISED_ACTION]?.protect?.failure_message;
-        this._sendToastMessage(message || DEFAULT_FAILED_TOAST_MESSAGE[type]);
+        this._sendToastMessage({ message: message || DEFAULT_FAILED_TOAST_MESSAGE[type] });
       }
     }
     this._protectedAction = undefined;
@@ -2064,14 +2091,14 @@ class ButtonCard extends LitElement {
     this._protectedAction = undefined;
   }
 
-  private _sendToastMessage(message: string | undefined): void {
-    if (message === undefined) return;
+  private _sendToastMessage(toastParams?: ShowToastParams): void {
+    if (toastParams?.message === undefined) return;
     this.dispatchEvent(
       new CustomEvent('hass-notification', {
         bubbles: true,
         composed: true,
         detail: {
-          message,
+          ...toastParams,
         },
       }),
     );

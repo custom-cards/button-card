@@ -351,7 +351,7 @@ tap_action:
       service_data:
         entity_id: light.test_light
     - action: javascript
-      javascript: '[[[ this._sendToastMessage(`Waiting ${variables.delay}...`); ]]]'
+      javascript: '[[[ helpers.toastMessage(`Waiting ${variables.delay}...`); ]]]'
     - delay: '[[[ return variables.delay; ]]]'
     - action: call-service
       service: light.toggle

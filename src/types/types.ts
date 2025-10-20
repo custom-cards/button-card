@@ -277,6 +277,11 @@ export interface MultiActionsActionConfig extends BaseActionConfig {
   actions?: string;
 }
 
+export interface ToastActionConfig extends BaseActionConfig {
+  action: 'toast';
+  toast?: ShowToastParams;
+}
+
 export interface BaseActionConfig {
   action: string;
   confirmation?: ConfirmationRestrictionConfig | string;
@@ -308,6 +313,7 @@ export type ActionConfig =
   | CustomActionConfig
   | JavascriptActionConfig
   | MultiActionsActionConfig
+  | ToastActionConfig
   | string;
 
 export type EvaluatedActionConfig = Exclude<ActionConfig, string>;
@@ -346,13 +352,20 @@ export interface CustomActionMultiActions extends CustomActionBase {
   };
 }
 
+export interface CustomActionToast extends CustomActionBase {
+  type: 'toast';
+  data?: {
+    toast?: ShowToastParams;
+  };
+}
+
 export interface CustomActionMultiActionsDelay {
   delay?: string | number;
   wait_completion?: boolean;
   timeout?: number | string;
 }
 
-export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionMultiActions;
+export type CustomButtonCardActionEvent = CustomActionJavascript | CustomActionMultiActions | CustomActionToast;
 
 export interface TooltipConfig {
   content: string | undefined;
@@ -361,4 +374,16 @@ export interface TooltipConfig {
   distance?: number;
   skidding?: number;
   arrow?: boolean;
+}
+
+export interface ToastActionParams {
+  action: () => void;
+  text: string;
+}
+
+export interface ShowToastParams {
+  message?: string;
+  action?: ToastActionParams;
+  duration?: number;
+  dismissable?: boolean;
 }

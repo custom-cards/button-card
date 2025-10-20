@@ -341,7 +341,7 @@ views:
         tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
         tap_action:
           action: javascript
-          javascript: "[[[ return; ]]]"
+          javascript: '[[[ return; ]]]'
         styles:
           tooltip:
             - color: red
@@ -352,7 +352,7 @@ views:
         tooltip: '[[[ return html`Line Extra Info<br>Next Line<ha-icon icon="mdi:help" style="color: red; width: 1em;"></ha-icon><br>` ]]]'
         tap_action:
           action: javascript
-          javascript: "[[[ return; ]]]"
+          javascript: '[[[ return; ]]]'
         lock:
           enabled: true
           duration: 7
@@ -1741,7 +1741,45 @@ views:
                   service: light.toggle
                   service_data:
                     entity_id: light.test_light
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
 
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: Toast javascript
+            tap_action:
+              action: javascript
+              javascript: |
+                [[[
+                  helpers.toast( {
+                    message: "This is a toast from JS",
+                    duration: 10000,
+                    dismissable: true,
+                    action: {
+                      text: "Undo",
+                      action: () => setTimeout(() => helpers.toastMessage("You clicked Undo!"), 500)
+                    }
+                  })
+                ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: Toast action
+            tap_action:
+              action: toast
+              toast:
+                message: 'This is a toast from JS'
+                duration: 10000
+                dismissable: true
+                action:
+                  text: 'Undo'
+                  action: '[[[ return () => setTimeout(() => helpers.toastMessage("You clicked Undo!"), 500) ]]]'
             section_mode: true
             grid_options:
               rows: 2
@@ -2795,7 +2833,7 @@ views:
     sections:
       - type: grid
         cards:
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             name: Tooltip Content
             styles:
@@ -2806,7 +2844,7 @@ views:
             grid_options:
               rows: 1
               columns: 12
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Config string
             tooltip: I am a tooltip
@@ -2814,19 +2852,19 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: State string
             state:
-              - value: "on"
+              - value: 'on'
                 tooltip: Tap to turn OFF
-              - value: "off"
+              - value: 'off'
                 tooltip: Tap to turn ON
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Config object
             tooltip:
@@ -2835,33 +2873,33 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: State object
             state:
-              - value: "on"
+              - value: 'on'
                 tooltip:
                   content: Tap to turn OFF
-              - value: "off"
+              - value: 'off'
                 tooltip:
                   content: Tap to turn ON
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Multiline
             tooltip:
               content: >
-                This is a tooltip<br/>
-                that spans multiple<br/>
-                lines
+                This is a tooltip<br/> that spans multiple<br/> lines
+
+
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             name: Tooltip Options
             styles:
@@ -2872,7 +2910,7 @@ views:
             grid_options:
               rows: 1
               columns: 12
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Delay 1s
             tooltip:
@@ -2882,7 +2920,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Arrow
             tooltip:
@@ -2892,7 +2930,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Distance 25px
             tooltip:
@@ -2902,7 +2940,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Skidding 50
             tooltip:
@@ -2912,7 +2950,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             name: Tooltip Placememnt
             styles:
@@ -2923,7 +2961,7 @@ views:
             grid_options:
               rows: 1
               columns: 12
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: top-start
             tooltip:
@@ -2934,7 +2972,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: top
             tooltip:
@@ -2945,7 +2983,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: top-end
             tooltip:
@@ -2956,7 +2994,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: right-start
             tooltip:
@@ -2967,14 +3005,14 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             color: white
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: left-start
             tooltip:
@@ -2985,7 +3023,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: right
             tooltip:
@@ -2996,14 +3034,14 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             color: white
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: left
             tooltip:
@@ -3014,7 +3052,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: right-end
             tooltip:
@@ -3025,14 +3063,14 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             color: white
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: left-end
             tooltip:
@@ -3043,7 +3081,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: bottom-start
             tooltip:
@@ -3054,7 +3092,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: bottom
             tooltip:
@@ -3065,7 +3103,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: bottom-end
             tooltip:
@@ -3076,7 +3114,7 @@ views:
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             name: Tooltip Styling
             styles:
@@ -3087,93 +3125,95 @@ views:
             grid_options:
               rows: 1
               columns: 12
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Red on white
             tooltip: I am a tooltip
             styles:
               tooltip:
-                - "--secondary-background-color": white
-                - "--primary-text-color": red
+                - '--secondary-background-color': white
+                - '--primary-text-color': red
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Consolas bold large
             tooltip: I am a tooltip
             styles:
               tooltip:
-                - "--ha-tooltip-font-family": Consolas
-                - "--ha-tooltip-font-weight": bold
-                - "--ha-tooltip-font-size": var(--ha-font-size-l)
+                - '--ha-tooltip-font-family': Consolas
+                - '--ha-tooltip-font-weight': bold
+                - '--ha-tooltip-font-size': var(--ha-font-size-l)
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Border radius 50
             tooltip:
               content: >
-                This is a tooltip<br/>
-                that spans multiple<br/>
-                lines
+                This is a tooltip<br/> that spans multiple<br/> lines
+
+
             styles:
               tooltip:
-                - "--ha-tooltip-border-radius": 50px
+                - '--ha-tooltip-border-radius': 50px
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Arrow size 16px
             tooltip:
               content: >
-                This is a tooltip<br/>
-                that spans multiple<br/>
-                lines
+                This is a tooltip<br/> that spans multiple<br/> lines
+
+
               arrow: true
             styles:
               tooltip:
-                - "--ha-tooltip-arrow-size": 16px
+                - '--ha-tooltip-arrow-size': 16px
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Max width 50px
             tooltip:
               content: >
-                This is a tooltip<br/>
-                that spans multiple<br/>
-                lines
+                This is a tooltip<br/> that spans multiple<br/> lines
+
+
               arrow: true
             styles:
               tooltip:
-                - "--max-width": 50px
+                - '--max-width': 50px
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Max width none
             tooltip:
               content: >
                 This is a tooltip a very very very long text that should not wrap but extend to full width
+
+
               arrow: true
             styles:
               tooltip:
-                - "--max-width": none
+                - '--max-width': none
             section_mode: true
             grid_options:
               rows: 2
               columns: 4
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             color_type: label-card
             name: Nested tooltips
             styles:
@@ -3184,7 +3224,7 @@ views:
             grid_options:
               rows: 1
               columns: 12
-          - type: "custom:button-card"
+          - type: 'custom:button-card'
             entity: switch.skylight
             name: Parent
             styles:
@@ -3195,7 +3235,7 @@ views:
             custom_fields:
               child:
                 card:
-                  type: "custom:button-card"
+                  type: 'custom:button-card'
                   entity: switch.skylight
                   name: Child + delay
                   tooltip:
