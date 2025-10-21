@@ -59,12 +59,47 @@ export const styles = css`
       calc(var(--ha-ripple-pressed-opacity, 0.12) + 0.05)
     );
   }
-  ha-tooltip {
-    text-align: center;
+  wa-tooltip {
+    --wa-tooltip-background-color: var(--button-card-tooltip-background-color, var(--secondary-background-color));
+    --wa-tooltip-content-color: var(--button-card-tooltip-content-color, var(--primary-text-color));
+    --wa-tooltip-font-family: var(
+      --button-card-tooltip-font-family,
+      var(--ha-tooltip-font-family, var(--ha-font-family-body))
+    );
+    --wa-tooltip-font-size: var(--button-card-tooltip-font-size, var(--ha-tooltip-font-size, var(--ha-font-size-s)));
+    --wa-tooltip-font-weight: var(
+      --button-card-tooltip-font-weight,
+      var(--ha-tooltip-font-weight, var(--ha-font-weight-normal))
+    );
+    --wa-tooltip-line-height: var(
+      --button-card-tooltip-line-height,
+      var(--ha-tooltip-line-height, var(--ha-line-height-condensed))
+    );
+    --wa-tooltip-padding: var(--button-card-tooltip-padding, 8px);
+    --wa-tooltip-border-radius: var(
+      --button-card-tooltip-border-radius,
+      var(--ha-tooltip-border-radius, var(--ha-border-radius-sm))
+    );
+    --wa-tooltip-arrow-size: var(--button-card-tooltip-arrow-size, var(--ha-tooltip-arrow-size, 8px));
+    --wa-tooltip-border-width: var(--button-card-tooltip-border-width);
+    --wa-tooltip-border-color: var(--button-card-tooltip-border-color);
+    --wa-tooltip-border-style: var(--button-card-tooltip-border-style);
+    --max-width: var(--button-card-tooltip-max-width, 30ch);
   }
-  :host span.tooltip {
-    font-weight: var(--ha-tooltip-font-weight, normal);
-    font-family: var(--ha-tooltip-font-family, inherit);
+  wa-tooltip::part(base__popup) {
+    --show-duration: var(--button-card-tooltip-show-duration, 100ms);
+    --hide-duration: var(--button-card-tooltip-hide-duration, 100ms);
+    opacity: var(--button-card-tooltip-opacity, 1);
+  }
+  wa-tooltip::part(body) {
+    padding: var(--button-card-tooltip-padding, 0.25em 0.5em);
+    box-shadow: var(--button-card-tooltip-box-shadow, var(--ha-card-box-shadow, none));
+    font-weight: var(--button-card-tooltip-font-weight, var(--ha-tooltip-font-weight, normal));
+    font-family: var(--button-card-tooltip-font-family, var(--ha-tooltip-font-family, inherit));
+    text-align: var(--button-card-tooltip-text-align, center);
+    text-decoration: var(--button-card-tooltip-text-decoration, none);
+    text-transform: var(--button-card-tooltip-text-transform, none);
+    overflow-wrap: var(--button-card-tooltip-overflow-wrap, normal);
   }
   :not(ha-state-icon) ha-icon,
   ha-state-icon {

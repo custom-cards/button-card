@@ -730,7 +730,7 @@ All parameters support [templates](#javascript-templates).
 | `content` | string | none | A string or an `` html`<elt></elt>` `` object | Tooltip content. |
 | `placement` | string | `top` | `top`, `top-start`, `top-end`, `right`, `right-start`, `right-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end` | The anchor point of the tooltip im relation to the card. The tooltip shows outside the card at this location. If needed the tooltip will flip to the alternate side. See [placement](https://webawesome.com/docs/components/tooltip/#placement) for examples. |
 | `delay` | number or string | 150ms | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will display when the card is in focus. |
-| `distance` | number | 8 | number (pixels) | The distance in pixels by which the tooltip is offset away from the card. |
+| `distance` | number | 8 | number (pixels) | The distance in pixels by which the tooltip is offset away from the card. This can be negative to move the tooltip closer to or even over the card. If the tooltip is over the card you may need to set tooltip style to include `pointer-events: none` to stop a focus battle between the tooltip and the card. |
 | `skidding` | number | optinal | number (pixels) | The distance in pixels by which the tooltip is offset along teh card |
 | `arrow` | boolean | false | true \| false | Whether to show an arrow connecting the button to the tooltip. |
 
@@ -772,15 +772,23 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 
 | CSS Variable | Default | Description |
 | --- | --- | --- |
-| --primary-text-color | Home Assistant default | Tooltip text color |
-| --secondary-background-color | Home Assistant default | Tooltip background color |
-| --ha-tooltip-font-family | var(--ha-font-family-body) | Tooltip font family |
-| --ha-tooltip-font-size | var(--ha-font-size-s) | Tooltip font size |
-| --ha-tooltip-font-weight | var(--ha-font-weight-normal) | Tooltip font weight |
-| --ha-tooltip-line-height | var(--ha-line-height-condensed) | Tooltip line height |
-| --ha-tooltip-border-radius | 4px | Tooltip border radius |
-| --ha-tooltip-arrow-size | 8px | Tooltip arrow size, if displayed |
-| --max-width | 30ch | Tooltip maximum width. Set to `none` to not limit the tooltip width |
+| --button-card-tooltip-content-color | var(--primary-text-color) | Tooltip text color |
+| --button-card-tooltip-background-color | var(--secondary-background-color) | Tooltip background color |
+| --button-card-tooltip-font-family | var(--ha-font-family-body) | Tooltip font family |
+| --button-card-tooltip-font-size | var(--ha-font-size-s) | Tooltip font size |
+| --button-card-tooltip-font-weight | var(--ha-font-weight-normal) | Tooltip font weight |
+| --button-card-tooltip-line-height | var(--ha-line-height-condensed) | Tooltip line height |
+| --button-card-tooltip-text-align | center | Tooltip text align |
+| --button-card-tooltip-text-transform | none | Tooltip text transform |
+| --button-card-tooltip-text-decoration | none | Tooltip text decoration |
+| --button-card-tooltip-overflow-wrap | normal | Tooltip overflow-wrap |
+| --button-card-tooltip-border-radius | var(--ha-tooltip-border-radius, var(--ha-border-radius-sm)) | Tooltip border radius |
+| --button-card-tooltip-border-width | none | Tooltip border width |
+| --button-card-tooltip-border-color | none | Tooltip border color |
+| --button-card-tooltip-border-style | none | Tooltip border style |
+| --button-card-tooltip-box-shadow | none | Tooltip box shadow |
+| --button-card-tooltip-arrow-size | var(--ha-tooltip-arrow-size, 8px) | Tooltip arrow size, if displayed |
+| --button-card-tooltip-max-width | 30ch | Tooltip maximum width. Set to `none` to not limit the tooltip width |
 
 ### Javascript Templates
 

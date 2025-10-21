@@ -338,13 +338,16 @@ views:
         show_entity_picture: true
         name: Entity Picture Cast
         entity_picture: /local/workspace/test/www/cast.jpg
-        tooltip: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
+        tooltip:
+          distance: -200
+          content: 'mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here mega super long tooltip that should overflow everything here'
         tap_action:
           action: javascript
           javascript: '[[[ return; ]]]'
         styles:
           tooltip:
             - color: red
+            - '--button-card-tooltip-max-width': 300px
       - type: 'custom:button-card'
         color_type: card
         icon: mdi:lock
@@ -2893,8 +2896,6 @@ views:
             tooltip:
               content: >
                 This is a tooltip<br/> that spans multiple<br/> lines
-
-
             section_mode: true
             grid_options:
               rows: 2
@@ -2922,6 +2923,17 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
+            name: Hide delay 1s
+            tooltip:
+              content: I am a tooltip
+              delay: 150ms
+              hide_delay: 1s
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
             name: Arrow
             tooltip:
               content: I am a tooltip
@@ -2940,6 +2952,19 @@ views:
             grid_options:
               rows: 2
               columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Distance -50px
+            tooltip:
+              content: I am a tooltip
+              distance: -50
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+            styles:
+              tooltip:
+                - 'pointer-events': none
           - type: 'custom:button-card'
             entity: switch.skylight
             name: Skidding 50
@@ -3131,8 +3156,8 @@ views:
             tooltip: I am a tooltip
             styles:
               tooltip:
-                - '--secondary-background-color': white
-                - '--primary-text-color': red
+                - '--button-card-tooltip-background-color': white
+                - '--button-card-tooltip-content-color': red
             section_mode: true
             grid_options:
               rows: 2
@@ -3143,9 +3168,49 @@ views:
             tooltip: I am a tooltip
             styles:
               tooltip:
-                - '--ha-tooltip-font-family': Consolas
-                - '--ha-tooltip-font-weight': bold
-                - '--ha-tooltip-font-size': var(--ha-font-size-l)
+                - '--button-card-tooltip-font-family': Consolas
+                - '--button-card-tooltip-font-weight': bold
+                - '--button-card-tooltip-font-size': var(--ha-font-size-l)
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Upper underlined
+            tooltip: I am a tooltip
+            styles:
+              tooltip:
+                - '--button-card-tooltip-text-decoration': underline
+                - '--button-card-tooltip-text-transform': uppercase
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Text align right
+            tooltip:
+              content: >
+                This is a tooltip<br/> that spans multiple<br/> lines
+            styles:
+              tooltip:
+                - '--button-card-tooltip-text-align': right
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Border red 2px dashed
+            tooltip:
+              content: >
+                This is a tooltip<br/> that spans multiple<br/> lines
+            styles:
+              tooltip:
+                - '--button-card-tooltip-border-color': red
+                - '--button-card-tooltip-border-width': 2px
+                - '--button-card-tooltip-border-style': dashed
             section_mode: true
             grid_options:
               rows: 2
@@ -3156,11 +3221,9 @@ views:
             tooltip:
               content: >
                 This is a tooltip<br/> that spans multiple<br/> lines
-
-
             styles:
               tooltip:
-                - '--ha-tooltip-border-radius': 50px
+                - '--button-card-tooltip-border-radius': 50px
             section_mode: true
             grid_options:
               rows: 2
@@ -3171,12 +3234,10 @@ views:
             tooltip:
               content: >
                 This is a tooltip<br/> that spans multiple<br/> lines
-
-
               arrow: true
             styles:
               tooltip:
-                - '--ha-tooltip-arrow-size': 16px
+                - '--button-card-tooltip-arrow-size': 16px
             section_mode: true
             grid_options:
               rows: 2
@@ -3187,8 +3248,6 @@ views:
             tooltip:
               content: >
                 This is a tooltip<br/> that spans multiple<br/> lines
-
-
               arrow: true
             styles:
               tooltip:
@@ -3203,12 +3262,54 @@ views:
             tooltip:
               content: >
                 This is a tooltip a very very very long text that should not wrap but extend to full width
-
-
               arrow: true
             styles:
               tooltip:
                 - '--max-width': none
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: overflow-wrap
+            tooltip: >
+                This is a tooltip<br/> that spans multiple<br/> lines with the last line needing a break 123456789123456789
+            styles:
+              tooltip:
+                - '--button-card-tooltip-max-width': 100px
+                - '--button-card-tooltip-overflow-wrap': anywhere
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Opacity 0.5
+            tooltip:
+              placement: right-start
+              distance: -50
+              content: >
+                This is a tooltip<br/> that spans multiple<br/> lines
+            styles:
+              tooltip:
+                - 'pointer-events': none
+                - '--button-card-tooltip-background-color': red
+                - '--button-card-tooltip-opacity': 0.5
+                - '--button-card-tooltip-show-duration': 1ms
+                - '--button-card-tooltip-hide-duration': 1ms
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Box shadow
+            tooltip: >
+                This is a tooltip<br/> that spans multiple<br/> lines
+            styles:
+              tooltip:
+                - '--button-card-tooltip-box-shadow': 10px 5px 5px red
             section_mode: true
             grid_options:
               rows: 2

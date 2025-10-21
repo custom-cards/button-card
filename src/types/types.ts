@@ -371,6 +371,7 @@ export interface TooltipConfig {
   content: string | undefined;
   placement?: string;
   delay?: string | number;
+  hide_delay?: string | number;
   distance?: number;
   skidding?: number;
   arrow?: boolean;

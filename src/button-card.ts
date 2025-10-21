@@ -1297,21 +1297,27 @@ class ButtonCard extends LitElement {
 
     if (tooltipMergedConfig && tooltipMergedConfig.content) {
       const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en');
+      const hideDelayMs = parseDuration(
+        String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '400'),
+        'ms',
+        'en',
+      );
       const withoutArrow = tooltipMergedConfig?.arrow ? undefined : true;
       return html`
-        <ha-tooltip
+        <wa-tooltip
           id="tooltip"
           for="card"
           @wa-show=${this._tooltipShow}
           placement=${ifDefined(tooltipMergedConfig.placement || undefined)}
           distance=${ifDefined(tooltipMergedConfig.distance || undefined)}
           skidding=${ifDefined(tooltipMergedConfig.skidding || undefined)}
-          show-delay=${ifDefined(delayMs || undefined)}
+          show-delay=${delayMs}
+          hide-delay=${hideDelayMs}
           without-arrow=${withoutArrow || nothing}
           style=${styleMap(tooltipStyle)}
         >
           <span class="tooltip">${this._unsafeHTMLorNot(tooltipMergedConfig.content)}</span>
-        </ha-tooltip>
+        </wa-tooltip>
       `;
     } else {
       return html``;
