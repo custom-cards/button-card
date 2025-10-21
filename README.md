@@ -730,6 +730,7 @@ All parameters support [templates](#javascript-templates).
 | `content` | string | none | A string or an `` html`<elt></elt>` `` object | Tooltip content. |
 | `placement` | string | `top` | `top`, `top-start`, `top-end`, `right`, `right-start`, `right-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end` | The anchor point of the tooltip im relation to the card. The tooltip shows outside the card at this location. If needed the tooltip will flip to the alternate side. See [placement](https://webawesome.com/docs/components/tooltip/#placement) for examples. |
 | `delay` | number or string | 150ms | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will display when the card is in focus. |
+| `hide_delay` | number or string | `delay` | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will hide when card loses of focus. |
 | `distance` | number | 8 | number (pixels) | The distance in pixels by which the tooltip is offset away from the card. This can be negative to move the tooltip closer to or even over the card. If the tooltip is over the card you may need to set tooltip style to include `pointer-events: none` to stop a focus battle between the tooltip and the card. |
 | `skidding` | number | optinal | number (pixels) | The distance in pixels by which the tooltip is offset along teh card |
 | `arrow` | boolean | false | true \| false | Whether to show an arrow connecting the button to the tooltip. |
