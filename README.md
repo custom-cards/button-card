@@ -795,6 +795,15 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 | `--button-card-tooltip-show-duration` | 100ms | Duration during which the show tooltip animation takes place. The underlying component has a fixed duration of scale (0.8 to 1) and opacity (0 to 1). If you set `--button-card-tooltip-opacity` you should set this to 1ms. |
 | `--button-card-tooltip-hide-duration` | 100ms | Duration during which the hide tooltip animation takes place. The underlying component has a fixed duration of scale (1 to 0.8) and opacity (1 to 0). If you set `--button-card-tooltip-opacity` you should set this to 1ms. NOTE: Setting this CSS variable to 0 will stop hiding of the tooltip. |
 
+In addition to the CSS variables above, you can also style parts of the popup directly using [extra_styles](#injecting-css-with-extra_styles). The parts available are listed in the table below.
+
+| Part | Targets | Usage |
+| --- | --- | --- |
+| `#tooltip::part(base)` | The component's base wrapper, an <wa-popup> element. | `#tooltip::part(body) { pointer-events: none; }` |
+| `#tooltip::part(base_popup)` | The popup's exported popup part. Use this to target the tooltip's popup container. | `#tooltip::part(base_popup) { transform: rotate(90deg) translateY(-100px); }` |
+| `#tooltip::part(base_arrow)` | The popup's exported arrow part. Use this to target the tooltip's arrow. | `#tooltip::part(base_arrow) { background-color: red; }` |
+| `#tooltip::part(body)` | Tooltip's body where the content is rendered | `#tooltip::part(body) { background-color: red; }` |
+
 ### Javascript Templates
 
 The template rendering uses a special format. All the fields where template is supported also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript function inside 3 square brackets: `[[[ javascript function here ]]]`

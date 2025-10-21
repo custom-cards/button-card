@@ -3328,6 +3328,36 @@ views:
               rows: 2
               columns: 4
           - type: 'custom:button-card'
+            entity: switch.skylight
+            name: Direct styling
+            tooltip:
+                content: This is a tooltip<br/> that spans multiple<br/> lines
+                arrow: true
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+            extra_styles: |
+              #tooltip::part(body) {
+                background-color: black;
+                color: yellow;
+                font-family: Courier New, monospace;
+                font-size: var(--ha-font-size-xl);
+                border: 3px double yellow;
+                border-radius: 20px;
+                padding: 20px 30px;
+                box-shadow: 0 0 10px 5px yellow;
+              }
+              #tooltip::part(base) {
+                pointer-events: none;
+              }
+              #tooltip::part(base__popup) {
+                transform:rotate(90deg) translateY(-100px);
+              }
+              #tooltip::part(base__arrow) {
+                background-color: black;
+              }
+          - type: 'custom:button-card'
             color_type: label-card
             name: Nested tooltips
             styles:
