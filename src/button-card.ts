@@ -1298,7 +1298,7 @@ class ButtonCard extends LitElement {
     if (tooltipMergedConfig && tooltipMergedConfig.content) {
       const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en');
       const hideDelayMs = parseDuration(
-        String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '400'),
+        String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '150'),
         'ms',
         'en',
       );
