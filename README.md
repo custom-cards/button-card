@@ -775,10 +775,10 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 | --- | --- | --- |
 | `--button-card-tooltip-content-color` | var(--primary-text-color) | Tooltip text color |
 | `--button-card-tooltip-background-color` | var(--secondary-background-color) | Tooltip background color |
-| `--button-card-tooltip-font-family` | var(--ha-font-family-body) | Tooltip font family |
-| `--button-card-tooltip-font-size` | var(--ha-font-size-s) | Tooltip font size |
-| `--button-card-tooltip-font-weight` | var(--ha-font-weight-normal) | Tooltip font weight |
-| `--button-card-tooltip-line-height` | var(--ha-line-height-condensed) | Tooltip line height |
+| `--button-card-tooltip-font-family` | var(--ha-tooltip-font-family, var(--ha-font-family-body)) | Tooltip font family |
+| `--button-card-tooltip-font-size` | var(--ha-tooltip-font-size, var(--ha-font-size-s)) | Tooltip font size |
+| `--button-card-tooltip-font-weight` | var(--ha-tooltip-font-weight, var(--ha-font-weight-normal)) | Tooltip font weight |
+| `--button-card-tooltip-line-height` | var(--ha-tooltip-line-height, var(--ha-line-height-condensed)) | Tooltip line height |
 | `--button-card-tooltip-text-align` | center | Tooltip text align |
 | `--button-card-tooltip-text-transform` | none | Tooltip text transform |
 | `--button-card-tooltip-text-decoration` | none | Tooltip text decoration |
