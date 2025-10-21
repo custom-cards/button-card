@@ -774,7 +774,7 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 | CSS Variable | Default | Description |
 | --- | --- | --- |
 | `--button-card-tooltip-content-color` | var(--primary-text-color) | Tooltip text color |
-| <nobr>`--button-card-tooltip-background-color`</nobr> | var(--secondary-background-color) | Tooltip background color |
+| `--button-card-tooltip-background-color` | var(--secondary-background-color) | Tooltip background color |
 | `--button-card-tooltip-font-family` | var(--ha-font-family-body) | Tooltip font family |
 | `--button-card-tooltip-font-size` | var(--ha-font-size-s) | Tooltip font size |
 | `--button-card-tooltip-font-weight` | var(--ha-font-weight-normal) | Tooltip font weight |
