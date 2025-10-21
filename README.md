@@ -773,23 +773,26 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 
 | CSS Variable | Default | Description |
 | --- | --- | --- |
-| --button-card-tooltip-content-color | var(--primary-text-color) | Tooltip text color |
-| --button-card-tooltip-background-color | var(--secondary-background-color) | Tooltip background color |
-| --button-card-tooltip-font-family | var(--ha-font-family-body) | Tooltip font family |
-| --button-card-tooltip-font-size | var(--ha-font-size-s) | Tooltip font size |
-| --button-card-tooltip-font-weight | var(--ha-font-weight-normal) | Tooltip font weight |
-| --button-card-tooltip-line-height | var(--ha-line-height-condensed) | Tooltip line height |
-| --button-card-tooltip-text-align | center | Tooltip text align |
-| --button-card-tooltip-text-transform | none | Tooltip text transform |
-| --button-card-tooltip-text-decoration | none | Tooltip text decoration |
-| --button-card-tooltip-overflow-wrap | normal | Tooltip overflow-wrap |
-| --button-card-tooltip-border-radius | var(--ha-tooltip-border-radius, var(--ha-border-radius-sm)) | Tooltip border radius |
-| --button-card-tooltip-border-width | none | Tooltip border width |
-| --button-card-tooltip-border-color | none | Tooltip border color |
-| --button-card-tooltip-border-style | none | Tooltip border style |
-| --button-card-tooltip-box-shadow | none | Tooltip box shadow |
-| --button-card-tooltip-arrow-size | var(--ha-tooltip-arrow-size, 8px) | Tooltip arrow size, if displayed |
-| --button-card-tooltip-max-width | 30ch | Tooltip maximum width. Set to `none` to not limit the tooltip width |
+| `--button-card-tooltip-content-color` | var(--primary-text-color) | Tooltip text color |
+| <nobr>`--button-card-tooltip-background-color`</nobr> | var(--secondary-background-color) | Tooltip background color |
+| `--button-card-tooltip-font-family` | var(--ha-font-family-body) | Tooltip font family |
+| `--button-card-tooltip-font-size` | var(--ha-font-size-s) | Tooltip font size |
+| `--button-card-tooltip-font-weight` | var(--ha-font-weight-normal) | Tooltip font weight |
+| `--button-card-tooltip-line-height` | var(--ha-line-height-condensed) | Tooltip line height |
+| `--button-card-tooltip-text-align` | center | Tooltip text align |
+| `--button-card-tooltip-text-transform` | none | Tooltip text transform |
+| `--button-card-tooltip-text-decoration` | none | Tooltip text decoration |
+| `--button-card-tooltip-overflow-wrap` | normal | Tooltip overflow-wrap |
+| `--button-card-tooltip-border-radius` | var(--ha-tooltip-border-radius, var(--ha-border-radius-sm)) | Tooltip border radius |
+| `--button-card-tooltip-border-width` | none | Tooltip border width |
+| `--button-card-tooltip-border-color` | none | Tooltip border color |
+| `--button-card-tooltip-border-style` | none | Tooltip border style |
+| `--button-card-tooltip-box-shadow` | none | Tooltip box shadow |
+| `--button-card-tooltip-arrow-size` | var(--ha-tooltip-arrow-size, 8px) | Tooltip arrow size, if displayed |
+| `--button-card-tooltip-max-width` | 30ch | Tooltip maximum width. Set to `none` to not limit the tooltip width |
+| `--button-card-tooltip-opacity` | 1 | Tooltip opacity. Due to the underlying component used, if you set opacity you will likely need to have set `--button-card-tooltip-show-duration` and `--button-card-hide-duration` to 1ms as the underlying component animates to opacity of 1, meaning a flash at full opacity if you don't set small show/hide duartion. |
+| `--button-card-tooltip-show-duration` | 100ms | Duration during which the show tooltip animation takes place. The underlying component has a fixed duration of scale (0.8 to 1) and opacity (0 to 1). If you set `--button-card-tooltip-opacity` you should set this to 1ms. |
+| `--button-card-tooltip-hide-duration` | 100ms | Duration during which the hide tooltip animation takes place. The underlying component has a fixed duration of scale (1 to 0.8) and opacity (1 to 0). If you set `--button-card-tooltip-opacity` you should set this to 1ms. NOTE: Setting this CSS variable to 0 will stop hiding of the tooltip. |
 
 ### Javascript Templates
 
