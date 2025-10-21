@@ -797,6 +797,8 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 
 In addition to the CSS variables above, you can also style parts of the popup directly using [extra_styles](#injecting-css-with-extra_styles). The parts available are listed in the table below.
 
+> NOTE: Keyframes are no injectable by parts so you cannot adjust nor set any keyframes for animation.
+
 | Part | Targets | Usage |
 | --- | --- | --- |
 | `#tooltip::part(base)` | The component's base wrapper, an <wa-popup> element. | `#tooltip::part(body) { pointer-events: none; }` |
