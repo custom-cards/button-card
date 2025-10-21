@@ -3202,6 +3202,19 @@ views:
               columns: 4
           - type: 'custom:button-card'
             entity: switch.skylight
+            name: Padding 1em 2em
+            tooltip:
+              content: >
+                This is a tooltip<br/> that spans multiple<br/> lines
+            styles:
+              tooltip:
+                - '--button-card-tooltip-padding': 1em 2em
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
             name: Border red 2px dashed
             tooltip:
               content: >

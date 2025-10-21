@@ -783,6 +783,7 @@ The following style variables are available for tooltips. See [Styles](#styles) 
 | `--button-card-tooltip-text-transform` | none | Tooltip text transform |
 | `--button-card-tooltip-text-decoration` | none | Tooltip text decoration |
 | `--button-card-tooltip-overflow-wrap` | normal | Tooltip overflow-wrap |
+| `--button-card-tooltip-padding` | 0.25em 0.5em | Tooltip padding |
 | `--button-card-tooltip-border-radius` | var(--ha-tooltip-border-radius, var(--ha-border-radius-sm)) | Tooltip border radius |
 | `--button-card-tooltip-border-width` | none | Tooltip border width |
 | `--button-card-tooltip-border-color` | none | Tooltip border color |
