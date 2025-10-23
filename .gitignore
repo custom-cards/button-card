@@ -1,0 +1,7 @@
+.DS_Store
+/node_modules/
+/node_modules
+.rpt2_cache/
+/dist/**
+test-*.html
+docs/public
