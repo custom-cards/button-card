@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pull-requests" class="md-skip">
+        <a href="#building" class="md-skip">
           Skip to content
         </a>
       
@@ -1175,8 +1175,19 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Contribute
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1189,6 +1200,50 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pull-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pull requests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edit-this-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edit this documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1279,10 +1334,26 @@
   
 
 
-<h1 id="pull-requests">Pull requests<a class="headerlink" href="#pull-requests" title="Permanent link">&para;</a></h1>
+  <h1>Contribute</h1>
+
+<h2 id="building">Building<a class="headerlink" href="#building" title="Permanent link">&para;</a></h2>
+<p>If using the devcontainer, you can the debug directly from the debug tool of VS Code.</p>
+<p>This will trigger 2 actions:</p>
+<ul>
+<li>Start Home Assistant</li>
+<li>run <code>npm run watch</code> (watching and rebuilding the code automatically)</li>
+</ul>
+<p>If you just want to build the project, you can run <code>npm run build</code>, the result will land in the <code>dist</code> folder.</p>
+<h2 id="pull-requests">Pull requests<a class="headerlink" href="#pull-requests" title="Permanent link">&para;</a></h2>
 <p>Please open all the PRs against the <code>dev</code> branch.</p>
-<h1 id="edit-this-documentation">Edit this documentation<a class="headerlink" href="#edit-this-documentation" title="Permanent link">&para;</a></h1>
+<p>This repo uses a VS Code's devcontainer which will configure your environment automatically. Make sure to use it before submitting a PR or it might get rejected (bad liting, bad formating, etc...)</p>
+<h2 id="edit-this-documentation">Edit this documentation<a class="headerlink" href="#edit-this-documentation" title="Permanent link">&para;</a></h2>
 <p>You can edit this documentation directly using the icon <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg></span> on the top right of each page and submitting a PR against the <code>dev</code> branch.</p>
+<p>The documentation uses <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a> with the <code>mike</code> extension for verioning support (you don't have to worry about that). All the documentation files are in the <code>docs</code> folder.</p>
+<p>You can test your edits like this when using the devcontainer:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>docs
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mkdocs<span class="w"> </span>serve<span class="w"> </span>--livereload
+</span></code></pre></div>
 
 
 
