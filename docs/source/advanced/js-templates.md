@@ -8,7 +8,7 @@ The code will be executed and the result will be used as a value for the configu
 
 The template rendering uses a special format. All the fields where JS template is supported (:white_check_mark:) also support plain text. To activate the templating feature for such a field, you'll need to enclose the javascript code inside 3 square brackets: `[[[ javascript code here ]]]`
 
-If you are using a template in a nested `custom:button-card`, either in a custom field or config for an action (e.g. `custom:button-card` as content in `browser_mod.popup`) then you can include your template in extra enclosing `[]` pair. The template will then be rendered in the nested `custom:button-card` with the extra enclosing `[]` pair removed. Template nesting can be at multiple levels, just include another enclosing `[]` pair.
+If you are using a template in a nested `custom:button-card`, either in a custom field or config for an action (e.g. `custom:button-card` as content in `browser_mod.popup`) then you can include your template in extra enclosing `[]` pair. The template will then be rendered in the nested `custom:button-card` with the extra enclosing `[]` pair removed. Template nesting can be at multiple levels, just include another enclosing `[]` pair. See [here](../examples/js-templates.md#nested-custombutton-card) for an example.
 
 Don't forget to quote if it's on one line:
 
@@ -113,4 +113,4 @@ Inside the javascript code, you'll have access to those variables:
   - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`. If a locale is specified `en` is also used as a fallback.
   - `helpers.toastMessage(message)` and `helpers.toast(toastParams)`: See [toast helpers](../config/actions.md#toast-helpers)
 
-See [here](#templates-support) for some examples or [here](./custom-fields.md) for some advanced configuration using templates.
+See [here](../examples/js-templates.md) for some examples or [here](./custom-fields.md) for some advanced configuration using templates.

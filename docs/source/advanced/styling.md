@@ -60,7 +60,7 @@ This will render:
 - The `card` with the styles `xxxx: value` **and** `yyyy: value` applied
 - Same for all the others.
 
-See [styling](#styling) for a complete example.
+See [styling](../examples/styling.md) for a complete example.
 
 ## Light entity color variable
 

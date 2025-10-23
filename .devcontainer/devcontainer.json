@@ -37,7 +37,8 @@
           "**/.git/subtree-cache/**": true,
           "**/node_modules/**": true,
           "**/.hg/store/**": true,
-          "**/.rpt2_cache/**": true
+          "**/.rpt2_cache/**": true,
+          "docs/public/**": true
         },
         "markdown.extension.tableFormatter.enabled": false,
         "files.associations": {

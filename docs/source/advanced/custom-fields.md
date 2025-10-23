@@ -47,7 +47,7 @@ Examples are better than a long text, so here you go:
         - font-size: 8px
         - line-height: 20px
   custom_fields:
-    notification: >
+    notification: |
       [[[ return Math.floor(states['input_number.test'].state / 10) ]]]
   ```
 

@@ -2,7 +2,7 @@ This will display a normal button with a lock symbol in the corner. Clicking the
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `enabled` | :white_check_mark: | boolean | `false` | `true` \| `false` | Enables or disables the lock. Supports templates, see [templates](#javascript-templates) |
+| `enabled` | [:white_check_mark:](../advanced/js-templates.md) | boolean | `false` | `true` \| `false` | Enables or disables the lock. |
 | `duration` | :no_entry_sign: | number | `5` | any number | Duration of the unlocked state in seconds |
 | `exemptions` | :no_entry_sign: | array of user id or username | none | `user: USER_ID` \| `username: test` | Any user declared in this list will not see the confirmation dialog. It can be a user id (`user`) or a username (`username`) |
 | `unlock` | :no_entry_sign: | string | `tap` | `tap` \| `hold` \| `double_tap` | The type of click which will unlock the button |
@@ -37,4 +37,23 @@ styles:
   lock:
     - justify-content: flex-end
     - align-items: flex-end
+```
+
+An example:
+
+![lock-animation](../images/lock.gif)
+
+```yaml
+- type: horizontal-stack
+  cards:
+    - type: 'custom:button-card'
+      entity: switch.test
+      lock:
+        enabled: true
+    - type: 'custom:button-card'
+      color_type: card
+      lock:
+        enabled: true
+      color: black
+      entity: switch.test
 ```

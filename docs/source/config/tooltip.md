@@ -4,7 +4,7 @@ This option enables you to define a tooltip for the card. Tooltips are not suppo
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `tooltip` | :white_check_mark: | string | none | A string or an `` html`<elt></elt>` `` object | A simple form of tooltip which allows for string/HTML but with no further control, allowing for backward compatability with configuration prior to 5.1.0 |
+| `tooltip` | [:white_check_mark:](../advanced/js-templates.md) | string | none | A string or an `` html`<elt></elt>` `` object | A simple form of tooltip which allows for string/HTML but with no further control, allowing for backward compatability with configuration prior to 5.1.0 |
 
 ```yaml
 type: custom:button-card
@@ -30,13 +30,13 @@ All parameters support [JS Templates](../advanced/js-templates.md).
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | --- | --- | --- | --- | --- |
-| `content` | :white_check_mark: | string | none | A string or an `` html`<elt></elt>` `` object | Tooltip content. |
-| `placement` | :white_check_mark: | string | `top` | `top`, `top-start`, `top-end`, `right`, `right-start`, `right-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end` | The anchor point of the tooltip im relation to the card. The tooltip shows outside the card at this location. If needed the tooltip will flip to the alternate side. See [placement](https://webawesome.com/docs/components/tooltip/#placement) for examples. |
-| `delay` | :white_check_mark: | number or string | 150ms | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will display when the card is in focus. |
-| `hide_delay` | :white_check_mark: | number or string | `delay` | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will hide when card loses of focus. |
-| `distance` | :white_check_mark: | number | 8 | number (pixels) | The distance in pixels by which the tooltip is offset away from the card. This can be negative to move the tooltip closer to or even over the card. If the tooltip is over the card you may need to set tooltip style to include `pointer-events: none` to stop a focus battle between the tooltip and the card. |
-| `skidding` | :white_check_mark: | number | optinal | number (pixels) | The distance in pixels by which the tooltip is offset along teh card |
-| `arrow` | :white_check_mark: | boolean | false | true \| false | Whether to show an arrow connecting the button to the tooltip. |
+| `content` | [:white_check_mark:](../advanced/js-templates.md) | string | none | A string or an `` html`<elt></elt>` `` object | Tooltip content. |
+| `placement` | [:white_check_mark:](../advanced/js-templates.md) | string | `top` | `top`, `top-start`, `top-end`, `right`, `right-start`, `right-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end` | The anchor point of the tooltip im relation to the card. The tooltip shows outside the card at this location. If needed the tooltip will flip to the alternate side. See [placement](https://webawesome.com/docs/components/tooltip/#placement) for examples. |
+| `delay` | [:white_check_mark:](../advanced/js-templates.md) | number or string | 150ms | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will display when the card is in focus. |
+| `hide_delay` | [:white_check_mark:](../advanced/js-templates.md) | number or string | `delay` | number (ms), string duration in english supported by `helpers.parseDuration` | Delay after which the tooltip will hide when card loses of focus. |
+| `distance` | [:white_check_mark:](../advanced/js-templates.md) | number | 8 | number (pixels) | The distance in pixels by which the tooltip is offset away from the card. This can be negative to move the tooltip closer to or even over the card. If the tooltip is over the card you may need to set tooltip style to include `pointer-events: none` to stop a focus battle between the tooltip and the card. |
+| `skidding` | [:white_check_mark:](../advanced/js-templates.md) | number | optinal | number (pixels) | The distance in pixels by which the tooltip is offset along teh card |
+| `arrow` | [:white_check_mark:](../advanced/js-templates.md) | boolean | false | true \| false | Whether to show an arrow connecting the button to the tooltip. |
 
 ```yaml
 type: custom:button-card

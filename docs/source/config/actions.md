@@ -1,29 +1,29 @@
 ## Actions Configuration
 
-All the fields support JS templates, see [templates](#javascript-templates). You may also provide a single template for the action itself. Such a template needs to return a javascript object that includes the fields below.
+All the fields support [JS templates](../advanced/js-templates.md). You may also provide a single template for the action itself. Such a template needs to return a javascript object that includes the fields below.
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `action` | :white_check_mark: | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript`, `multi-actions` | Action to perform |
-| `entity` | :white_check_mark: | string | none | Any entity id | **Only valid for `action: more-info` or `action: toggle`** to override the entity on which you want to call `more-info` |
-| `target` | :white_check_mark: | object | none |  | Only works with `call-service` or `perform-action`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
-| `navigation_path` | :white_check_mark: | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as `navigate` |
-| `navigation_replace` | :white_check_mark: | boolean | none | `true`, `false` | Whether to replace the current page in the the history with the new URL when the action is defined as `navigate` |
-| `url_path` | :white_check_mark: | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
-| `service` | :white_check_mark: | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
-| `perform_action` | :white_check_mark: | string | none | Any action | Action to call (e.g. `media_player.media_play_pause`) when `action` defined as `perform-action` |
+| `action` | [:white_check_mark:](../advanced/js-templates.md) | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript`, `multi-actions` | Action to perform |
+| `entity` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Any entity id | **Only valid for `action: more-info` or `action: toggle`** to override the entity on which you want to call `more-info` |
+| `target` | [:white_check_mark:](../advanced/js-templates.md) | object | none |  | Only works with `call-service` or `perform-action`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
+| `navigation_path` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as `navigate` |
+| `navigation_replace` | [:white_check_mark:](../advanced/js-templates.md) | boolean | none | `true`, `false` | Whether to replace the current page in the the history with the new URL when the action is defined as `navigate` |
+| `url_path` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Eg: `https://www.google.fr` | URL to open on click when action is `url`. The URL will open in a new tab |
+| `service` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Any service | Service to call (e.g. `media_player.media_play_pause`) when `action` defined as `call-service` |
+| `perform_action` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Any action | Action to call (e.g. `media_player.media_play_pause`) when `action` defined as `perform-action` |
 | `data` or `service_data` | object | none | Any service data | Service data to include (e.g. `entity_id: media_player.bedroom`) when `action` defined as `call-service` or `perform-action`. If your `data` requires an `entity_id`, you can use the keyword `entity`, this will actually call the service on the entity defined in the main configuration of this card. Useful for [configuration templates](../advanced/config-templates.md) |
-| `haptic` | :white_check_mark: | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
-| `repeat` | :white_check_mark: | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
-| `repeat_limit` | :white_check_mark: | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
-| `confirmation` | :white_check_mark: | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. |
-| `protect` | :white_check_mark: | object | none | See [protect](#protect) | Display a password or PIN confirmation popup. |
-| `javascript` | :white_check_mark: | string | none | any javascript template | A button card javascript template which contains the javascript code to execute. |
-| `actions` | :white_check_mark: | array of [Actions](./actions.md) or `delay` | none | See [multi-actions](#multi-actions) | Only valid when `action` is set to `multi-actions`. Array of the actions you want to see executed in a row. |
-| `pipeline_id` | :white_check_mark: | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
-| `start_listening` | :white_check_mark: | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
-| `sound` | :white_check_mark: | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. This field supports templates. |
-| `toast` | :white_check_mark: | object | none | See [toast](#toast-message) | Only available when action is `toast`. An object describing the toast message to display on the bottom of the screen. |
+| `haptic` | [:white_check_mark:](../advanced/js-templates.md) | string | none | `success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection` | Haptic feedback for the [Beta IOS App](http://home-assistant.io/ios/beta) |
+| `repeat` | [:white_check_mark:](../advanced/js-templates.md) | number | none | eg: `500` | For a hold_action, you can optionally configure the action to repeat while the button is being held down (for example, to repeatedly increase the volume of a media player). Define the number of milliseconds between repeat actions here. Not available for `press` or `release` actions. |
+| `repeat_limit` | [:white_check_mark:](../advanced/js-templates.md) | number | none | eg: `5` | For Hold action and if `repeat` if defined, it will stop calling the action after the `repeat_limit` has been reached. Not available for `press` or `release` actions. |
+| `confirmation` | [:white_check_mark:](../advanced/js-templates.md) | object | none | See [confirmation](#confirmation) | Display a confirmation popup, overrides the default `confirmation` object. |
+| `protect` | [:white_check_mark:](../advanced/js-templates.md) | object | none | See [protect](#protect) | Display a password or PIN confirmation popup. |
+| `javascript` | [:white_check_mark:](../advanced/js-templates.md) | string | none | any javascript template | A button card javascript template which contains the javascript code to execute. |
+| `actions` | [:white_check_mark:](../advanced/js-templates.md) | array of [Actions](./actions.md) or `delay` | none | See [multi-actions](#multi-actions) | Only valid when `action` is set to `multi-actions`. Array of the actions you want to see executed in a row. |
+| `pipeline_id` | [:white_check_mark:](../advanced/js-templates.md) | string | none | `last_used`, `prefered`, pipeline ID | Assist pipeline to use when the action is defined as `assist`. It can be either `last_used`, `preferred`, or a pipeline id. |
+| `start_listening` | [:white_check_mark:](../advanced/js-templates.md) | boolean | none | `true`, `false` | If supported, listen for voice commands when opening the assist dialog and the action is defined as `assist`. |
+| `sound` | [:white_check_mark:](../advanced/js-templates.md) | string | none | eg: `/local/click.mp3` | The path to an audio file (eg: `/local/click.mp3`, `https://some.audio.file/file.wav` or `media-source://media_source/local/click.mp3`). Plays a sound in your browswer when the corresponding action is used. Can be a different sound for each action. Supports also `media-source://` type URLs. |
+| `toast` | [:white_check_mark:](../advanced/js-templates.md) | object | none | See [toast](#toast-message) | Only available when action is `toast`. An object describing the toast message to display on the bottom of the screen. |
 
 Example - specifying fields directly:
 
@@ -68,14 +68,56 @@ tap_action:
     [[[ alert("Hello from button card"); ]]]
 ```
 
+## `icon_*_action`
+
+You can configure a separate action for when clicking the icon specifically, while the card itself has a different action:
+
+```yaml
+- type: 'custom:button-card'
+  entity: light.living_room
+  name: Living Room Light
+  tap_action:
+    action: toggle
+  icon_tap_action:
+    action: more-info
+```
+
+!!! info
+
+    If any `icon_*_action` is defined, the icon will capture **all** the actions for its area. For eg. in the case below, clicking on the icon will not do anything unless you hold it. To execute `tap_action` you'll have to click outside of the icon area.
+
+```yaml
+type: 'custom:button-card'
+entity: light.living_room
+name: Living Room Light
+tap_action:
+  action: toggle
+icon_hold_action:
+  action: more-info
+```
+
+In this case, if you want to have the same action as the button also on the icon for `tap`, you'll have to define the `icon_tap_action` explicitely.
+
+```yaml
+type: 'custom:button-card'
+entity: light.living_room
+name: Living Room Light
+tap_action:
+  action: toggle
+icon_tap_action:
+  action: toggle
+icon_hold_action:
+  action: more-info
+```
+
 ## Confirmation
 
 This will popup a dialog box before running the action.
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `text` | :white_check_mark: | string | none | Any text | This text will be displayed in the popup. Supports templates, see [templates](#javascript-templates) |
-| `exemptions` | :white_check_mark: | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
+| `text` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Any text | This text will be displayed in the popup. |
+| `exemptions` | [:white_check_mark:](../advanced/js-templates.md) | array of users | none | `user: USER_ID` | Any user declared in this list will not see the confirmation dialog |
 
 Example:
 
@@ -98,10 +140,10 @@ This will popup a dialog box with password or PIN confirmation before running th
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `pin` | :white_check_mark: | string | none | any string composed of digits only | This will prompt for a PIN before running the action. Make sure you set this as a **string** like so `"1234"` |
-| `password` | :white_check_mark: | string | none | any string | Setting this field will prompt for a password before running the action. |
-| `failure_message` | :white_check_mark: | string | Fixed failure message | any string | If password or PIN is wrong, a toast will popup with this `failure_message` inside. |
-| `success_message` | :white_check_mark: | string | none | any string | If password or PIN is valid, a toast will popup with the content of `success_message` inside. |
+| `pin` | [:white_check_mark:](../advanced/js-templates.md) | string | none | any string composed of digits only | This will prompt for a PIN before running the action. Make sure you set this as a **string** like so `"1234"` |
+| `password` | [:white_check_mark:](../advanced/js-templates.md) | string | none | any string | Setting this field will prompt for a password before running the action. |
+| `failure_message` | [:white_check_mark:](../advanced/js-templates.md) | string | Fixed failure message | any string | If password or PIN is wrong, a toast will popup with this `failure_message` inside. |
+| `success_message` | [:white_check_mark:](../advanced/js-templates.md) | string | none | any string | If password or PIN is valid, a toast will popup with the content of `success_message` inside. |
 
 Protect can be defined at the card level, or at the action level. Both objects supports templating. The action level takes precedance over the card level, if both are defined, objects will be "merged" together (see eg. below).
 
@@ -226,10 +268,10 @@ All options support templating.
 
 | Name | JS |  | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- | --- |
-| `message` | :white_check_mark: | string | Optional | any string | The toast message to display |
-| `duration` | :white_check_mark: | number | Optional | any number | The message will be displayed for `duration` ms |
-| `dismissable` | :white_check_mark: | boolean | Optional | `true` or `false` | If the toast message is dismissable |
-| `action` | :white_check_mark: | object | Optional | See [toast actions](#toast-actions) | If defined, will display a button on the toast message and if clicked, an action will be triggered |
+| `message` | [:white_check_mark:](../advanced/js-templates.md) | string | Optional | any string | The toast message to display |
+| `duration` | [:white_check_mark:](../advanced/js-templates.md) | number | Optional | any number | The message will be displayed for `duration` ms |
+| `dismissable` | [:white_check_mark:](../advanced/js-templates.md) | boolean | Optional | `true` or `false` | If the toast message is dismissable |
+| `action` | [:white_check_mark:](../advanced/js-templates.md) | object | Optional | See [toast actions](#toast-actions) | If defined, will display a button on the toast message and if clicked, an action will be triggered |
 
 Eg:
 
@@ -281,8 +323,8 @@ You can display a button on the toast message with an associated action.
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `text` | :white_check_mark: | string |  | any string | The action button text |
-| `action` | :white_check_mark: | function |  | any javascript function | This needs to be a template and the template needs to return a function. The function is then called if the user clicks on the toast button |
+| `text` | [:white_check_mark:](../advanced/js-templates.md) | string |  | any string | The action button text |
+| `action` | [:white_check_mark:](../advanced/js-templates.md) | function |  | any javascript function | This needs to be a template and the template needs to return a function. The function is then called if the user clicks on the toast button |
 
 Eg:
 

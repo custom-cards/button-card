@@ -40,19 +40,19 @@ button-card is a highly customizable button for your lovelace interfaces.
 - state display (optional)
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style
-- [custom size of the icon, width and height](#Play-with-width-height-and-icon-size)
+- [custom size of the icon, width and height](./examples/sizing.md)
 - [aspect ratio support](./advanced/aspect-ratio.md)
 - Support for [javascript templates](./advanced/js-templates.md)
 - custom icon
 - custom css style
-- multiple [layout](./advanced/layout.md) support and [custom layout](#advanced-styling-options) support
+- multiple [layout](./advanced/layout.md) support and [custom layout](./advanced/styling.md#advanced-styling-options) support
 - units for sensors can be redefined or hidden
 - 2 color types
   - `icon` : apply color settings to the icon only
   - `card` : apply color settings to the card only
 - automatic font color if `color_type` is set to `card`
 - blank card and label card (for organization)
-- Native [blink](#blink) animation support
+- Native [blink](./examples/animations.md#blink) animation support
 - icon rotation animation support
 - confirmation popup for sensitive items or [locking mecanism](./config/lock.md)
 - [password or PIN protection](./config/actions.md#protect) for actions
