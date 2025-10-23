@@ -1,0 +1,2765 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://custom-cards.github.io/button-card/v6.0/CHANGELOG/">
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Changelog - custom:button-card documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#600-dev2-2025-10-22" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+               You're viewing the latest stable documentation.
+<a href="../..">
+  <strong>Click here to go to stable.</strong>
+</a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL(".."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="custom:button-card documentation" class="md-header__button md-logo" aria-label="custom:button-card documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            custom:button-card documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/custom-cards/button-card" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    custom-cards/button-card
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="custom:button-card documentation" class="md-nav__button md-logo" aria-label="custom:button-card documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    custom:button-card documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/custom-cards/button-card" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    custom-cards/button-card
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#600-dev2-2025-10-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.0.0-dev.2 (2025-10-22)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.0.0-dev.2 (2025-10-22)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#600-dev1-2025-10-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.0.0-dev.1 (2025-10-20)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.0.0-dev.1 (2025-10-20)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-dev4-2025-10-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.0-dev.4 (2025-10-16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.0-dev.4 (2025-10-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-dev3-2025-10-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.0-dev.3 (2025-10-07)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.0-dev.3 (2025-10-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-dev2-2025-10-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.0-dev.2 (2025-10-07)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.0-dev.2 (2025-10-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-dev1-2025-10-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1.0-dev.1 (2025-10-07)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1.0-dev.1 (2025-10-07)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#502-2025-10-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.2 (2025-10-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.2 (2025-10-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#501-2025-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.1 (2025-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.1 (2025-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-2025-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0 (2025-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0 (2025-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev9-2025-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.9 (2025-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.9 (2025-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev8-2025-10-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.8 (2025-10-04)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.8 (2025-10-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev7-2025-10-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.7 (2025-10-04)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.7 (2025-10-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev6-2025-10-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.6 (2025-10-03)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.6 (2025-10-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev5-2025-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.5 (2025-10-01)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.5 (2025-10-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev4-2025-09-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.4 (2025-09-30)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.4 (2025-09-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev3-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.3 (2025-09-17)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.3 (2025-09-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev2-2025-09-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.2 (2025-09-17)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.2 (2025-09-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-dev1-2025-09-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.0.0-dev.1 (2025-09-16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.0.0-dev.1 (2025-09-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#430-2025-08-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3.0 (2025-08-31)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3.0 (2025-08-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#430-dev2-2025-08-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3.0-dev.2 (2025-08-31)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3.0-dev.2 (2025-08-31)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#430-dev1-2025-08-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.3.0-dev.1 (2025-08-29)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3.0-dev.1 (2025-08-29)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-2025-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2.0 (2025-08-28)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2.0 (2025-08-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-dev2-2025-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2.0-dev.2 (2025-08-28)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2.0-dev.2 (2025-08-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-dev1-2025-08-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2.0-dev.1 (2025-08-27)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2.0-dev.1 (2025-08-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-dev1-2025-08-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.3-dev.1 (2025-08-15)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-2024-02-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2 (2024-02-01)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-dev2-2024-02-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2-dev.2 (2024-02-01)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-dev1-2023-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.2-dev.1 (2023-08-20)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#411-2023-08-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.1 (2023-08-03)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-2023-08-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.0 (2023-08-03)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1.0 (2023-08-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-dev3-2023-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.0-dev.3 (2023-08-01)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1.0-dev.3 (2023-08-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-dev2-2023-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.0-dev.2 (2023-08-01)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1.0-dev.2 (2023-08-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-dev1-2023-07-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1.0-dev.1 (2023-07-30)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1.0-dev.1 (2023-07-30)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#401-2023-07-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.1 (2023-07-30)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-2023-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0 (2023-07-29)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0 (2023-07-29)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev19-2023-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.19 (2023-07-29)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.19 (2023-07-29)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev18-2023-07-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.18 (2023-07-28)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.18 (2023-07-28)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev17-2023-07-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.17 (2023-07-27)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.17 (2023-07-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev16-2023-07-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.16 (2023-07-27)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.16 (2023-07-27)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev15-2023-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.15 (2023-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.15 (2023-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev14-2023-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.14 (2023-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.14 (2023-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev13-2023-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.13 (2023-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.13 (2023-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev12-2023-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.12 (2023-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.12 (2023-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_33" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev11-2023-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.11 (2023-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.11 (2023-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_34" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev10-2023-07-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.10 (2023-07-25)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.10 (2023-07-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_35" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev9-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.9 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.9 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_36" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev8-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.8 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.8 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_37" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev7-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.7 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.7 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_38" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev6-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.6 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.6 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_39" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev5-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.5 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.5 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_40" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev4-2023-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.4 (2023-07-24)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.4 (2023-07-24)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_41" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev3-2023-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.3 (2023-07-23)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.3 (2023-07-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev2-2023-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.2 (2023-07-23)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.2 (2023-07-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-dev1-2023-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.0.0-dev.1 (2023-07-23)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.0.0-dev.1 (2023-07-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠ BREAKING CHANGES
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_42" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-2023-04-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5.0 (2023-04-02)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5.0 (2023-04-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_43" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-dev2-2023-04-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5.0-dev.2 (2023-04-02)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5.0-dev.2 (2023-04-02)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_44" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-dev1-2021-02-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5.0-dev.1 (2021-02-17)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5.0-dev.1 (2021-02-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#342-2021-02-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4.2 (2021-02-17)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-fixes_45" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bug Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Changelog</h1>
+
+<h2 id="600-dev2-2025-10-22"><a href="https://github.com/custom-cards/button-card/compare/v6.0.0-dev.1...v6.0.0-dev.2">6.0.0-dev.2</a> (2025-10-22)</h2>
+<h3 id="features">Features</h3>
+<ul>
+<li><strong>action:</strong> new <code>toast</code> custom action and new <code>helpers.toastMessage</code> and <code>helpers.toast</code> helpers functions (<a href="https://github.com/custom-cards/button-card/issues/1070">#1070</a>) (<a href="https://github.com/custom-cards/button-card/commit/ecf1b5c97fb7b7fb648bd9ec57578dcca4d5b062">ecf1b5c</a>)</li>
+<li><strong>tooltips:</strong> replace ha-tooltip with wa-tooltip and expose more styling (<a href="https://github.com/custom-cards/button-card/issues/1072">#1072</a>) (<a href="https://github.com/custom-cards/button-card/commit/c97f4dd1c0d10dfe38209100ac6d71ca3b0371c5">c97f4dd</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1071">#1071</a></li>
+</ul>
+<h2 id="600-dev1-2025-10-20"><a href="https://github.com/custom-cards/button-card/compare/v5.1.0-dev.4...v6.0.0-dev.1">6.0.0-dev.1</a> (2025-10-20)</h2>
+<h3 id="breaking-changes">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>tooltips:</strong> Tooltips have been migrated to use Home Assistant
+tooltips (ha-tooltip) and will now show in the standard Home Assistant
+style. There must be a button action for toolips to show as they fire
+off pointer events. Review documentation for impact and updated styling
+options. Requires Home Assistant 2025.10 and greater.</li>
+</ul>
+<h3 id="features_1">Features</h3>
+<ul>
+<li><strong>tooltips:</strong> Migrate tooltips to ha-tooltip (<a href="https://github.com/custom-cards/button-card/issues/1063">#1063</a>) (<a href="https://github.com/custom-cards/button-card/commit/561003eac2655a48911c1fac2b4b2b194c498a2d">561003e</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1062">#1062</a></li>
+</ul>
+<h3 id="bug-fixes">Bug Fixes</h3>
+<ul>
+<li>improve spinner's default color for <code>color_type: card</code> (<a href="https://github.com/custom-cards/button-card/issues/1065">#1065</a>) (<a href="https://github.com/custom-cards/button-card/commit/6db839d63607ba7c0ea1ab5260b6ba0bf4b644c4">6db839d</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1058">#1058</a></li>
+</ul>
+<h2 id="510-dev4-2025-10-16"><a href="https://github.com/custom-cards/button-card/compare/v5.1.0-dev.3...v5.1.0-dev.4">5.1.0-dev.4</a> (2025-10-16)</h2>
+<h3 id="features_2">Features</h3>
+<ul>
+<li>Support templates for <code>hidden</code> to hide the card completely (<a href="https://github.com/custom-cards/button-card/issues/1013">#1013</a>) (<a href="https://github.com/custom-cards/button-card/commit/263d366e150e0876be983465e65cd3675bc12689">263d366</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1004">#1004</a></li>
+</ul>
+<h3 id="bug-fixes_1">Bug Fixes</h3>
+<ul>
+<li>custom_fields cards are not recreated from scratch anymore if their config is modified (<a href="https://github.com/custom-cards/button-card/issues/1064">#1064</a>) (<a href="https://github.com/custom-cards/button-card/commit/2d8aaa420028fd9aa96250915a71857263e7c185">2d8aaa4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1060">#1060</a></li>
+</ul>
+<h2 id="510-dev3-2025-10-07"><a href="https://github.com/custom-cards/button-card/compare/v5.1.0-dev.2...v5.1.0-dev.3">5.1.0-dev.3</a> (2025-10-07)</h2>
+<h3 id="features_3">Features</h3>
+<ul>
+<li><strong>protect:</strong> allow configuring <code>protect</code> at the card level (<a href="https://github.com/custom-cards/button-card/issues/1049">#1049</a>) (<a href="https://github.com/custom-cards/button-card/commit/16803303a82b135ccbe58e17fce6d8826b5840f3">1680330</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1044">#1044</a></li>
+<li><strong>protect:</strong> Support for <code>success_message</code> (<a href="https://github.com/custom-cards/button-card/issues/1048">#1048</a>) (<a href="https://github.com/custom-cards/button-card/commit/78c71513c15d2c101a4e58acec62b6dedf668405">78c7151</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1046">#1046</a></li>
+<li><strong>spinner:</strong> Display a configurable spinning wheel (eg. while a script is running) (<a href="https://github.com/custom-cards/button-card/issues/1047">#1047</a>) (<a href="https://github.com/custom-cards/button-card/commit/fb1963ec057a5f11a4a16d15519c9a32fc1e665c">fb1963e</a>)</li>
+</ul>
+<h2 id="510-dev2-2025-10-07"><a href="https://github.com/custom-cards/button-card/compare/v5.1.0-dev.1...v5.1.0-dev.2">5.1.0-dev.2</a> (2025-10-07)</h2>
+<h3 id="features_4">Features</h3>
+<ul>
+<li><code>disable_kbd</code> option to disable keyboard capture on the card (<a href="https://github.com/custom-cards/button-card/issues/1040">#1040</a>) (<a href="https://github.com/custom-cards/button-card/commit/f108a52ac47bb8bf9c313769b8d14bb241ede268">f108a52</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1032">#1032</a></li>
+<li><strong>actions:</strong> call multiple actions in a row for any <code>*_action</code> or <code>icon_*_action</code> with the new <code>multi-actions</code> action (<a href="https://github.com/custom-cards/button-card/issues/1041">#1041</a>) (<a href="https://github.com/custom-cards/button-card/commit/e3a50d8fabbcb0518fa8f83f7c345ce1447fb075">e3a50d8</a>)</li>
+</ul>
+<h2 id="510-dev1-2025-10-07"><a href="https://github.com/custom-cards/button-card/compare/v5.0.2...v5.1.0-dev.1">5.1.0-dev.1</a> (2025-10-07)</h2>
+<h3 id="features_5">Features</h3>
+<ul>
+<li><strong>actions:</strong> confirmation support for javascript, PIN &amp; Password confirmation support (<a href="https://github.com/custom-cards/button-card/issues/1033">#1033</a>) (<a href="https://github.com/custom-cards/button-card/commit/6632114e76fdef560524b1ab19b2d849450ae152">6632114</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1030">#1030</a></li>
+</ul>
+<h3 id="bug-fixes_2">Bug Fixes</h3>
+<ul>
+<li><strong>tooltip:</strong> Set default z-index so long/wide tooltips are always visible. (<a href="https://github.com/custom-cards/button-card/issues/1039">#1039</a>) (<a href="https://github.com/custom-cards/button-card/commit/45033df2d8d011243c99de99cf2899e675f8e922">45033df</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1035">#1035</a></li>
+<li>Update --button-card-riple-hover-opacity to 0.04 to match HA button defaults (<a href="https://github.com/custom-cards/button-card/issues/1037">#1037</a>) (<a href="https://github.com/custom-cards/button-card/commit/17917b895e087a8c420bd270b40e76fc0020c060">17917b8</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1036">#1036</a></li>
+</ul>
+<h2 id="502-2025-10-06"><a href="https://github.com/custom-cards/button-card/compare/v5.0.1...v5.0.2">5.0.2</a> (2025-10-06)</h2>
+<h3 id="bug-fixes_3">Bug Fixes</h3>
+<ul>
+<li><strong>actions:</strong> complex templates would break in specific cases (<a href="https://github.com/custom-cards/button-card/issues/1029">#1029</a>) (<a href="https://github.com/custom-cards/button-card/commit/854b96aab6284596cfc467833e81c97d8b927924">854b96a</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1028">#1028</a></li>
+</ul>
+<h2 id="501-2025-10-05"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0...v5.0.1">5.0.1</a> (2025-10-05)</h2>
+<h3 id="bug-fixes_4">Bug Fixes</h3>
+<ul>
+<li><strong>actions:</strong> confirmation would not work (<a href="https://github.com/custom-cards/button-card/commit/cf034d26a8950ce370ad294f9b7339185025f0fd">cf034d2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1025">#1025</a> <a href="https://github.com/custom-cards/button-card/issues/1026">#1026</a></li>
+</ul>
+<h2 id="500-2025-10-05"><a href="https://github.com/custom-cards/button-card/compare/v4.3.0...v5.0.0">5.0.0</a> (2025-10-05)</h2>
+<h3 id="breaking-changes_1">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>actions:</strong> <code>*_action</code> and <code>icon_*_action</code> stricly follow what is
+allowed in the configuration of this card (see updated documentation).
+If you used some hacks, it might break. If those hacks were created to
+run javascript code, you can now use <code>action: javascript</code> instead.</li>
+<li><strong>actions:</strong> Some of you were using hacks to execute javascript
+actions. This release officially implements <code>action: javascript</code> and
+this is the <strong>only supported</strong> way to execute javascript actions going
+forward. Any other configuration might execute the javascript action
+while the card is first displayed. Please update your config accordingly
+and read the updated documentation.</li>
+<li><strong>actions:</strong> CSS variables <code>--mdc-ripple-*</code> are no longer supported.
+These have been replaced with <code>--button-card-ripple-*</code> variables. You
+will need to update your configuration.</li>
+<li><strong>color:</strong> Card background color will always be <code>var
+(--card-background-color)</code> when state is inactive and <code>color_type:
+card</code>. You can set card background with state.</li>
+</ul>
+<h3 id="features_6">Features</h3>
+<ul>
+<li><strong>actions:</strong> migrate to ha-ripple (<a href="https://github.com/custom-cards/button-card/issues/1011">#1011</a>) (<a href="https://github.com/custom-cards/button-card/commit/3c4dc9293f1fc58be3b7f83e8973895ea419abf3">3c4dc92</a>), closes <a href="https://github.com/custom-cards/button-card/issues/887">#887</a></li>
+<li><strong>actions:</strong> Official support for native javascript actions (<a href="https://github.com/custom-cards/button-card/issues/1022">#1022</a>) (<a href="https://github.com/custom-cards/button-card/commit/62163ccd5721ea6853d7f6baeccf281c0fe763a0">62163cc</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1021">#1021</a></li>
+<li><strong>actions:</strong> press and release support for momentary actions (<a href="https://github.com/custom-cards/button-card/issues/1014">#1014</a>) (<a href="https://github.com/custom-cards/button-card/commit/76f2fd400e623ad676dd9e3730341975416a5524">76f2fd4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/360">#360</a> <a href="https://github.com/custom-cards/button-card/issues/249">#249</a></li>
+<li>Add <code>icon_*_action</code> support (<a href="https://github.com/custom-cards/button-card/issues/984">#984</a>) (<a href="https://github.com/custom-cards/button-card/commit/4e028873a5c216f1ba98ba9e34fea944f73e970c">4e02887</a>), closes <a href="https://github.com/custom-cards/button-card/issues/739">#739</a></li>
+<li>allow html tooltips using the lit html tag (<a href="https://github.com/custom-cards/button-card/commit/5bb800a61fb0449492505471bd7ceaac75cd1489">5bb800a</a>)</li>
+<li>Support update timer (<a href="https://github.com/custom-cards/button-card/issues/981">#981</a>) (<a href="https://github.com/custom-cards/button-card/commit/4717feb8474d9ac8eab29af1321891a7d9de4b79">4717feb</a>), closes <a href="https://github.com/custom-cards/button-card/issues/436">#436</a></li>
+</ul>
+<h3 id="bug-fixes_5">Bug Fixes</h3>
+<ul>
+<li><strong>actions:</strong> avoid executing invalid actions configurations (<a href="https://github.com/custom-cards/button-card/issues/1023">#1023</a>) (<a href="https://github.com/custom-cards/button-card/commit/fe05b529ea873f60ad6ffccbd9d9981c35449cf1">fe05b52</a>)</li>
+<li><strong>color:</strong> inactive card background no longer inactive color when <code>colour_type: card</code> and <code>color</code> set. (<a href="https://github.com/custom-cards/button-card/issues/987">#987</a>) (<a href="https://github.com/custom-cards/button-card/commit/b4f00f92f71df9df9d76e057f8a38a6e49a2cea7">b4f00f9</a>), closes <a href="https://github.com/custom-cards/button-card/issues/754">#754</a></li>
+<li>console error on click introduced in 5.0.0-dev.1 (<a href="https://github.com/custom-cards/button-card/commit/fc39748e0b0062c605abc09f9e6d2effd9424ceb">fc39748</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1001">#1001</a></li>
+<li>double triggers with icon_*_actions (<a href="https://github.com/custom-cards/button-card/commit/d9725d75081225bdd660feeb9c8de1f928ac7682">d9725d7</a>)</li>
+<li>Embedded light card handle issue (<a href="https://github.com/custom-cards/button-card/issues/989">#989</a>) (<a href="https://github.com/custom-cards/button-card/commit/d01ef377ab751fa0607bd75107ac48fbfc04cf64">d01ef37</a>), closes <a href="https://github.com/custom-cards/button-card/issues/427">#427</a> <a href="https://github.com/custom-cards/button-card/issues/901">#901</a></li>
+<li>Event propagation to parent would not propagate the event properties (<a href="https://github.com/custom-cards/button-card/issues/1017">#1017</a>) (<a href="https://github.com/custom-cards/button-card/commit/a2051d49b3b53de63527e9ca6920497d38aa151c">a2051d4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1015">#1015</a></li>
+<li>Hold action on picture entity (<a href="https://github.com/custom-cards/button-card/issues/996">#996</a>) (<a href="https://github.com/custom-cards/button-card/commit/9f2501f2cf3bff4e9a210f0969218fedc072464a">9f2501f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/994">#994</a></li>
+<li>Move while hold on touch devices (<a href="https://github.com/custom-cards/button-card/issues/993">#993</a>) (<a href="https://github.com/custom-cards/button-card/commit/2c17386c64253c684f0d965ae76b0e3c09a7f002">2c17386</a>)</li>
+<li>Type error when using actions in templates (<a href="https://github.com/custom-cards/button-card/issues/1020">#1020</a>) (<a href="https://github.com/custom-cards/button-card/commit/55956fee56fe65c53befb8812f9befc616f382a0">55956fe</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1019">#1019</a></li>
+</ul>
+<h2 id="500-dev9-2025-10-05"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.8...v5.0.0-dev.9">5.0.0-dev.9</a> (2025-10-05)</h2>
+<h3 id="breaking-changes_2">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>actions:</strong> <code>*_action</code> and <code>icon_*_action</code> stricly follow what is
+allowed in the configuration of this card (see updated documentation).
+If you used some hacks, it might break. If those hacks were created to
+run javascript code, you can now use <code>action: javascript</code> instead.</li>
+</ul>
+<h3 id="bug-fixes_6">Bug Fixes</h3>
+<ul>
+<li><strong>actions:</strong> avoid executing invalid actions configurations (<a href="https://github.com/custom-cards/button-card/issues/1023">#1023</a>) (<a href="https://github.com/custom-cards/button-card/commit/fe05b529ea873f60ad6ffccbd9d9981c35449cf1">fe05b52</a>)</li>
+</ul>
+<h2 id="500-dev8-2025-10-04"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.7...v5.0.0-dev.8">5.0.0-dev.8</a> (2025-10-04)</h2>
+<h3 id="breaking-changes_3">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>actions:</strong> Some of you were using hacks to execute javascript
+actions. This release officially implements <code>action: javascript</code> and
+this is the <strong>only supported</strong> way to execute javascript actions going
+forward. Any other configuration might execute the javascript action
+while the card is first displayed. Please update your config accordingly
+and read the updated documentation.</li>
+</ul>
+<h3 id="features_7">Features</h3>
+<ul>
+<li><strong>actions:</strong> Official support for native javascript actions (<a href="https://github.com/custom-cards/button-card/issues/1022">#1022</a>) (<a href="https://github.com/custom-cards/button-card/commit/62163ccd5721ea6853d7f6baeccf281c0fe763a0">62163cc</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1021">#1021</a></li>
+</ul>
+<h2 id="500-dev7-2025-10-04"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.6...v5.0.0-dev.7">5.0.0-dev.7</a> (2025-10-04)</h2>
+<h3 id="bug-fixes_7">Bug Fixes</h3>
+<ul>
+<li>Type error when using actions in templates (<a href="https://github.com/custom-cards/button-card/issues/1020">#1020</a>) (<a href="https://github.com/custom-cards/button-card/commit/55956fee56fe65c53befb8812f9befc616f382a0">55956fe</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1019">#1019</a></li>
+</ul>
+<h2 id="500-dev6-2025-10-03"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.5...v5.0.0-dev.6">5.0.0-dev.6</a> (2025-10-03)</h2>
+<h3 id="features_8">Features</h3>
+<ul>
+<li><strong>actions:</strong> press and release support for momentary actions (<a href="https://github.com/custom-cards/button-card/issues/1014">#1014</a>) (<a href="https://github.com/custom-cards/button-card/commit/76f2fd400e623ad676dd9e3730341975416a5524">76f2fd4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/360">#360</a> <a href="https://github.com/custom-cards/button-card/issues/249">#249</a></li>
+</ul>
+<h2 id="500-dev5-2025-10-01"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.4...v5.0.0-dev.5">5.0.0-dev.5</a> (2025-10-01)</h2>
+<h3 id="bug-fixes_8">Bug Fixes</h3>
+<ul>
+<li>Event propagation to parent would not propagate the event properties (<a href="https://github.com/custom-cards/button-card/issues/1017">#1017</a>) (<a href="https://github.com/custom-cards/button-card/commit/a2051d49b3b53de63527e9ca6920497d38aa151c">a2051d4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1015">#1015</a></li>
+</ul>
+<h2 id="500-dev4-2025-09-30"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.3...v5.0.0-dev.4">5.0.0-dev.4</a> (2025-09-30)</h2>
+<h3 id="breaking-changes_4">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>actions:</strong> CSS variables <code>--mdc-ripple-*</code> are no longer supported.
+These have been replaced with <code>--button-card-ripple-*</code> variables. You
+will need to update your configuration.</li>
+</ul>
+<h3 id="features_9">Features</h3>
+<ul>
+<li><strong>actions:</strong> migrate to ha-ripple (<a href="https://github.com/custom-cards/button-card/issues/1011">#1011</a>) (<a href="https://github.com/custom-cards/button-card/commit/3c4dc9293f1fc58be3b7f83e8973895ea419abf3">3c4dc92</a>), closes <a href="https://github.com/custom-cards/button-card/issues/887">#887</a></li>
+</ul>
+<h2 id="500-dev3-2025-09-17"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.2...v5.0.0-dev.3">5.0.0-dev.3</a> (2025-09-17)</h2>
+<h3 id="bug-fixes_9">Bug Fixes</h3>
+<ul>
+<li>double triggers with icon_*_actions (<a href="https://github.com/custom-cards/button-card/commit/d9725d75081225bdd660feeb9c8de1f928ac7682">d9725d7</a>)</li>
+</ul>
+<h2 id="500-dev2-2025-09-17"><a href="https://github.com/custom-cards/button-card/compare/v5.0.0-dev.1...v5.0.0-dev.2">5.0.0-dev.2</a> (2025-09-17)</h2>
+<h3 id="features_10">Features</h3>
+<ul>
+<li>allow html tooltips using the lit html tag (<a href="https://github.com/custom-cards/button-card/commit/5bb800a61fb0449492505471bd7ceaac75cd1489">5bb800a</a>)</li>
+</ul>
+<h3 id="bug-fixes_10">Bug Fixes</h3>
+<ul>
+<li>console error on click introduced in 5.0.0-dev.1 (<a href="https://github.com/custom-cards/button-card/commit/fc39748e0b0062c605abc09f9e6d2effd9424ceb">fc39748</a>), closes <a href="https://github.com/custom-cards/button-card/issues/1001">#1001</a></li>
+</ul>
+<h2 id="500-dev1-2025-09-16"><a href="https://github.com/custom-cards/button-card/compare/v4.3.0...v5.0.0-dev.1">5.0.0-dev.1</a> (2025-09-16)</h2>
+<h3 id="breaking-changes_5">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>color:</strong> Card background color will always be <code>var
+(--card-background-color)</code> when state is inactive and <code>color_type:
+card</code>. You can set card background with state.</li>
+</ul>
+<h3 id="features_11">Features</h3>
+<ul>
+<li>Add <code>icon_*_action</code> support (<a href="https://github.com/custom-cards/button-card/issues/984">#984</a>) (<a href="https://github.com/custom-cards/button-card/commit/4e028873a5c216f1ba98ba9e34fea944f73e970c">4e02887</a>), closes <a href="https://github.com/custom-cards/button-card/issues/739">#739</a></li>
+<li>Support update timer (<a href="https://github.com/custom-cards/button-card/issues/981">#981</a>) (<a href="https://github.com/custom-cards/button-card/commit/4717feb8474d9ac8eab29af1321891a7d9de4b79">4717feb</a>), closes <a href="https://github.com/custom-cards/button-card/issues/436">#436</a></li>
+</ul>
+<h3 id="bug-fixes_11">Bug Fixes</h3>
+<ul>
+<li><strong>color:</strong> inactive card background no longer inactive color when <code>colour_type: card</code> and <code>color</code> set. (<a href="https://github.com/custom-cards/button-card/issues/987">#987</a>) (<a href="https://github.com/custom-cards/button-card/commit/b4f00f92f71df9df9d76e057f8a38a6e49a2cea7">b4f00f9</a>), closes <a href="https://github.com/custom-cards/button-card/issues/754">#754</a></li>
+<li>Embedded light card handle issue (<a href="https://github.com/custom-cards/button-card/issues/989">#989</a>) (<a href="https://github.com/custom-cards/button-card/commit/d01ef377ab751fa0607bd75107ac48fbfc04cf64">d01ef37</a>), closes <a href="https://github.com/custom-cards/button-card/issues/427">#427</a> <a href="https://github.com/custom-cards/button-card/issues/901">#901</a></li>
+<li>Hold action on picture entity (<a href="https://github.com/custom-cards/button-card/issues/996">#996</a>) (<a href="https://github.com/custom-cards/button-card/commit/9f2501f2cf3bff4e9a210f0969218fedc072464a">9f2501f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/994">#994</a></li>
+<li>Move while hold on touch devices (<a href="https://github.com/custom-cards/button-card/issues/993">#993</a>) (<a href="https://github.com/custom-cards/button-card/commit/2c17386c64253c684f0d965ae76b0e3c09a7f002">2c17386</a>)</li>
+</ul>
+<h2 id="430-2025-08-31"><a href="https://github.com/custom-cards/button-card/compare/v4.2.0...v4.3.0">4.3.0</a> (2025-08-31)</h2>
+<h3 id="features_12">Features</h3>
+<ul>
+<li><strong>lock:</strong> Option to keep the unlock icon displayed and define custom lock/unlock icon (<a href="https://github.com/custom-cards/button-card/issues/966">#966</a>) (<a href="https://github.com/custom-cards/button-card/commit/3c42b7b7fc26097c04199025b20fd2697f69c34e">3c42b7b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/842">#842</a></li>
+<li>Support to play a sound in the browser on any *_action (<a href="https://github.com/custom-cards/button-card/issues/968">#968</a>) (<a href="https://github.com/custom-cards/button-card/commit/18550139e6518bc5c384f31dce28ce72f49d35b1">1855013</a>), closes <a href="https://github.com/custom-cards/button-card/issues/574">#574</a></li>
+</ul>
+<h3 id="bug-fixes_12">Bug Fixes</h3>
+<ul>
+<li><strong>lock:</strong> Lock not displayed on safari/IOS and lock sometimes misplaced (<a href="https://github.com/custom-cards/button-card/issues/965">#965</a>) (<a href="https://github.com/custom-cards/button-card/commit/6c916518534e2dea75023bad3ef4f04827a62453">6c91651</a>), closes <a href="https://github.com/custom-cards/button-card/issues/963">#963</a></li>
+<li><strong>lock:</strong> Lock would not display on firefox (<a href="https://github.com/custom-cards/button-card/issues/983">#983</a>) (<a href="https://github.com/custom-cards/button-card/commit/72d2c82453bd079950317a066f26a2040fc57d19">72d2c82</a>), closes <a href="https://github.com/custom-cards/button-card/issues/980">#980</a></li>
+<li><strong>state_display:</strong> Allow empty string or null to override state (<a href="https://github.com/custom-cards/button-card/issues/976">#976</a>) (<a href="https://github.com/custom-cards/button-card/commit/0e40cdc4b025104808207f3f0bfb74f601f7b832">0e40cdc</a>), closes <a href="https://github.com/custom-cards/button-card/issues/435">#435</a></li>
+</ul>
+<h2 id="430-dev2-2025-08-31"><a href="https://github.com/custom-cards/button-card/compare/v4.3.0-dev.1...v4.3.0-dev.2">4.3.0-dev.2</a> (2025-08-31)</h2>
+<h3 id="features_13">Features</h3>
+<ul>
+<li>Support to play a sound in the browser on any *_action (<a href="https://github.com/custom-cards/button-card/issues/968">#968</a>) (<a href="https://github.com/custom-cards/button-card/commit/18550139e6518bc5c384f31dce28ce72f49d35b1">1855013</a>), closes <a href="https://github.com/custom-cards/button-card/issues/574">#574</a></li>
+</ul>
+<h3 id="bug-fixes_13">Bug Fixes</h3>
+<ul>
+<li><strong>lock:</strong> Lock would not display on firefox (<a href="https://github.com/custom-cards/button-card/issues/983">#983</a>) (<a href="https://github.com/custom-cards/button-card/commit/72d2c82453bd079950317a066f26a2040fc57d19">72d2c82</a>), closes <a href="https://github.com/custom-cards/button-card/issues/980">#980</a></li>
+<li><strong>state_display:</strong> Allow empty string or null to override state (<a href="https://github.com/custom-cards/button-card/issues/976">#976</a>) (<a href="https://github.com/custom-cards/button-card/commit/0e40cdc4b025104808207f3f0bfb74f601f7b832">0e40cdc</a>), closes <a href="https://github.com/custom-cards/button-card/issues/435">#435</a></li>
+</ul>
+<h2 id="430-dev1-2025-08-29"><a href="https://github.com/custom-cards/button-card/compare/v4.2.0...v4.3.0-dev.1">4.3.0-dev.1</a> (2025-08-29)</h2>
+<h3 id="features_14">Features</h3>
+<ul>
+<li><strong>lock:</strong> Option to keep the unlock icon displayed and define custom lock/unlock icon (<a href="https://github.com/custom-cards/button-card/issues/966">#966</a>) (<a href="https://github.com/custom-cards/button-card/commit/3c42b7b7fc26097c04199025b20fd2697f69c34e">3c42b7b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/842">#842</a></li>
+</ul>
+<h3 id="bug-fixes_14">Bug Fixes</h3>
+<ul>
+<li><strong>lock:</strong> Lock not displayed on safari/IOS and lock sometimes misplaced (<a href="https://github.com/custom-cards/button-card/issues/965">#965</a>) (<a href="https://github.com/custom-cards/button-card/commit/6c916518534e2dea75023bad3ef4f04827a62453">6c91651</a>), closes <a href="https://github.com/custom-cards/button-card/issues/963">#963</a></li>
+</ul>
+<h2 id="420-2025-08-28"><a href="https://github.com/custom-cards/button-card/compare/v4.1.2...v4.2.0">4.2.0</a> (2025-08-28)</h2>
+<h3 id="features_15">Features</h3>
+<ul>
+<li>Allow *_action to be a template string returning an object (<a href="https://github.com/custom-cards/button-card/issues/945">#945</a>) (<a href="https://github.com/custom-cards/button-card/commit/b235a04bebe551585b6d4ab445be58483147bc7b">b235a04</a>), closes <a href="https://github.com/custom-cards/button-card/issues/850">#850</a> <a href="https://github.com/custom-cards/button-card/issues/611">#611</a> <a href="https://github.com/custom-cards/button-card/issues/543">#543</a> <a href="https://github.com/custom-cards/button-card/issues/425">#425</a></li>
+<li>Support for sections using <code>section_mode: true</code> (<a href="https://github.com/custom-cards/button-card/issues/959">#959</a>) (<a href="https://github.com/custom-cards/button-card/commit/92dd6d2f49171b995a8f1f940c27e326045a7a86">92dd6d2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/854">#854</a></li>
+<li>Support nested templates on nested button cards (<a href="https://github.com/custom-cards/button-card/issues/942">#942</a>) (<a href="https://github.com/custom-cards/button-card/commit/795d3d644d624d3b4d2d51a34d3fcc6e340c754c">795d3d6</a>), closes <a href="https://github.com/custom-cards/button-card/issues/544">#544</a> <a href="https://github.com/custom-cards/button-card/issues/620">#620</a> <a href="https://github.com/custom-cards/button-card/issues/880">#880</a> <a href="https://github.com/custom-cards/button-card/issues/879">#879</a> <a href="https://github.com/custom-cards/button-card/issues/730">#730</a></li>
+</ul>
+<h3 id="bug-fixes_15">Bug Fixes</h3>
+<ul>
+<li>Don't trigger action on touchcancel event (<a href="https://github.com/custom-cards/button-card/issues/808">#808</a>) (<a href="https://github.com/custom-cards/button-card/commit/ebbbb318ebcfd73a32cae5a6defbcea9e1336ae0">ebbbb31</a>), closes <a href="https://github.com/custom-cards/button-card/issues/914">#914</a></li>
+<li>Fix camera live stream refresh and support aspect ratio &amp; fit mode (<a href="https://github.com/custom-cards/button-card/issues/944">#944</a>) (<a href="https://github.com/custom-cards/button-card/commit/bd9fa97665851ba93709a44398d076a2a805ee00">bd9fa97</a>), closes <a href="https://github.com/custom-cards/button-card/issues/913">#913</a></li>
+<li>input_button entity to default to input_button.press for tap_action (<a href="https://github.com/custom-cards/button-card/issues/949">#949</a>) (<a href="https://github.com/custom-cards/button-card/commit/f8e19fdfbce89ab9d6daab36fe8dcf48708a8b6f">f8e19fd</a>), closes <a href="https://github.com/custom-cards/button-card/issues/531">#531</a> <a href="https://github.com/custom-cards/button-card/issues/572">#572</a></li>
+<li>Replace deprecated --paper-item-icon-color (<a href="https://github.com/custom-cards/button-card/issues/925">#925</a>) (<a href="https://github.com/custom-cards/button-card/commit/8e34b841dde312b4b4fd5a535303e6b1800d8adb">8e34b84</a>), closes <a href="https://github.com/custom-cards/button-card/issues/924">#924</a></li>
+<li>Update button-card error display (<a href="https://github.com/custom-cards/button-card/issues/958">#958</a>) (<a href="https://github.com/custom-cards/button-card/commit/921b6eb2ebd523ba3cc8f325537b1b5107aaddf1">921b6eb</a>)</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>Update card_mod example configuration in README.md (<a href="https://github.com/custom-cards/button-card/issues/953">#953</a>) (<a href="https://github.com/custom-cards/button-card/commit/89dacd6d6c138a52347d435a78a5a2909d2fa136">89dacd6</a>), closes <a href="https://github.com/custom-cards/button-card/issues/817">#817</a></li>
+<li>Update installation instructions (<a href="https://github.com/custom-cards/button-card/issues/943">#943</a>) (<a href="https://github.com/custom-cards/button-card/commit/c4c0be821b75f92d759c6e87f0cf97eede3675e3">c4c0be8</a>), closes <a href="https://github.com/custom-cards/button-card/issues/912">#912</a></li>
+</ul>
+<h2 id="420-dev2-2025-08-28"><a href="https://github.com/custom-cards/button-card/compare/v4.2.0-dev.1...v4.2.0-dev.2">4.2.0-dev.2</a> (2025-08-28)</h2>
+<h3 id="features_16">Features</h3>
+<ul>
+<li>Support for sections using <code>section_mode: true</code> (<a href="https://github.com/custom-cards/button-card/issues/959">#959</a>) (<a href="https://github.com/custom-cards/button-card/commit/92dd6d2f49171b995a8f1f940c27e326045a7a86">92dd6d2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/854">#854</a></li>
+</ul>
+<h2 id="420-dev1-2025-08-27"><a href="https://github.com/custom-cards/button-card/compare/v4.1.3-dev.1...v4.2.0-dev.1">4.2.0-dev.1</a> (2025-08-27)</h2>
+<h3 id="features_17">Features</h3>
+<ul>
+<li>Allow *_action to be a template string returning an object (<a href="https://github.com/custom-cards/button-card/issues/945">#945</a>) (<a href="https://github.com/custom-cards/button-card/commit/b235a04bebe551585b6d4ab445be58483147bc7b">b235a04</a>), closes <a href="https://github.com/custom-cards/button-card/issues/850">#850</a> <a href="https://github.com/custom-cards/button-card/issues/611">#611</a> <a href="https://github.com/custom-cards/button-card/issues/543">#543</a> <a href="https://github.com/custom-cards/button-card/issues/425">#425</a></li>
+<li>Support nested templates on nested button cards (<a href="https://github.com/custom-cards/button-card/issues/942">#942</a>) (<a href="https://github.com/custom-cards/button-card/commit/795d3d644d624d3b4d2d51a34d3fcc6e340c754c">795d3d6</a>), closes <a href="https://github.com/custom-cards/button-card/issues/544">#544</a> <a href="https://github.com/custom-cards/button-card/issues/620">#620</a> <a href="https://github.com/custom-cards/button-card/issues/880">#880</a> <a href="https://github.com/custom-cards/button-card/issues/879">#879</a> <a href="https://github.com/custom-cards/button-card/issues/730">#730</a></li>
+</ul>
+<h3 id="bug-fixes_16">Bug Fixes</h3>
+<ul>
+<li>Fix camera live stream refresh and support aspect ratio &amp; fit mode (<a href="https://github.com/custom-cards/button-card/issues/944">#944</a>) (<a href="https://github.com/custom-cards/button-card/commit/bd9fa97665851ba93709a44398d076a2a805ee00">bd9fa97</a>), closes <a href="https://github.com/custom-cards/button-card/issues/913">#913</a></li>
+<li>input_button entity to default to input_button.press for tap_action (<a href="https://github.com/custom-cards/button-card/issues/949">#949</a>) (<a href="https://github.com/custom-cards/button-card/commit/f8e19fdfbce89ab9d6daab36fe8dcf48708a8b6f">f8e19fd</a>), closes <a href="https://github.com/custom-cards/button-card/issues/531">#531</a> <a href="https://github.com/custom-cards/button-card/issues/572">#572</a></li>
+<li>Update button-card error display (<a href="https://github.com/custom-cards/button-card/issues/958">#958</a>) (<a href="https://github.com/custom-cards/button-card/commit/921b6eb2ebd523ba3cc8f325537b1b5107aaddf1">921b6eb</a>)</li>
+</ul>
+<h3 id="documentation_1">Documentation</h3>
+<ul>
+<li>Update card_mod example configuration in README.md (<a href="https://github.com/custom-cards/button-card/issues/953">#953</a>) (<a href="https://github.com/custom-cards/button-card/commit/89dacd6d6c138a52347d435a78a5a2909d2fa136">89dacd6</a>), closes <a href="https://github.com/custom-cards/button-card/issues/817">#817</a></li>
+<li>Update installation instructions (<a href="https://github.com/custom-cards/button-card/issues/943">#943</a>) (<a href="https://github.com/custom-cards/button-card/commit/c4c0be821b75f92d759c6e87f0cf97eede3675e3">c4c0be8</a>), closes <a href="https://github.com/custom-cards/button-card/issues/912">#912</a></li>
+</ul>
+<h3 id="413-dev1-2025-08-15"><a href="https://github.com/custom-cards/button-card/compare/v4.1.2...v4.1.3-dev.1">4.1.3-dev.1</a> (2025-08-15)</h3>
+<h3 id="bug-fixes_17">Bug Fixes</h3>
+<ul>
+<li>Don't trigger action on touchcancel event (<a href="https://github.com/custom-cards/button-card/issues/808">#808</a>) (<a href="https://github.com/custom-cards/button-card/commit/ebbbb318ebcfd73a32cae5a6defbcea9e1336ae0">ebbbb31</a>), closes <a href="https://github.com/custom-cards/button-card/issues/914">#914</a></li>
+<li>Replace deprecated --paper-item-icon-color (<a href="https://github.com/custom-cards/button-card/issues/925">#925</a>) (<a href="https://github.com/custom-cards/button-card/commit/8e34b841dde312b4b4fd5a535303e6b1800d8adb">8e34b84</a>), closes <a href="https://github.com/custom-cards/button-card/issues/924">#924</a></li>
+</ul>
+<h3 id="412-2024-02-01"><a href="https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2">4.1.2</a> (2024-02-01)</h3>
+<h3 id="bug-fixes_18">Bug Fixes</h3>
+<ul>
+<li>card would sometimes not be clickable (<a href="https://github.com/custom-cards/button-card/commit/56c3f44066c6bd08fb8a7d8bb8fa679920dc5992">56c3f44</a>), closes <a href="https://github.com/custom-cards/button-card/issues/738">#738</a> <a href="https://github.com/custom-cards/button-card/issues/759">#759</a></li>
+<li>support for new ha-state-icon in 2024.02 (<a href="https://github.com/custom-cards/button-card/commit/ab2b3939bcce504125853d2ca9312d32f9a3f6d6">ab2b393</a>)</li>
+</ul>
+<h3 id="412-dev2-2024-02-01"><a href="https://github.com/custom-cards/button-card/compare/v4.1.2-dev.1...v4.1.2-dev.2">4.1.2-dev.2</a> (2024-02-01)</h3>
+<h3 id="bug-fixes_19">Bug Fixes</h3>
+<ul>
+<li>support for new ha-state-icon in 2024.02 (<a href="https://github.com/custom-cards/button-card/commit/ab2b3939bcce504125853d2ca9312d32f9a3f6d6">ab2b393</a>)</li>
+</ul>
+<h3 id="412-dev1-2023-08-20"><a href="https://github.com/custom-cards/button-card/compare/v4.1.1...v4.1.2-dev.1">4.1.2-dev.1</a> (2023-08-20)</h3>
+<h3 id="bug-fixes_20">Bug Fixes</h3>
+<ul>
+<li>card would sometimes not be clickable (<a href="https://github.com/custom-cards/button-card/commit/56c3f44066c6bd08fb8a7d8bb8fa679920dc5992">56c3f44</a>), closes <a href="https://github.com/custom-cards/button-card/issues/738">#738</a> <a href="https://github.com/custom-cards/button-card/issues/759">#759</a></li>
+</ul>
+<h3 id="411-2023-08-03"><a href="https://github.com/custom-cards/button-card/compare/v4.1.0...v4.1.1">4.1.1</a> (2023-08-03)</h3>
+<h3 id="bug-fixes_21">Bug Fixes</h3>
+<ul>
+<li><strong>color:</strong> color wouldn't follow light color with <code>color: auto</code> (<a href="https://github.com/custom-cards/button-card/commit/b63f0db220b8a9c72383c4288546112625fdff04">b63f0db</a>), closes <a href="https://github.com/custom-cards/button-card/issues/737">#737</a></li>
+</ul>
+<h2 id="410-2023-08-03"><a href="https://github.com/custom-cards/button-card/compare/v4.0.1...v4.1.0">4.1.0</a> (2023-08-03)</h2>
+<h3 id="features_18">Features</h3>
+<ul>
+<li><strong>templates:</strong> Support for one time evaluation of js templates in <code>triggers_update</code> and <code>entity</code> (<a href="https://github.com/custom-cards/button-card/issues/741">#741</a>) (<a href="https://github.com/custom-cards/button-card/commit/b372642253c890b08c7de7395d138b01fb90120b">b372642</a>), closes <a href="https://github.com/custom-cards/button-card/issues/618">#618</a> <a href="https://github.com/custom-cards/button-card/issues/558">#558</a> <a href="https://github.com/custom-cards/button-card/issues/368">#368</a></li>
+</ul>
+<h3 id="bug-fixes_22">Bug Fixes</h3>
+<ul>
+<li>Keep default background color for color_type: card when off (<a href="https://github.com/custom-cards/button-card/commit/41dea3f72a607ea0fc1c71269bb0122f27970a6e">41dea3f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/737">#737</a></li>
+<li>lock would not display on many browsers (<a href="https://github.com/custom-cards/button-card/commit/245441b69fad5f56f43ea1b5d189b4ddbbab2ebb">245441b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/740">#740</a></li>
+<li>remove margin-top on name/label/state introduced with 4.0.0 which broke many cards (<a href="https://github.com/custom-cards/button-card/commit/53fee75c163b72df42b859705af536c4c7dffac6">53fee75</a>), closes <a href="https://github.com/custom-cards/button-card/issues/742">#742</a> <a href="https://github.com/custom-cards/button-card/issues/744">#744</a></li>
+</ul>
+<h2 id="410-dev3-2023-08-01"><a href="https://github.com/custom-cards/button-card/compare/v4.1.0-dev.2...v4.1.0-dev.3">4.1.0-dev.3</a> (2023-08-01)</h2>
+<h3 id="bug-fixes_23">Bug Fixes</h3>
+<ul>
+<li>lock would not display on many browsers (<a href="https://github.com/custom-cards/button-card/commit/245441b69fad5f56f43ea1b5d189b4ddbbab2ebb">245441b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/740">#740</a></li>
+</ul>
+<h2 id="410-dev2-2023-08-01"><a href="https://github.com/custom-cards/button-card/compare/v4.1.0-dev.1...v4.1.0-dev.2">4.1.0-dev.2</a> (2023-08-01)</h2>
+<h3 id="bug-fixes_24">Bug Fixes</h3>
+<ul>
+<li>remove margin-top on name/label/state introduced with 4.0.0 which broke many cards (<a href="https://github.com/custom-cards/button-card/commit/53fee75c163b72df42b859705af536c4c7dffac6">53fee75</a>), closes <a href="https://github.com/custom-cards/button-card/issues/742">#742</a> <a href="https://github.com/custom-cards/button-card/issues/744">#744</a></li>
+</ul>
+<h2 id="410-dev1-2023-07-30"><a href="https://github.com/custom-cards/button-card/compare/v4.0.1...v4.1.0-dev.1">4.1.0-dev.1</a> (2023-07-30)</h2>
+<h3 id="features_19">Features</h3>
+<ul>
+<li><strong>templates:</strong> Support for one time evaluation of js templates in <code>triggers_update</code> and <code>entity</code> (<a href="https://github.com/custom-cards/button-card/issues/741">#741</a>) (<a href="https://github.com/custom-cards/button-card/commit/b372642253c890b08c7de7395d138b01fb90120b">b372642</a>), closes <a href="https://github.com/custom-cards/button-card/issues/618">#618</a> <a href="https://github.com/custom-cards/button-card/issues/558">#558</a> <a href="https://github.com/custom-cards/button-card/issues/368">#368</a></li>
+</ul>
+<h3 id="bug-fixes_25">Bug Fixes</h3>
+<ul>
+<li>Keep default background color for color_type: card when off (<a href="https://github.com/custom-cards/button-card/commit/41dea3f72a607ea0fc1c71269bb0122f27970a6e">41dea3f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/737">#737</a></li>
+</ul>
+<h3 id="401-2023-07-30"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0...v4.0.1">4.0.1</a> (2023-07-30)</h3>
+<h3 id="bug-fixes_26">Bug Fixes</h3>
+<ul>
+<li>color: auto/auto-no-temperature was broken (<a href="https://github.com/custom-cards/button-card/commit/a63f9a96a5e4d4582ca90095c49464b0462a451a">a63f9a9</a>), closes <a href="https://github.com/custom-cards/button-card/issues/737">#737</a></li>
+</ul>
+<h2 id="400-2023-07-29"><a href="https://github.com/custom-cards/button-card/compare/v3.5.0...v4.0.0">4.0.0</a> (2023-07-29)</h2>
+<h3 id="breaking-changes_6">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>helpers:</strong> If you were using any of the beta before <code>4.0.0-dev14</code>. Please replace all the calls to helper functions with <code>helpers.xxx</code> for eg. <code>helpers.relativeTime(entity.state)</code> or <code>helpers.localize(entity)</code></li>
+<li><strong>hacs:</strong> Minimum required HA Version is now 2023.7</li>
+<li><strong>actions:</strong> Requires HA 2023.4 minimum. Support for the new action format (<code>target</code> is also be supported), <code>service_data</code> should be renamed to <code>data</code> (but it still works with the old format)</li>
+<li><strong>icons:</strong> This might break your card-mod setup</li>
+<li>this might break some of your color settings</li>
+</ul>
+<h3 id="features_20">Features</h3>
+<ul>
+<li><strong>action:</strong> <code>repeat_limit</code> for <code>hold_action</code> (<a href="https://github.com/custom-cards/button-card/commit/73c216f1bf82c104848bb5d7aef2d91ba3597a95">73c216f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/564">#564</a> <a href="https://github.com/custom-cards/button-card/issues/555">#555</a></li>
+<li><strong>actions:</strong> Support for the new action (assist) and all the future ones (<a href="https://github.com/custom-cards/button-card/commit/d9c17a40652c020a42497828a56f49d11748d1b8">d9c17a4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/711">#711</a> <a href="https://github.com/custom-cards/button-card/issues/685">#685</a></li>
+<li><strong>custom_fields:</strong> Add <code>do_not_eval</code> to stop evaluating js templates in an embedded card (<a href="https://github.com/custom-cards/button-card/commit/1638cf81217ef696a6b0967550cbbb9f3849c813">1638cf8</a>)</li>
+<li><strong>helpers:</strong> all template functions are now available through the <code>helpers</code> object (<a href="https://github.com/custom-cards/button-card/commit/f22ed6982f09d1ffbc303a14f81a9a6345acd274">f22ed69</a>)</li>
+<li><strong>icons:</strong> replace ha-icon with ha-state-icon to follow new HA's icons per domain automatically (<a href="https://github.com/custom-cards/button-card/commit/ab6a3f5bd39fc48890f1b851e929df2fe1d8796c">ab6a3f5</a>)</li>
+<li><strong>templates:</strong> new <code>relativeTime</code> function to display a relative time in a template and update it automatically (<a href="https://github.com/custom-cards/button-card/commit/965a3d7b97b9fe1d155029dd6156f7a2f051f5a9">965a3d7</a>), closes <a href="https://github.com/custom-cards/button-card/issues/701">#701</a></li>
+<li><strong>templates:</strong> New date and time format helpers (<a href="https://github.com/custom-cards/button-card/commit/9b4fb05e4e5b3d70fa4c1f8f7f5778ca55e551f6">9b4fb05</a>)</li>
+<li><strong>variables:</strong> A variable can depend on another variable based on their name's alphabetical order (<a href="https://github.com/custom-cards/button-card/commit/8cddccb83466d2db29f832085e2c701bdef6b254">8cddccb</a>), closes <a href="https://github.com/custom-cards/button-card/issues/656">#656</a></li>
+<li>Force the <code>numeric_precision</code> for states which are numbers (<a href="https://github.com/custom-cards/button-card/commit/24d75c2651c9e6b3b080b1c2561bda2c30a2f294">24d75c2</a>)</li>
+<li>new helper functions for date/time in templates (<a href="https://github.com/custom-cards/button-card/commit/2b75993f22e4624776c839bfa9dafe1ddde7660d">2b75993</a>), closes <a href="https://github.com/custom-cards/button-card/issues/701">#701</a></li>
+<li>Support for localization in templates (<a href="https://github.com/custom-cards/button-card/commit/5de2dc906781f46a952377d40ba77d75728f19e3">5de2dc9</a>)</li>
+</ul>
+<h3 id="bug-fixes_27">Bug Fixes</h3>
+<ul>
+<li>*_action more-info entity as a template was not evaluated (<a href="https://github.com/custom-cards/button-card/commit/02441b29820bc84816bb480a94307291c20028d4">02441b2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/734">#734</a></li>
+<li><code>group_expand</code> now works even if the entity is not a <code>group.xxx</code> (<a href="https://github.com/custom-cards/button-card/commit/f192ded67f092a47d4bafe2c0fec2d8ccc55dc44">f192ded</a>), closes <a href="https://github.com/custom-cards/button-card/issues/645">#645</a></li>
+<li>Color are now aligned with HA &gt; 2022.12 (<a href="https://github.com/custom-cards/button-card/commit/685d55e49cacfacace96a56d17f97649a4e3cafd">685d55e</a>), closes <a href="https://github.com/custom-cards/button-card/issues/635">#635</a></li>
+<li>custom fields would sometime throw unsafeHTML errors (<a href="https://github.com/custom-cards/button-card/commit/c67e1d550c79bc6610e1592c95e509cfc6a06fa5">c67e1d5</a>), closes <a href="https://github.com/custom-cards/button-card/issues/725">#725</a></li>
+<li>ha-icon (if in custom_fields) size was weird (<a href="https://github.com/custom-cards/button-card/commit/a448c8e826605d17591beebd4a230d0287cdf945">a448c8e</a>)</li>
+<li>ha-state-icon CSS selector was wrong (<a href="https://github.com/custom-cards/button-card/commit/a1bb39a71c55dca505d4b1a7d820229e26d4e0eb">a1bb39a</a>)</li>
+<li>icon would be cut with card height defined (<a href="https://github.com/custom-cards/button-card/commit/19f83931939a8c15bd9e1174f11c0e52dd451bf8">19f8393</a>), closes <a href="https://github.com/custom-cards/button-card/issues/731">#731</a></li>
+<li>localization fix (<a href="https://github.com/custom-cards/button-card/commit/02dfab3db391d2ab671f9722c730c1e70dd723db">02dfab3</a>), closes <a href="https://github.com/custom-cards/button-card/issues/685">#685</a> <a href="https://github.com/custom-cards/button-card/issues/693">#693</a></li>
+<li>lock icon was displaying over more-info dialog (<a href="https://github.com/custom-cards/button-card/commit/bf075b00e4a2f7aa6a193d03eb8c93e0aa30e8ae">bf075b0</a>), closes <a href="https://github.com/custom-cards/button-card/issues/694">#694</a></li>
+<li>lock would go out of the button (<a href="https://github.com/custom-cards/button-card/commit/0b3e4d331cfa21b5f682c962ea6222c9e1be7754">0b3e4d3</a>)</li>
+<li>non string fiels would error with an unsafeHTML error (<a href="https://github.com/custom-cards/button-card/commit/d65c34757a20859a8c3c70fd2b612bfe818a662a">d65c347</a>), closes <a href="https://github.com/custom-cards/button-card/issues/725">#725</a></li>
+<li>numerical states would not follow HA's format (<a href="https://github.com/custom-cards/button-card/commit/72d7c4133ff96713ecbe42168db0d6732b82510c">72d7c41</a>), closes <a href="https://github.com/custom-cards/button-card/issues/662">#662</a></li>
+<li>optimize contrast color compute (<a href="https://github.com/custom-cards/button-card/commit/35109c3d5c8454958f67be706026e73786f853bc">35109c3</a>)</li>
+<li>relativeTime didn't support to set the first letter uppercase (<a href="https://github.com/custom-cards/button-card/commit/f8b9b0916964495c3b0b9341b5c6751a9a99a1c8">f8b9b09</a>), closes <a href="https://github.com/custom-cards/button-card/issues/735">#735</a></li>
+<li>Some cards with child cards wouldn't be clickable (<a href="https://github.com/custom-cards/button-card/commit/9f21c58dacf5605851ef3ab2d936ef8f35d0b783">9f21c58</a>)</li>
+<li>text/icon contrast when using label-card (<a href="https://github.com/custom-cards/button-card/commit/01e199b18b9caa31d4bc1a43c5a143e8d40f2836">01e199b</a>)</li>
+<li>variable which were objects were only evaluated once (<a href="https://github.com/custom-cards/button-card/commit/e40bda9da67008cbca8f18fc0ef4d65c7b8f08b5">e40bda9</a>)</li>
+<li><strong>templates:</strong> <code>variables</code> was <code>undefined</code> if none where provided. (<a href="https://github.com/custom-cards/button-card/commit/fad332b80d0fe910fa99e13e1e291ffa4b65188e">fad332b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/718">#718</a></li>
+<li>tooltip would show over everything (<a href="https://github.com/custom-cards/button-card/commit/1bc8f9950159a260536d6918b55c3cb15eb7bb04">1bc8f99</a>)</li>
+<li><strong>color:</strong> main config <code>color</code> was broken (<a href="https://github.com/custom-cards/button-card/commit/b93c9969c2d1d9be9486edc1607a11635b03c29a">b93c996</a>)</li>
+<li><strong>hacs:</strong> minimum HA version 2023.7 (<a href="https://github.com/custom-cards/button-card/commit/db3b394fa6e970599d58c51d0caaa0ab2afbda1d">db3b394</a>)</li>
+<li><strong>templates:</strong> don't use the <code>numeric_precision</code> from the card config for <code>localize</code> in js templates by default (<a href="https://github.com/custom-cards/button-card/commit/2cc384f9dc5cb91a88a31b363db6083147092bb5">2cc384f</a>)</li>
+</ul>
+<h2 id="400-dev19-2023-07-29"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.18...v4.0.0-dev.19">4.0.0-dev.19</a> (2023-07-29)</h2>
+<h3 id="bug-fixes_28">Bug Fixes</h3>
+<ul>
+<li>variable which were objects were only evaluated once (<a href="https://github.com/custom-cards/button-card/commit/e40bda9da67008cbca8f18fc0ef4d65c7b8f08b5">e40bda9</a>)</li>
+</ul>
+<h2 id="400-dev18-2023-07-28"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.17...v4.0.0-dev.18">4.0.0-dev.18</a> (2023-07-28)</h2>
+<h3 id="features_21">Features</h3>
+<ul>
+<li><strong>custom_fields:</strong> Add <code>do_not_eval</code> to stop evaluating js templates in an embedded card (<a href="https://github.com/custom-cards/button-card/commit/1638cf81217ef696a6b0967550cbbb9f3849c813">1638cf8</a>)</li>
+</ul>
+<h3 id="bug-fixes_29">Bug Fixes</h3>
+<ul>
+<li>relativeTime didn't support to set the first letter uppercase (<a href="https://github.com/custom-cards/button-card/commit/f8b9b0916964495c3b0b9341b5c6751a9a99a1c8">f8b9b09</a>), closes <a href="https://github.com/custom-cards/button-card/issues/735">#735</a></li>
+</ul>
+<h2 id="400-dev17-2023-07-27"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.16...v4.0.0-dev.17">4.0.0-dev.17</a> (2023-07-27)</h2>
+<h3 id="features_22">Features</h3>
+<ul>
+<li><strong>variables:</strong> A variable can depend on another variable based on their name's alphabetical order (<a href="https://github.com/custom-cards/button-card/commit/8cddccb83466d2db29f832085e2c701bdef6b254">8cddccb</a>), closes <a href="https://github.com/custom-cards/button-card/issues/656">#656</a></li>
+</ul>
+<h2 id="400-dev16-2023-07-27"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.15...v4.0.0-dev.16">4.0.0-dev.16</a> (2023-07-27)</h2>
+<h3 id="bug-fixes_30">Bug Fixes</h3>
+<ul>
+<li>*_action more-info entity as a template was not evaluated (<a href="https://github.com/custom-cards/button-card/commit/02441b29820bc84816bb480a94307291c20028d4">02441b2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/734">#734</a></li>
+</ul>
+<h2 id="400-dev15-2023-07-26"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.14...v4.0.0-dev.15">4.0.0-dev.15</a> (2023-07-26)</h2>
+<h3 id="features_23">Features</h3>
+<ul>
+<li><strong>templates:</strong> New date and time format helpers (<a href="https://github.com/custom-cards/button-card/commit/9b4fb05e4e5b3d70fa4c1f8f7f5778ca55e551f6">9b4fb05</a>)</li>
+</ul>
+<h2 id="400-dev14-2023-07-26"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.13...v4.0.0-dev.14">4.0.0-dev.14</a> (2023-07-26)</h2>
+<h3 id="breaking-changes_7">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>helpers:</strong> If you were using any of the beta before <code>4.0.0-dev14</code>. Please replace all the calls to helper functions with <code>helpers.xxx</code> for eg. <code>helpers.relativeTime(entity.state)</code> or <code>helpers.localize(entity)</code></li>
+</ul>
+<h3 id="features_24">Features</h3>
+<ul>
+<li><strong>helpers:</strong> all template functions are now available through the <code>helpers</code> object (<a href="https://github.com/custom-cards/button-card/commit/f22ed6982f09d1ffbc303a14f81a9a6345acd274">f22ed69</a>)</li>
+</ul>
+<h3 id="bug-fixes_31">Bug Fixes</h3>
+<ul>
+<li><code>group_expand</code> now works even if the entity is not a <code>group.xxx</code> (<a href="https://github.com/custom-cards/button-card/commit/f192ded67f092a47d4bafe2c0fec2d8ccc55dc44">f192ded</a>), closes <a href="https://github.com/custom-cards/button-card/issues/645">#645</a></li>
+</ul>
+<h2 id="400-dev13-2023-07-26"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.12...v4.0.0-dev.13">4.0.0-dev.13</a> (2023-07-26)</h2>
+<h3 id="bug-fixes_32">Bug Fixes</h3>
+<ul>
+<li><strong>templates:</strong> <code>variables</code> was <code>undefined</code> if none where provided. (<a href="https://github.com/custom-cards/button-card/commit/fad332b80d0fe910fa99e13e1e291ffa4b65188e">fad332b</a>), closes <a href="https://github.com/custom-cards/button-card/issues/718">#718</a></li>
+</ul>
+<h2 id="400-dev12-2023-07-26"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.11...v4.0.0-dev.12">4.0.0-dev.12</a> (2023-07-26)</h2>
+<h3 id="bug-fixes_33">Bug Fixes</h3>
+<ul>
+<li>icon would be cut with card height defined (<a href="https://github.com/custom-cards/button-card/commit/19f83931939a8c15bd9e1174f11c0e52dd451bf8">19f8393</a>), closes <a href="https://github.com/custom-cards/button-card/issues/731">#731</a></li>
+</ul>
+<h2 id="400-dev11-2023-07-26"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.10...v4.0.0-dev.11">4.0.0-dev.11</a> (2023-07-26)</h2>
+<h3 id="features_25">Features</h3>
+<ul>
+<li><strong>templates:</strong> new <code>relativeTime</code> function to display a relative time in a template and update it automatically (<a href="https://github.com/custom-cards/button-card/commit/965a3d7b97b9fe1d155029dd6156f7a2f051f5a9">965a3d7</a>), closes <a href="https://github.com/custom-cards/button-card/issues/701">#701</a></li>
+</ul>
+<h3 id="bug-fixes_34">Bug Fixes</h3>
+<ul>
+<li>ha-state-icon CSS selector was wrong (<a href="https://github.com/custom-cards/button-card/commit/a1bb39a71c55dca505d4b1a7d820229e26d4e0eb">a1bb39a</a>)</li>
+<li>tooltip would show over everything (<a href="https://github.com/custom-cards/button-card/commit/1bc8f9950159a260536d6918b55c3cb15eb7bb04">1bc8f99</a>)</li>
+<li><strong>templates:</strong> don't use the <code>numeric_precision</code> from the card config for <code>localize</code> in js templates by default (<a href="https://github.com/custom-cards/button-card/commit/2cc384f9dc5cb91a88a31b363db6083147092bb5">2cc384f</a>)</li>
+</ul>
+<h2 id="400-dev10-2023-07-25"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.9...v4.0.0-dev.10">4.0.0-dev.10</a> (2023-07-25)</h2>
+<h3 id="bug-fixes_35">Bug Fixes</h3>
+<ul>
+<li><strong>color:</strong> main config <code>color</code> was broken (<a href="https://github.com/custom-cards/button-card/commit/b93c9969c2d1d9be9486edc1607a11635b03c29a">b93c996</a>)</li>
+</ul>
+<h2 id="400-dev9-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.8...v4.0.0-dev.9">4.0.0-dev.9</a> (2023-07-24)</h2>
+<h3 id="bug-fixes_36">Bug Fixes</h3>
+<ul>
+<li>numerical states would not follow HA's format (<a href="https://github.com/custom-cards/button-card/commit/72d7c4133ff96713ecbe42168db0d6732b82510c">72d7c41</a>), closes <a href="https://github.com/custom-cards/button-card/issues/662">#662</a></li>
+</ul>
+<h2 id="400-dev8-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.7...v4.0.0-dev.8">4.0.0-dev.8</a> (2023-07-24)</h2>
+<h3 id="features_26">Features</h3>
+<ul>
+<li>Force the <code>numeric_precision</code> for states which are numbers (<a href="https://github.com/custom-cards/button-card/commit/24d75c2651c9e6b3b080b1c2561bda2c30a2f294">24d75c2</a>)</li>
+<li><strong>action:</strong> <code>repeat_limit</code> for <code>hold_action</code> (<a href="https://github.com/custom-cards/button-card/commit/73c216f1bf82c104848bb5d7aef2d91ba3597a95">73c216f</a>), closes <a href="https://github.com/custom-cards/button-card/issues/564">#564</a> <a href="https://github.com/custom-cards/button-card/issues/555">#555</a></li>
+<li>new helper functions for date/time in templates (<a href="https://github.com/custom-cards/button-card/commit/2b75993f22e4624776c839bfa9dafe1ddde7660d">2b75993</a>), closes <a href="https://github.com/custom-cards/button-card/issues/701">#701</a></li>
+</ul>
+<h3 id="bug-fixes_37">Bug Fixes</h3>
+<ul>
+<li>ha-icon (if in custom_fields) size was weird (<a href="https://github.com/custom-cards/button-card/commit/a448c8e826605d17591beebd4a230d0287cdf945">a448c8e</a>)</li>
+</ul>
+<h2 id="400-dev7-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.6...v4.0.0-dev.7">4.0.0-dev.7</a> (2023-07-24)</h2>
+<h3 id="bug-fixes_38">Bug Fixes</h3>
+<ul>
+<li>non string fiels would error with an unsafeHTML error (<a href="https://github.com/custom-cards/button-card/commit/d65c34757a20859a8c3c70fd2b612bfe818a662a">d65c347</a>), closes <a href="https://github.com/custom-cards/button-card/issues/725">#725</a></li>
+</ul>
+<h2 id="400-dev6-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.5...v4.0.0-dev.6">4.0.0-dev.6</a> (2023-07-24)</h2>
+<h3 id="breaking-changes_8">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>hacs:</strong> Minimum required HA Version is now 2023.7</li>
+</ul>
+<h3 id="features_27">Features</h3>
+<ul>
+<li>Support for localization in templates (<a href="https://github.com/custom-cards/button-card/commit/5de2dc906781f46a952377d40ba77d75728f19e3">5de2dc9</a>)</li>
+</ul>
+<h3 id="bug-fixes_39">Bug Fixes</h3>
+<ul>
+<li>custom fields would sometime throw unsafeHTML errors (<a href="https://github.com/custom-cards/button-card/commit/c67e1d550c79bc6610e1592c95e509cfc6a06fa5">c67e1d5</a>), closes <a href="https://github.com/custom-cards/button-card/issues/725">#725</a></li>
+<li><strong>hacs:</strong> minimum HA version 2023.7 (<a href="https://github.com/custom-cards/button-card/commit/db3b394fa6e970599d58c51d0caaa0ab2afbda1d">db3b394</a>)</li>
+</ul>
+<h2 id="400-dev5-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.4...v4.0.0-dev.5">4.0.0-dev.5</a> (2023-07-24)</h2>
+<h3 id="bug-fixes_40">Bug Fixes</h3>
+<ul>
+<li>optimize contrast color compute (<a href="https://github.com/custom-cards/button-card/commit/35109c3d5c8454958f67be706026e73786f853bc">35109c3</a>)</li>
+<li>Some cards with child cards wouldn't be clickable (<a href="https://github.com/custom-cards/button-card/commit/9f21c58dacf5605851ef3ab2d936ef8f35d0b783">9f21c58</a>)</li>
+</ul>
+<h2 id="400-dev4-2023-07-24"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.3...v4.0.0-dev.4">4.0.0-dev.4</a> (2023-07-24)</h2>
+<h3 id="bug-fixes_41">Bug Fixes</h3>
+<ul>
+<li>text/icon contrast when using label-card (<a href="https://github.com/custom-cards/button-card/commit/01e199b18b9caa31d4bc1a43c5a143e8d40f2836">01e199b</a>)</li>
+</ul>
+<h2 id="400-dev3-2023-07-23"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.2...v4.0.0-dev.3">4.0.0-dev.3</a> (2023-07-23)</h2>
+<h3 id="breaking-changes_9">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>actions:</strong> Requires HA 2023.4 minimum. Support for the new action format (<code>target</code> is also be supported), <code>service_data</code> should be renamed to <code>data</code> (but it still works with the old format)</li>
+</ul>
+<h3 id="features_28">Features</h3>
+<ul>
+<li><strong>actions:</strong> Support for the new action (assist) and all the future ones (<a href="https://github.com/custom-cards/button-card/commit/d9c17a40652c020a42497828a56f49d11748d1b8">d9c17a4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/711">#711</a> <a href="https://github.com/custom-cards/button-card/issues/685">#685</a></li>
+</ul>
+<h2 id="400-dev2-2023-07-23"><a href="https://github.com/custom-cards/button-card/compare/v4.0.0-dev.1...v4.0.0-dev.2">4.0.0-dev.2</a> (2023-07-23)</h2>
+<h3 id="breaking-changes_10">⚠ BREAKING CHANGES</h3>
+<ul>
+<li><strong>icons:</strong> This might break your card-mod setup</li>
+</ul>
+<h3 id="features_29">Features</h3>
+<ul>
+<li><strong>icons:</strong> replace ha-icon with ha-state-icon to follow new HA's icons per domain automatically (<a href="https://github.com/custom-cards/button-card/commit/ab6a3f5bd39fc48890f1b851e929df2fe1d8796c">ab6a3f5</a>)</li>
+</ul>
+<h2 id="400-dev1-2023-07-23"><a href="https://github.com/custom-cards/button-card/compare/v3.5.0...v4.0.0-dev.1">4.0.0-dev.1</a> (2023-07-23)</h2>
+<h3 id="breaking-changes_11">⚠ BREAKING CHANGES</h3>
+<ul>
+<li>this might break some of your color settings</li>
+</ul>
+<h3 id="bug-fixes_42">Bug Fixes</h3>
+<ul>
+<li>Color are now aligned with HA &gt; 2022.12 (<a href="https://github.com/custom-cards/button-card/commit/685d55e49cacfacace96a56d17f97649a4e3cafd">685d55e</a>), closes <a href="https://github.com/custom-cards/button-card/issues/635">#635</a></li>
+<li>localization fix (<a href="https://github.com/custom-cards/button-card/commit/02dfab3db391d2ab671f9722c730c1e70dd723db">02dfab3</a>), closes <a href="https://github.com/custom-cards/button-card/issues/685">#685</a> <a href="https://github.com/custom-cards/button-card/issues/693">#693</a></li>
+<li>lock icon was displaying over more-info dialog (<a href="https://github.com/custom-cards/button-card/commit/bf075b00e4a2f7aa6a193d03eb8c93e0aa30e8ae">bf075b0</a>), closes <a href="https://github.com/custom-cards/button-card/issues/694">#694</a></li>
+<li>lock would go out of the button (<a href="https://github.com/custom-cards/button-card/commit/0b3e4d331cfa21b5f682c962ea6222c9e1be7754">0b3e4d3</a>)</li>
+</ul>
+<h2 id="350-2023-04-02"><a href="https://github.com/custom-cards/button-card/compare/v3.4.2...v3.5.0">3.5.0</a> (2023-04-02)</h2>
+<h3 id="features_30">Features</h3>
+<ul>
+<li><strong>state_display:</strong> Support for <code>state_display</code> in <code>state</code> (<a href="https://github.com/custom-cards/button-card/commit/440dc77e7e94ee2db2166be5612419426fcf3582">440dc77</a>), closes <a href="https://github.com/custom-cards/button-card/issues/426">#426</a></li>
+</ul>
+<h3 id="bug-fixes_43">Bug Fixes</h3>
+<ul>
+<li>card broken with HA 2023.04bXX (<a href="https://github.com/custom-cards/button-card/commit/9b4f1e23be55a11e7c520e49cbd366380cdba23e">9b4f1e2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/669">#669</a> <a href="https://github.com/custom-cards/button-card/issues/671">#671</a></li>
+<li>extra space at bottom because of button-card-action-handler (<a href="https://github.com/custom-cards/button-card/commit/699b57d5fce3cd9f9d26b9e1b23fa086239f9f89">699b57d</a>), closes <a href="https://github.com/custom-cards/button-card/issues/672">#672</a></li>
+<li>remove border from blank card (<a href="https://github.com/custom-cards/button-card/commit/b05c6b470b70f1b6e3a4383d561eb17ca8557e14">b05c6b4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/652">#652</a></li>
+</ul>
+<h3 id="documentation_2">Documentation</h3>
+<ul>
+<li>minor quotes correction (<a href="https://github.com/custom-cards/button-card/issues/437">#437</a>) (<a href="https://github.com/custom-cards/button-card/commit/9b5f728905692649d50f291e738e807e3f5ac36e">9b5f728</a>)</li>
+<li>minor quotes correction (<a href="https://github.com/custom-cards/button-card/issues/438">#438</a>) (<a href="https://github.com/custom-cards/button-card/commit/07ae7a129384da329b6f9cb7af62b78e3c34f16a">07ae7a1</a>)</li>
+</ul>
+<h2 id="350-dev2-2023-04-02"><a href="https://github.com/custom-cards/button-card/compare/v3.5.0-dev.1...v3.5.0-dev.2">3.5.0-dev.2</a> (2023-04-02)</h2>
+<h3 id="bug-fixes_44">Bug Fixes</h3>
+<ul>
+<li>card broken with HA 2023.04bXX (<a href="https://github.com/custom-cards/button-card/commit/9b4f1e23be55a11e7c520e49cbd366380cdba23e">9b4f1e2</a>), closes <a href="https://github.com/custom-cards/button-card/issues/669">#669</a> <a href="https://github.com/custom-cards/button-card/issues/671">#671</a></li>
+<li>extra space at bottom because of button-card-action-handler (<a href="https://github.com/custom-cards/button-card/commit/699b57d5fce3cd9f9d26b9e1b23fa086239f9f89">699b57d</a>), closes <a href="https://github.com/custom-cards/button-card/issues/672">#672</a></li>
+<li>remove border from blank card (<a href="https://github.com/custom-cards/button-card/commit/b05c6b470b70f1b6e3a4383d561eb17ca8557e14">b05c6b4</a>), closes <a href="https://github.com/custom-cards/button-card/issues/652">#652</a></li>
+</ul>
+<h3 id="documentation_3">Documentation</h3>
+<ul>
+<li>minor quotes correction (<a href="https://github.com/custom-cards/button-card/issues/437">#437</a>) (<a href="https://github.com/custom-cards/button-card/commit/9b5f728905692649d50f291e738e807e3f5ac36e">9b5f728</a>)</li>
+<li>minor quotes correction (<a href="https://github.com/custom-cards/button-card/issues/438">#438</a>) (<a href="https://github.com/custom-cards/button-card/commit/07ae7a129384da329b6f9cb7af62b78e3c34f16a">07ae7a1</a>)</li>
+</ul>
+<h2 id="350-dev1-2021-02-17"><a href="https://github.com/custom-cards/button-card/compare/v3.4.2...v3.5.0-dev.1">3.5.0-dev.1</a> (2021-02-17)</h2>
+<h3 id="features_31">Features</h3>
+<ul>
+<li><strong>state_display:</strong> Support for <code>state_display</code> in <code>state</code> (<a href="https://github.com/custom-cards/button-card/commit/440dc77e7e94ee2db2166be5612419426fcf3582">440dc77</a>), closes <a href="https://github.com/custom-cards/button-card/issues/426">#426</a></li>
+</ul>
+<h3 id="342-2021-02-17"><a href="https://github.com/custom-cards/button-card/compare/v3.4.1...v3.4.2">3.4.2</a> (2021-02-17)</h3>
+<h3 id="bug-fixes_45">Bug Fixes</h3>
+<ul>
+<li>Support for <code>fire-dom-event</code> (<a href="https://github.com/custom-cards/button-card/commit/f4fcbfe2ee7e5a9f1ca7a550c77767e921e7b802">f4fcbfe</a>), closes <a href="https://github.com/custom-cards/button-card/issues/429">#429</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "toc.follow", "toc.integrate", "navigation.top", "content.code.copy", "content.code.annotate", "pymdownx.snippets"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "alias_type": "copy", "default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

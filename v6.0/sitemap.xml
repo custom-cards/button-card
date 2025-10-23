@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://custom-cards.github.io/button-card/v6.0/</loc>
+         <lastmod>2025-10-23</lastmod>
+    </url>
+    <url>
+         <loc>https://custom-cards.github.io/button-card/v6.0/CHANGELOG/</loc>
+         <lastmod>2025-10-23</lastmod>
+    </url>
+    <url>
+         <loc>https://custom-cards.github.io/button-card/v6.0/installation/</loc>
+         <lastmod>2025-10-23</lastmod>
+    </url>
+    <url>
+         <loc>https://custom-cards.github.io/button-card/v6.0/installation/hacs/</loc>
+         <lastmod>2025-10-23</lastmod>
+    </url>
+    <url>
+         <loc>https://custom-cards.github.io/button-card/v6.0/installation/manual/</loc>
+         <lastmod>2025-10-23</lastmod>
+    </url>
+</urlset>
