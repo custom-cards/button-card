@@ -6,12 +6,12 @@
 - You can also inherit another template from within a template.
 - You can inherit multiple templates at once by making it an array. In this case, the templates will be merged together with the current configuration in the order they are defined. This happens recursively.
 
-  ```yaml
-  type: custom:button-card
-  template:
-    - template1
-    - template2
-  ```
+      ```yaml
+      type: custom:button-card
+      template:
+        - template1
+        - template2
+      ```
 
   The button templates will be applied in the order they are defined: `template2` will be merged with `template1` and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).
 

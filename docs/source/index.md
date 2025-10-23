@@ -48,8 +48,10 @@ button-card is a highly customizable button for your lovelace interfaces.
 - multiple [layout](./advanced/layout.md) support and [custom layout](./advanced/styling.md#advanced-styling-options) support
 - units for sensors can be redefined or hidden
 - 2 color types
-  - `icon` : apply color settings to the icon only
-  - `card` : apply color settings to the card only
+
+      - `icon` : apply color settings to the icon only
+      - `card` : apply color settings to the card only
+
 - automatic font color if `color_type` is set to `card`
 - blank card and label card (for organization)
 - Native [blink](./examples/animations.md#blink) animation support

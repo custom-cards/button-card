@@ -13,37 +13,37 @@ Multiple CSS variables are also available for its configuration and you can conf
 
 Some examples:
 
+![spinner](../images/spinner.png)
+
 - Spinner displayed while a script is running, actions are locked
 
-  ```yaml
-  type: 'custom:button-card'
-  entity: script.delay_script
-  name: Spinner script main
-  tap_action:
-    action: perform-action
-    perform_action: script.delay_script
-  show_label: state
-  spinner: '[[[ return entity.state === "on" ]]]'
-  ```
+      ```yaml
+      type: 'custom:button-card'
+      entity: script.delay_script
+      name: Spinner script main
+      tap_action:
+        action: perform-action
+        perform_action: script.delay_script
+      show_label: state
+      spinner: '[[[ return entity.state === "on" ]]]'
+      ```
 
 - Spinner displayed in `red` while a script is running using `state`, interactions are unlocked and overlay color is disabled.
 
-  ```yaml
-  type: 'custom:button-card'
-  entity: script.delay_script
-  name: Spinner script state
-  tap_action:
-    action: perform-action
-    perform_action: script.delay_script
-  show_label: state
-  state:
-    - value: 'on'
-      spinner: true
-      styles:
-        spinner:
-          - pointer-events: none !important # this unlocks the overlay
-          - --button-card-spinner-color: red
-          - --button-card-spinner-background-color: none
-  ```
-
-![spinner](../images/spinner.png)
+      ```yaml
+      type: 'custom:button-card'
+      entity: script.delay_script
+      name: Spinner script state
+      tap_action:
+        action: perform-action
+        perform_action: script.delay_script
+      show_label: state
+      state:
+        - value: 'on'
+          spinner: true
+          styles:
+            spinner:
+              - pointer-events: none !important # this unlocks the overlay
+              - --button-card-spinner-color: red
+              - --button-card-spinner-background-color: none
+      ```

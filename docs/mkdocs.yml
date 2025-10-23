@@ -92,6 +92,9 @@ theme:
 use_directory_urls: true
 
 markdown_extensions:
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

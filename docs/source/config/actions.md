@@ -277,43 +277,43 @@ Eg:
 
 - Simple toast messages:
 
-  ```yaml
-  type: 'custom:button-card'
-  icon: mdi:console
-  name: Toast action
-  tap_action:
-    action: toast
-    toast:
-      message: 'This is a toast message'
-  ```
+      ```yaml
+      type: 'custom:button-card'
+      icon: mdi:console
+      name: Toast action
+      tap_action:
+        action: toast
+        toast:
+          message: 'This is a toast message'
+      ```
 
-  ```yaml
-  type: 'custom:button-card'
-  icon: mdi:console
-  name: Toast action
-  tap_action:
-    action: toast
-    toast:
-      message: 'This is a toast message which is displayed for 20s and can be dismissed'
-      duration: 20000
-      dismissable: true
-  ```
+      ```yaml
+      type: 'custom:button-card'
+      icon: mdi:console
+      name: Toast action
+      tap_action:
+        action: toast
+        toast:
+          message: 'This is a toast message which is displayed for 20s and can be dismissed'
+          duration: 20000
+          dismissable: true
+      ```
 
 - Used in `action: multi-actions`
 
-  ```yaml
-  type: 'custom:button-card'
-  entity: light.skylight
-  tap_action:
-    action: multi-actions
-    actions:
-      - action: toggle
-      - action: toast
-        toast:
-          message: 'The light has been toggled'
-          duration: 20000
-          dismissable: true
-  ```
+      ```yaml
+      type: 'custom:button-card'
+      entity: light.skylight
+      tap_action:
+        action: multi-actions
+        actions:
+          - action: toggle
+          - action: toast
+            toast:
+              message: 'The light has been toggled'
+              duration: 20000
+              dismissable: true
+      ```
 
 ### Toast Actions
 

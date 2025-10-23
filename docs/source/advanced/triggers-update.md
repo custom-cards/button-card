@@ -18,19 +18,19 @@ In this second case, you have 2 options:
 
 - Set the value of `triggers_update` to `all`
 
-  ```yaml
-  triggers_update: all
-  ```
+      ```yaml
+      triggers_update: all
+      ```
 
 - Set the value of `triggers_update` to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant `* templates` integration (see [here](https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id) for example):
 
-  ```yaml
-  type: custom:button-card
-  entity: sensor.mysensor # (1)!
-  triggers_update:
-    - switch.myswitch
-    - light.mylight
-  ```
+      ```yaml
+      type: custom:button-card
+      entity: sensor.mysensor # (1)!
+      triggers_update:
+        - switch.myswitch
+        - light.mylight
+      ```
 
 1. No need to repeat this one in the `triggers_update` list, it is added by default
 

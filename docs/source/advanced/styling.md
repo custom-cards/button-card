@@ -126,67 +126,67 @@ Some examples:
 
 - label on top:
 
-  ```yaml
-  styles:
-    grid:
-      - grid-template-areas: '"l" "i" "n" "s"'
-      - grid-template-rows: min-content 1fr min-content min-content
-      - grid-template-columns: 1fr
-  ```
+      ```yaml
+      styles:
+        grid:
+          - grid-template-areas: '"l" "i" "n" "s"'
+          - grid-template-rows: min-content 1fr min-content min-content
+          - grid-template-columns: 1fr
+      ```
 
 - icon on the right side (by overloading an existing layout):
 
-  ```yaml
-  type: 'custom:button-card'
-  entity: sensor.sensor1
-  layout: icon_state_name2nd
-  show_state: true
-  show_name: true
-  show_label: true
-  label: label
-  styles:
-    grid:
-      - grid-template-areas: '"n i" "s i" "l i"'
-      - grid-template-columns: 1fr 40%
-  ```
+      ```yaml
+      type: 'custom:button-card'
+      entity: sensor.sensor1
+      layout: icon_state_name2nd
+      show_state: true
+      show_name: true
+      show_label: true
+      label: label
+      styles:
+        grid:
+          - grid-template-areas: '"n i" "s i" "l i"'
+          - grid-template-columns: 1fr 40%
+      ```
 
 - Apple Homekit-like buttons:
 
-  ![apple-like-buttons](../images/apple_style.gif)
+      ![apple-like-buttons](../images/apple_style.gif)
 
-  ```yaml
-  type: custom:button-card
-  entity: switch.skylight
-  name: <3 Apple
-  icon: mdi:fire
-  show_state: true
-  styles:
-    card:
-      - width: 100px
-      - height: 100px
-    grid:
-      - grid-template-areas: '"i" "n" "s"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: 1fr min-content min-content
-    img_cell:
-      - align-self: start
-      - text-align: start
-    name:
-      - justify-self: start
-      - padding-left: 10px
-      - font-weight: bold
-      - text-transform: lowercase
-    state:
-      - justify-self: start
-      - padding-left: 10px
-  state:
-    - value: 'off'
+      ```yaml
+      type: custom:button-card
+      entity: switch.skylight
+      name: <3 Apple
+      icon: mdi:fire
+      show_state: true
       styles:
         card:
-          - filter: opacity(50%)
-        icon:
-          - filter: grayscale(100%)
-  ```
+          - width: 100px
+          - height: 100px
+        grid:
+          - grid-template-areas: '"i" "n" "s"'
+          - grid-template-columns: 1fr
+          - grid-template-rows: 1fr min-content min-content
+        img_cell:
+          - align-self: start
+          - text-align: start
+        name:
+          - justify-self: start
+          - padding-left: 10px
+          - font-weight: bold
+          - text-transform: lowercase
+        state:
+          - justify-self: start
+          - padding-left: 10px
+      state:
+        - value: 'off'
+          styles:
+            card:
+              - filter: opacity(50%)
+            icon:
+              - filter: grayscale(100%)
+      ```
 
 ## Injecting CSS with `extra_styles`
 
