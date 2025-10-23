@@ -8,10 +8,10 @@ By default, the card will update itself when the main entity in the configuratio
 
 ```js
 // This will match switch.myswitch and add switch.myswitch to the trigger list
-return states['switch.myswitch'].state
+return states['switch.myswitch'].state;
 // but this won't match anything
-const test = switch.myswitch
-return states[test].state
+const entity = 'switch.myswitch';
+return states[entity].state;
 ```
 
 In this second case, you have 2 options:
