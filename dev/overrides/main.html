@@ -1,5 +1,9 @@
-{% extends "base.html" %} {% block outdated %} You're not viewing the latest version.
+{% extends "base.html" %} {% block outdated %} You're not viewing the latest version. {% if version == "dev" %}
+<a href="{{ '../' ~ base_url }}">
+  <strong>Click here to go to dev.</strong>
+</a>
+{% else %}
 <a href="{{ '../' ~ base_url }}">
   <strong>Click here to go to latest.</strong>
 </a>
-{% endblock %}
+{% endif %} {% endblock %}
