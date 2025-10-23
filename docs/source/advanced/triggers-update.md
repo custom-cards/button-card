@@ -32,7 +32,7 @@ In this second case, you have 2 options:
         - light.mylight
       ```
 
-1. No need to repeat this one in the `triggers_update` list, it is added by default
+      1. No need to repeat this one in the `triggers_update` list, it is added by default
 
 !!! info
 
