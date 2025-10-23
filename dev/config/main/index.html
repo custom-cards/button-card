@@ -14,7 +14,7 @@
         <link rel="prev" href="../../installation/">
       
       
-        <link rel="next" href="../../CHANGELOG/">
+        <link rel="next" href="../actions/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -491,6 +491,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Actions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -553,7 +576,7 @@
 </thead>
 <tbody>
 <tr>
-<td><nobr><code>type</code></nobr></td>
+<td><code>type</code></td>
 <td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>string</td>
 <td><strong>Required</strong></td>
@@ -561,7 +584,7 @@
 <td>Type of the card</td>
 </tr>
 <tr>
-<td><nobr><code>template</code></nobr></td>
+<td><code>template</code></td>
 <td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>string</td>
 <td>optional</td>
@@ -577,7 +600,7 @@
 <td>entity_id</td>
 </tr>
 <tr>
-<td><nobr><code>section_mode</code></nobr></td>
+<td><code>section_mode</code></td>
 <td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>boolean</td>
 <td>optional</td>
@@ -585,7 +608,7 @@
 <td>Set it to <code>true</code> when the card is used in a sections view. See <a href="#sections-views">Sections views</a></td>
 </tr>
 <tr>
-<td><nobr><code>triggers_update</code></nobr></td>
+<td><code>triggers_update</code></td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /> <br/>(init only)</td>
 <td>string or array</td>
 <td>optional</td>
@@ -593,7 +616,15 @@
 <td>entity_id list that would trigger a card update, see <a href="#triggers_update">triggers_update</a></td>
 </tr>
 <tr>
-<td><nobr><code>update_timer</code></nobr></td>
+<td><code>group_expand</code></td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td>boolean</td>
+<td>false</td>
+<td><code>true</code> | <code>false</code></td>
+<td>When <code>true</code>, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See <a href="#triggers_update">triggers_update</a></td>
+</tr>
+<tr>
+<td><code>update_timer</code></td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /></td>
 <td>number or string</td>
 <td>optional</td>
@@ -601,58 +632,50 @@
 <td>Set to a duration greater than or equal to 100ms to update the card at this refresh rate. This should only be used when the card has no entity and there is no appropriate <a href="#triggers_update">triggers_update</a> strategy. Supports templates, see <a href="#javascript-templates">templates</a>. The template is evaluated on each refresh of the card, be it from the <code>update_timer</code> timeout or trigger update. To maintan dashboard compatability when user locale changes, the duration must be specified in english locale.</td>
 </tr>
 <tr>
-<td><code>group_expand</code></td>
-<td style="text-align: center;">boolean</td>
-<td>false</td>
-<td><code>true</code> | <code>false</code></td>
-<td>When <code>true</code>, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See <a href="#triggers_update">triggers_update</a></td>
-<td></td>
-</tr>
-<tr>
 <td><code>icon</code></td>
-<td style="text-align: center;">string</td>
+<td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /></td>
+<td>string</td>
 <td>optional</td>
 <td><code>mdi:air-conditioner</code></td>
 <td>Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with <code>show_icon: false</code>. Supports templates, see <a href="#javascript-templates">templates</a></td>
-<td></td>
 </tr>
 <tr>
 <td><code>color_type</code></td>
-<td style="text-align: center;">string</td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td>string</td>
 <td><code>icon</code></td>
 <td><code>icon</code> | <code>card</code> | <code>blank-card</code> | <code>label-card</code></td>
 <td>Color either the background of the card or the icon inside the card. Setting this to <code>card</code> enable automatic <code>font</code> and <code>icon</code> color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options <code>blank-card</code> and <code>label-card</code> can be used for organisation (see examples).</td>
-<td></td>
 </tr>
 <tr>
 <td><code>color</code></td>
-<td style="text-align: center;">string</td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td>string</td>
 <td>optional</td>
 <td><code>auto</code> | <code>auto-no-temperature</code> | <code>rgb(28, 128, 199)</code></td>
 <td>Color of the icon/card. <code>auto</code> sets the color based on the color of a light including the temperature of the light. Setting this to <code>auto-no-temperature</code> will behave like home-assistant's default, ignoring the temperature of the light. By default, if the entity state is <code>off</code>, the color will be <code>var(--state-inactive-color)</code> for icon and <code>var (--card-background-color)</code> for card, for <code>on</code> it will be <code>var(--state-active-color)</code> and for any other state it will be <code>var(--primary-text-color)</code>. You can redefine each colors using <code>state</code></td>
-<td></td>
 </tr>
 <tr>
 <td><code>size</code></td>
-<td style="text-align: center;">string</td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td>string</td>
 <td><code>40%</code></td>
 <td><code>20px</code></td>
 <td>Size of the icon. Can be percentage or pixel</td>
-<td></td>
 </tr>
 <tr>
 <td><code>aspect_ratio</code></td>
-<td style="text-align: center;">string</td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td>string</td>
 <td>optional</td>
 <td><code>1/1</code>, <code>2/1</code>, <code>1/1.5</code>, ...</td>
 <td>See <a href="#aspect-ratio">here</a> for an example. Aspect ratio of the card. <code>1/1</code> being a square. This will auto adapt to your screen size</td>
-<td></td>
 </tr>
 <tr>
 <td><code>tap_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button.</td>
 <td></td>
 </tr>
@@ -660,7 +683,7 @@
 <td><code>hold_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on hold, if undefined, nothing happens.</td>
 <td></td>
 </tr>
@@ -668,7 +691,7 @@
 <td><code>double_tap_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on double click, if undefined, nothing happens.</td>
 <td></td>
 </tr>
@@ -676,7 +699,7 @@
 <td><code>press_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action to execute immediately on button press. If defined, the only other card action allowed is <code>release_action</code></td>
 <td></td>
 </tr>
@@ -684,7 +707,7 @@
 <td><code>release_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action to execute on button release. If defined, the only other card action allowed is <code>press_action</code></td>
 <td></td>
 </tr>
@@ -692,7 +715,7 @@
 <td><code>icon_tap_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
 <td></td>
 </tr>
@@ -700,7 +723,7 @@
 <td><code>icon_hold_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
 <td></td>
 </tr>
@@ -708,7 +731,7 @@
 <td><code>icon_double_tap_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
 <td></td>
 </tr>
@@ -716,7 +739,7 @@
 <td><code>icon_press_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action to execute immediately on icon press. If defined, the only other icon action allowed is <code>icon_release_action</code></td>
 <td></td>
 </tr>
@@ -724,7 +747,7 @@
 <td><code>icon_release_action</code></td>
 <td style="text-align: center;">object</td>
 <td>optional</td>
-<td>See <a href="#Action">Action</a></td>
+<td>See <a href="#config/actions">Action</a></td>
 <td>Define the type of action to execute on icon release. If defined, the only other icon action allowed is <code>icon_press_action</code></td>
 <td></td>
 </tr>
