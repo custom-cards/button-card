@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#general-configuration" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -860,6 +865,19 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Custom Fields
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -871,6 +889,68 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#general-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      General configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#absolute-element-positioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Absolute element positioning
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-grid-template-areas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using grid-template-areas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested card
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-cards-with-js-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nested cards with JS templates
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1274,8 +1354,9 @@
 
   <h1>Custom Fields</h1>
 
+<h2 id="general-configuration">General configuration<a class="headerlink" href="#general-configuration" title="Permanent link">&para;</a></h2>
 <p>Custom fields support, using the <code>custom_fields</code> object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon). This is an advanced feature which leverages (if you require it) the CSS Grid.</p>
-<p>Custom fields also support embeded cards, see <a href="#custom_fields_card_example">example below</a>.</p>
+<p>Custom fields also support embeded cards, see <a href="#nested-card">example below</a>.</p>
 <p>Each custom field supports its own styling config, the name needs to match between both objects needs to match:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p p-Indicator">[</span><span class="nv">...</span><span class="p p-Indicator">]</span>
@@ -1288,9 +1369,8 @@
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">font-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13px</span>
 </span></code></pre></div>
 <p>Examples are better than a long text, so here you go:</p>
-<ul>
-<li>Placing an element wherever you want (that means bypassing the grid). Set the grid to <code>position: relative</code> and set the element to <code>position: absolute</code></li>
-</ul>
+<h2 id="absolute-element-positioning">Absolute element positioning<a class="headerlink" href="#absolute-element-positioning" title="Permanent link">&para;</a></h2>
+<p>Placing an element wherever you want (that means bypassing the grid). Set the grid to <code>position: relative</code> and set the element to <code>position: absolute</code></p>
 <p><img alt="custom_fields_1" src="../../images/custom_fields_1.gif" /></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mdi:lightbulb</span>
@@ -1319,9 +1399,8 @@
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="nt">notification</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 </span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="no">[[[ return Math.floor(states[&#39;input_number.test&#39;].state / 10) ]]]</span>
 </span></code></pre></div>
-<ul>
-<li>Or you can use the grid. Each element will have it's name positioned as the <code>grid-area</code>:</li>
-</ul>
+<h2 id="using-grid-template-areas">Using <code>grid-template-areas</code><a class="headerlink" href="#using-grid-template-areas" title="Permanent link">&para;</a></h2>
+<p>Or you can use the grid. Each element will have it's name positioned as the <code>grid-area</code>:</p>
 <p><img alt="custom_fields_2" src="../../images/custom_fields_2.png" /></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;sensor.raspi_temp&#39;</span>
@@ -1409,9 +1488,8 @@
 </span><span id="__span-2-84"><a id="__codelineno-2-84" name="__codelineno-2-84" href="#__codelineno-2-84"></a><span class="w">        </span><span class="no">&lt;/ha-icon&gt;&lt;span&gt;SD: &lt;span style=&quot;color: var(--text-color-sensor);&quot;&gt;${states[&#39;sensor.raspi_sd&#39;].state}%&lt;/span&gt;&lt;/span&gt;`</span>
 </span><span id="__span-2-85"><a id="__codelineno-2-85" name="__codelineno-2-85" href="#__codelineno-2-85"></a><span class="w">    </span><span class="no">]]]</span>
 </span></code></pre></div>
-<ul>
-<li><a name="custom_fields_card_example"></a>Or you can embed a card (or multiple) inside the button card (note, this configuration uses <a href="https://github.com/thomasloven/lovelace-card-mod">card-mod</a> to remove the <code>box-shadow</code> of the sensor card.</li>
-</ul>
+<h2 id="nested-card">Nested card<a class="headerlink" href="#nested-card" title="Permanent link">&para;</a></h2>
+<p>Or you can embed a card (or multiple) inside the button card (note, this configuration uses <a href="https://github.com/thomasloven/lovelace-card-mod">card-mod</a> to remove the <code>box-shadow</code> of the sensor card.</p>
 <p>This is what the <code>style</code> inside the embedded card is for):</p>
 <p><img alt="custom_fields_3" src="../../images/custom_fields_card.png" /></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
@@ -1443,6 +1521,7 @@
 </span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nt">hold_action</span><span class="p">:</span>
 </span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">more-info</span>
 </span></code></pre></div>
+<h2 id="nested-cards-with-js-templates">Nested cards with JS templates<a class="headerlink" href="#nested-cards-with-js-templates" title="Permanent link">&para;</a></h2>
 <p>To use nested templates in a custom_field (eg. you embed a <code>custom:button-card</code> inside a Custom Field and then template is for the <code>custom:button-card</code>), then use an extra <code>[]</code> pair around your template. You may also set <code>do_not_eval</code> to <code>true</code> to skip evaluating the template (DEPRECATED). See <a href="../js-templates/">JS Templates</a> for more information on using templates in nested <code>custom:button-card</code>.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">styles</span><span class="p">:</span>

@@ -1342,13 +1342,15 @@
 <li>You can overload any parameter with a new one</li>
 <li>You can merge states together <strong>by <code>id</code></strong> when using templates. The states you want to merge have to have the same <code>id</code>. This <code>id</code> parameter is new and can be anything (string, number, ...). States without <code>id</code> will be appended to the state array. Styles embedded in a state are merged together as usual. See <a href="#merging-state-by-id">below</a> for an example.</li>
 <li>You can also inherit another template from within a template.</li>
-<li>You can inherit multiple templates at once by making it an array. In this case, the templates will be merged together with the current configuration in the order they are defined. This happens recursively.</li>
-</ul>
+<li>
+<p>You can inherit multiple templates at once by making it an array. In this case, the templates will be merged together with the current configuration in the order they are defined. This happens recursively.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">template</span><span class="p">:</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template1</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template2</span>
 </span></code></pre></div>
+</li>
+</ul>
 <p>The button templates will be applied in the order they are defined: <code>template2</code> will be merged with <code>template1</code> and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).</p>
 <p>Make sure which type of lovelace dashboard you are using before changing the main lovelace configuration:</p>
 <ul>

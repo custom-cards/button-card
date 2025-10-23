@@ -1447,17 +1447,17 @@
 <p><img alt="button card grid layout example with callouts" src="../../images/button-card-grid-layout-example-with-callouts.png" /></p>
 <p>Some examples:</p>
 <ul>
-<li>label on top:</li>
-</ul>
+<li>
+<p>label on top:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">styles</span><span class="p">:</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">grid</span><span class="p">:</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">grid-template-areas</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&quot;l&quot;</span><span class="nv"> </span><span class="s">&quot;i&quot;</span><span class="nv"> </span><span class="s">&quot;n&quot;</span><span class="nv"> </span><span class="s">&quot;s&quot;&#39;</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">grid-template-rows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">min-content 1fr min-content min-content</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">grid-template-columns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1fr</span>
 </span></code></pre></div>
-<ul>
-<li>icon on the right side (by overloading an existing layout):</li>
-</ul>
+</li>
+<li>
+<p>icon on the right side (by overloading an existing layout):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;custom:button-card&#39;</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.sensor1</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">layout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">icon_state_name2nd</span>
@@ -1470,9 +1470,9 @@
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">grid-template-areas</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&quot;n</span><span class="nv"> </span><span class="s">i&quot;</span><span class="nv"> </span><span class="s">&quot;s</span><span class="nv"> </span><span class="s">i&quot;</span><span class="nv"> </span><span class="s">&quot;l</span><span class="nv"> </span><span class="s">i&quot;&#39;</span>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">grid-template-columns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1fr 40%</span>
 </span></code></pre></div>
-<ul>
-<li>Apple Homekit-like buttons:</li>
-</ul>
+</li>
+<li>
+<p>Apple Homekit-like buttons:</p>
 <p><img alt="apple-like-buttons" src="../../images/apple_style.gif" /></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch.skylight</span>
@@ -1506,6 +1506,8 @@
 </span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">      </span><span class="nt">icon</span><span class="p">:</span>
 </span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grayscale(100%)</span>
 </span></code></pre></div>
+</li>
+</ul>
 <h2 id="injecting-css-with-extra_styles">Injecting CSS with <code>extra_styles</code><a class="headerlink" href="#injecting-css-with-extra_styles" title="Permanent link">&para;</a></h2>
 <p><strong>Note</strong>: <code>extra_styles</code> <strong>MUST NOT</strong> be used on the first button-card of the current view, else it will be applied to all the cards in all Lovelace. <strong>It is not possible to fix this behaviour.</strong></p>
 <p>You can inject any CSS style you want using this config option. It is useful if you want to inject CSS animations for example. This field supports <a href="../js-templates/">JS Templates</a>.</p>

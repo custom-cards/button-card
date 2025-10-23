@@ -1286,22 +1286,24 @@
 </span></code></pre></div>
 <p>In this second case, you have 2 options:</p>
 <ul>
-<li>Set the value of <code>triggers_update</code> to <code>all</code></li>
-</ul>
+<li>
+<p>Set the value of <code>triggers_update</code> to <code>all</code></p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">triggers_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
 </span></code></pre></div>
-<ul>
-<li>Set the value of <code>triggers_update</code> to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant <code>* templates</code> integration (see <a href="https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id">here</a> for example):</li>
-</ul>
+</li>
+<li>
+<p>Set the value of <code>triggers_update</code> to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant <code>* templates</code> integration (see <a href="https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id">here</a> for example):</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.mysensor</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">triggers_update</span><span class="p">:</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch.myswitch</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light.mylight</span>
 </span></code></pre></div>
-<ol>
-<li>No need to repeat this one in the <code>triggers_update</code> list, it is added by default</li>
-</ol>
+</li>
+<li>
+<p>No need to repeat this one in the <code>triggers_update</code> list, it is added by default</p>
+</li>
+</ul>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>You can also use <a href="../js-templates/">JS Templates</a> in triggers update. In this case, it is only evaluated once, when the card configuration is loaded.</p>
