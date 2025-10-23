@@ -4,3 +4,4 @@
 .rpt2_cache/
 /dist/**
 test-*.html
+docs/public

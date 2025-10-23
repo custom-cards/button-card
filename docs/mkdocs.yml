@@ -1,0 +1,72 @@
+site_name: custom:button-card documentation
+site_url: https://custom-cards.github.io/button-card/
+docs_dir: source
+site_dir: public
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - toc.follow
+    - toc.integrate
+    - navigation.top
+
+  palette:
+    # Palette toggle for automatic mode
+    - media: '(prefers-color-scheme)'
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+use_directory_urls: true
+
+repo_url: https://github.com/custom-cards/button-card
+repo_name: custom-cards/button-card
+
+validation:
+  links:
+    absolute_links: relative_to_docs
+    anchors: warn
+    unrecognized_links: warn
+    not_found: warn
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: relative_to_docs
+
+nav:
+  - Home: 'index.md'
+  - Installation:
+      - 'installation/hacs.md'
+      - 'installation/manual.md'
+
+extra:
+  version:
+    provider: mike
+    default: stable
+    alias: true
+    alias_type: copy
+
+plugins:
+  - mike
+  - search
