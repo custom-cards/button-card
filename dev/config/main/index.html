@@ -544,7 +544,7 @@
 <thead>
 <tr>
 <th>Name</th>
-<th>JS tpl</th>
+<th style="text-align: center;">JS tpl</th>
 <th>Type</th>
 <th>Default</th>
 <th>Supported options</th>
@@ -554,7 +554,7 @@
 <tbody>
 <tr>
 <td><code>type</code></td>
-<td><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>string</td>
 <td><strong>Required</strong></td>
 <td><code>custom:button-card</code></td>
@@ -562,7 +562,7 @@
 </tr>
 <tr>
 <td><code>template</code></td>
-<td><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
+<td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>string</td>
 <td>optional</td>
 <td>any valid template from <code>button_card_templates</code></td>
@@ -570,7 +570,7 @@
 </tr>
 <tr>
 <td><code>entity</code></td>
-<td><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /> <br/>(init only)</td>
+<td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /> <br/>(init only)</td>
 <td>string</td>
 <td>optional</td>
 <td><code>switch.ac</code></td>
@@ -578,7 +578,7 @@
 </tr>
 <tr>
 <td><code>section_mode</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td>optional</td>
 <td><code>true</code> | <code>false</code></td>
 <td>Set it to <code>true</code> when the card is used in a sections view. See <a href="#sections-views">Sections views</a></td>
@@ -586,7 +586,7 @@
 </tr>
 <tr>
 <td><code>triggers_update</code></td>
-<td>string or array</td>
+<td style="text-align: center;">string or array</td>
 <td>optional</td>
 <td><code>switch.ac</code></td>
 <td>entity_id list that would trigger a card update, see <a href="#triggers_update">triggers_update</a></td>
@@ -594,7 +594,7 @@
 </tr>
 <tr>
 <td><code>update_timer</code></td>
-<td>number or string</td>
+<td style="text-align: center;">number or string</td>
 <td>optional</td>
 <td>number &gt;= 100 (ms), string duration in english supported by <code>helpers.parseDuration</code> &gt;= 100 (ms)</td>
 <td>Set to a duration greater than or equal to 100ms to update the card at this refresh rate. This should only be used when the card has no entity and there is no appropriate <a href="#triggers_update">triggers_update</a> strategy. Supports templates, see <a href="#javascript-templates">templates</a>. The template is evaluated on each refresh of the card, be it from the <code>update_timer</code> timeout or trigger update. To maintan dashboard compatability when user locale changes, the duration must be specified in english locale.</td>
@@ -602,7 +602,7 @@
 </tr>
 <tr>
 <td><code>group_expand</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td>false</td>
 <td><code>true</code> | <code>false</code></td>
 <td>When <code>true</code>, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See <a href="#triggers_update">triggers_update</a></td>
@@ -610,7 +610,7 @@
 </tr>
 <tr>
 <td><code>icon</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>mdi:air-conditioner</code></td>
 <td>Icon to display. Will be overridden by the icon defined in a state (if present). Defaults to the entity icon. Hide with <code>show_icon: false</code>. Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -618,7 +618,7 @@
 </tr>
 <tr>
 <td><code>color_type</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td><code>icon</code></td>
 <td><code>icon</code> | <code>card</code> | <code>blank-card</code> | <code>label-card</code></td>
 <td>Color either the background of the card or the icon inside the card. Setting this to <code>card</code> enable automatic <code>font</code> and <code>icon</code> color. This allows the text/icon to be readable even if the background color is bright/dark. Additional color-type options <code>blank-card</code> and <code>label-card</code> can be used for organisation (see examples).</td>
@@ -626,7 +626,7 @@
 </tr>
 <tr>
 <td><code>color</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>auto</code> | <code>auto-no-temperature</code> | <code>rgb(28, 128, 199)</code></td>
 <td>Color of the icon/card. <code>auto</code> sets the color based on the color of a light including the temperature of the light. Setting this to <code>auto-no-temperature</code> will behave like home-assistant's default, ignoring the temperature of the light. By default, if the entity state is <code>off</code>, the color will be <code>var(--state-inactive-color)</code> for icon and <code>var (--card-background-color)</code> for card, for <code>on</code> it will be <code>var(--state-active-color)</code> and for any other state it will be <code>var(--primary-text-color)</code>. You can redefine each colors using <code>state</code></td>
@@ -634,7 +634,7 @@
 </tr>
 <tr>
 <td><code>size</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td><code>40%</code></td>
 <td><code>20px</code></td>
 <td>Size of the icon. Can be percentage or pixel</td>
@@ -642,7 +642,7 @@
 </tr>
 <tr>
 <td><code>aspect_ratio</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>1/1</code>, <code>2/1</code>, <code>1/1.5</code>, ...</td>
 <td>See <a href="#aspect-ratio">here</a> for an example. Aspect ratio of the card. <code>1/1</code> being a square. This will auto adapt to your screen size</td>
@@ -650,7 +650,7 @@
 </tr>
 <tr>
 <td><code>tap_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on click, if undefined, toggle will be used for domains that support toggle, or button press for input_button.</td>
@@ -658,7 +658,7 @@
 </tr>
 <tr>
 <td><code>hold_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on hold, if undefined, nothing happens.</td>
@@ -666,7 +666,7 @@
 </tr>
 <tr>
 <td><code>double_tap_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on double click, if undefined, nothing happens.</td>
@@ -674,7 +674,7 @@
 </tr>
 <tr>
 <td><code>press_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action to execute immediately on button press. If defined, the only other card action allowed is <code>release_action</code></td>
@@ -682,7 +682,7 @@
 </tr>
 <tr>
 <td><code>release_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action to execute on button release. If defined, the only other card action allowed is <code>press_action</code></td>
@@ -690,7 +690,7 @@
 </tr>
 <tr>
 <td><code>icon_tap_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on icon click, if undefined, nothing happens. When configured, the icon becomes clickable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
@@ -698,7 +698,7 @@
 </tr>
 <tr>
 <td><code>icon_hold_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on icon hold, if undefined, nothing happens. When configured, the icon becomes holdable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
@@ -706,7 +706,7 @@
 </tr>
 <tr>
 <td><code>icon_double_tap_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action on icon double click, if undefined, nothing happens. When configured, the icon becomes double-clickable separately from the card. See note in <a href="#icon__action">icon_*_action</a></td>
@@ -714,7 +714,7 @@
 </tr>
 <tr>
 <td><code>icon_press_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action to execute immediately on icon press. If defined, the only other icon action allowed is <code>icon_release_action</code></td>
@@ -722,7 +722,7 @@
 </tr>
 <tr>
 <td><code>icon_release_action</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Action">Action</a></td>
 <td>Define the type of action to execute on icon release. If defined, the only other icon action allowed is <code>icon_press_action</code></td>
@@ -730,7 +730,7 @@
 </tr>
 <tr>
 <td><code>name</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>Air conditioner</code></td>
 <td>Define an optional text to show below the icon. Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -738,7 +738,7 @@
 </tr>
 <tr>
 <td><code>state_display</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>On</code></td>
 <td>Override the way the state is displayed. Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -746,7 +746,7 @@
 </tr>
 <tr>
 <td><code>label</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td>Any string that you want</td>
 <td>Display a label below the card. See <a href="#layout">Layouts</a> for more information. Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -754,7 +754,7 @@
 </tr>
 <tr>
 <td><code>show_name</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>true</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Wether to show the name or not. Will pick entity_id's name by default, unless redefined in the <code>name</code> property or in any state <code>name</code> property</td>
@@ -762,7 +762,7 @@
 </tr>
 <tr>
 <td><code>show_state</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Show the state on the card. defaults to false if not set</td>
@@ -770,7 +770,7 @@
 </tr>
 <tr>
 <td><code>numeric_precision</code></td>
-<td>number</td>
+<td style="text-align: center;">number</td>
 <td>none</td>
 <td>any number</td>
 <td>Force the display precision of the state to be with <code>numeric_precision</code> decimals</td>
@@ -778,7 +778,7 @@
 </tr>
 <tr>
 <td><code>show_icon</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>true</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Wether to show the icon or not. Unless redefined in <code>icon</code>, uses the default entity icon from hass</td>
@@ -786,7 +786,7 @@
 </tr>
 <tr>
 <td><code>show_units</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>true</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Display or hide the units of a sensor, if any.</td>
@@ -794,7 +794,7 @@
 </tr>
 <tr>
 <td><code>show_label</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Display or hide the <code>label</code></td>
@@ -802,7 +802,7 @@
 </tr>
 <tr>
 <td><code>show_last_changed</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Replace the label altogether and display the the <code>last_changed</code> attribute in a nice way (eg: <code>12 minutes ago</code>)</td>
@@ -810,7 +810,7 @@
 </tr>
 <tr>
 <td><code>show_entity_picture</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined</td>
@@ -818,7 +818,7 @@
 </tr>
 <tr>
 <td><code>show_live_stream</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> | <code>false</code></td>
 <td>Display the camera stream (if the entity is a camera). Requires the <code>stream:</code> component to be enabled in home-assistant's config</td>
@@ -826,7 +826,7 @@
 </tr>
 <tr>
 <td><code>live_stream_aspect_ratio</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>16x9</code>, <code>50%</code>, <code>1.78</code> ...</td>
 <td>See home-assistant Picture Entity card <a href="https://www.home-assistant.io/dashboards/picture-entity/#aspect_ratio">aspect_ratio</a> for valid options</td>
@@ -834,7 +834,7 @@
 </tr>
 <tr>
 <td><code>live_stream_fit_mode</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>cover</code>, <code>contain</code>, <code>fill</code></td>
 <td>See home-assistant Picture Entity card <a href="https://www.home-assistant.io/dashboards/picture-entity/#fit_mode">fit_mod</a> for information on how each option works</td>
@@ -842,7 +842,7 @@
 </tr>
 <tr>
 <td><code>entity_picture</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td>Can be any of <code>/local/*</code> file or a URL</td>
 <td>Will override the icon/the default entity_picture with your own image. Best is to use a square image. You can also define one per state. Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -850,7 +850,7 @@
 </tr>
 <tr>
 <td><code>units</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td><code>Kb/s</code>, <code>lux</code>, ...</td>
 <td>Override or define the units to display after the state of the entity. If omitted, it's using the entity's units</td>
@@ -858,7 +858,7 @@
 </tr>
 <tr>
 <td><code>styles</code></td>
-<td>object list</td>
+<td style="text-align: center;">object list</td>
 <td>optional</td>
 <td></td>
 <td>See <a href="#styles">styles</a></td>
@@ -866,7 +866,7 @@
 </tr>
 <tr>
 <td><code>extra_styles</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td></td>
 <td>See <a href="#styles">styles</a></td>
@@ -874,7 +874,7 @@
 </tr>
 <tr>
 <td><code>state</code></td>
-<td>object list</td>
+<td style="text-align: center;">object list</td>
 <td>optional</td>
 <td>See <a href="#State">State</a></td>
 <td>State to use for the color, icon and style of the button. Multiple states can be defined</td>
@@ -882,7 +882,7 @@
 </tr>
 <tr>
 <td><code>confirmation</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#confirmation">confirmation</a></td>
 <td>Display a confirmation popup</td>
@@ -890,7 +890,7 @@
 </tr>
 <tr>
 <td><code>lock</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#lock-object">Lock Object</a></td>
 <td>Displays a lock on the button</td>
@@ -898,7 +898,7 @@
 </tr>
 <tr>
 <td><code>layout</code></td>
-<td>string</td>
+<td style="text-align: center;">string</td>
 <td>optional</td>
 <td>See <a href="#Layout">Layout</a></td>
 <td>The layout of the button can be modified using this option</td>
@@ -906,7 +906,7 @@
 </tr>
 <tr>
 <td><code>custom_fields</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Custom-Fields">Custom Fields</a></td>
 <td></td>
@@ -914,7 +914,7 @@
 </tr>
 <tr>
 <td><code>variables</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>optional</td>
 <td>See <a href="#Variables">Variables</a></td>
 <td></td>
@@ -922,7 +922,7 @@
 </tr>
 <tr>
 <td><code>card_size</code></td>
-<td>number</td>
+<td style="text-align: center;">number</td>
 <td>3</td>
 <td>Any number</td>
 <td>Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px)</td>
@@ -930,7 +930,7 @@
 </tr>
 <tr>
 <td><code>tooltip</code></td>
-<td>string or object</td>
+<td style="text-align: center;">string or object</td>
 <td>optional</td>
 <td>See <a href="#tooltips">Tooltips</a></td>
 <td>Display a tooltip. (Not supported on touchscreens). Supports templates, see <a href="#javascript-templates">templates</a></td>
@@ -938,7 +938,7 @@
 </tr>
 <tr>
 <td><code>hidden</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td>optional</td>
 <td><code>false</code></td>
 <td>Shows or hides the card. Supports templates.</td>
@@ -946,7 +946,7 @@
 </tr>
 <tr>
 <td><code>disable_kbd</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> or <code>false</code></td>
 <td>Disable keyboard <code>enter</code> and <code>space</code> capture on the button itself. Usefull when you have input fields inside the button.</td>
@@ -954,7 +954,7 @@
 </tr>
 <tr>
 <td><code>spinner</code></td>
-<td>boolean</td>
+<td style="text-align: center;">boolean</td>
 <td><code>false</code></td>
 <td><code>true</code> or <code>false</code></td>
 <td>See <a href="#spinner">spinner</a>. If <code>true</code>, it will lock the card and display a spinner. You'll need to use a template or <code>state</code> to make this variable.</td>
@@ -962,7 +962,7 @@
 </tr>
 <tr>
 <td><code>protect</code></td>
-<td>object</td>
+<td style="text-align: center;">object</td>
 <td>none</td>
 <td>See <a href="#protect">protect</a></td>
 <td>Display a password or PIN confirmation popup.</td>
