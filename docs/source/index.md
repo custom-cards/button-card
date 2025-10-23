@@ -1,6 +1,8 @@
 ---
 hide:
   - navigation
+search:
+  exclude: true
 ---
 
 # Welcome to `custom:button-card`'s documentation.
@@ -24,7 +26,7 @@ hide:
 [downloads]: https://img.shields.io/github/downloads/custom-cards/button-card/total
 [hacs-link]: https://hacs.xyz/
 
-![all](assets/all.gif)
+![all](images/all.gif)
 
 button-card is a highly customizable button for your lovelace interfaces.
 
@@ -39,11 +41,11 @@ button-card is a highly customizable button for your lovelace interfaces.
 - custom color (optional), or based on light rgb value/temperature
 - custom state definition with customizable color, icon and style
 - [custom size of the icon, width and height](#Play-with-width-height-and-icon-size)
-- [aspect ratio support](#aspect-ratio)
-- Support for [javascript templates](#javascript-templates)
+- [aspect ratio support](./advanced/aspect-ratio.md)
+- Support for [javascript templates](./advanced/js-templates.md)
 - custom icon
 - custom css style
-- multiple [layout](#Layout) support and [custom layout](#advanced-styling-options) support
+- multiple [layout](./advanced/layout.md) support and [custom layout](#advanced-styling-options) support
 - units for sensors can be redefined or hidden
 - 2 color types
   - `icon` : apply color settings to the icon only
@@ -52,7 +54,7 @@ button-card is a highly customizable button for your lovelace interfaces.
 - blank card and label card (for organization)
 - Native [blink](#blink) animation support
 - icon rotation animation support
-- confirmation popup for sensitive items or [locking mecanism](#lock)
-- password or PIN protection for actions
+- confirmation popup for sensitive items or [locking mecanism](./config/lock.md)
+- [password or PIN protection](./config/actions.md#protect) for actions
 - haptic support for the [IOS companion App](https://companion.home-assistant.io/docs/integrations/haptics)
 - support for [HACS](https://github.com/hacs/integration)

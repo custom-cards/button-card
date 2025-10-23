@@ -2,6 +2,28 @@ site_name: custom:button-card documentation
 site_url: https://custom-cards.github.io/button-card/
 docs_dir: source
 site_dir: public
+
+nav:
+  - Home: 'index.md'
+  - Installation: 'installation.md'
+  - Configuration:
+      - Main Options: 'config/main.md'
+      - Actions object: 'config/actions.md'
+      - Lock object: 'config/lock.md'
+      - State object: 'config/state.md'
+      - Tooltip object: 'config/tooltip.md'
+  - Advanced:
+      - JS Templates: 'advanced/js-templates.md'
+      - Config Templates: 'advanced/config-templates.md'
+      - Triggers Update: 'advanced/triggers-update.md'
+      - Layouts: 'advanced/layout.md'
+      - Aspect Ratio: 'advanced/aspect-ratio.md'
+      - Section Views: 'advanced/section-views.md'
+      - Styling: 'advanced/styling.md'
+      - Custom Fields: 'advanced/custom-fields.md'
+      - Ripple/Hover Effect: 'advanced/ripple.md'
+  - Changelog: 'changelog.md'
+
 theme:
   name: material
   language: en
@@ -16,6 +38,15 @@ theme:
     - toc.follow
     - toc.integrate
     - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - pymdownx.snippets
+    - search.highlight
+    - search.suggest
+    - navigation.footer
+  custom_dir: overrides
+  logo: images/custom-card.png
+  favicon: images/custom-card.png
 
   palette:
     # Palette toggle for automatic mode
@@ -43,6 +74,30 @@ use_directory_urls: true
 repo_url: https://github.com/custom-cards/button-card
 repo_name: custom-cards/button-card
 
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - attr_list
+  - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - js/tablesort.js
+
 validation:
   links:
     absolute_links: relative_to_docs
@@ -54,18 +109,23 @@ validation:
     not_found: warn
     absolute_links: relative_to_docs
 
-nav:
-  - Home: 'index.md'
-  - Installation:
-      - 'installation/hacs.md'
-      - 'installation/manual.md'
-
 extra:
   version:
     provider: mike
     default: stable
     alias: true
     alias_type: copy
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/custom-cards/button-card
+      name: GitHub
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/Qa5fW2R
+      name: Discord
+    - icon: fontawesome/solid/comments
+      link: https://community.home-assistant.io/t/lovelace-button-card/65981
+      name: HA Community
 
 plugins:
   - mike
