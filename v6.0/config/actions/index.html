@@ -1747,7 +1747,7 @@
 <p>Defining a PIN for all actions but one:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light.aquarium</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">protect</span><span class="p">:</span><span class="w"> </span><span class="c1"># globally enables the PIN for all actions</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">protect</span><span class="p">:</span><span class="w"> </span><span class="c1"># (1)!</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">pin</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1234&#39;</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">success_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;PIN</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">correct!&#39;</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">failure_message</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;PIN</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">wrong!&#39;</span>
@@ -1762,8 +1762,12 @@
 </span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">more-info</span>
 </span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.aquarium_temperature</span>
 </span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="nt">protect</span><span class="p">:</span>
-</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="nt">pin</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"> </span><span class="c1"># Setting this to an empty string disables the pin for this action only.</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="nt">pin</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="w"> </span><span class="c1"># (2)!</span>
 </span></code></pre></div>
+<ol>
+<li>Globally enables the PIN for all actions.</li>
+<li>Setting this to an empty string disables the pin for this action only.</li>
+</ol>
 <h2 id="multi-actions">Multi-actions<a class="headerlink" href="#multi-actions" title="Permanent link">&para;</a></h2>
 <p>The <code>action: multi-actions</code> enables you to run several actions in a row with optional delay between them.</p>
 <div class="admonition info">
@@ -1837,7 +1841,6 @@ Also, because it's running in the browser, it means that if you navigate away fr
 <tr>
 <th>Name</th>
 <th style="text-align: center;">JS</th>
-<th></th>
 <th>Type</th>
 <th>Default</th>
 <th>Supported options</th>
@@ -1852,7 +1855,6 @@ Also, because it's running in the browser, it means that if you navigate away fr
 <td>Optional</td>
 <td>any string</td>
 <td>The toast message to display</td>
-<td></td>
 </tr>
 <tr>
 <td><code>duration</code></td>
@@ -1861,7 +1863,6 @@ Also, because it's running in the browser, it means that if you navigate away fr
 <td>Optional</td>
 <td>any number</td>
 <td>The message will be displayed for <code>duration</code> ms</td>
-<td></td>
 </tr>
 <tr>
 <td><code>dismissable</code></td>
@@ -1870,7 +1871,6 @@ Also, because it's running in the browser, it means that if you navigate away fr
 <td>Optional</td>
 <td><code>true</code> or <code>false</code></td>
 <td>If the toast message is dismissable</td>
-<td></td>
 </tr>
 <tr>
 <td><code>action</code></td>
@@ -1879,7 +1879,6 @@ Also, because it's running in the browser, it means that if you navigate away fr
 <td>Optional</td>
 <td>See <a href="#toast-actions">toast actions</a></td>
 <td>If defined, will display a button on the toast message and if clicked, an action will be triggered</td>
-<td></td>
 </tr>
 </tbody>
 </table>
