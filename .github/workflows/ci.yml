@@ -67,7 +67,9 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: docs/requirements.txt
-      - run: pip install -r docs/requirements.txt
-      - run: |
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+      - name: Build with MkDocs strict
+        run: |
           cd docs
           mkdocs build --strict
