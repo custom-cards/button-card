@@ -711,6 +711,10 @@ class ButtonCard extends LitElement {
       toast: (params: ShowToastParams) => {
         return this._sendToastMessage.bind(this)(params);
       },
+      runAction: (actionConfig: ActionConfig) => {
+        const localAction = this._evalActions(this._config!, actionConfig);
+        this._buildActionConfig(localAction);
+      },
     };
   }
 
@@ -1957,17 +1961,15 @@ class ButtonCard extends LitElement {
       const action = ev.detail.action;
       const actionKey = options.isIcon ? `icon_${action}_action` : `${action}_action`;
       if (this._isActionDoingSomething(this._stateObj, config[actionKey])) {
-        this._buildActionConfig(actionKey);
+        // always returns the action in NORMALISED_ACTION for easier handling
+        const localAction = this._evalActions(config, config[actionKey]);
+        this._buildActionConfig(localAction);
       }
     }
   }
 
-  private _buildActionConfig(actionKey: string): void {
-    const config = this._config;
-    if (!config) return;
-    // always returns the action in NORMALISED_ACTION for easier handling
-    const localAction = this._evalActions(config, config[actionKey]);
-
+  private _buildActionConfig(localAction?: ActionEventData): void {
+    if (!localAction) return;
     if (localAction[NORMALISED_ACTION]?.protect?.pin) {
       (window as any).cardHelpers.showEnterCodeDialog(this, {
         submit: (code: string) => this._protectedConfirmedCallback.bind(this)(code, 'pin'),

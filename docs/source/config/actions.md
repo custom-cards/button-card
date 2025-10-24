@@ -259,9 +259,20 @@ tap_action:
       navigation_path: /lovelace/0
 ```
 
-1. This script runs for 10 seconds, keeping its state to "on"
-2. Safeguard
-3. This will be called once the script has finished running (state will be "off")
+1.  This script runs for 10 seconds, keeping its state to "on"
+
+    `script.delay_script`'s config for the sake of the example:
+
+    ```yaml title="configuration.yaml"
+    script:
+      delay_script:
+        alias: Delay Script
+        sequence:
+          - delay: '00:00:10'
+    ```
+
+2.  Safeguard
+3.  This will be called once the script has finished running (state will be "off")
 
 ## Toast Message
 
@@ -382,5 +393,30 @@ tap_action:
           }
         }
       )
+    ]]]
+```
+
+## `runAction` JS helper
+
+`helpers.runAction(actionConfig)` is a [JS Template](../advanced/js-templates.md) helper function which takes an [action](./actions.md) object as a parameter and runs the action. All the button-card action options and types are supported.
+
+Eg:
+
+```yaml
+type: 'custom:button-card'
+icon: mdi:console
+name: helper.runAction
+tap_action:
+  action: javascript
+  javascript: |
+    [[[
+      const action = {
+        action: "toggle",
+        entity: "switch.skylight",
+        protect: {
+          pin: "1234"
+        }
+      }
+      helpers.runAction(action);
     ]]]
 ```
