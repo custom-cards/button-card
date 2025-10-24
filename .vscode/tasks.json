@@ -68,6 +68,13 @@
         "-c",
         "sudo killall hass; sudo kill $(ps au | grep 'node.*rollup' | grep -v grep | awk {'print $2'}); exit 0;"
       ]
+    },
+    {
+      "label": "MkDocs Watch",
+      "group": "test",
+      "type": "shell",
+      "command": "cd docs && mkdocs serve --livereload",
+      "isBackground": true
     }
   ]
 }

@@ -4,57 +4,70 @@ on:
   pull_request:
     branches:
       - '*'
-  push:
-    branches:
-      - '*'
+
+env:
+  NODE_VERSION: '24.x'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   lint:
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4.4.0
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - name: Cache Node.js modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          path: node_modules
+          key: ${{ runner.OS }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-${{ matrix.node-version }}
+            ${{ runner.OS }}-node-${{ env.NODE_VERSION }}
             ${{ runner.OS }}-
+      - name: Install yarn for ACT (local testing)
+        if: ${{ env.ACT }}
+        run: npm install -g yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint the code
         run: npm run lint --if-present
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
       - uses: actions/checkout@v5
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4.4.0
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - name: Cache Node.js modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          path: node_modules
+          key: ${{ runner.OS }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-${{ matrix.node-version }}
+            ${{ runner.OS }}-node-${{ env.NODE_VERSION }}
             ${{ runner.OS }}-
+      - name: Install yarn for ACT (local testing)
+        if: ${{ env.ACT }}
+        run: npm install -g yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build the project
         run: npm run build --if-present
+
+  mkdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - run: pip install -r docs/requirements.txt
+      - run: |
+          cd docs
+          mkdocs build --strict

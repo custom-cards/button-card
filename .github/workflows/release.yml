@@ -2,12 +2,12 @@ name: Release
 
 on: workflow_dispatch
 
+env:
+  NODE_VERSION: '24.x'
+  PYTHON_VERSION: '3.13'
+
 jobs:
   release-bundle:
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
 
@@ -17,21 +17,47 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4.4.0
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - name: Cache Node.js modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          path: node_modules
+          key: ${{ runner.OS }}-node-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.OS }}-node-${{ matrix.node-version }}
+            ${{ runner.OS }}-node-${{ env.NODE_VERSION }}
             ${{ runner.OS }}-
+      - name: Install yarn for ACT (local testing)
+        if: ${{ env.ACT }}
+        run: npm install -g yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Release docs
+      - name: Setup python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - run: pip install -r docs/requirements.txt
+      - name: Build and publish dev documentation
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          cd docs
+          mike deploy -u -p --allow-empty dev
+      - name: Build and publish stable documentation
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "Getting version from package.json"
+          cat package.json | jq -r .version
+          echo Publishing documentation (only major.minor)
+          VERSION=$(cat package.json | jq -r .version | cut -d '.' -f 1,2)
+          cd docs
+          mike deploy -u -p --allow-empty "v${VERSION}" stable
