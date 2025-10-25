@@ -1790,7 +1790,7 @@ views:
 
           - type: 'custom:button-card'
             icon: mdi:console
-            name: helper.runAction
+            name: helpers.runAction
             tap_action:
               action: javascript
               javascript: |
@@ -1804,6 +1804,25 @@ views:
                   }
                   helpers.runAction(action);
                 ]]]
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
+
+          - type: 'custom:button-card'
+            icon: mdi:console
+            name: var helpers.runAction
+            variables:
+              my_action:
+                action: perform-action
+                perform_action: switch.toggle
+                target:
+                  entity_id: switch.skylight
+                protect:
+                  pin: '1234'
+            tap_action:
+              action: javascript
+              javascript: '[[[ helpers.runAction(variables.my_action); ]]]'
             section_mode: true
             grid_options:
               rows: 2

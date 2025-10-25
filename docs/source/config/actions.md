@@ -398,25 +398,46 @@ tap_action:
 
 ## `runAction` JS helper
 
-`helpers.runAction(actionConfig)` is a [JS Template](../advanced/js-templates.md) helper function which takes an [action](./actions.md) object as a parameter and runs the action. All the button-card action options and types are supported.
+If for any reason, you want to run an action directly from javascript, `helpers.runAction(actionConfig)` is a [JS Template](../advanced/js-templates.md) helper function which takes an [action](./actions.md) object as a parameter and runs the action. All the button-card action options and types are supported.
 
 Eg:
 
-```yaml
-type: 'custom:button-card'
-icon: mdi:console
-name: helper.runAction
-tap_action:
-  action: javascript
-  javascript: |
-    [[[
-      const action = {
-        action: "toggle",
-        entity: "switch.skylight",
-        protect: {
-          pin: "1234"
-        }
-      }
-      helpers.runAction(action);
-    ]]]
-```
+* With the action defined directly in the template:
+
+      ```yaml
+      type: 'custom:button-card'
+      icon: mdi:console
+      name: helper.runAction
+      tap_action:
+        action: javascript
+        javascript: |
+          [[[
+            const action = {
+              action: "toggle",
+              entity: "switch.skylight",
+              protect: {
+                pin: "1234"
+              }
+            }
+            helpers.runAction(action);
+          ]]]
+      ```
+
+- With the action defined in a variable:
+
+      ```yaml
+      type: 'custom:button-card'
+      icon: mdi:console
+      name: helper.runAction
+      variables:
+        my_action:
+          action: perform-action
+          perform_action: switch.turn_on
+          target:
+            entity_id: switch.my_switch
+          protect:
+            pin: '1234'
+      tap_action:
+        action: javascript
+        javascript: '[[[ helpers.runAction(variables.my_action); ]]]'
+      ```
