@@ -2351,6 +2351,16 @@ views:
             grid_options:
               rows: 2
               columns: 4
+          - type: 'custom:button-card'
+            entity: switch.skylight
+            name: 'show_ripple:<br/>false'
+            show_ripple: false
+            tap_action:
+              action: toggle
+            section_mode: true
+            grid_options:
+              rows: 2
+              columns: 4
       - type: grid
         cards:
           - type: 'custom:button-card'

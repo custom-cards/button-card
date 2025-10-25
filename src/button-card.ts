@@ -1141,13 +1141,13 @@ class ButtonCard extends LitElement {
     const hasChildCards =
       this._hasChildCards(this._config!.custom_fields) ||
       !!(configState && this._hasChildCards(configState.custom_fields));
-
+    const rippleEnabled = this._getTemplateOrValue(state, this._config!.show_ripple);
     const cardHasActions = tapActive || holdActive || doubleTapActive || pressActive || releaseActive;
     this._cardClickable = cardHasActions || hasChildCards;
     this._hasIconActions =
       iconTapActive || iconHoldActive || iconDoubleTapActive || iconPressActive || iconReleaseActive;
     this._iconClickable = this._cardClickable || this._hasIconActions;
-    this._cardRipple = cardHasActions || this._hasIconActions;
+    this._cardRipple = rippleEnabled ?? (cardHasActions || this._hasIconActions);
     this._cardMomentary = pressActive || releaseActive;
     this._iconMomentary = iconPressActive || iconReleaseActive;
   }

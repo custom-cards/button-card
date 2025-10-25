@@ -20,6 +20,7 @@
 | `show_units` | :no_entry_sign: | boolean | `true` | `true` \| `false` | Display or hide the units of a sensor, if any. |
 | `show_label` | :no_entry_sign: | boolean | `false` | `true` \| `false` | Display or hide the `label` |
 | `show_last_changed` | :no_entry_sign: | boolean | `false` | `true` \| `false` | Replace the label altogether and display the the `last_changed` attribute in a nice way (eg: `12 minutes ago`) |
+| `show_ripple` | [:white_check_mark:](../advanced/js-templates.md) | boolean | optional | `true` or `false` | If defined, this will enable or disable the ripple/hover effect on the card. If undefined, the ripple/hover effect is automatically enabled if the card has at least an action defined (including the default one based on the entity). |
 | `show_entity_picture` | :no_entry_sign: | boolean | `false` | `true` \| `false` | Replace the icon by the entity picture (if any) or the custom picture (if any). Falls back to using the icon if both are undefined |
 | `show_live_stream` | :no_entry_sign: | boolean | `false` | `true` \| `false` | Display the camera stream (if the entity is a camera). Requires the `stream:` component to be enabled in home-assistant's config |
 | `live_stream_aspect_ratio` | :no_entry_sign: | string | optional | `16x9`, `50%`, `1.78` ... | See home-assistant Picture Entity card [aspect_ratio](https://www.home-assistant.io/dashboards/picture-entity/#aspect_ratio) for valid options |

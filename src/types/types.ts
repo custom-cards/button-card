@@ -33,6 +33,7 @@ export interface ButtonCardConfig {
   show_last_changed?: boolean;
   show_label?: boolean;
   show_live_stream?: boolean;
+  show_ripple?: boolean;
   live_stream_aspect_ratio?: string;
   live_stream_fit_mode?: 'cover' | 'contain' | 'fill';
   label?: string;
@@ -93,6 +94,7 @@ export interface ExternalButtonCardConfig {
   show_last_changed?: boolean;
   show_label?: boolean;
   show_live_stream?: boolean;
+  show_ripple?: boolean;
   label?: string;
   entity_picture?: string;
   units?: string;
