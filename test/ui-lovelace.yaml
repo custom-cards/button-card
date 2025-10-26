@@ -2936,7 +2936,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             section_mode: true
             grid_options:
               rows: 2
@@ -3234,7 +3233,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             styles:
               tooltip:
                 - '--button-card-tooltip-text-align': right
@@ -3248,7 +3246,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             styles:
               tooltip:
                 - '--button-card-tooltip-padding': 1em 2em
@@ -3262,7 +3259,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             styles:
               tooltip:
                 - '--button-card-tooltip-border-color': red
@@ -3278,7 +3274,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             styles:
               tooltip:
                 - '--button-card-tooltip-border-radius': 50px
@@ -3292,7 +3287,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
               arrow: true
             styles:
               tooltip:
@@ -3307,7 +3301,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
               arrow: true
             styles:
               tooltip:
@@ -3322,7 +3315,6 @@ views:
             tooltip:
               content: |
                 This is a tooltip a very very very long text that should not wrap but extend to full width
-
               arrow: true
             styles:
               tooltip:
@@ -3352,7 +3344,6 @@ views:
               distance: -50
               content: |
                 This is a tooltip<br/> that spans multiple<br/> lines
-
             styles:
               tooltip:
                 - 'pointer-events': none
