@@ -245,7 +245,9 @@ class ButtonCard extends LitElement {
 
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._pStates = this._createStateProxy(this._hass);
+    if (!this._pStates) {
+      this._pStates = this._createStateProxy();
+    }
     Object.keys(this._cards).forEach((element) => {
       const el = this._cards[element];
       el.hass = this._hass;
@@ -255,16 +257,19 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _createStateProxy(hass: HomeAssistant): HassEntities {
-    return new Proxy(hass.states, {
-      get: (__target, prop: string) => {
-        if (prop.includes('.') && !this._entities.includes(prop)) {
-          this._entities.push(prop);
-          this._expandTriggerGroups();
-        }
-        return this._hass?.states[prop];
+  private _createStateProxy(): HassEntities {
+    return new Proxy(
+      {},
+      {
+        get: (__target, prop: string) => {
+          if (prop.includes('.') && !this._entities.includes(prop)) {
+            this._entities.push(prop);
+            this._expandTriggerGroups();
+          }
+          return this._hass?.states?.[prop];
+        },
       },
-    });
+    );
   }
 
   public disconnectedCallback(): void {
