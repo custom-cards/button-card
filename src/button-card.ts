@@ -268,6 +268,9 @@ class ButtonCard extends LitElement {
           }
           return this._hass?.states?.[prop];
         },
+        has: (__target, prop: string) => {
+          return !!this._hass?.states?.[prop];
+        },
       },
     );
   }
