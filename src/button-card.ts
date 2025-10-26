@@ -259,7 +259,6 @@ class ButtonCard extends LitElement {
     return new Proxy(hass.states, {
       get: (__target, prop: string) => {
         if (prop.includes('.') && !this._entities.includes(prop)) {
-          console.log(`button-card: Detected access to states['${prop}']`);
           this._entities.push(prop);
           this._expandTriggerGroups();
         }
@@ -742,7 +741,10 @@ class ButtonCard extends LitElement {
         this._pStates,
         state,
         this._hass!.user,
-        this._hass,
+        {
+          ...this._hass,
+          states: this._pStates,
+        },
         this._evaledVariables,
         html,
         this._getTemplateHelpers(),
