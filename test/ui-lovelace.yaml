@@ -3512,6 +3512,19 @@ views:
             const ac = "switch.ac";
             return `AC: ${states[ac].state}`;
           ]]]
+        custom_fields:
+          nested:
+            card:
+              type: custom:button-card
+              entity: switch.ac
+        styles:
+          custom_fields:
+            nested:
+              - position: absolute
+              - top: 5px
+              - right: 5px
+              - width: 20%
+              - height: 20%
 
   - title: Grid
     type: sections
