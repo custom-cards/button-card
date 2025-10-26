@@ -7,7 +7,7 @@ import { until } from 'lit/directives/until.js';
 import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html';
 import { classMap, ClassInfo } from 'lit-html/directives/class-map';
-import { HassEntity } from 'home-assistant-js-websocket';
+import { HassEntities, HassEntity } from 'home-assistant-js-websocket';
 import { LovelaceCard } from './types/lovelace';
 import {
   ButtonCardConfig,
@@ -168,6 +168,8 @@ class ButtonCard extends LitElement {
 
   @queryAsync('ha-ripple') private _ripple!: Promise<HaRipple | null>;
 
+  private _pStates?: HassEntities;
+
   private _triggersAll?: boolean;
 
   private _stateObj: HassEntity | undefined;
@@ -243,6 +245,7 @@ class ButtonCard extends LitElement {
 
   public set hass(hass: HomeAssistant) {
     this._hass = hass;
+    this._pStates = this._createStateProxy(this._hass);
     Object.keys(this._cards).forEach((element) => {
       const el = this._cards[element];
       el.hass = this._hass;
@@ -250,6 +253,19 @@ class ButtonCard extends LitElement {
     if (!this._initialSetupComplete) {
       this._finishSetup();
     }
+  }
+
+  private _createStateProxy(hass: HomeAssistant): HassEntities {
+    return new Proxy(hass.states, {
+      get: (__target, prop: string) => {
+        if (prop.includes('.') && !this._entities.includes(prop)) {
+          console.log(`button-card: Detected access to states['${prop}']`);
+          this._entities.push(prop);
+          this._expandTriggerGroups();
+        }
+        return this._hass?.states[prop];
+      },
+    });
   }
 
   public disconnectedCallback(): void {
@@ -375,15 +391,6 @@ class ButtonCard extends LitElement {
         } else {
           this._config!.triggers_update = result;
         }
-      }
-      if (this._config!.triggers_update !== 'all') {
-        const entitiesRxp = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'gm');
-        const entitiesRxp2 = new RegExp(/states\[\s*('|\\")([a-zA-Z0-9_]+\.[a-zA-Z0-9_]+)\1\s*\]/, 'm');
-        const matched = jsonConfig.match(entitiesRxp);
-        matched?.forEach((match) => {
-          const res = match.match(entitiesRxp2);
-          if (res && !this._entities.includes(res[2])) this._entities.push(res[2]);
-        });
       }
       if (this._config!.entity && !this._entities.includes(this._config!.entity))
         this._entities.push(this._config!.entity);
@@ -732,7 +739,7 @@ class ButtonCard extends LitElement {
         `'use strict'; ${func}`,
       ).call(
         this,
-        this._hass!.states,
+        this._pStates,
         state,
         this._hass!.user,
         this._hass,

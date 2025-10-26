@@ -3503,6 +3503,16 @@ views:
                 actions:
                   - delay: 10000
 
+      - type: custom:button-card
+        entity: switch.skylight
+        name: Access other entity states (no triggers_update)
+        show_label: true
+        label: |
+          [[[
+            const ac = "switch.ac";
+            return `AC: ${states[ac].state}`;
+          ]]]
+
   - title: Grid
     type: sections
     sections:
