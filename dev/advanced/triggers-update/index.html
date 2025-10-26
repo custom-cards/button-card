@@ -73,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#configuration-options" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -745,6 +750,19 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Triggers Update
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -756,6 +774,41 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deprecated
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1274,30 +1327,40 @@
 
   <h1>Triggers Update</h1>
 
-<p>This field defines which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in <code>custom_fields</code> as they are always updated with the latest state. This is expected and fast!).</p>
+<h2 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
+<p>If you don't have <a href="../js-templates/">JS templates</a> in your config, you don't need to do anything, else read further.</p>
+<p>By default, the card will update itself when:</p>
+<ul>
+<li>The main entity of the card is updated</li>
+<li>Any entity used in any of the JS Templates is updated</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If any entity is a group, you might want to set <code>group_expand: true</code>. This will expand the group and also update the card if any entities in the group is updated</p>
+</div>
 <p>If you are using <code>update_timer</code> you can set <code>triggers_update: update_timer</code> which will <strong>ONLY</strong> update at the timer interval. If <code>update_timer</code> is a template, the template is checked whenever hass entities update.</p>
-<p>If you don't have javascript <code>[[[ ]]]</code> templates in your config, you don't need to do anything, else read further.</p>
-<p>By default, the card will update itself when the main entity in the configuration is updated. In any case, the card will parse your code and look for entities that it can match (<strong>it only matches the format <code>states['ENTITY_ID']</code></strong>) so:</p>
-<div class="language-js highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// This will match switch.myswitch and add switch.myswitch to the trigger list</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">return</span><span class="w"> </span><span class="nx">states</span><span class="p">[</span><span class="s1">&#39;switch.myswitch&#39;</span><span class="p">].</span><span class="nx">state</span><span class="p">;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">// but this won&#39;t match anything</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;switch.myswitch&#39;</span><span class="p">;</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">return</span><span class="w"> </span><span class="nx">states</span><span class="p">[</span><span class="nx">entity</span><span class="p">].</span><span class="nx">state</span><span class="p">;</span>
-</span></code></pre></div>
-<p>In this second case, you have 2 options:</p>
+<p>If no entity is suitable for <code>triggers_update</code> you may consider to use <code>update_timer</code>.</p>
+<h2 id="deprecated">Deprecated<a class="headerlink" href="#deprecated" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Deprecated</p>
+<p>The pre <code>v6.1.0</code> configuration shouldn't be used anymore.</p>
+</div>
+<p>By setting this configuration option, you can set which entities should trigger an update of the card itself (this rule doesn't apply for nested cards in <code>custom_fields</code> as they are always updated with the latest state.</p>
+<p>You can change this behavior by setting <code>triggers_update</code> to:</p>
 <ul>
 <li>
 <p>Set the value of <code>triggers_update</code> to <code>all</code></p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">triggers_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
+<p>This will update the card whenever <strong>any</strong> entity is updated (could make your frontend very slow)</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">triggers_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all</span>
 </span></code></pre></div>
 </li>
 <li>
 <p>Set the value of <code>triggers_update</code> to a list of entities. When any of the entities in this list is updated, the card will be updated. The logic is the same as the internal home-assistant <code>* templates</code> integration (see <a href="https://www.home-assistant.io/integrations/binary_sensor.template/#entity_id">here</a> for example):</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.mysensor</span><span class="w"> </span><span class="c1"># (1)!</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">triggers_update</span><span class="p">:</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch.myswitch</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light.mylight</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom:button-card</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.mysensor</span><span class="w"> </span><span class="c1"># (1)!</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">triggers_update</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch.myswitch</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light.mylight</span>
 </span></code></pre></div>
 <ol>
 <li>No need to repeat this one in the <code>triggers_update</code> list, it is added by default</li>
@@ -1308,8 +1371,6 @@
 <p class="admonition-title">Info</p>
 <p>You can also use <a href="../js-templates/">JS Templates</a> in triggers update. In this case, it is only evaluated once, when the card configuration is loaded.</p>
 </div>
-<p>If your entity, any entity in the <code>triggers_update</code> field or any entity matched from your templates are a group and you want to update the card if any of the nested entity in that group update its state, then you can set <code>group_expand</code> to <code>true</code>. It will do the work for you and you won't have to specify manually the full list of entities in <code>triggers_update</code>.</p>
-<p>If no entity is suitable for <code>triggers_update</code> you may consider to use <code>update_timer</code>.</p>
 
 
 
