@@ -168,6 +168,8 @@ class ButtonCard extends LitElement {
 
   @queryAsync('ha-ripple') private _ripple!: Promise<HaRipple | null>;
 
+  private _pHass?: HomeAssistant;
+
   private _pStates?: HassEntities;
 
   private _triggersAll?: boolean;
@@ -248,6 +250,10 @@ class ButtonCard extends LitElement {
     if (!this._pStates) {
       this._pStates = this._createStateProxy();
     }
+    this._pHass = {
+      ...hass,
+      states: this._pStates,
+    };
     Object.keys(this._cards).forEach((element) => {
       const el = this._cards[element];
       el.hass = this._hass;
@@ -749,10 +755,7 @@ class ButtonCard extends LitElement {
         this._pStates,
         state,
         this._hass!.user,
-        {
-          ...this._hass,
-          states: this._pStates,
-        },
+        this._pHass,
         this._evaledVariables,
         html,
         this._getTemplateHelpers(),
