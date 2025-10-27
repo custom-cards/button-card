@@ -1175,7 +1175,10 @@ class ButtonCard extends LitElement {
   }
 
   private _rotate(configState: StateConfig | undefined): boolean {
-    return configState?.spin ? true : false;
+    return !!(
+      this._getTemplateOrValue(this._stateObj, configState?.spin) ??
+      this._getTemplateOrValue(this._stateObj, this._config?.spin)
+    );
   }
 
   private _blankCardColoredHtml(cardStyle: StyleInfo): TemplateResult {

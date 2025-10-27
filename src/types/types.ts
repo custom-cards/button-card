@@ -57,6 +57,7 @@ export interface ButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
+  spin?: boolean;
 }
 
 export interface GridOptions {
@@ -116,6 +117,7 @@ export interface ExternalButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
+  spin?: boolean;
 }
 
 export type Layout =
