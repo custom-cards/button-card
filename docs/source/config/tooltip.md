@@ -107,6 +107,6 @@ In addition to the CSS variables above, you can also style parts of the popup di
 | Part | Targets | Usage |
 | --- | --- | --- |
 | `#tooltip::part(base)` | The component's base wrapper, an <wa-popup> element. | `#tooltip::part(body) { pointer-events: none; }` |
-| `#tooltip::part(base_popup)` | The popup's exported popup part. Use this to target the tooltip's popup container. | `#tooltip::part(base_popup) { transform: rotate(90deg) translateY(-100px); }` |
-| `#tooltip::part(base_arrow)` | The popup's exported arrow part. Use this to target the tooltip's arrow. | `#tooltip::part(base_arrow) { background-color: red; }` |
+| `#tooltip::part(base__popup)` | The popup's exported popup part. Use this to target the tooltip's popup container. | `#tooltip::part(base__popup) { transform: rotate(90deg) translateY(-100px); }` |
+| `#tooltip::part(base__arrow)` | The popup's exported arrow part. Use this to target the tooltip's arrow. | `#tooltip::part(base__arrow) { background-color: red; }` |
 | `#tooltip::part(body)` | Tooltip's body where the content is rendered | `#tooltip::part(body) { background-color: red; }` |
