@@ -1,5 +1,5 @@
 import { PropertyValues } from 'lit';
-import tinycolor, { TinyColor } from '@ctrl/tinycolor';
+import { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, ResolvedMediaSource } from './types/homeassistant';
 import {
   LovelaceConfig,
@@ -29,7 +29,6 @@ export function computeEntity(entityId: string): string {
 export const computeStateDomain = (stateObj: HassEntity) => computeDomain(stateObj.entity_id);
 
 export function getColorFromVariable(elt: Element, color: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const colorArray: string[] = [];
   let result = color;
   if (color.trim().substring(0, 3) === 'var') {
@@ -74,13 +73,9 @@ export function getLightColorBasedOnTemperature(current: number, min: number, ma
   const middle = new TinyColor('white');
   const mixAmount = ((current - min) / (max - min)) * 100;
   if (mixAmount < 50) {
-    return tinycolor(low)
-      .mix(middle, mixAmount * 2)
-      .toRgbString();
+    return low.mix(middle, mixAmount * 2).toRgbString();
   } else {
-    return tinycolor(middle)
-      .mix(high, (mixAmount - 50) * 2)
-      .toRgbString();
+    return middle.mix(high, (mixAmount - 50) * 2).toRgbString();
   }
 }
 
@@ -196,7 +191,6 @@ export function getLovelaceCast(): any {
 }
 
 export function getLovelace(): LovelaceConfig | null {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let root: any = document.querySelector('home-assistant');
   root = root && root.shadowRoot;
   root = root && root.querySelector('home-assistant-main');

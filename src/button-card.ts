@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { LitElement, html, TemplateResult, CSSResult, PropertyValues, nothing } from 'lit';
-import { customElement, property, queryAsync } from 'lit/decorators';
+import { customElement, property, queryAsync } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { until } from 'lit/directives/until.js';
-import { styleMap, StyleInfo } from 'lit-html/directives/style-map';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html';
-import { classMap, ClassInfo } from 'lit-html/directives/class-map';
+import { styleMap, StyleInfo } from 'lit-html/directives/style-map.js';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+import { classMap, ClassInfo } from 'lit-html/directives/class-map.js';
 import { HassEntities, HassEntity } from 'home-assistant-js-websocket';
 import { LovelaceCard } from './types/lovelace';
 import {
@@ -145,7 +143,6 @@ console.info(
 });
 
 declare global {
-  // eslint-disable-next-line
   interface HASSDomEvents {
     'card-visibility-changed': null;
   }
@@ -304,6 +301,7 @@ class ButtonCard extends LitElement {
       variablesNameOrdered.forEach((variable) => {
         try {
           this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {}
       });
     }
@@ -395,6 +393,7 @@ class ButtonCard extends LitElement {
             if (evaluatedEntry !== undefined && evaluatedEntry !== null && !this._entities.includes(evaluatedEntry)) {
               this._entities.push(evaluatedEntry);
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (e) {}
         });
       } else if (typeof this._config!.triggers_update === 'string') {
@@ -630,7 +629,6 @@ class ButtonCard extends LitElement {
     show_units = true,
     units?: string,
   ): string {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     return computeStateDisplay(
       this._hass!.localize,
       stateObj,
@@ -1961,7 +1959,9 @@ class ButtonCard extends LitElement {
             insetStyle = `${iconInset.top}px ${iconInset.right}px ${iconInset.bottom}px ${iconInset.left}px`;
           }
           r.setAttribute('icon', '');
-          insetStyle != '' && r.style.setProperty('--dynamic-ripple-icon-inset', insetStyle);
+          if (insetStyle != '') {
+            r.style.setProperty('--dynamic-ripple-icon-inset', insetStyle);
+          }
         } else if (ev.type === 'pointerleave') {
           r.removeAttribute('icon');
           r.style.removeProperty('--dynamic-ripple-icon-inset');
@@ -2192,8 +2192,8 @@ class ButtonCard extends LitElement {
     const event = ev.type?.startsWith('touch')
       ? new TouchEvent(ev.type, ev)
       : ev.type?.startsWith('mouse')
-      ? new MouseEvent(ev.type, ev)
-      : new CustomEvent(ev.type, ev);
+        ? new MouseEvent(ev.type, ev)
+        : new CustomEvent(ev.type, ev);
     ev.stopPropagation();
     this.parentElement?.dispatchEvent(event);
     // Send non-bubbling event to ha-card to allow ripples

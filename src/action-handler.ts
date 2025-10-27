@@ -1,7 +1,7 @@
 import { noChange } from 'lit-html';
 import { fireEvent } from './common/fire-event';
 import { deepEqual } from './deep-equal';
-import { AttributePart, Directive, DirectiveParameters, directive } from 'lit-html/directive';
+import { AttributePart, Directive, DirectiveParameters, directive } from 'lit-html/directive.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -310,7 +310,7 @@ export const actionHandler = directive(
       return noChange;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     render(_options?: ActionHandlerOptions) {}
   },
 );

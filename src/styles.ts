@@ -174,7 +174,9 @@ export const styles = css`
   .hidden {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s 1s, opacity 1s linear;
+    transition:
+      visibility 0s 1s,
+      opacity 1s linear;
   }
   @keyframes blink {
     0% {
