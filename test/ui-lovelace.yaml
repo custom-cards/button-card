@@ -1699,7 +1699,8 @@ views:
             icon: mdi:console
             name: multi-actions
             variables:
-              delay: 3s
+              zz: 3s
+              delay: '[[[ return variables.zz; ]]]'
             tap_action:
               confirmation:
                 text: Do you want to run multiple-actions?

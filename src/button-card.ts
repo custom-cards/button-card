@@ -175,6 +175,10 @@ class ButtonCard extends LitElement {
 
   private _evaledVariables: any | undefined;
 
+  private _pVariables: any | undefined;
+
+  private _varLoopDetect = {};
+
   private _interval?: number;
 
   private _updateTimeout: number | undefined;
@@ -247,6 +251,9 @@ class ButtonCard extends LitElement {
     if (!this._pStates) {
       this._pStates = this._createStateProxy();
     }
+    if (!this._pVariables) {
+      this._pVariables = this._createVariablesProxy();
+    }
     this._pHass = {
       ...hass,
       states: this._pStates,
@@ -273,6 +280,29 @@ class ButtonCard extends LitElement {
         },
         has: (__target, prop: string) => {
           return !!this._hass?.states?.[prop];
+        },
+      },
+    );
+  }
+
+  private _createVariablesProxy(): any {
+    return new Proxy(
+      {},
+      {
+        get: (__target, prop: string) => {
+          if (this._evaledVariables?.[prop]) {
+            return this._evaledVariables[prop];
+          } else {
+            if (this._config?.variables?.[prop]) {
+              if (this._varLoopDetect[prop]) {
+                throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
+              }
+              this._varLoopDetect[prop] = true;
+              this._evaledVariables[prop] = this._getTemplateOrValue(this._stateObj, this._config!.variables![prop]);
+              delete this._varLoopDetect[prop];
+              return this._evaledVariables[prop];
+            }
+          }
         },
       },
     );
@@ -309,15 +339,15 @@ class ButtonCard extends LitElement {
 
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._evaluateVariablesSkipError();
-
       if (this._config!.entity) {
-        const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
-        this._config!.entity = entityEvaled;
-        this._stateObj = this._hass!.states[entityEvaled];
+        try {
+          const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
+          this._config!.entity = entityEvaled;
+          this._stateObj = this._hass!.states[entityEvaled];
+        } catch (e) {
+          console.warn(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
+        }
       }
-
-      this._evaluateVariablesSkipError(this._stateObj);
 
       if (
         !this._isActionDoingSomething(this._stateObj, this._config!.press_action) &&
@@ -445,15 +475,7 @@ class ButtonCard extends LitElement {
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
       this._evaledVariables = {};
-      if (this._config?.variables) {
-        const variablesNameOrdered = Object.keys(this._config.variables).sort();
-        variablesNameOrdered.forEach((variable) => {
-          this._evaledVariables[variable] = this._objectEvalTemplate(
-            this._stateObj,
-            this._config!.variables![variable],
-          );
-        });
-      }
+      this._varLoopDetect = {};
       return this._cardHtml();
     } catch (e: any) {
       if (e.stack) console.error(e.stack);
@@ -754,7 +776,7 @@ class ButtonCard extends LitElement {
         state,
         this._hass!.user,
         this._pHass,
-        this._evaledVariables,
+        this._pVariables,
         html,
         this._getTemplateHelpers(),
       );
