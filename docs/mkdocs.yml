@@ -44,6 +44,7 @@ theme:
   features:
     - navigation.instant
     - navigation.instant.progress
+    - navigation.instant.prefetch
     - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
@@ -51,16 +52,12 @@ theme:
     - navigation.expand
     - navigation.top
     - navigation.footer
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.instant.prefetch
     - toc.follow
     - toc.integrate
     - content.code.copy
     - content.code.annotate
     - content.action.edit
     - content.action.view
-    - pymdownx.snippets
     - search.highlight
     - search.suggest
     - search.share
@@ -110,7 +107,6 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
   - toc:
       permalink: true
 
@@ -148,5 +144,4 @@ extra:
       name: HA Community
 
 plugins:
-  - mike
   - search
