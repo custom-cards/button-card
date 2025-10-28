@@ -1383,12 +1383,12 @@ class ButtonCard extends LitElement {
     const tooltipMergedConfig = { ...tooltipConfig, ...tooltipStateConfig };
 
     if (tooltipMergedConfig && tooltipMergedConfig.content) {
-      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en');
+      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en') as number;
       const hideDelayMs = parseDuration(
         String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '150'),
         'ms',
         'en',
-      );
+      ) as number;
       const withoutArrow = tooltipMergedConfig?.arrow ? undefined : true;
       return html`
         <wa-tooltip

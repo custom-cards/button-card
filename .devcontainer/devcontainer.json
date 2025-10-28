@@ -18,7 +18,7 @@
         "redhat.vscode-yaml",
         "yzhang.markdown-all-in-one",
         "esbenp.prettier-vscode",
-        "bierner.lit-html",
+        "runem.lit-plugin",
         "cschleiden.vscode-github-actions",
         "samuelcolvin.jinjahtml",
         "rvest.vs-code-prettier-eslint"
