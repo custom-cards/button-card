@@ -2,9 +2,9 @@
 
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon). This is an advanced feature which leverages (if you require it) the CSS Grid.
 
-Custom fields also support embeded cards, see [example below](#nested-card).
+Custom fields also support embedded cards, see [example below](#nested-card).
 
-Each custom field supports its own styling config, the name needs to match between both objects needs to match:
+Each custom field supports its own styling config, the name needs to match between both objects:
 
 ```yaml
 type: custom:button-card
@@ -30,7 +30,7 @@ Placing an element wherever you want (that means bypassing the grid). Set the gr
 type: custom:button-card
 icon: mdi:lightbulb
 aspect_ratio: 1/1
-name: Nb lights on
+name: No lights on
 styles:
   grid:
     - position: relative
@@ -57,7 +57,7 @@ custom_fields:
 
 ## Using `grid-template-areas`
 
-Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
+Or you can use the grid. Each element will have its name positioned as the `grid-area`:
 
 ![custom_fields_2](../images/custom_fields_2.png)
 
