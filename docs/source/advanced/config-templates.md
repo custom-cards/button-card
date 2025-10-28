@@ -130,6 +130,8 @@ state:
 
 You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
 
+Variables can be of any type: number, object, string, function, ...
+
 An example below:
 
 ```yaml
@@ -155,28 +157,47 @@ button_card_templates:
  # name will be "My local Value"
 ```
 
+Using a variable as a function:
+
+```yaml
+type: custom:button-card
+variables:
+  myFunc: |
+    [[[
+      return (str) => {
+        return `${str} from myFunc()`;
+      }
+    ]]]
+name: '[[[ return variables.myFunc("Nice Name"); ]]]' # (1)!
+show_label: true
+label: '[[[ return variables.myFunc("Nice Label"); ]]]' # (2)!
+```
+
+1. Would return `Nice Name from myFunc()`
+2. Would return `Nice Label from myFunc()`
+
 !!! info
 
-    Variables are evaluated in their alphabetical order based on their name. That means a variable named `b` can depend on a variable named `a`, but variable named `a` can't depend on a variable named `b`.
+    Variables can depend on each other but variables loops are prohibited and will fail.
 
 This works:
 
 ```yaml
 variables:
-  index: 2
-  value: '[[[ return variables.index + 2; ]]]'
+  zindex: 2
+  value: '[[[ return variables.zindex + 2; ]]]'
 name: '[[[ return variables.value; ]]]' # (1)!
 ```
 
-1. would return 4
+1. would return `4`
 
 This doesn't work:
 
 ```yaml
 variables:
-  z_index: 2
-  value: '[[[ return variables.z_index + 2; ]]]' # (1)!
-name: '[[[ return variables.value; ]]]'
+  zindex: '[[[ return variables.value; ]]]'
+  value: '[[[ return variables.zindex + 2; ]]]'
+name: '[[[ return variables.value; ]]]' # (1)!
 ```
 
-1. This would fail because z comes after v in the alphabet.
+1. This would fail because both variables depend on each other creating a loop.

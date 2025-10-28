@@ -173,9 +173,9 @@ class ButtonCard extends LitElement {
 
   private _stateObj: HassEntity | undefined;
 
-  private _evaledVariables: any | undefined;
+  private _evaledVariables?: any;
 
-  private _pVariables: any | undefined;
+  private _pVariables?: any;
 
   private _varLoopDetect = {};
 
@@ -375,7 +375,7 @@ class ButtonCard extends LitElement {
           this._stateObj = this._hass!.states[entityEvaled];
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          console.warn(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
+          console.error(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
         }
       }
 
@@ -454,11 +454,13 @@ class ButtonCard extends LitElement {
               this._entities.push(evaluatedEntry);
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {}
+          } catch (e) {
+            console.error(`button-card: Could not evaluate triggers_update template: ${entry}`);
+          }
         });
       } else if (typeof this._config!.triggers_update === 'string') {
         const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
-        if (result && result !== 'all') {
+        if (result && result !== 'all' && result !== 'update_timer') {
           this._entities.push(result);
         } else {
           this._config!.triggers_update = result;
