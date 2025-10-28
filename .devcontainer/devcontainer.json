@@ -20,7 +20,8 @@
         "esbenp.prettier-vscode",
         "bierner.lit-html",
         "cschleiden.vscode-github-actions",
-        "samuelcolvin.jinjahtml"
+        "samuelcolvin.jinjahtml",
+        "rvest.vs-code-prettier-eslint"
       ],
       "settings": {
         "files.eol": "\n",

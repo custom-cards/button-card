@@ -290,7 +290,7 @@ class ButtonCard extends LitElement {
       {},
       {
         get: (__target, prop: string) => {
-          if (this._evaledVariables?.[prop]) {
+          if (prop in this._evaledVariables) {
             return this._evaledVariables[prop];
           } else {
             if (this._config?.variables?.[prop]) {
@@ -303,6 +303,10 @@ class ButtonCard extends LitElement {
               return this._evaledVariables[prop];
             }
           }
+        },
+        has: (__target, prop: string) => {
+          if (!this._config || !this._config.variables) return false;
+          return prop in this._config.variables;
         },
       },
     );
@@ -344,6 +348,7 @@ class ButtonCard extends LitElement {
           const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
           this._config!.entity = entityEvaled;
           this._stateObj = this._hass!.states[entityEvaled];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           console.warn(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
         }

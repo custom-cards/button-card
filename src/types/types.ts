@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LovelaceCardConfig, LovelaceCard } from './lovelace';
 import { HassServiceTarget } from 'home-assistant-js-websocket';
 
