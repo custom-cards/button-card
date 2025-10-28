@@ -251,9 +251,6 @@ class ButtonCard extends LitElement {
     if (!this._pStates) {
       this._pStates = this._createStateProxy();
     }
-    if (!this._pVariables) {
-      this._pVariables = this._createVariablesProxy();
-    }
     this._pHass = {
       ...hass,
       states: this._pStates,
@@ -281,6 +278,17 @@ class ButtonCard extends LitElement {
         has: (__target, prop: string) => {
           return !!this._hass?.states?.[prop];
         },
+        ownKeys: () => {
+          if (!this._hass || !this._hass.states) return [];
+          return Object.keys(this._hass.states);
+        },
+        getOwnPropertyDescriptor: (__target, prop: string) => {
+          return {
+            value: this._hass?.states?.[prop],
+            enumerable: true,
+            configurable: true,
+          };
+        },
       },
     );
   }
@@ -307,6 +315,17 @@ class ButtonCard extends LitElement {
         has: (__target, prop: string) => {
           if (!this._config || !this._config.variables) return false;
           return prop in this._config.variables;
+        },
+        ownKeys: () => {
+          if (!this._config || !this._config.variables) return [];
+          return Object.keys(this._config.variables);
+        },
+        getOwnPropertyDescriptor: (__target, prop: string) => {
+          return {
+            value: this._pVariables![prop],
+            enumerable: true,
+            configurable: true,
+          };
         },
       },
     );
@@ -343,6 +362,12 @@ class ButtonCard extends LitElement {
 
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
+      this._evaledVariables = {};
+      this._varLoopDetect = {};
+      if (!this._pVariables) {
+        this._pVariables = this._createVariablesProxy();
+      }
+
       if (this._config!.entity) {
         try {
           const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
@@ -481,6 +506,14 @@ class ButtonCard extends LitElement {
     try {
       this._evaledVariables = {};
       this._varLoopDetect = {};
+      if (this._config?.variables) {
+        Object.keys(this._config.variables).forEach((variable) => {
+          // this is to evaluate all variables to support "hacks"
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const notUsed = this._pVariables[variable];
+        });
+      }
+
       return this._cardHtml();
     } catch (e: any) {
       if (e.stack) console.error(e.stack);
