@@ -3447,6 +3447,37 @@ views:
   - title: JS Templates
     cards:
       - type: custom:button-card
+        entity: switch.skylight
+        variables:
+          alwayRun:
+            force_eval: true
+            value: |
+              [[[
+                if (!window.myFunction) {
+                  window.myFunction = (str) => { return `Hi from ${str}` }
+                }
+              ]]]
+        name: '[[[ return window.myFunction("name"); ]]]'
+      - type: custom:button-card
+        entity: switch.skylight
+        variables:
+          color_on: green
+          color_off: red
+          is_on: '[[[ return entity.state === "on"; ]]]'
+          color: |
+            [[[
+              if (variables.is_on) {
+                return variables.color_on
+              } else {
+                return variables.color_off
+              }
+            ]]]
+        styles:
+          icon:
+            - color: '[[[ return variables.color; ]]]'
+          name:
+            - color: '[[[ return variables.color; ]]]'
+      - type: custom:button-card
         variables:
           never_evaled: '[[[ throw new Error("This variable should never be evaluated") ]]]'
           pioup:

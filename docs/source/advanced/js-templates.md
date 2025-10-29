@@ -80,7 +80,7 @@ Inside the javascript code, you'll have access to those variables:
 - `states`: An object with all the states of all the entities (equivalent to `hass.states`)
 - `user`: The user object (equivalent to `hass.user`)
 - `hass`: The complete `hass` object
-- `variables`: an object containing all your variables defined in the configuration. See [Variables](./config-templates.md#variables)
+- `variables`: an object containing all your variables defined in the configuration. See [Variables](#variables)
 - Helper functions availble through the object `helpers`:
   - `helpers.localize(entity, state?, numeric_precision?, show_units?, units?)`: a function which localizes a state to your language (eg. `helpers.localize(entity)`) and returns a string. Takes an entity object as argument (not the state of the entity as we need context) and takes optional arguments. Works with numerical states also.
     - If `state` is not provided, it localizes the state of the `entity` (Eg. `helpers.localize(entity)` or `helpers.localize(states['weather.your_city'])`).
@@ -115,3 +115,130 @@ Inside the javascript code, you'll have access to those variables:
   - `helpers.runAction(actionConfig)`: See [`runAction` JS helper](../config/actions.md#runaction-js-helper)
 
 See [here](../examples/js-templates.md) for some examples or [here](./custom-fields.md) for some advanced configuration using templates.
+
+## Variables
+
+### Simple variables usage
+
+You can use variables in your JS templates and overload them in the instance of your button card. This lets you easily re-use those variables in any other JS template. You can also overload variables defined in config templates, see [here](./config-templates.md#variables)
+
+Variables can be of any type: number, object, string, function, ...
+
+!!! info
+
+    Variables are only evaluated if used somewhere else. If you define a variable which is never used, it will never be evaluated. See [below](#advanced-variables-usage) if you want to force the evaluation of a variable.
+
+Some examples below:
+
+- Defining the color once:
+
+      ```yaml
+      type: custom:button-card
+      entity: sensor.test
+      variables:
+        color: red
+      styles:
+        icon:
+          - color: '[[[ return variables.color; ]]]'
+        name:
+          - color: '[[[ return variables.color; ]]]'
+      ```
+
+- Using JS templates in variables:
+
+      ```yaml
+      type: custom:button-card
+      entity: switch.skylight
+      variables:
+        color_on: green
+        color_off: red
+        is_on: '[[[ return entity.state === "on"; ]]]'
+        color: |
+          [[[
+            if (variables.is_on) {
+              return variables.color_on
+            } else {
+              return variables.color_off
+            }
+          ]]]
+      styles:
+        icon:
+          - color: '[[[ return variables.color; ]]]'
+        name:
+          - color: '[[[ return variables.color; ]]]'
+      ```
+
+- Using a variable as a function:
+
+      ```yaml
+      type: custom:button-card
+      variables:
+        myFunc: |
+          [[[
+            return (str) => {
+              return `${str} from myFunc()`;
+            }
+          ]]]
+      name: '[[[ return variables.myFunc("Nice Name"); ]]]' # (1)!
+      show_label: true
+      label: '[[[ return variables.myFunc("Nice Label"); ]]]' # (2)!
+      ```
+
+      1. Would return `Nice Name from myFunc()`
+      2. Would return `Nice Label from myFunc()`
+
+### Variables dependencies
+
+!!! info
+
+    Variables can depend on each other but variables loops are prohibited and will fail.
+
+This works:
+
+```yaml
+variables:
+  zindex: 2
+  value: '[[[ return variables.zindex + 2; ]]]'
+name: '[[[ return variables.value; ]]]' # (1)!
+```
+
+1. would return `4`
+
+This doesn't work:
+
+```yaml
+variables:
+  zindex: '[[[ return variables.value; ]]]'
+  value: '[[[ return variables.zindex + 2; ]]]'
+name: '[[[ return variables.value; ]]]' # (1)!
+```
+
+1. This would fail because both variables depend on each other creating a loop.
+
+### Advanced variables usage
+
+It is possible to define variables which will be evaluated every time the card is updated (and on init). This is useful if you want to run some advanced javascript code. In this case, you have to define your variable like this:
+
+```yaml
+variables:
+  varName:
+    force_eval: true
+    value: '[[[ JS code here ]]]'
+```
+
+An example:
+
+```yaml
+type: custom:button-card
+entity: switch.skylight
+variables:
+  alwayRun:
+    force_eval: true
+    value: |
+      [[[
+        if (!window.myFunction) {
+          window.myFunction = (str) => { return `Hi from ${str}` }
+        }
+      ]]]
+name: '[[[ return window.myFunction("name"); ]]]'
+```

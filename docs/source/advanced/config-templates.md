@@ -130,8 +130,6 @@ state:
 
 You can add variables to your templates and overload them in the instance of your button card. This lets you easily work with templates without the need to redefine everything for a small change.
 
-Variables can be of any type: number, object, string, function, ...
-
 An example below:
 
 ```yaml
@@ -154,50 +152,5 @@ button_card_templates:
   entity: sensor.test
   variables:
     var_name: "My local Value"
- # name will be "My local Value"
+  # name will be "My local Value"
 ```
-
-Using a variable as a function:
-
-```yaml
-type: custom:button-card
-variables:
-  myFunc: |
-    [[[
-      return (str) => {
-        return `${str} from myFunc()`;
-      }
-    ]]]
-name: '[[[ return variables.myFunc("Nice Name"); ]]]' # (1)!
-show_label: true
-label: '[[[ return variables.myFunc("Nice Label"); ]]]' # (2)!
-```
-
-1. Would return `Nice Name from myFunc()`
-2. Would return `Nice Label from myFunc()`
-
-!!! info
-
-    Variables can depend on each other but variables loops are prohibited and will fail.
-
-This works:
-
-```yaml
-variables:
-  zindex: 2
-  value: '[[[ return variables.zindex + 2; ]]]'
-name: '[[[ return variables.value; ]]]' # (1)!
-```
-
-1. would return `4`
-
-This doesn't work:
-
-```yaml
-variables:
-  zindex: '[[[ return variables.value; ]]]'
-  value: '[[[ return variables.zindex + 2; ]]]'
-name: '[[[ return variables.value; ]]]' # (1)!
-```
-
-1. This would fail because both variables depend on each other creating a loop.
