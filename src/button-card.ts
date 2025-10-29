@@ -38,6 +38,7 @@ import {
   TooltipConfig,
   ShowToastParams,
   ToastActionConfig,
+  EvaluatedVariables,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -173,11 +174,9 @@ class ButtonCard extends LitElement {
 
   private _stateObj: HassEntity | undefined;
 
-  private _evaledVariables?: any;
+  private _evaluatedVariables: EvaluatedVariables = {};
 
   private _pVariables?: any;
-
-  private _varLoopDetect = {};
 
   private _interval?: number;
 
@@ -293,42 +292,36 @@ class ButtonCard extends LitElement {
     );
   }
 
-  private _createVariablesProxy(): any {
-    return new Proxy(
-      {},
-      {
-        get: (__target, prop: string) => {
-          if (prop in this._evaledVariables) {
-            return this._evaledVariables[prop];
-          } else {
-            if (this._config?.variables?.[prop]) {
-              if (this._varLoopDetect[prop]) {
-                throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
-              }
-              this._varLoopDetect[prop] = true;
-              this._evaledVariables[prop] = this._getTemplateOrValue(this._stateObj, this._config!.variables![prop]);
-              delete this._varLoopDetect[prop];
-              return this._evaledVariables[prop];
-            }
+  private _createVariablesProxy(variables: any): any {
+    if (!variables) return {};
+    this._evaluatedVariables = {};
+    return new Proxy(variables, {
+      get: (__target, prop: string) => {
+        if (prop in this._evaluatedVariables && 'value' in this._evaluatedVariables[prop]) {
+          return this._evaluatedVariables[prop].value;
+        } else if (prop in __target) {
+          if (this._evaluatedVariables[prop]?.loop) {
+            throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
           }
-        },
-        has: (__target, prop: string) => {
-          if (!this._config || !this._config.variables) return false;
-          return prop in this._config.variables;
-        },
-        ownKeys: () => {
-          if (!this._config || !this._config.variables) return [];
-          return Object.keys(this._config.variables);
-        },
-        getOwnPropertyDescriptor: (__target, prop: string) => {
-          return {
-            value: this._pVariables![prop],
-            enumerable: true,
-            configurable: true,
-          };
-        },
+          this._evaluatedVariables[prop] = { loop: true };
+          if (typeof Reflect.get(__target, prop) === 'object') {
+            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+              this._stateObj,
+              Reflect.get(__target, prop).value,
+            );
+          } else {
+            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+              this._stateObj,
+              Reflect.get(__target, prop),
+            );
+          }
+          delete this._evaluatedVariables[prop].loop;
+          return this._evaluatedVariables[prop].value;
+        } else {
+          return undefined;
+        }
       },
-    );
+    });
   }
 
   public disconnectedCallback(): void {
@@ -347,26 +340,9 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
-    this._evaledVariables = {};
-    if (this._config?.variables) {
-      const variablesNameOrdered = Object.keys(this._config.variables).sort();
-      variablesNameOrdered.forEach((variable) => {
-        try {
-          this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {}
-      });
-    }
-  }
-
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._evaledVariables = {};
-      this._varLoopDetect = {};
-      if (!this._pVariables) {
-        this._pVariables = this._createVariablesProxy();
-      }
+      this._pVariables = this._createVariablesProxy(this._config?.variables);
 
       if (this._config!.entity) {
         try {
@@ -506,16 +482,17 @@ class ButtonCard extends LitElement {
     if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._evaledVariables = {};
-      this._varLoopDetect = {};
+      this._evaluatedVariables = {};
       if (this._config?.variables) {
-        Object.keys(this._config.variables).forEach((variable) => {
-          // this is to evaluate all variables to support "hacks"
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const notUsed = this._pVariables[variable];
+        Object.keys(this._config?.variables)?.forEach((varName) => {
+          const v = this._config!.variables![varName];
+          if (typeof v === 'object' && v.force_eval) {
+            // this is to force evaluate specific variables to support "hacks"
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const __ = this._pVariables[varName];
+          }
         });
       }
-
       return this._cardHtml();
     } catch (e: any) {
       if (e.stack) console.error(e.stack);

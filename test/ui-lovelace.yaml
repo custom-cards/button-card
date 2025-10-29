@@ -1711,7 +1711,7 @@ views:
                   service_data:
                     entity_id: light.test_light
                 - action: javascript
-                  javascript: '[[[ this._sendToastMessage(`Waiting ${variables.delay}...`); ]]]'
+                  javascript: '[[[ helpers.toastMessage(`Waiting ${variables.delay}...`); ]]]'
                 - delay: '[[[ return variables.delay; ]]]'
                 - action: call-service
                   service: light.toggle
@@ -3444,8 +3444,51 @@ views:
               rows: 2
               columns: 4
 
-  - title: Nested Templates
+  - title: JS Templates
     cards:
+      - type: custom:button-card
+        variables:
+          never_evaled: '[[[ throw new Error("This variable should never be evaluated") ]]]'
+          pioup:
+            value: '[[[ return "Test variables dependencies: OK" ]]]'
+          test: '[[[ return variables.pioup ]]]'
+        name: '[[[ return variables.test; ]]]'
+      - type: custom:button-card
+        entity: switch.skylight
+        update_timer: 1s
+        variables:
+          always_evaled:
+            value: '[[[ window.alwaysEvaled = `${new Date().getTime()}`; ]]]'
+            force_eval: true
+          never_evaled: '[[[ window.neverEvaled = `${new Date().getTime()}`; ]]]'
+        name: 'always should update every second,<br/>never should be unset'
+        show_label: true
+        label: '[[[ return `always: ${window.alwaysEvaled || "not set"}<br/>never: ${window.neverEvaled || "not set"}`; ]]]'
+      - type: custom:button-card
+        name: Nested card should display<br/>"Variables loop detected"
+        styles:
+          grid:
+            - grid-template-areas: '"n" "nested"'
+            - grid-template-columns: 1fr
+            - grid-template-rows: auto auto
+        custom_fields:
+          nested:
+            card:
+              type: 'custom:button-card'
+              variables:
+                loop1: '[[[[ return variables.loop2; ]]]]'
+                loop2: '[[[[ return variables.loop1; ]]]]'
+              name: |
+                [[[[
+                  try {
+                    return variables.loop1;
+                  } catch (e) {
+                    if (e.message.includes("Detected a loop while evaluating variable")) {
+                      return "Variables Loop detected";
+                    }
+                    return "Wrong error catched";
+                  }
+                ]]]]
       - type: custom:button-card
         entity: switch.skylight
         show_icon: false
