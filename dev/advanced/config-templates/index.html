@@ -14,7 +14,7 @@
         <link rel="prev" href="../js-templates/">
       
       
-        <link rel="next" href="../triggers-update/">
+        <link rel="next" href="../layout/">
       
       
       <link rel="icon" href="../../images/custom-card.png">
@@ -808,29 +808,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../triggers-update/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Triggers Update
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../layout/" class="md-nav__link">
         
   
@@ -1470,30 +1447,8 @@
 </span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.test</span>
 </span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
 </span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="nt">var_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">local</span><span class="nv"> </span><span class="s">Value&quot;</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w"> </span><span class="c1"># name will be &quot;My local Value&quot;</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span><span class="c1"># name will be &quot;My local Value&quot;</span>
 </span></code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Variables are evaluated in their alphabetical order based on their name. That means a variable named <code>b</code> can depend on a variable named <code>a</code>, but variable named <code>a</code> can't depend on a variable named <code>b</code>.</p>
-</div>
-<p>This works:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">variables</span><span class="p">:</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[[[</span><span class="nv"> </span><span class="s">return</span><span class="nv"> </span><span class="s">variables.index</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">2;</span><span class="nv"> </span><span class="s">]]]&#39;</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[[[</span><span class="nv"> </span><span class="s">return</span><span class="nv"> </span><span class="s">variables.value;</span><span class="nv"> </span><span class="s">]]]&#39;</span><span class="w"> </span><span class="c1"># (1)!</span>
-</span></code></pre></div>
-<ol>
-<li>would return 4</li>
-</ol>
-<p>This doesn't work:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">variables</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">z_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[[[</span><span class="nv"> </span><span class="s">return</span><span class="nv"> </span><span class="s">variables.z_index</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">2;</span><span class="nv"> </span><span class="s">]]]&#39;</span><span class="w"> </span><span class="c1"># (1)!</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;[[[</span><span class="nv"> </span><span class="s">return</span><span class="nv"> </span><span class="s">variables.value;</span><span class="nv"> </span><span class="s">]]]&#39;</span>
-</span></code></pre></div>
-<ol>
-<li>This would fail because z comes after v in the alphabet.</li>
-</ol>
 
 
 
@@ -1546,13 +1501,13 @@
         
         
           
-          <a href="../triggers-update/" class="md-footer__link md-footer__link--next" aria-label="Next: Triggers Update">
+          <a href="../layout/" class="md-footer__link md-footer__link--next" aria-label="Next: Layouts">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Triggers Update
+                Layouts
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1614,7 +1569,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "navigation.instant", "navigation.instant.progress", "navigation.instant.prefetch", "toc.follow", "toc.integrate", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "pymdownx.snippets", "search.highlight", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "alias_type": "symlink", "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.instant.prefetch", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.highlight", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "alias_type": "symlink", "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>

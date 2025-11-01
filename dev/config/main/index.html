@@ -753,29 +753,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../advanced/triggers-update/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Triggers Update
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../advanced/layout/" class="md-nav__link">
         
   
@@ -1325,20 +1302,12 @@
 <td>Set it to <code>true</code> when the card is used in a sections view. See <a href="../../advanced/section-views/">Sections views</a></td>
 </tr>
 <tr>
-<td><code>triggers_update</code></td>
-<td style="text-align: center;"><a href="../../advanced/js-templates/"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /></a> <br/>(init only)</td>
-<td>string or array</td>
-<td>optional</td>
-<td><code>switch.ac</code></td>
-<td>entity_id list that would trigger a card update, see <a href="../../advanced/triggers-update/">triggers_update</a></td>
-</tr>
-<tr>
 <td><code>group_expand</code></td>
 <td style="text-align: center;"><img alt="🚫" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f6ab.svg" title=":no_entry_sign:" /></td>
 <td>boolean</td>
 <td>false</td>
 <td><code>true</code> | <code>false</code></td>
-<td>When <code>true</code>, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too. See <a href="../../advanced/triggers-update/">triggers_update</a></td>
+<td>When <code>true</code>, if any of the entities triggering a card update is a group, it will auto-expand the group and the card will update on any child entity state change. This works with nested groups too.</td>
 </tr>
 <tr>
 <td><code>update_timer</code></td>
@@ -1346,7 +1315,7 @@
 <td>number or string</td>
 <td>optional</td>
 <td>number &gt;= 100 (ms), string duration in english supported by <code>helpers.parseDuration</code> &gt;= 100 (ms)</td>
-<td>Set to a duration greater than or equal to 100ms to update the card at this refresh rate. This should only be used when the card has no entity and there is no appropriate <a href="../../advanced/triggers-update/">triggers_update</a> strategy. The template is evaluated on each refresh of the card, be it from the <code>update_timer</code> timeout or trigger update. To maintan dashboard compatability when user locale changes, the duration must be specified in english locale.</td>
+<td>Set to a duration greater than or equal to 100ms to <strong>only</strong> update the card at this refresh rate. This should only be used when the card has no entity. If this field is a <a href="../../advanced/js-templates/">JS template</a>, it will be evaluated on each refresh of the card.</td>
 </tr>
 <tr>
 <td><code>icon</code></td>
@@ -1523,6 +1492,14 @@
 <td>optional</td>
 <td><code>1/1</code>, <code>2/1</code>, <code>1/1.5</code>, ...</td>
 <td>See <a href="../../advanced/aspect-ratio/">Aspect Ratio</a> for an example. Aspect ratio of the card. <code>1/1</code> being a square. This will auto adapt to your screen size</td>
+</tr>
+<tr>
+<td><code>spin</code></td>
+<td style="text-align: center;"><a href="../../advanced/js-templates/"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:" /></a></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td><code>true</code> | <code>false</code></td>
+<td>If <code>true</code>, the entity_picture or icon will rotate</td>
 </tr>
 <tr>
 <td><code>tap_action</code></td>
@@ -1838,7 +1815,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "navigation.instant", "navigation.instant.progress", "navigation.instant.prefetch", "toc.follow", "toc.integrate", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "pymdownx.snippets", "search.highlight", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "alias_type": "symlink", "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.instant.prefetch", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.highlight", "search.suggest", "search.share"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "alias_type": "symlink", "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
