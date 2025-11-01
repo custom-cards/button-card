@@ -1,4 +1,3 @@
-import { PropertyValues } from 'lit';
 import { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, ResolvedMediaSource } from './types/homeassistant';
 import {
@@ -12,7 +11,6 @@ import {
 import { StateConfig } from './types/types';
 import { HassEntity, HassEntityAttributeBase, HassEntityBase } from 'home-assistant-js-websocket';
 import { OFF, UNAVAILABLE, isUnavailableState } from './common/const';
-import { ButtonCard } from './button-card';
 
 export const atLeastVersion = (version: string, major: number, minor: number): boolean => {
   const [haMajor, haMinor] = version.split('.', 2);
