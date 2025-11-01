@@ -18,7 +18,6 @@ nav:
   - Advanced:
       - JS Templates: 'advanced/js-templates.md'
       - Config Templates: 'advanced/config-templates.md'
-      - Triggers Update: 'advanced/triggers-update.md'
       - Layouts: 'advanced/layout.md'
       - Aspect Ratio: 'advanced/aspect-ratio.md'
       - Section Views: 'advanced/section-views.md'
