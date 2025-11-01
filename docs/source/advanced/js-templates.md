@@ -56,21 +56,6 @@ Special fields which do support templating but are **only evaluated once**, when
   entity: '[[[ return variables.my_entity; ]]]'
   ```
 
-- `triggers_update`: Useful when you define multiple entities in `variables` to use throughout the card. Eg:
-
-  ```yaml
-  type: custom:button-card
-  variables:
-    my_entity: switch.skylight
-    my_other_entity: light.bedroom
-  entity: '[[[ return variables.my_entity; ]]]'
-  label: '[[[ return localize(variables.my_other_entity) ]]]'
-  show_label: true
-  triggers_update:
-    - '[[[ return variables.my_entity; ]]]'
-    - '[[[ return variables.my_other_entity; ]]]'
-  ```
-
 ## JS Templates helpers
 
 Inside the javascript code, you'll have access to those variables:
