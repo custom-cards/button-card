@@ -497,6 +497,15 @@ class ButtonCard extends LitElement {
       return true;
     }
 
+    // if update_timer is set (and > 100ms), we only update on interval
+    if (this._updateTimerDuration) {
+      if (changedProps.has('_updateTimerMS')) {
+        return true;
+      } else {
+        return this._updateTimerChanged();
+      }
+    }
+
     const forceUpdate =
       changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') || changedProps.has('_spinnerActive')
         ? true
