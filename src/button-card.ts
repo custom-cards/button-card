@@ -47,7 +47,6 @@ import {
   getFontColorBasedOnBackgroundColor,
   buildNameStateConcat,
   applyBrightnessToColor,
-  myHasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
   mergeDeep,
   mergeStatesById,
@@ -151,7 +150,7 @@ declare global {
 
 @customElement('button-card')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class ButtonCard extends LitElement {
+export class ButtonCard extends LitElement {
   @property() private _hass?: HomeAssistant;
 
   @property() private _config?: ButtonCardConfig;
@@ -170,8 +169,6 @@ class ButtonCard extends LitElement {
 
   private _pStates?: HassEntities;
 
-  private _triggersAll?: boolean;
-
   private _stateObj: HassEntity | undefined;
 
   private _evaluatedVariables: EvaluatedVariables = {};
@@ -188,7 +185,7 @@ class ButtonCard extends LitElement {
 
   private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
 
-  private _entities: string[] = [];
+  private _monitoredEntities: string[] = [];
 
   private _initialSetupComplete = false;
 
@@ -268,8 +265,8 @@ class ButtonCard extends LitElement {
       {},
       {
         get: (__target, prop: string) => {
-          if (prop.includes('.') && !this._entities.includes(prop)) {
-            this._entities.push(prop);
+          if (prop.includes('.') && !this._monitoredEntities.includes(prop)) {
+            this._monitoredEntities.push(prop);
             this._expandTriggerGroups();
           }
           return this._hass?.states?.[prop];
@@ -420,34 +417,10 @@ class ButtonCard extends LitElement {
         }
       }
 
-      const jsonConfig = JSON.stringify(this._config);
-      this._entities = [];
-      if (Array.isArray(this._config!.triggers_update)) {
-        this._config!.triggers_update.forEach((entry) => {
-          try {
-            const evaluatedEntry = this._getTemplateOrValue(this._stateObj, entry);
-            if (evaluatedEntry !== undefined && evaluatedEntry !== null && !this._entities.includes(evaluatedEntry)) {
-              this._entities.push(evaluatedEntry);
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {
-            console.error(`button-card: Could not evaluate triggers_update template: ${entry}`);
-          }
-        });
-      } else if (typeof this._config!.triggers_update === 'string') {
-        const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
-        if (result && result !== 'all' && result !== 'update_timer') {
-          this._entities.push(result);
-        } else {
-          this._config!.triggers_update = result;
-        }
-      }
-      if (this._config!.entity && !this._entities.includes(this._config!.entity))
-        this._entities.push(this._config!.entity);
+      this._monitoredEntities = [];
+      if (this._config!.entity && !this._monitoredEntities.includes(this._config!.entity))
+        this._monitoredEntities.push(this._config!.entity);
       this._expandTriggerGroups();
-
-      const rxp = new RegExp('(?:[^\\[]|^)\\[{3}[^\\[].*[^\\]]\\]{3}(?:[^\\]]|$)', 's');
-      this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
       this._updateTimerStart();
@@ -508,25 +481,27 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _hasAnEntityChanged(changedProps: PropertyValues): boolean {
+    const oldHass = changedProps.get('_hass') as HomeAssistant | undefined;
+    if (oldHass) {
+      function hasChanged(this: ButtonCard, elt: string): boolean {
+        return oldHass?.states[elt] !== this._hass!.states[elt];
+      }
+      return this._monitoredEntities.some(hasChanged.bind(this));
+    }
+    return false;
+  }
+
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     if (changedProps.has('_config')) {
       return true;
     }
-    if (this._config?.triggers_update === 'update_timer') {
-      if (changedProps.has('_updateTimerMS')) {
-        return true;
-      } else {
-        return this._updateTimerChanged();
-      }
-    }
+
     const forceUpdate =
-      this._triggersAll ||
-      changedProps.has('_timeRemaining') ||
-      changedProps.has('_updateTimerMS') ||
-      changedProps.has('_spinnerActive')
+      changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') || changedProps.has('_spinnerActive')
         ? true
         : false;
-    if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
+    if (forceUpdate || this._hasAnEntityChanged(changedProps)) {
       this._expandTriggerGroups();
       return true;
     } else if (changedProps.has('preview')) {
@@ -1714,8 +1689,8 @@ class ButtonCard extends LitElement {
           if (this._hass.states[childEntity].attributes?.entity_id) {
             this._loopGroup(this._hass.states[childEntity].attributes.entity_id);
           } else {
-            if (!this._entities.includes(childEntity)) {
-              this._entities.push(childEntity);
+            if (!this._monitoredEntities.includes(childEntity)) {
+              this._monitoredEntities.push(childEntity);
             }
           }
         }
@@ -1724,8 +1699,8 @@ class ButtonCard extends LitElement {
   }
 
   private _expandTriggerGroups(): void {
-    if (this._hass && this._config?.group_expand && this._entities) {
-      this._entities.forEach((entity) => {
+    if (this._hass && this._config?.group_expand && this._monitoredEntities) {
+      this._monitoredEntities.forEach((entity) => {
         if (this._hass?.states[entity]?.attributes?.entity_id) {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
