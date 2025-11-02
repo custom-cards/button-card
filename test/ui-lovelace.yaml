@@ -959,7 +959,7 @@ views:
                         - filter: grayscale(100%)
                         - border-radius: 50%
                   - value: 'on'
-                    spin: true
+                    rotate: true
                     styles:
                       card:
                       entity_picture:
@@ -1096,9 +1096,9 @@ views:
                 name: Fan Spin
                 state:
                   - value: 'on'
-                    spin: true
+                    rotate: true
                   - operator: default
-                    spin: false
+                    rotate: false
               - type: 'custom:button-card'
                 color_type: icon
                 entity: switch.skylight
@@ -1106,9 +1106,9 @@ views:
                 name: Fan Spin
                 state:
                   - value: 'on'
-                    spin: true
+                    rotate: true
                   - operator: default
-                    spin: false
+                    rotate: false
 
       - type: vertical-stack
         cards:
