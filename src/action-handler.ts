@@ -150,7 +150,7 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
 
       if (options.isMomentary) {
         // ignore anything but left mouse button
-        if ((ev as any).button !== 0) {
+        if (!(ev as TouchEvent).touches && (ev as any).button !== 0) {
           return;
         }
         fireEvent(element, 'action', { action: 'press' });
@@ -188,6 +188,9 @@ class ActionHandlerType extends HTMLElement implements ActionHandlerType {
         if (this.isRepeating && this.repeatTimeout) {
           clearInterval(this.repeatTimeout);
           this.isRepeating = false;
+        }
+        if (options.isMomentary) {
+          fireEvent(element, 'action', { action: 'release' });
         }
         return;
       }
