@@ -55,7 +55,7 @@ export interface ButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
-  spin?: boolean;
+  rotate?: boolean;
 }
 
 export interface GridOptions {
@@ -114,7 +114,7 @@ export interface ExternalButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
-  spin?: boolean;
+  rotate?: boolean;
 }
 
 export type Layout =
@@ -157,7 +157,7 @@ export interface StateConfig {
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
   styles?: StylesConfig;
-  spin?: boolean;
+  rotate?: boolean;
   label?: string;
   custom_fields?: CustomFields;
   state_display?: string;
