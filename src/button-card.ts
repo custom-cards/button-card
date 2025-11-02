@@ -339,7 +339,7 @@ class ButtonCard extends LitElement {
 
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._pVariables = this._createVariablesProxy(this._config?.variables);
+      this._pVariables = this._createVariablesProxy(copy(this._config?.variables));
 
       if (this._config!.entity) {
         try {
