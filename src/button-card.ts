@@ -1112,7 +1112,10 @@ class ButtonCard extends LitElement {
         };
         let thing;
         if (!deepEqual(this._cardsConfig[key], cards[key])) {
-          if ((this._cardsConfig[key] as any)?.type === cards[key]?.type) {
+          if (
+            (this._cardsConfig[key] as any)?.type === cards[key]?.type &&
+            (this._config!.custom_fields?.[key] as CustomFieldCard)?.force_recreate !== true
+          ) {
             // same type, different config
             thing = this._cards[key];
             thing.preview = this.preview;
@@ -1331,13 +1334,17 @@ class ButtonCard extends LitElement {
   private _getTooltip(tooltipStyle: StyleInfo, configState: StateConfig | undefined): TemplateResult {
     let tooltipConfig: TooltipConfig | undefined;
     if (typeof this._config!.tooltip === 'string') {
-      tooltipConfig = { content: this._getTemplateOrValue(this._stateObj, this._config!.tooltip) };
+      tooltipConfig = {
+        content: this._getTemplateOrValue(this._stateObj, this._config!.tooltip),
+      };
     } else {
       tooltipConfig = this._objectEvalTemplate(this._stateObj, this._config!.tooltip) ?? {};
     }
     let tooltipStateConfig: TooltipConfig | undefined;
     if (typeof configState?.tooltip === 'string') {
-      tooltipStateConfig = { content: this._getTemplateOrValue(this._stateObj, configState?.tooltip) };
+      tooltipStateConfig = {
+        content: this._getTemplateOrValue(this._stateObj, configState?.tooltip),
+      };
     } else {
       tooltipStateConfig = this._objectEvalTemplate(this._stateObj, configState?.tooltip) ?? {};
     }
@@ -2130,12 +2137,16 @@ class ButtonCard extends LitElement {
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
       if (code === this._protectedAction[NORMALISED_ACTION]?.protect?.[type]) {
-        this._sendToastMessage({ message: this._protectedAction[NORMALISED_ACTION]?.protect?.success_message });
+        this._sendToastMessage({
+          message: this._protectedAction[NORMALISED_ACTION]?.protect?.success_message,
+        });
         delete this._protectedAction[NORMALISED_ACTION]?.protect;
         this._executeAction(this._protectedAction);
       } else {
         const message = this._protectedAction[NORMALISED_ACTION]?.protect?.failure_message;
-        this._sendToastMessage({ message: message || DEFAULT_FAILED_TOAST_MESSAGE[type] });
+        this._sendToastMessage({
+          message: message || DEFAULT_FAILED_TOAST_MESSAGE[type],
+        });
       }
     }
     this._protectedAction = undefined;
@@ -2223,7 +2234,12 @@ class ButtonCard extends LitElement {
     ev.stopPropagation();
     this.parentElement?.dispatchEvent(event);
     // Send non-bubbling event to ha-card to allow ripples
-    const rippleEvent = new CustomEvent(ev.type, { ...ev, bubbles: false, composed: false, detail: { ignore: true } });
+    const rippleEvent = new CustomEvent(ev.type, {
+      ...ev,
+      bubbles: false,
+      composed: false,
+      detail: { ignore: true },
+    });
     this._ripple.then((r) => {
       if (r) {
         r.parentElement?.dispatchEvent(rippleEvent);

@@ -194,6 +194,7 @@ export interface CustomFields {
 export interface CustomFieldCard {
   card: LovelaceCardConfig;
   do_not_eval?: boolean;
+  force_recreate?: boolean;
 }
 
 export interface Variables {
