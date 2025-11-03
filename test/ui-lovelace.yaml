@@ -3436,6 +3436,15 @@ views:
   - title: JS Templates
     cards:
       - type: custom:button-card
+        variables:
+          translate:
+            a: A
+            b: B
+            c: C
+        name: 'Variable is an object'
+        show_label: true
+        label: '[[[ return JSON.stringify(variables.translate); ]]]'
+      - type: custom:button-card
         entity: switch.skylight
         variables:
           alwayRun:

@@ -294,20 +294,20 @@ class ButtonCard extends LitElement {
     this._evaluatedVariables = {};
     return new Proxy(variables, {
       get: (__target, prop: string) => {
-        if (prop in this._evaluatedVariables && 'value' in this._evaluatedVariables[prop]) {
+        if (prop in this._evaluatedVariables) {
           return this._evaluatedVariables[prop].value;
         } else if (prop in __target) {
           if (this._evaluatedVariables[prop]?.loop) {
             throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
           }
           this._evaluatedVariables[prop] = { loop: true };
-          if (typeof Reflect.get(__target, prop) === 'object') {
-            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+          if (typeof Reflect.get(__target, prop) === 'object' && 'value' in Reflect.get(__target, prop)) {
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
               this._stateObj,
               Reflect.get(__target, prop).value,
             );
           } else {
-            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
               this._stateObj,
               Reflect.get(__target, prop),
             );
@@ -795,7 +795,7 @@ class ButtonCard extends LitElement {
   }
 
   private _getTemplateOrValue(state: HassEntity | undefined, value: any | undefined): any | undefined {
-    if (['number', 'boolean'].includes(typeof value)) return value;
+    if (['number', 'boolean', 'function'].includes(typeof value)) return value;
     if (!value) return value;
     if (typeof value === 'object') {
       Object.keys(value).forEach((key) => {
@@ -804,7 +804,7 @@ class ButtonCard extends LitElement {
       return value;
     }
     const trimmed = value.trim();
-    const rx = new RegExp('(\\[{3,})(.*?)(\\]{3,})', 's');
+    const rx = new RegExp('^(\\[{3,})(.*?)(\\]{3,})$', 's');
     const match = trimmed.match(rx);
     if (match && match.length === 4) {
       if (match[1].length === 3 && match[3].length === 3) {
