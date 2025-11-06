@@ -152,31 +152,5 @@ button_card_templates:
   entity: sensor.test
   variables:
     var_name: "My local Value"
- # name will be "My local Value"
+  # name will be "My local Value"
 ```
-
-!!! info
-
-    Variables are evaluated in their alphabetical order based on their name. That means a variable named `b` can depend on a variable named `a`, but variable named `a` can't depend on a variable named `b`.
-
-This works:
-
-```yaml
-variables:
-  index: 2
-  value: '[[[ return variables.index + 2; ]]]'
-name: '[[[ return variables.value; ]]]' # (1)!
-```
-
-1. would return 4
-
-This doesn't work:
-
-```yaml
-variables:
-  z_index: 2
-  value: '[[[ return variables.z_index + 2; ]]]' # (1)!
-name: '[[[ return variables.value; ]]]'
-```
-
-1. This would fail because z comes after v in the alphabet.

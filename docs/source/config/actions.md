@@ -4,7 +4,7 @@ All the fields support [JS templates](../advanced/js-templates.md). You may also
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
-| `action` | [:white_check_mark:](../advanced/js-templates.md) | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript`, `multi-actions` | Action to perform |
+| `action` | [:white_check_mark:](../advanced/js-templates.md) | string | `toggle` | `more-info`, `toggle`, `call-service`, `perform-action`, `none`, `navigate`, `url`, `assist`, `javascript`, `multi-actions`, `fire-dom-event` | Action to perform |
 | `entity` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Any entity id | **Only valid for `action: more-info` or `action: toggle`** to override the entity on which you want to call `more-info` |
 | `target` | [:white_check_mark:](../advanced/js-templates.md) | object | none |  | Only works with `call-service` or `perform-action`. Follows the [home-assistant syntax](https://www.home-assistant.io/docs/scripts/service-calls/#targeting-areas-and-devices) |
 | `navigation_path` | [:white_check_mark:](../advanced/js-templates.md) | string | none | Eg: `/lovelace/0/` | Path to navigate to (e.g. `/lovelace/0/`) when action defined as `navigate` |

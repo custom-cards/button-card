@@ -1,4 +1,3 @@
-import { PropertyValues } from 'lit';
 import { TinyColor } from '@ctrl/tinycolor';
 import { HomeAssistant, ResolvedMediaSource } from './types/homeassistant';
 import {
@@ -103,22 +102,6 @@ export function applyBrightnessToColor(elt: Element, color: string, brightness: 
     if (validColor) return validColor;
   }
   return color;
-}
-
-// Check if config or Entity changed
-export function myHasConfigOrEntityChanged(element: any, changedProps: PropertyValues): boolean {
-  if (changedProps.has('_config')) {
-    return true;
-  }
-
-  const oldHass = changedProps.get('_hass') as HomeAssistant | undefined;
-  if (oldHass) {
-    function hasChanged(elt: string): boolean {
-      return oldHass?.states[elt] !== element._hass!.states[elt];
-    }
-    return element._entities.some(hasChanged);
-  }
-  return false;
 }
 
 /**

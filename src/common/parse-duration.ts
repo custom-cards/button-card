@@ -19,7 +19,8 @@ const units = {
   zh: zh,
 };
 
-export const parseDuration = (input: string, format: string, locale: string): number | undefined => {
+export const parseDuration = (input: string | undefined, format: string, locale: string): number | undefined => {
+  if (input === undefined) return undefined;
   locale = locale.toLocaleLowerCase();
   locale = locale.startsWith('en') ? 'en' : locale;
   if (locale && locale in units) {

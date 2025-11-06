@@ -8,7 +8,7 @@
 | `icon` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | `mdi:battery` | The icon to display for this state - Defaults to the entity icon. Hide with `show_icon: false`. |
 | `color` | :no_entry_sign: | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
 | `styles` | :no_entry_sign: | string | optional |  | See [styles](../advanced/styling.md) |
-| `spin` | [:white_check_mark:](../advanced/js-templates.md) | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
+| `rotate` | [:white_check_mark:](../advanced/js-templates.md) | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
 | `entity_picture` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. |
 | `label` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Any string that you want | Display a label below the card. See [Layouts](../advanced/layout.md) for more information. |
 | `state_display` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | `On` | If defined, override the way the state is displayed. |

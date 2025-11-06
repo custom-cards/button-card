@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HapticType } from '../forward-haptic';
 import { LovelaceCardConfig, LovelaceCard } from './lovelace';
 import { HassServiceTarget } from 'home-assistant-js-websocket';
 
 export interface ButtonCardConfig {
   template?: string | string[];
-  triggers_update?: string[] | 'all' | 'update_timer';
   group_expand: boolean;
   type: string;
   entity?: string;
@@ -58,7 +56,7 @@ export interface ButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
-  spin?: boolean;
+  rotate?: boolean;
 }
 
 export interface GridOptions {
@@ -68,7 +66,6 @@ export interface GridOptions {
 
 export interface ExternalButtonCardConfig {
   template?: string | string[];
-  triggers_update?: string[] | 'all' | 'update_timer';
   group_expand?: boolean;
   entity?: string;
   name?: string;
@@ -118,7 +115,7 @@ export interface ExternalButtonCardConfig {
   disable_kbd?: boolean;
   spinner?: boolean;
   protect?: ButtonCardProtect;
-  spin?: boolean;
+  rotate?: boolean;
 }
 
 export type Layout =
@@ -161,7 +158,7 @@ export interface StateConfig {
   entity_picture_style?: CssStyleConfig[];
   entity_picture?: string;
   styles?: StylesConfig;
-  spin?: boolean;
+  rotate?: boolean;
   label?: string;
   custom_fields?: CustomFields;
   state_display?: string;
@@ -198,10 +195,20 @@ export interface CustomFields {
 export interface CustomFieldCard {
   card: LovelaceCardConfig;
   do_not_eval?: boolean;
+  force_recreate?: boolean;
 }
 
 export interface Variables {
-  [key: string]: any;
+  [key: string]: any | VariablesExtended;
+}
+
+export interface VariablesExtended {
+  value: any;
+  force_eval?: boolean;
+}
+
+export interface EvaluatedVariables {
+  [key: string]: { value?: any; loop?: boolean };
 }
 
 export interface ButtonCardEmbeddedCards {

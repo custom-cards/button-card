@@ -2,9 +2,9 @@
 
 Custom fields support, using the `custom_fields` object, enables you to create your own fields on top of the pre-defined ones (name, state, label and icon). This is an advanced feature which leverages (if you require it) the CSS Grid.
 
-Custom fields also support embeded cards, see [example below](#nested-card).
+Custom fields also support embedded cards, see [example below](#nested-card).
 
-Each custom field supports its own styling config, the name needs to match between both objects needs to match:
+Each custom field supports its own styling config, the name needs to match between both objects:
 
 ```yaml
 type: custom:button-card
@@ -30,7 +30,7 @@ Placing an element wherever you want (that means bypassing the grid). Set the gr
 type: custom:button-card
 icon: mdi:lightbulb
 aspect_ratio: 1/1
-name: Nb lights on
+name: No lights on
 styles:
   grid:
     - position: relative
@@ -57,7 +57,7 @@ custom_fields:
 
 ## Using `grid-template-areas`
 
-Or you can use the grid. Each element will have it's name positioned as the `grid-area`:
+Or you can use the grid. Each element will have its name positioned as the `grid-area`:
 
 ![custom_fields_2](../images/custom_fields_2.png)
 
@@ -151,9 +151,21 @@ custom_fields:
 
 ## Nested card
 
-Or you can embed a card (or multiple) inside the button card (note, this configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card.
+Or you can embed a card (or multiple) inside the button card
 
-This is what the `style` inside the embedded card is for):
+!!! info
+
+    Some cards do not behave properly when their config is updated while already being displayed. In this case, you can set `force_recreate: true`. This will recreate the card every time there is an update. If you see weird behavior with nested cards (eg. not updating), try this setting.
+
+    ```yaml
+    type: custom:button-card
+    custom_fields:
+      graph:
+        force_recreate: true
+        card:
+          type: custom:decluttering-card
+          ...
+    ```
 
 ![custom_fields_3](../images/custom_fields_card.png)
 
@@ -166,7 +178,7 @@ custom_fields:
       type: sensor
       entity: sensor.sensor1
       graph: line
-      card_mod:
+      card_mod: # (1)!
         style: |
           ha-card {
             box-shadow: none;
@@ -182,11 +194,14 @@ styles:
     - grid-template-areas: '"i" "n" "graph"'
     - grid-template-columns: 1fr
     - grid-template-rows: 1fr min-content min-content
-
 entity: light.test_light
 hold_action:
   action: more-info
 ```
+
+1.  This configuration uses [card-mod](https://github.com/thomasloven/lovelace-card-mod) to remove the `box-shadow` of the sensor card.
+
+    This is what the `style` inside the embedded card is for.
 
 ## Nested cards with JS templates
 

@@ -1,3 +1,82 @@
+## [7.0.0-dev.3](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.2...v7.0.0-dev.3) (2025-11-03)
+
+### Features
+
+* **custom_fields:** New `force_recreate: true` to recreate the nested card on each config update ([#1102](https://github.com/custom-cards/button-card/issues/1102)) ([0a85dff](https://github.com/custom-cards/button-card/commit/0a85dff18767a50e2209635a76966f5f0803f7cf)), closes [#1086](https://github.com/custom-cards/button-card/issues/1086)
+
+### Bug Fixes
+
+* **variables:** storing objects or functions in variables would fail in specific cases ([#1103](https://github.com/custom-cards/button-card/issues/1103)) ([4778c4a](https://github.com/custom-cards/button-card/commit/4778c4afa90b27e73cf9ce99b1801b2e75fb37a5))
+
+## [7.0.0-dev.2](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.1...v7.0.0-dev.2) (2025-11-02)
+
+### ⚠ BREAKING CHANGES
+
+* `spin` (to make the icon/entity_picture rotate) has
+been renamed to `rotate`, please update your configurations
+
+### Features
+
+* rename `spin` to `rotate` ([#1098](https://github.com/custom-cards/button-card/issues/1098)) ([d26bae2](https://github.com/custom-cards/button-card/commit/d26bae2e37f6d086a793169ad88ae490d65c6cc7)), closes [#1081](https://github.com/custom-cards/button-card/issues/1081)
+
+### Bug Fixes
+
+* `press_action` would not work on touchscreen ([#1100](https://github.com/custom-cards/button-card/issues/1100)) ([ea71b3d](https://github.com/custom-cards/button-card/commit/ea71b3d4282ad0f5cb08928883f4ec868b480546)), closes [#1097](https://github.com/custom-cards/button-card/issues/1097)
+* **variables:** read only error in some cases ([#1101](https://github.com/custom-cards/button-card/issues/1101)) ([a316aa2](https://github.com/custom-cards/button-card/commit/a316aa2376d4bf19df0388b2889115956cc79308)), closes [#1099](https://github.com/custom-cards/button-card/issues/1099)
+
+## [7.0.0-dev.1](https://github.com/custom-cards/button-card/compare/v6.1.0-dev.2...v7.0.0-dev.1) (2025-11-01)
+
+### ⚠ BREAKING CHANGES
+
+* **triggers_update:** `triggers_update` is deprecated and will not have any
+effect if set. Entities are discovered automatically. If there is no
+suitable entities in your configuration, consider using `update_timer`
+to update the card on interval.
+* **variables:** `variables` are only evaluated if they are "used" so
+hacks using variables to run javascript code during card init for eg.
+should read the updated documentation section. It is still possible with
+the `force_eval` variables configuration option.
+
+```yaml
+type: custom:button-card
+entity: switch.skylight
+update_timer: 1s
+variables:
+  always_evaled:
+    value: '[[[ window.alwaysEvaled = `${new Date().getTime()}`; ]]]'
+    force_eval: true
+  never_evaled: '[[[ window.neverEvaled = `${new Date().getTime()}`; ]]]'
+name: 'always should update every second,<br/>never should be unset'
+show_label: true
+label: |
+  [[[
+    return `always: ${window.alwaysEvaled || "not set"}
+      <br/>never: ${window.neverEvaled || "not set"}`;
+   ]]]
+```
+
+```yaml
+type: custom:button-card
+variables:
+  never_evaled: '[[[ throw new Error("This variable should never be evaluated") ]]]'
+  aa:
+    value: '[[[ return "Test variables dependencies: OK" ]]]'
+  test1: '[[[ return variables.aa ]]]'
+name: '[[[ return variables.test1; ]]]'
+```
+
+### Features
+
+* **spin:** Make `spin` available as a main config option and support JS templates ([#1084](https://github.com/custom-cards/button-card/issues/1084)) ([3c92a5d](https://github.com/custom-cards/button-card/commit/3c92a5d69ceb594f9ceb73d6d9c82c7dcf2904f2)), closes [#1081](https://github.com/custom-cards/button-card/issues/1081)
+* **triggers_update:** `triggers_update` is deprecated and will not have any effect. This is now automatic. ([#1095](https://github.com/custom-cards/button-card/issues/1095)) ([45a6b69](https://github.com/custom-cards/button-card/commit/45a6b69c2e340327e6275066cf43d0c10b9e6828))
+* **variables:** variables can depend on any other variable (no alphabetical dependency anymore) ([#1089](https://github.com/custom-cards/button-card/issues/1089)) ([f372ce4](https://github.com/custom-cards/button-card/commit/f372ce446ec06a5120632c03dbd83b0bcc0f324e))
+
+### Documentation
+
+* Add Browser Mod nested templates example ([#1092](https://github.com/custom-cards/button-card/issues/1092)) ([18a8f21](https://github.com/custom-cards/button-card/commit/18a8f21607cfb22266c119be307552b215cae361))
+* fix several typos ([#1090](https://github.com/custom-cards/button-card/issues/1090)) ([6dc25ab](https://github.com/custom-cards/button-card/commit/6dc25abafb307c85c0ba43d5175783a5ab515d4e))
+* fix tooltip part naming conventions in doco ([#1085](https://github.com/custom-cards/button-card/issues/1085)) ([b0aa2a9](https://github.com/custom-cards/button-card/commit/b0aa2a99f05bd7cd541a6219742b45bbe774a3b2))
+
 ## [6.1.0-dev.2](https://github.com/custom-cards/button-card/compare/v6.1.0-dev.1...v6.1.0-dev.2) (2025-10-26)
 
 ### Features

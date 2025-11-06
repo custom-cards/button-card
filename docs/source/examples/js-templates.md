@@ -102,3 +102,69 @@ styles:
         return entity?.state === 'on' ? 'Light On' : 'Light Off';
       ]]]
     ```
+
+## Nested templates in Browser Mod
+
+This examples shows the effect of template nesting when included code may require the template **CODE** rather that the template **VALUE**. Here Browser Mod code uses a button-card. However it may also be applicable if the Browser Mod code used another card that also supported `[[[ ]]]` javascript templates.
+
+![browser_mod example](../images/browser-mod-nested-templates-example.gif)
+
+```yaml
+type: custom:button-card
+show_label: true
+label: Broswer Mod Nested Templates
+section_mode: true
+grid_options:
+  rows: 1
+  columns: 12
+tap_action:
+  action: fire-dom-event
+  browser_mod:
+    service: browser_mod.popup
+    data:
+      title: Nested Templates Example
+      content:
+        type: vertical-stack
+        cards:
+          - type: tile
+            entity: light.bed_light
+            vertical: false
+            features_position: inline
+            features:
+              - type: toggle
+          - type: markdown
+            content: Non-nested template
+            text_only: true
+          - type: custom:button-card
+            show_label: true
+            label: | # (1)!
+              [[[
+                return `Light is ${states['light.bed_light'].state.toUpperCase()}`;
+              ]]]
+          - type: markdown
+            content: Nested template
+            text_only: true
+          - type: custom:button-card
+            show_label: true
+            label: | # (2)!
+              [[[[
+                return `Light is ${states['light.bed_light'].state.toUpperCase()}`;
+              ]]]]
+```
+
+1.  In this case, the card in the popup will get the following configuration which is the resulting string of the JS template evaluated by the main card (which is why the text doesn't update in the animation above):
+
+    ```yaml
+    label: Light is ON
+    # or
+    label: Light is OFF
+    ```
+
+2.  In this case, the card in the popup will get the configuration below (1 pair of `[]` removed) and it will then evaluate this JS template by itself:
+
+    ```yaml
+    label: |
+      [[[
+        return `Light is ${states['light.bed_light'].state.toUpperCase()}`;
+      ]]]
+    ```

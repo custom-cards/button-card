@@ -38,6 +38,7 @@ import {
   TooltipConfig,
   ShowToastParams,
   ToastActionConfig,
+  EvaluatedVariables,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -46,7 +47,6 @@ import {
   getFontColorBasedOnBackgroundColor,
   buildNameStateConcat,
   applyBrightnessToColor,
-  myHasConfigOrEntityChanged,
   getLightColorBasedOnTemperature,
   mergeDeep,
   mergeStatesById,
@@ -170,11 +170,11 @@ class ButtonCard extends LitElement {
 
   private _pStates?: HassEntities;
 
-  private _triggersAll?: boolean;
-
   private _stateObj: HassEntity | undefined;
 
-  private _evaledVariables: any | undefined;
+  private _evaluatedVariables: EvaluatedVariables = {};
+
+  private _pVariables?: any;
 
   private _interval?: number;
 
@@ -186,7 +186,7 @@ class ButtonCard extends LitElement {
 
   private _cardsConfig: ButtonCardEmbeddedCardsConfig = {};
 
-  private _entities: string[] = [];
+  private _monitoredEntities: string[] = [];
 
   private _initialSetupComplete = false;
 
@@ -268,8 +268,8 @@ class ButtonCard extends LitElement {
       {},
       {
         get: (__target, prop: string) => {
-          if (prop.includes('.') && !this._entities.includes(prop)) {
-            this._entities.push(prop);
+          if (prop.includes('.') && !this._monitoredEntities.includes(prop)) {
+            this._monitoredEntities.push(prop);
             this._expandTriggerGroups();
           }
           return this._hass?.states?.[prop];
@@ -277,8 +277,51 @@ class ButtonCard extends LitElement {
         has: (__target, prop: string) => {
           return !!this._hass?.states?.[prop];
         },
+        ownKeys: () => {
+          if (!this._hass || !this._hass.states) return [];
+          return Object.keys(this._hass.states);
+        },
+        getOwnPropertyDescriptor: (__target, prop: string) => {
+          return {
+            value: this._hass?.states?.[prop],
+            enumerable: true,
+            configurable: true,
+          };
+        },
       },
     );
+  }
+
+  private _createVariablesProxy(variables: any): any {
+    if (!variables) return {};
+    this._evaluatedVariables = {};
+    return new Proxy(variables, {
+      get: (__target, prop: string) => {
+        if (prop in this._evaluatedVariables && 'value' in this._evaluatedVariables[prop]) {
+          return this._evaluatedVariables[prop].value;
+        } else if (prop in __target) {
+          if (this._evaluatedVariables[prop]?.loop) {
+            throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
+          }
+          this._evaluatedVariables[prop] = { loop: true };
+          if (typeof Reflect.get(__target, prop) === 'object' && 'value' in Reflect.get(__target, prop)) {
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
+              this._stateObj,
+              Reflect.get(__target, prop).value,
+            );
+          } else {
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
+              this._stateObj,
+              Reflect.get(__target, prop),
+            );
+          }
+          delete this._evaluatedVariables[prop].loop;
+          return this._evaluatedVariables[prop].value;
+        } else {
+          return undefined;
+        }
+      },
+    });
   }
 
   public disconnectedCallback(): void {
@@ -299,30 +342,20 @@ class ButtonCard extends LitElement {
     window.addEventListener('haptic', this._hapticInterceptHandler.bind(this), { capture: true });
   }
 
-  private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
-    this._evaledVariables = {};
-    if (this._config?.variables) {
-      const variablesNameOrdered = Object.keys(this._config.variables).sort();
-      variablesNameOrdered.forEach((variable) => {
-        try {
-          this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {}
-      });
-    }
-  }
-
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._evaluateVariablesSkipError();
+      this._pVariables = this._createVariablesProxy(copy(this._config?.variables));
 
       if (this._config!.entity) {
-        const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
-        this._config!.entity = entityEvaled;
-        this._stateObj = this._hass!.states[entityEvaled];
+        try {
+          const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
+          this._config!.entity = entityEvaled;
+          this._stateObj = this._hass!.states[entityEvaled];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          console.error(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
+        }
       }
-
-      this._evaluateVariablesSkipError(this._stateObj);
 
       if (
         !this._isActionDoingSomething(this._stateObj, this._config!.press_action) &&
@@ -389,32 +422,10 @@ class ButtonCard extends LitElement {
         }
       }
 
-      const jsonConfig = JSON.stringify(this._config);
-      this._entities = [];
-      if (Array.isArray(this._config!.triggers_update)) {
-        this._config!.triggers_update.forEach((entry) => {
-          try {
-            const evaluatedEntry = this._getTemplateOrValue(this._stateObj, entry);
-            if (evaluatedEntry !== undefined && evaluatedEntry !== null && !this._entities.includes(evaluatedEntry)) {
-              this._entities.push(evaluatedEntry);
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {}
-        });
-      } else if (typeof this._config!.triggers_update === 'string') {
-        const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
-        if (result && result !== 'all') {
-          this._entities.push(result);
-        } else {
-          this._config!.triggers_update = result;
-        }
-      }
-      if (this._config!.entity && !this._entities.includes(this._config!.entity))
-        this._entities.push(this._config!.entity);
+      this._monitoredEntities = [];
+      if (this._config!.entity && !this._monitoredEntities.includes(this._config!.entity))
+        this._monitoredEntities.push(this._config!.entity);
       this._expandTriggerGroups();
-
-      const rxp = new RegExp('(?:[^\\[]|^)\\[{3}[^\\[].*[^\\]]\\]{3}(?:[^\\]]|$)', 's');
-      this._triggersAll = this._config!.triggers_update === 'all' && jsonConfig.match(rxp) ? true : false;
 
       this._startTimerCountdown();
       this._updateTimerStart();
@@ -449,14 +460,15 @@ class ButtonCard extends LitElement {
     if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._evaledVariables = {};
+      this._evaluatedVariables = {};
       if (this._config?.variables) {
-        const variablesNameOrdered = Object.keys(this._config.variables).sort();
-        variablesNameOrdered.forEach((variable) => {
-          this._evaledVariables[variable] = this._objectEvalTemplate(
-            this._stateObj,
-            this._config!.variables![variable],
-          );
+        Object.keys(this._config?.variables)?.forEach((varName) => {
+          const v = this._config!.variables![varName];
+          if (typeof v === 'object' && v.force_eval) {
+            // this is to force evaluate specific variables to support "hacks"
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const __ = this._pVariables[varName];
+          }
         });
       }
       return this._cardHtml();
@@ -474,25 +486,36 @@ class ButtonCard extends LitElement {
     }
   }
 
+  private _hasAnEntityChanged(changedProps: PropertyValues): boolean {
+    const oldHass = changedProps.get('_hass') as HomeAssistant | undefined;
+    if (oldHass) {
+      function hasChanged(this: ButtonCard, elt: string): boolean {
+        return oldHass?.states[elt] !== this._hass!.states[elt];
+      }
+      return this._monitoredEntities.some(hasChanged.bind(this));
+    }
+    return false;
+  }
+
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     if (changedProps.has('_config')) {
       return true;
     }
-    if (this._config?.triggers_update === 'update_timer') {
+
+    // if update_timer is set (and > 100ms), we only update on interval
+    if (this._updateTimerDuration) {
       if (changedProps.has('_updateTimerMS')) {
         return true;
       } else {
         return this._updateTimerChanged();
       }
     }
+
     const forceUpdate =
-      this._triggersAll ||
-      changedProps.has('_timeRemaining') ||
-      changedProps.has('_updateTimerMS') ||
-      changedProps.has('_spinnerActive')
+      changedProps.has('_timeRemaining') || changedProps.has('_updateTimerMS') || changedProps.has('_spinnerActive')
         ? true
         : false;
-    if (forceUpdate || myHasConfigOrEntityChanged(this, changedProps)) {
+    if (forceUpdate || this._hasAnEntityChanged(changedProps)) {
       this._expandTriggerGroups();
       return true;
     } else if (changedProps.has('preview')) {
@@ -759,7 +782,7 @@ class ButtonCard extends LitElement {
         state,
         this._hass!.user,
         this._pHass,
-        this._evaledVariables,
+        this._pVariables,
         html,
         this._getTemplateHelpers(),
       );
@@ -777,7 +800,7 @@ class ButtonCard extends LitElement {
   }
 
   private _getTemplateOrValue(state: HassEntity | undefined, value: any | undefined): any | undefined {
-    if (['number', 'boolean'].includes(typeof value)) return value;
+    if (['number', 'boolean', 'function'].includes(typeof value)) return value;
     if (!value) return value;
     if (typeof value === 'object') {
       Object.keys(value).forEach((key) => {
@@ -786,7 +809,7 @@ class ButtonCard extends LitElement {
       return value;
     }
     const trimmed = value.trim();
-    const rx = new RegExp('(\\[{3,})(.*?)(\\]{3,})', 's');
+    const rx = new RegExp('^(\\[{3,})(.*?)(\\]{3,})$', 's');
     const match = trimmed.match(rx);
     if (match && match.length === 4) {
       if (match[1].length === 3 && match[3].length === 3) {
@@ -1094,7 +1117,10 @@ class ButtonCard extends LitElement {
         };
         let thing;
         if (!deepEqual(this._cardsConfig[key], cards[key])) {
-          if ((this._cardsConfig[key] as any)?.type === cards[key]?.type) {
+          if (
+            (this._cardsConfig[key] as any)?.type === cards[key]?.type &&
+            (this._config!.custom_fields?.[key] as CustomFieldCard)?.force_recreate !== true
+          ) {
             // same type, different config
             thing = this._cards[key];
             thing.preview = this.preview;
@@ -1181,8 +1207,8 @@ class ButtonCard extends LitElement {
 
   private _rotate(configState: StateConfig | undefined): boolean {
     return !!(
-      this._getTemplateOrValue(this._stateObj, configState?.spin) ??
-      this._getTemplateOrValue(this._stateObj, this._config?.spin)
+      this._getTemplateOrValue(this._stateObj, configState?.rotate) ??
+      this._getTemplateOrValue(this._stateObj, this._config?.rotate)
     );
   }
 
@@ -1313,25 +1339,29 @@ class ButtonCard extends LitElement {
   private _getTooltip(tooltipStyle: StyleInfo, configState: StateConfig | undefined): TemplateResult {
     let tooltipConfig: TooltipConfig | undefined;
     if (typeof this._config!.tooltip === 'string') {
-      tooltipConfig = { content: this._getTemplateOrValue(this._stateObj, this._config!.tooltip) };
+      tooltipConfig = {
+        content: this._getTemplateOrValue(this._stateObj, this._config!.tooltip),
+      };
     } else {
       tooltipConfig = this._objectEvalTemplate(this._stateObj, this._config!.tooltip) ?? {};
     }
     let tooltipStateConfig: TooltipConfig | undefined;
     if (typeof configState?.tooltip === 'string') {
-      tooltipStateConfig = { content: this._getTemplateOrValue(this._stateObj, configState?.tooltip) };
+      tooltipStateConfig = {
+        content: this._getTemplateOrValue(this._stateObj, configState?.tooltip),
+      };
     } else {
       tooltipStateConfig = this._objectEvalTemplate(this._stateObj, configState?.tooltip) ?? {};
     }
     const tooltipMergedConfig = { ...tooltipConfig, ...tooltipStateConfig };
 
     if (tooltipMergedConfig && tooltipMergedConfig.content) {
-      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en');
+      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en') as number;
       const hideDelayMs = parseDuration(
         String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '150'),
         'ms',
         'en',
-      );
+      ) as number;
       const withoutArrow = tooltipMergedConfig?.arrow ? undefined : true;
       return html`
         <wa-tooltip
@@ -1680,8 +1710,8 @@ class ButtonCard extends LitElement {
           if (this._hass.states[childEntity].attributes?.entity_id) {
             this._loopGroup(this._hass.states[childEntity].attributes.entity_id);
           } else {
-            if (!this._entities.includes(childEntity)) {
-              this._entities.push(childEntity);
+            if (!this._monitoredEntities.includes(childEntity)) {
+              this._monitoredEntities.push(childEntity);
             }
           }
         }
@@ -1690,8 +1720,8 @@ class ButtonCard extends LitElement {
   }
 
   private _expandTriggerGroups(): void {
-    if (this._hass && this._config?.group_expand && this._entities) {
-      this._entities.forEach((entity) => {
+    if (this._hass && this._config?.group_expand && this._monitoredEntities) {
+      this._monitoredEntities.forEach((entity) => {
         if (this._hass?.states[entity]?.attributes?.entity_id) {
           this._loopGroup(this._hass?.states[entity].attributes?.entity_id);
         }
@@ -2125,12 +2155,16 @@ class ButtonCard extends LitElement {
   private _protectedConfirmedCallback(code: string, type: 'pin' | 'password'): void {
     if (this._protectedAction && this._config) {
       if (code === this._protectedAction[NORMALISED_ACTION]?.protect?.[type]) {
-        this._sendToastMessage({ message: this._protectedAction[NORMALISED_ACTION]?.protect?.success_message });
+        this._sendToastMessage({
+          message: this._protectedAction[NORMALISED_ACTION]?.protect?.success_message,
+        });
         delete this._protectedAction[NORMALISED_ACTION]?.protect;
         this._executeAction(this._protectedAction);
       } else {
         const message = this._protectedAction[NORMALISED_ACTION]?.protect?.failure_message;
-        this._sendToastMessage({ message: message || DEFAULT_FAILED_TOAST_MESSAGE[type] });
+        this._sendToastMessage({
+          message: message || DEFAULT_FAILED_TOAST_MESSAGE[type],
+        });
       }
     }
     this._protectedAction = undefined;
@@ -2218,7 +2252,12 @@ class ButtonCard extends LitElement {
     ev.stopPropagation();
     this.parentElement?.dispatchEvent(event);
     // Send non-bubbling event to ha-card to allow ripples
-    const rippleEvent = new CustomEvent(ev.type, { ...ev, bubbles: false, composed: false, detail: { ignore: true } });
+    const rippleEvent = new CustomEvent(ev.type, {
+      ...ev,
+      bubbles: false,
+      composed: false,
+      detail: { ignore: true },
+    });
     this._ripple.then((r) => {
       if (r) {
         r.parentElement?.dispatchEvent(rippleEvent);
