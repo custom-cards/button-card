@@ -208,6 +208,8 @@ class ButtonCard extends LitElement {
 
   private _hapticCapture = false;
 
+  private _extraStyles?: string[] = [];
+
   private get _doIHaveEverything(): boolean {
     return !!this._hass && !!this._config && this.isConnected;
   }
@@ -1300,10 +1302,16 @@ class ButtonCard extends LitElement {
     lockStyle = { ...lockStyle, ...lockStyleFromConfig };
     spinnerStyle = { ...spinnerStyle, ...spinnerStyleFromConfig };
 
-    const extraStyles = this._config!.extra_styles
+    let extraStylesConcat = '';
+    this._extraStyles?.forEach((style) => {
+      const styleEvaled = this._getTemplateOrValue(this._stateObj, style);
+      extraStylesConcat += styleEvaled ? styleEvaled.trim() + '\n' : '';
+    });
+    extraStylesConcat = extraStylesConcat.trim();
+    const extraStyles = extraStylesConcat
       ? html`
           <style>
-            ${this._getTemplateOrValue(this._stateObj, this._config!.extra_styles)}
+            ${extraStylesConcat}
           </style>
         `
       : html``;
@@ -1635,19 +1643,26 @@ class ButtonCard extends LitElement {
 
   private _configFromLLTemplates(ll: any, config: any): ExternalButtonCardConfig {
     const tpl = config.template;
-    if (!tpl) return config;
     let result: any = {};
-    let mergedStateConfig: StateConfig[] | undefined;
-    const tpls = tpl && Array.isArray(tpl) ? tpl : [tpl];
-    tpls?.forEach((template) => {
-      if (!ll.config.button_card_templates?.[template])
-        throw new Error(`Button-card template '${template}' is missing!`);
-      const res = this._configFromLLTemplates(ll, ll.config.button_card_templates[template]);
-      result = mergeDeep(result, res);
-      mergedStateConfig = mergeStatesById(mergedStateConfig, res.state);
-    });
-    result = mergeDeep(result, config);
-    result.state = mergeStatesById(mergedStateConfig, config.state);
+    if (!tpl) {
+      result = copy(config);
+    } else {
+      let mergedStateConfig: StateConfig[] | undefined;
+      const tpls = tpl && Array.isArray(tpl) ? tpl : [tpl];
+      tpls?.forEach((template) => {
+        if (!ll.config.button_card_templates?.[template])
+          throw new Error(`Button-card template '${template}' is missing!`);
+        const res = this._configFromLLTemplates(ll, ll.config.button_card_templates[template]);
+        result = mergeDeep(result, res);
+        mergedStateConfig = mergeStatesById(mergedStateConfig, res.state);
+      });
+      result = mergeDeep(result, config);
+      result.state = mergeStatesById(mergedStateConfig, config.state);
+    }
+    if (result.extra_styles) {
+      this._extraStyles?.push(result.extra_styles);
+      delete result.extra_styles;
+    }
     return result as ExternalButtonCardConfig;
   }
 
@@ -1661,6 +1676,7 @@ class ButtonCard extends LitElement {
 
     this._cards = {};
     this._cardsConfig = {};
+    this._extraStyles = [];
     const ll = getLovelace() || getLovelaceCast();
     let template: ExternalButtonCardConfig = copy(config);
     template = this._configFromLLTemplates(ll, template);
