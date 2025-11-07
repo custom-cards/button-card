@@ -340,6 +340,7 @@ button_card_templates:
     extra_styles: |
       #name {
         color: blue;
+        font-size: 10px;
       }
   extraS3:
     extra_styles: |
@@ -4147,12 +4148,15 @@ views:
             styles:
               name:
                 - text-align: left
-                - font-size: 10px
             template:
               - extraS1
               - extraS3
             entity: switch.skylight
-            name: '[[[ return "Should be green when on, purple when off<br/><pre>"+JSON.stringify(this._extraStyles, undefined, 2)+"</pre>"; ]]]'
+            name: |
+              [[[
+                return "Should be green when on, purple when off<br/><pre>"
+                +JSON.stringify(this._extraStyles, undefined, 2)+"</pre>";
+              ]]]
 
   # second view
   - title: 2nd
