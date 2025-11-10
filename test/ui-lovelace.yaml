@@ -3534,6 +3534,10 @@ views:
     cards:
       - type: custom:button-card
         variables:
+          null_var:
+        name: '[[[ return variables.null_var === null ? "null variable OK" : "null variable NOK"; ]]]'
+      - type: custom:button-card
+        variables:
           translate:
             a: A
             b: B

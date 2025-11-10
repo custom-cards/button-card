@@ -304,16 +304,11 @@ class ButtonCard extends LitElement {
             throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
           }
           this._evaluatedVariables[prop] = { loop: true };
-          if (typeof Reflect.get(__target, prop) === 'object' && 'value' in Reflect.get(__target, prop)) {
-            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
-              this._stateObj,
-              Reflect.get(__target, prop).value,
-            );
+          const origin = Reflect.get(__target, prop);
+          if (typeof origin === 'object' && origin !== null && 'value' in origin) {
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(this._stateObj, origin.value);
           } else {
-            this._evaluatedVariables[prop].value = this._objectEvalTemplate(
-              this._stateObj,
-              Reflect.get(__target, prop),
-            );
+            this._evaluatedVariables[prop].value = this._objectEvalTemplate(this._stateObj, origin);
           }
           delete this._evaluatedVariables[prop].loop;
           return this._evaluatedVariables[prop].value;
@@ -464,7 +459,7 @@ class ButtonCard extends LitElement {
       if (this._config?.variables) {
         Object.keys(this._config?.variables)?.forEach((varName) => {
           const v = this._config!.variables![varName];
-          if (typeof v === 'object' && v.force_eval) {
+          if (typeof v === 'object' && v !== null && v.force_eval) {
             // this is to force evaluate specific variables to support "hacks"
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const __ = this._pVariables[varName];
