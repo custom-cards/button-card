@@ -196,36 +196,99 @@ You can inject any CSS style you want using this config option. It is useful if 
 
     If you use [config templates](./config-templates.md), all the `extra_styles` will be merged together from the deepest to the most shallow one, in this order.
 
-An example is better than words:
+- A simple example:
 
-![change_background](../images/loop_background.gif)
+      ![change_background](../images/loop_background.gif)
 
-```yaml
-type: custom:button-card
-name: Change Background
-aspect_ratio: 2/1
-extra_styles: |
-  @keyframes bgswap1 {
-    0% {
-      background-image: url("/local/background1.jpg");
-    }
-    25% {
-      background-image: url("/local/background1.jpg");
-    }
-    50% {
-      background-image: url("/local/background2.jpg");
-    }
-    75% {
-      background-image: url("/local/background2.jpg");
-    }
-    100% {
-      background-image: url("/local/background1.jpg");
-    }
-  }
-styles:
-  card:
-    - animation: bgswap1 10s linear infinite
-    - background-size: cover
-  name:
-    - color: white
-```
+      ```yaml
+      type: custom:button-card
+      name: Change Background
+      aspect_ratio: 2/1
+      extra_styles: |
+        @keyframes bgswap1 {
+          0% {
+            background-image: url("/local/background1.jpg");
+          }
+          25% {
+            background-image: url("/local/background1.jpg");
+          }
+          50% {
+            background-image: url("/local/background2.jpg");
+          }
+          75% {
+            background-image: url("/local/background2.jpg");
+          }
+          100% {
+            background-image: url("/local/background1.jpg");
+          }
+        }
+      styles:
+        card:
+          - animation: bgswap1 10s linear infinite
+          - background-size: cover
+        name:
+          - color: white
+      ```
+
+- Using config templates, merging `extra_styles`
+
+      Those are the config templates defined:
+
+      ```yaml
+      button_card_templates:
+        extraS1:
+          template: extraS2
+          extra_styles: |
+            #name {
+              color: red;
+            }
+        extraS2:
+          extra_styles: |
+            #name {
+              color: blue;
+              font-size: 10px;
+            }
+        extraS3:
+          extra_styles: |
+            [[[
+              return `#name {
+                color: ${entity.state === 'on' ? 'green' : 'purple'};
+              }`;
+            ]]]
+      ```
+
+      Used like that:
+
+      ```yaml
+      type: 'custom:button-card'
+      section_mode: true
+      grid_options:
+        rows: 4
+        columns: 12
+      styles:
+        name:
+          - text-align: left
+      template: # (1)!
+        - extraS1
+        - extraS3
+      entity: switch.skylight
+      name: |
+        [[[
+          return "Should be green when on, purple when off<br/>and font-size: 10px"
+        ]]]
+      ```
+
+      1.  If the entity's state is `on`, the resulting `extra_styles` will be:
+
+          ```css
+          #name {
+            color: blue;
+            font-size: 10px;
+          }
+          #name {
+            color: red;
+          }
+          #name {
+            color: green;
+          }
+          ```
