@@ -5,6 +5,7 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import serve from 'rollup-plugin-serve';
 import json from '@rollup/plugin-json';
+import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 
 const dev = process.env.ROLLUP_WATCH;
 const port = process.env.PORT || 5000;
@@ -27,6 +28,19 @@ const plugins = [
   babel({
     exclude: 'node_modules/**',
     babelHelpers: 'bundled',
+  }),
+  getBabelOutputPlugin({
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          targets: {
+            browsers: ['last 2 versions', 'Android >= 5', 'Chrome >= 60', 'Firefox ESR', 'Safari >= 9'],
+          },
+          modules: false,
+        },
+      ],
+    ],
   }),
   dev && serve(serveopts),
   !dev &&
