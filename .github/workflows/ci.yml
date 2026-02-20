@@ -13,7 +13,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v6
         with:
@@ -36,7 +36,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v6
         with:
@@ -60,7 +60,7 @@ jobs:
   mkdocs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v6
         with:
