@@ -1,9 +1,9 @@
 {
   "name": "Button Card Development",
-  "image": "thomasloven/hass-custom-devcontainer",
+  "image": "romrider/hass-custom-devcontainer:latest",
   "runArgs": ["--env-file", "${localWorkspaceFolder}/test/.env"],
   "appPort": ["${localEnv:BUTTONCARD_HA_HOST:8123}:8123", "${localEnv:BUTTONCARD_DIST_HOST:5000}:5000"],
-  "postCreateCommand": "sudo --preserve-env=PATH -E bash -c \"source /usr/local/share/nvm/nvm.sh && nvm install 24\" && sudo --preserve-env=PATH -E uv pip install --upgrade --force-reinstall homeassistant && sudo --preserve-env=PATH -E uv pip show homeassistant | grep -i version: | cut -d ' ' -f 2 | sudo tee /config/.HA_VERSION && sudo --preserve-env=PATH -E container setup && yarn install --frozen-lockfile && sudo --preserve-env=PATH -E uv pip install -r docs/requirements.txt",
+  "postCreateCommand": "yarn install --frozen-lockfile && uv pip install -r docs/requirements.txt",
   "mounts": [
     "source=${localWorkspaceFolder},target=/config/www/workspace,type=bind",
     "source=${localWorkspaceFolder}/test,target=/config/test,type=bind",
