@@ -65,7 +65,7 @@ import {
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
 import { computeStateDisplay } from './common/compute_state_display';
-import copy from 'fast-copy';
+import { copy } from 'fast-copy';
 import * as pjson from '../package.json';
 import { deepEqual } from './deep-equal';
 import { stateColorCss } from './common/state_color';

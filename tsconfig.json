@@ -2,8 +2,9 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "lib": ["es2017", "dom", "dom.iterable"],
+    "types": ["node"],
     "plugins": [
       {
         "name": "ts-lit-plugin"
