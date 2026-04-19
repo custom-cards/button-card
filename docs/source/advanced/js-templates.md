@@ -98,6 +98,10 @@ Inside the javascript code, you'll have access to those variables:
   - `helpers.parseDuration(duration,format?='ms',locale? = <Home Assistant locale>)`: Parses a string duration to number. `helpers.parseDuration('1 day', 's')` returns `86400`. `helpers.parseDuration('1 jour', 'd', 'fr')` returns `1`. If a locale is specified `en` is also used as a fallback.
   - `helpers.toastMessage(message)` and `helpers.toast(toastParams)`: See [toast helpers](../config/actions.md#toast-helpers)
   - `helpers.runAction(actionConfig)`: See [`runAction` JS helper](../config/actions.md#runaction-js-helper)
+  - Helpers to retrieve an entity name, area name or device name:
+    - `helpers.getEntityName(entityId)`: returns the name of the entity. It uses the `friendly_name` attribute if it exists, else it returns the entity part of the entity_id.
+    - `helpers.getDeviceNameFromEntityId(entityId)`: returns the name of the device of the entity if the entity is linked to a device, else it returns `undefined`.
+    - `helpers.getAreaNameFromEntityId(entityId)`: returns the name of the area of the entity if the entity is in an area, else it returns the area of the device if the entity is linked to a device which is in an area, else it returns `undefined`.
 
 See [here](../examples/js-templates.md) for some examples or [here](./custom-fields.md) for some advanced configuration using templates.
 
