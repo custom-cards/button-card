@@ -951,29 +951,6 @@ class ButtonCard extends LitElement {
     return style;
   }
 
-  private _buildCustomStyleGeneric(
-    state: HassEntity | undefined,
-    configState: StateConfig | undefined,
-    styleType: string,
-  ): StyleInfo {
-    let style: any = {};
-    if (this._config!.styles?.custom_fields?.[styleType]) {
-      style = Object.assign(style, ...this._config!.styles.custom_fields[styleType]);
-    }
-    if (configState?.styles?.custom_fields?.[styleType]) {
-      let configStateStyle: StyleInfo = {};
-      configStateStyle = Object.assign(configStateStyle, ...configState.styles.custom_fields[styleType]);
-      style = {
-        ...style,
-        ...configStateStyle,
-      };
-    }
-    Object.keys(style).forEach((key) => {
-      style[key] = this._getTemplateOrValue(state, style[key]);
-    });
-    return style;
-  }
-
   private _buildName(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
     if (this._config!.show_name === false) {
       return undefined;
