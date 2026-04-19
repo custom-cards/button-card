@@ -240,3 +240,74 @@ custom_fields:
 2. This will return: B: undefined / C: 42 as it is evaluated in the context of the local button-card inside the custom_field (which doesn't know about b)
 3. (**DEPRECATED**) This stops the evaluation of js templates for the card object in this custom field
 4. This will return: B: undefined / C: 42 as it is evaluated in the context of the local button-card inside the custom_field (which doesn't know about b)
+
+## Custom Fields as JS Templates
+
+You can also set the whole `custom_fields` object as a [JS template](./js-templates.md), this allows you to create custom fields dynamically based on the state of an entity or whatever you want.
+
+If you want to apply styles to them as well, you can also set the `styles.custom_fields` as a [JS template](./js-templates.md) that returns an object with the same keys as the custom fields and the styles you want to apply to them.
+
+This is useful if you want to show/hide custom fields based on the state of an entity, or if you want to change the card inside a custom field based on the state of an entity, etc...
+
+```yaml
+type: custom:button-card
+name: |
+  <b>Custom Fields as a JS Template.</b> <br/>
+  Shows a red background and a markdown card if sensor1 is 0 <br/>
+  Shows a blue background with an entity card if it's above 0.
+variables:
+  card1:
+    card:
+      type: markdown
+      content: 'This is a custom field with a markdown card'
+  card2:
+    card:
+      type: entity
+      entity: sensor.sensor1
+custom_fields: |
+  [[[
+    if (hass.states["sensor.sensor1"].state == 0) {
+      return {
+        test: variables.card1,
+      }
+    } else {
+      return {
+        test: variables.card2,
+      }
+    }
+  ]]]
+styles:
+  grid:
+    - grid-template-areas: '"n" "test"'
+    - grid-template-columns: 1fr
+    - grid-template-rows: min-content 1fr
+  custom_fields: |
+    [[[
+      return {
+        test: [
+          { 'background-color': 'blue' },
+          { padding: '10px' },
+          { 'border-radius': '10px' },
+        ],
+      }
+    ]]]
+state:
+  - value: '[[[ return hass.states["sensor.sensor1"].state > 0 ]]]'
+    operator: template
+    styles:
+      custom_fields: |
+        [[[
+          return {
+            test: [
+              { 'background-color': 'green' },
+              { padding: '20px' },
+            ],
+          }
+        ]]]
+  - value: '[[[ return hass.states["sensor.sensor1"].state == 0 ]]]'
+    operator: template
+    styles:
+      custom_fields:
+        test:
+          - background-color: red
+```

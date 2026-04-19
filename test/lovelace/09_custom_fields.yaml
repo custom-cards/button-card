@@ -1,6 +1,67 @@
 title: Custom Fields
 cards:
   - type: custom:button-card
+    name: |
+      <b>Custom Fields as a JS Template.</b> <br/>
+      Shows a red background and a markdown card if sensor1 is 0 <br/>
+      Shows a blue background with an entity card if it's above 0.
+    variables:
+      card1:
+        card:
+          type: markdown
+          content: 'This is a custom field with a markdown card'
+      card2:
+        card:
+          type: entity
+          entity: sensor.sensor1
+    custom_fields: |
+      [[[
+        if (hass.states["sensor.sensor1"].state == 0) {
+          return {
+            test: variables.card1,
+          }
+        } else {
+          return {
+            test: variables.card2,
+          }
+        }
+      ]]]
+    styles:
+      grid:
+        - grid-template-areas: '"n" "test"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: min-content 1fr
+      custom_fields: |
+        [[[
+          return {
+            test: [
+              { 'background-color': 'blue' },
+              { padding: '10px' },
+              { 'border-radius': '10px' },
+            ],
+          }
+        ]]]
+    state:
+      - value: '[[[ return hass.states["sensor.sensor1"].state > 0 ]]]'
+        operator: template
+        styles:
+          custom_fields: |
+            [[[
+              return {
+                test: [
+                  { 'background-color': 'green' },
+                  { padding: '20px' },
+                ],
+              }
+            ]]]
+      - value: '[[[ return hass.states["sensor.sensor1"].state == 0 ]]]'
+        operator: template
+        styles:
+          custom_fields:
+            test:
+              - background-color: red
+
+  - type: custom:button-card
     variables:
       test2: piou
     template: test_var

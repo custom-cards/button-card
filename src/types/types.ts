@@ -45,7 +45,7 @@ export interface ButtonCardConfig {
   confirmation?: string;
   layout: Layout;
   entity_picture_style?: CssStyleConfig[];
-  custom_fields?: CustomFields;
+  custom_fields?: CustomFields | string;
   variables?: Variables;
   extra_styles?: string;
   card_size: number;
@@ -103,7 +103,7 @@ export interface ExternalButtonCardConfig {
   confirmation?: string;
   layout?: Layout;
   entity_picture_style?: CssStyleConfig[];
-  custom_fields?: CustomFields;
+  custom_fields?: CustomFields | string;
   variables?: Variables;
   extra_styles?: string;
   card_size?: number;
@@ -160,7 +160,7 @@ export interface StateConfig {
   styles?: StylesConfig;
   rotate?: boolean;
   label?: string;
-  custom_fields?: CustomFields;
+  custom_fields?: CustomFields | string;
   state_display?: string;
   spinner?: boolean;
   tooltip?: string | TooltipConfig;
@@ -177,7 +177,7 @@ export interface StylesConfig {
   img_cell?: CssStyleConfig[];
   lock?: CssStyleConfig[];
   tooltip?: CssStyleConfig[];
-  custom_fields?: CustomStyleConfig;
+  custom_fields?: CustomStyleConfig | string;
 }
 
 export interface CustomStyleConfig {
