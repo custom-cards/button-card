@@ -1,6 +1,6 @@
 {
   "name": "button-card",
-  "version": "7.0.1",
+  "version": "7.1.0-dev.1",
   "description": "Button card for lovelace",
   "main": "dist/button-card.js",
   "type": "module",
