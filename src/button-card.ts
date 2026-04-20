@@ -758,6 +758,27 @@ class ButtonCard extends LitElement {
         const localAction = this._evalActions(this._config!, actionConfig);
         this._buildActionConfig(localAction);
       },
+      // Name formating
+      getEntityName: (entityId: string) => {
+        return (
+          this._hass!.entities?.[entityId]?.name ||
+          this._hass!.states?.[entityId]?.attributes?.friendly_name ||
+          computeEntity(entityId)
+        );
+      },
+      getDeviceNameFromEntityId: (entityId: string) => {
+        return this._hass!.devices?.[this._hass!.entities?.[entityId]?.device_id || '']?.name || undefined;
+      },
+      getAreaNameFromEntityId: (entityId: string) => {
+        const entityAreaId = this._hass!.entities?.[entityId]?.area_id;
+        const deviceAreaId = this._hass!.devices?.[this._hass!.entities?.[entityId]?.device_id || '']?.area_id;
+        if (entityAreaId) {
+          return this._hass!.areas?.[entityAreaId]?.name;
+        } else if (deviceAreaId) {
+          return this._hass!.areas?.[deviceAreaId].name;
+        }
+        return undefined;
+      },
     };
   }
 

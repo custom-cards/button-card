@@ -18,11 +18,11 @@ export const atLeastVersion = (version: string, major: number, minor: number): b
 };
 
 export function computeDomain(entityId: string): string {
-  return entityId.substr(0, entityId.indexOf('.'));
+  return entityId.slice(0, entityId.indexOf('.'));
 }
 
 export function computeEntity(entityId: string): string {
-  return entityId.substr(entityId.indexOf('.') + 1);
+  return entityId.slice(entityId.indexOf('.') + 1);
 }
 
 export const computeStateDomain = (stateObj: HassEntity) => computeDomain(stateObj.entity_id);
