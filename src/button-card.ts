@@ -972,29 +972,6 @@ class ButtonCard extends LitElement {
     return style;
   }
 
-  private _buildCustomStyleGeneric(
-    state: HassEntity | undefined,
-    configState: StateConfig | undefined,
-    styleType: string,
-  ): StyleInfo {
-    let style: any = {};
-    if (this._config!.styles?.custom_fields?.[styleType]) {
-      style = Object.assign(style, ...this._config!.styles.custom_fields[styleType]);
-    }
-    if (configState?.styles?.custom_fields?.[styleType]) {
-      let configStateStyle: StyleInfo = {};
-      configStateStyle = Object.assign(configStateStyle, ...configState.styles.custom_fields[styleType]);
-      style = {
-        ...style,
-        ...configStateStyle,
-      };
-    }
-    Object.keys(style).forEach((key) => {
-      style[key] = this._getTemplateOrValue(state, style[key]);
-    });
-    return style;
-  }
-
   private _buildName(state: HassEntity | undefined, configState: StateConfig | undefined): string | undefined {
     if (this._config!.show_name === false) {
       return undefined;
@@ -1087,40 +1064,34 @@ class ButtonCard extends LitElement {
     let result = html``;
     const fields: any = {};
     const cards: any = {};
-    if (this._config!.custom_fields) {
-      Object.keys(this._config!.custom_fields).forEach((key) => {
-        const value = this._config!.custom_fields![key];
-        if (!(value as CustomFieldCard).card) {
-          fields[key] = this._getTemplateOrValue(state, value);
+
+    [this._config!.custom_fields, configState?.custom_fields].forEach((customFields) => {
+      if (customFields) {
+        if (typeof customFields === 'string') {
+          this._buildCustomFieldsFromString(customFields, state, fields, cards);
         } else {
-          if ((value as CustomFieldCard).do_not_eval) {
-            cards[key] = copy((value as CustomFieldCard).card);
-          } else {
-            cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
-          }
+          this._buildCustomFieldFromObject(customFields, state, fields, cards);
         }
-      });
-    }
-    if (configState?.custom_fields) {
-      Object.keys(configState.custom_fields).forEach((key) => {
-        const value = configState!.custom_fields![key];
-        if (!(value as CustomFieldCard)!.card) {
-          fields[key] = this._getTemplateOrValue(state, value);
-        } else {
-          if ((value as CustomFieldCard).do_not_eval) {
-            cards[key] = copy((value as CustomFieldCard).card);
-          } else {
-            cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
-          }
-        }
-      });
-    }
+      }
+    });
+
+    let mainCustomStyles: any = {};
+    [this._config!.styles?.custom_fields, configState?.styles?.custom_fields].forEach((customFieldStyles) => {
+      if (customFieldStyles) {
+        mainCustomStyles = mergeDeep(mainCustomStyles, this._objectEvalTemplate(state, customFieldStyles));
+      }
+    });
+
     Object.keys(fields).forEach((key) => {
       if (fields[key] != undefined) {
-        const customStyle: StyleInfo = {
-          ...this._buildCustomStyleGeneric(state, configState, key),
-          'grid-area': key,
-        };
+        const customStyle: StyleInfo = mainCustomStyles?.[key]
+          ? {
+              ...Object.assign({}, ...mainCustomStyles[key]),
+              'grid-area': key,
+            }
+          : {
+              'grid-area': key,
+            };
         result = html`
           ${result}
           <div id=${key} class="ellipsis" style=${styleMap(customStyle)}>${this._unsafeHTMLorNot(fields[key])}</div>
@@ -1129,10 +1100,14 @@ class ButtonCard extends LitElement {
     });
     Object.keys(cards).forEach((key) => {
       if (cards[key] != undefined) {
-        const customStyle: StyleInfo = {
-          ...this._buildCustomStyleGeneric(state, configState, key),
-          'grid-area': key,
-        };
+        const customStyle: StyleInfo = mainCustomStyles?.[key]
+          ? {
+              ...Object.assign({}, ...mainCustomStyles[key]),
+              'grid-area': key,
+            }
+          : {
+              'grid-area': key,
+            };
         let thing;
         if (!deepEqual(this._cardsConfig[key], cards[key])) {
           if (
@@ -1175,8 +1150,54 @@ class ButtonCard extends LitElement {
     return result;
   }
 
-  private _hasChildCards(customFields: CustomFields | undefined): boolean {
+  // updates fields and cards in place
+  private _buildCustomFieldFromObject(
+    customFieldObj: CustomFields | undefined,
+    state: HassEntity | undefined,
+    fields: any,
+    cards: any,
+  ): void {
+    if (!customFieldObj) return;
+    Object.keys(customFieldObj).forEach((key) => {
+      const value = customFieldObj[key];
+      if (!(value as CustomFieldCard).card) {
+        fields[key] = this._getTemplateOrValue(state, value);
+      } else {
+        if ((value as CustomFieldCard).do_not_eval) {
+          cards[key] = copy((value as CustomFieldCard).card);
+        } else {
+          cards[key] = this._objectEvalTemplate(state, (value as CustomFieldCard).card);
+        }
+      }
+    });
+  }
+
+  private _buildCustomFieldsFromString(
+    customFieldsString: string | undefined,
+    state: HassEntity | undefined,
+    fields: any,
+    cards: any,
+  ): void {
+    const evaled = this._getTemplateOrValue(state, customFieldsString);
+    if (!evaled) {
+      return;
+    } else if (typeof evaled === 'object') {
+      Object.keys(evaled).forEach((key) => {
+        const value = evaled[key];
+        if (!(value as CustomFieldCard).card) {
+          fields[key] = value;
+        } else {
+          cards[key] = value.card;
+        }
+      });
+    } else {
+      throw new Error('button-card: custom_fields template did not evaluate to an object');
+    }
+  }
+
+  private _hasChildCards(customFields: string | CustomFields | undefined): boolean {
     if (!customFields) return false;
+    if (typeof customFields === 'string') return true; // we assume that if it's a string, it will evaluate to an object with cards or fields
     return Object.keys(customFields).some((key) => {
       const value = customFields![key];
       if ((value as CustomFieldCard)!.card) {
