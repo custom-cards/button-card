@@ -1,5 +1,7 @@
 decluttering_templates: !include decluttering-templates.yaml
 button_card_templates: !include button-card-templates.yaml
+button_card_templates_url:
+  - /local/workspace/test/www/url-templates.yaml
 
 views:
   - !include lovelace/01_main.yaml

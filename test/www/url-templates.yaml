@@ -1,0 +1,7 @@
+extraS3:
+  extra_styles: |
+    [[[
+      return `#name {
+        color: ${entity.state === 'on' ? 'blue' : 'purple'};
+      }`;
+    ]]]
