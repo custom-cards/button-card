@@ -108,6 +108,7 @@ import {
 } from './common/format_date';
 import { parseDuration } from './common/parse-duration';
 import { forwardHaptic, HapticType } from './forward-haptic';
+import YAML from 'yaml';
 
 let helpers = (window as any).cardHelpers;
 const helperPromise = new Promise<void>(async (resolve) => {
@@ -134,6 +135,8 @@ console.info(
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
+
+const templateCache: Record<string, any> = {};
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -1678,7 +1681,49 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _configFromLLTemplates(ll: any, config: any): ExternalButtonCardConfig {
+  private async _configFromTemplates(ll: any, config: any): Promise<ExternalButtonCardConfig> {
+    const tpl = config.template;
+    let result: any = {};
+    if (!tpl) {
+      result = copy(config);
+    } else {
+      let urlTemplates: any = {};
+      if (ll.config.button_card_templates_url) {
+        const urls = Array.isArray(ll.config.button_card_templates_url)
+          ? ll.config.button_card_templates_url
+          : [ll.config.button_card_templates_url];
+        for (const templateUrl of urls) {
+          try {
+            if (templateCache[templateUrl]) {
+              urlTemplates = { ...urlTemplates, ...templateCache[templateUrl] };
+            } else {
+              const response = await fetch(templateUrl, { cache: 'no-cache' });
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              const blob = await response.blob();
+              const text = await blob.text();
+              const parsedTemplates = YAML.parse(text);
+              urlTemplates = { ...urlTemplates, ...parsedTemplates };
+              templateCache[templateUrl] = parsedTemplates;
+            }
+          } catch (error: any) {
+            throw new Error(`Error loading button-card template from URL '${templateUrl}': ${error}`);
+          }
+        }
+      }
+      const configTemplates = copy(ll.config.button_card_templates) as any;
+      const allTemplates = { ...urlTemplates, ...configTemplates };
+      result = this._configFromLLTemplates(allTemplates, config);
+    }
+    if (result.extra_styles) {
+      this._extraStyles?.push(result.extra_styles);
+      delete result.extra_styles;
+    }
+    return result as ExternalButtonCardConfig;
+  }
+
+  private _configFromLLTemplates(templates: any, config: any): ExternalButtonCardConfig {
     const tpl = config.template;
     let result: any = {};
     if (!tpl) {
@@ -1687,9 +1732,8 @@ class ButtonCard extends LitElement {
       let mergedStateConfig: StateConfig[] | undefined;
       const tpls = tpl && Array.isArray(tpl) ? tpl : [tpl];
       tpls?.forEach((template) => {
-        if (!ll.config.button_card_templates?.[template])
-          throw new Error(`Button-card template '${template}' is missing!`);
-        const res = this._configFromLLTemplates(ll, ll.config.button_card_templates[template]);
+        if (!templates?.[template]) throw new Error(`Button-card template '${template}' is missing!`);
+        const res = this._configFromLLTemplates(templates, templates[template]);
         result = mergeDeep(result, res);
         mergedStateConfig = mergeStatesById(mergedStateConfig, res.state);
       });
@@ -1703,7 +1747,7 @@ class ButtonCard extends LitElement {
     return result as ExternalButtonCardConfig;
   }
 
-  public setConfig(config: ExternalButtonCardConfig): void {
+  public async setConfig(config: ExternalButtonCardConfig): Promise<void> {
     if (!config) {
       throw new Error('Invalid configuration');
     }
@@ -1716,7 +1760,7 @@ class ButtonCard extends LitElement {
     this._extraStyles = [];
     const ll = getLovelace() || getLovelaceCast();
     let template: ExternalButtonCardConfig = copy(config);
-    template = this._configFromLLTemplates(ll, template);
+    template = await this._configFromTemplates(ll, template);
     this._config = {
       type: 'custom:button-card',
       group_expand: false,

@@ -17,11 +17,31 @@
 
 Make sure which type of lovelace dashboard you are using before changing the main lovelace configuration:
 
-- **`managed`** changes are managed by lovelace ui: add the template configuration to configuration in raw editor
-  - go to your dashboard
-  - click three dots and `Edit dashboard` button
-  - click three dots again and click `Raw configuration editor` button
-- **`yaml`**: add template configuration to your `ui-lovelace.yaml`
+- **`managed`** changes are managed by lovelace ui: add the template configuration to the dashboard in the RAW editor.
+
+      - go to your dashboard
+      - click the three dots and `Edit dashboard` button
+      - click the three dots again and click `Raw configuration editor` button
+      - Add your template configuration at the top of the file, before the `views` key
+
+- **`yaml`**: add your template configuration to your `ui-lovelace.yaml` file, before the `views` key
+
+Then you can define your templates in 2 ways:
+
+- Defined directly in the [dashboard configuration](#loading-templates-directly-defined-in-the-dashboard)
+- Loaded from a [URL](#loading-templates-files-from-a-url)
+
+### Loading templates directly defined in the dashboard
+
+!!! info
+
+    If you are in YAML mode, you can use Home Assistant's YAML extensions `!include`, `!include_dir_named` or `!include_dir_merge_named` to split your templates in multiple files. For example, you can create a file `templates.yaml` and include it in your main configuration as follows:
+
+    ```yaml
+    button_card_templates: !include templates.yaml
+    ```
+
+This would be the content of your lovelace dashboard file (either in the RAW editor of your dashboard if you are in `managed` mode or in your `ui-lovelace.yaml` file if you are in `yaml` mode):
 
 ```yaml
 button_card_templates:
@@ -48,15 +68,68 @@ button_card_templates:
         - background-color: '#FF0000'
 
   my_little_template: [...]
+
+views:
+  - title: My view
+  # ...
 ```
 
-And then you can apply this template, and/or overload it:
+### Loading templates files from a URL
+
+!!! warning "Security Warning"
+
+    By using this feature, you are trusting the source of the URL. Make sure you trust the source and do not blindly load templates from unknown sources as they can contain malicious code. Always review the content of the URL before using it.
+
+You can load templates from a URL using `button_card_templates_url`. This is useful if you want to share your templates between multiple dashboards when they are managed by Home Assistant (i.e., not in yaml mode) or if you want to load templates from an external source.
+
+The only requirement is that the URL returns a valid YAML with the same structure as the `button_card_templates` configuration.
+
+Any valid URL is supported:
+
+- **local files**: eg. `/local/my_templates.yaml` which would download the file `/config/www/my_templates.yaml` located on your Home Assistant's server
+- **external URLs**: eg. `https://example.com/my_templates.yaml`.
+
+!!! info
+
+    - None of the Home Assistant's YAML extensions are supported in the file loaded from the URL. This means that you cannot use `!include` or any other Home Assistant's YAML extension in a file loaded from a URL. You can still use YAML anchors and aliases as they are part of the YAML specification.
+    - If a template is defined both in `button_card_templates` and in file loaded from `button_card_templates_url`, the one defined in `button_card_templates` will take precedence over the one loaded from the URL.
+    - If a template is defined in multiple files loaded from `button_card_templates_url`, the one defined in the last file will take precedence over the previous ones. The order of the files is determined by the order they are defined in the `button_card_templates_url` array.
+    - Each URL will be loaded by all the `custom:button-card` displayed on the page. There's only so much we can do to optimize this behavior.
+    - This might slow down the loading of your dashboard if the URL is slow to respond.
+
+```yaml
+button_card_templates_url:
+  - /local/my_templates.yaml
+  - https://example.com/my_templates.yaml
+
+views:
+  - title: My view
+  # ...
+```
+
+## Using config templates in a button-card
+
+Once you have defined your template, you can use it in your button-card as follows:
 
 ```yaml
 type: custom:button-card
 template: header_red
 name: My Test Header
 ```
+
+Or you can also inherit multiple templates at once by making it an array:
+
+```yaml
+type: custom:button-card
+template:
+  - template1
+  - template2
+name: Testing multiple templates
+```
+
+In this case, the templates will be merged together with the current configuration in the order they are defined: `template2` will be merged with `template1` and then the local config will be merged with the result. You can still chain templates together (ie. define template in a button-card template. It will follow the path recursively).
+
+Merging means that the last defined parameter will overwrite the previous one. For example, if `template1` defines a `color: red` and `template2` defines a `color: blue`, the resulting color will be `blue`. If the local config also defines a `color: green`, the final color will be `green`.
 
 ## Merging state by id
 

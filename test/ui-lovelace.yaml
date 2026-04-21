@@ -1,5 +1,7 @@
 decluttering_templates: !include decluttering-templates.yaml
 button_card_templates: !include button-card-templates.yaml
+button_card_templates_url:
+  - /local/workspace/test/www/url-templates.yaml
 
 views:
   - !include lovelace/01_main.yaml
@@ -11,6 +13,7 @@ views:
   - !include lovelace/07_styling.yaml
   - !include lovelace/08_layouts.yaml
   - !include lovelace/09_custom_fields.yaml
+  - !include lovelace/10_config_templates.yaml
 
   - !include lovelace/20_decluttering.yaml
 

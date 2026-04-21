@@ -1,0 +1,42 @@
+title: Config Templates
+cards:
+  - type: grid
+    columns: 2
+    cards:
+      - type: custom:button-card
+        name: Simple Template (icon blue)
+        template: simple_template
+        show_label: true
+        variables:
+          test_result: "[[[ return this._config.styles?.icon?.[0]?.color === 'blue' ]]]"
+        section_mode: true
+        icon: mdi:fire
+
+      - type: custom:button-card
+        name: Simple Template from URL<br/>(icon green)
+        template: simple_template_url
+        show_label: true
+        variables:
+          test_result: "[[[ return this._config.styles?.icon?.[0]?.color === 'green' ]]]"
+        section_mode: true
+        icon: mdi:fire
+
+      - type: custom:button-card
+        name: Local Template (icon blue)<br/>overrides URL Template<br/>(icon green)
+        template: simple_template_override
+        show_label: true
+        variables:
+          test_result: "[[[ return this._config.styles?.icon?.[0]?.color === 'blue' ]]]"
+        section_mode: true
+        icon: mdi:fire
+
+      - type: custom:button-card
+        name: Nested Templates<br/>icon red and name red
+        template: nested_templates
+        show_label: true
+        variables:
+          test_result: |
+            [[[ return this._config.styles?.icon?.[0]?.color === 'blue'
+            && this._config.styles?.name?.[0]?.color === 'blue' ]]]
+        section_mode: true
+        icon: mdi:fire

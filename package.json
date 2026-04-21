@@ -74,6 +74,7 @@
     "lit-element": "^4.2.2",
     "lit-html": "^3.3.2",
     "memoize-one": "^6.0.0",
-    "parse-duration": "^2.1.6"
+    "parse-duration": "^2.1.6",
+    "yaml": "^2.8.3"
   }
 }
