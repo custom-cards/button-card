@@ -29,7 +29,7 @@ Make sure which type of lovelace dashboard you are using before changing the mai
 Then you can define your templates in 2 ways:
 
 - Defined directly in the [dashboard configuration](#loading-templates-directly-defined-in-the-dashboard)
-- Loaded from a [URL](#loading-templates-from-a-url)
+- Loaded from a [URL](#loading-templates-files-from-a-url)
 
 ### Loading templates directly defined in the dashboard
 
