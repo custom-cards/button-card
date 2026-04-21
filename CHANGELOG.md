@@ -1,3 +1,9 @@
+## [7.1.0-dev.2](https://github.com/custom-cards/button-card/compare/v7.1.0-dev.1...v7.1.0-dev.2) (2026-04-21)
+
+### Features
+
+* add the possibility to load configuration templates from URLs ([#1172](https://github.com/custom-cards/button-card/issues/1172)) ([ca8a0b4](https://github.com/custom-cards/button-card/commit/ca8a0b4d72aca1c35c0080cdb24df31abc7ce142)), closes [#1153](https://github.com/custom-cards/button-card/issues/1153)
+
 ## [7.1.0-dev.1](https://github.com/custom-cards/button-card/compare/v7.0.1...v7.1.0-dev.1) (2026-04-20)
 
 ### Features
