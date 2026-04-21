@@ -331,3 +331,37 @@ extraS3:
         color: ${entity.state === 'on' ? 'green' : 'purple'};
       }`;
     ]]]
+
+label_bold:
+  show_label: true
+  label: |
+    [[[
+      return variables.test_result ? "Pass" : "Fail";
+    ]]]
+  styles:
+    label:
+      - font-weight: bold
+      - color: '[[[ return variables.test_result ? "green" : "red"; ]]]'
+      - padding-top: 10px
+
+simple_template:
+  template:
+    - label_bold
+  styles:
+    icon:
+      - color: blue
+
+simple_template_override:
+  template:
+    - label_bold
+  styles:
+    icon:
+      - color: blue
+
+nested_templates:
+  template:
+    - label_bold
+    - simple_template
+  styles:
+    name:
+      - color: blue

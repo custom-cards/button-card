@@ -1,7 +1,11 @@
-extraS3:
-  extra_styles: |
-    [[[
-      return `#name {
-        color: ${entity.state === 'on' ? 'blue' : 'purple'};
-      }`;
-    ]]]
+simple_template_url:
+  template:
+    - label_bold
+  styles:
+    icon:
+      - color: green
+
+simple_template_override:
+  styles:
+    icon:
+      - color: green
