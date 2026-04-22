@@ -43,7 +43,7 @@ Then you can define your templates in 2 ways:
 
 This would be the content of your lovelace dashboard file (either in the RAW editor of your dashboard if you are in `managed` mode or in your `ui-lovelace.yaml` file if you are in `yaml` mode):
 
-```yaml
+```yaml title="ui-lovelace.yaml"
 button_card_templates:
   header:
     styles:
@@ -80,9 +80,11 @@ views:
 
     By using this feature, you are trusting the source of the URL. Make sure you trust the source and do not blindly load templates from unknown sources as they can contain malicious code. Always review the content of the URL before using it.
 
+    Any file put in the `/config/www` directory is publicly accessible without authentication. Make sure you do not put any sensitive information in these files and do not put any file that you do not want to be publicly accessible in this directory.
+
 You can load templates from a URL using `button_card_templates_url`. This is useful if you want to share your templates between multiple dashboards when they are managed by Home Assistant (i.e., not in yaml mode) or if you want to load templates from an external source.
 
-The only requirement is that the URL returns a valid YAML with the same structure as the `button_card_templates` configuration.
+The only requirement is that the URL returns a valid YAML with the same structure as the `button_card_templates` object.
 
 Any valid URL is supported:
 
@@ -97,13 +99,23 @@ Any valid URL is supported:
     - Each URL will be loaded by all the `custom:button-card` displayed on the page. There's only so much we can do to optimize this behavior.
     - This might slow down the loading of your dashboard if the URL is slow to respond.
 
-```yaml
+```yaml title="ui-lovelace.yaml"
 button_card_templates_url:
   - /local/my_templates.yaml
   - https://example.com/my_templates.yaml
 
 views:
   - title: My view
+  # ...
+```
+
+```yaml title="my_templates.yaml"
+header_red:
+  styles:
+    card:
+      - background-color: '#FF0000'
+
+other_template:
   # ...
 ```
 
