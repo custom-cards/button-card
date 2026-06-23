@@ -1112,7 +1112,18 @@ class ButtonCard extends LitElement {
               'grid-area': key,
             };
         let thing;
-        if (!deepEqual(this._cardsConfig[key], cards[key])) {
+        if (
+          (this._cards[key] as any)?.type === 'error' &&
+          (this._cards[key] as any)?.error?.includes("Element doesn't exist") &&
+          cards[key]?.type !== 'error' &&
+          customElements.get(cards[key]?.type)
+        ) {
+          // previously errored because element didn't exist, but now it does
+          thing = this._createCard(cards[key]);
+          thing.preview = this.preview;
+          this._cards[key] = thing;
+          this._cardsConfig[key] = copy(cards[key]);
+        } else if (!deepEqual(this._cardsConfig[key], cards[key])) {
           if (
             (this._cardsConfig[key] as any)?.type === cards[key]?.type &&
             (this._config!.custom_fields?.[key] as CustomFieldCard)?.force_recreate !== true

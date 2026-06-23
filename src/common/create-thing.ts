@@ -81,13 +81,17 @@ export const createThing = (cardConfig, isRow = false) => {
   if (customElements.get(tag)) return _createThing(tag, cardConfig);
 
   // If element doesn't exist (yet) create an error
-  const element = _createError(`Custom element doesn't exist: ${cardConfig.type}.`, cardConfig);
+  const element = _createError(`Element doesn't exist: ${cardConfig.type}.`, cardConfig);
   element.style.display = 'None';
   const timer = setTimeout(() => {
     element.style.display = '';
   }, 2000);
   // Remove error if element is defined later
-  customElements.whenDefined(cardConfig.type).then(() => {
+  // We will get here if cardHelpers were not initially available
+  // and we are the first to load the lazy loaded element
+  // as createCardElement in cardHelpers does not await the lazy loaded import
+  // before trying to create the element.
+  customElements.whenDefined(tag).then(() => {
     clearTimeout(timer);
     fireEvent(element, 'll-rebuild', {}, element);
   });
