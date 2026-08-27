@@ -498,7 +498,7 @@ class ButtonCard extends LitElement {
   }
 
   protected shouldUpdate(changedProps: PropertyValues): boolean {
-    if (changedProps.has('_config')) {
+    if (changedProps.has('_config') || changedProps.has('preview')) {
       return true;
     }
 
@@ -530,6 +530,7 @@ class ButtonCard extends LitElement {
         const el = this._cards[element];
         el.preview = this.preview;
       });
+      this._computeHidden();
     }
   }
 
