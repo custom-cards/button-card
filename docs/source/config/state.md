@@ -4,7 +4,7 @@
 | --- | :-: | --- | --- | --- | --- |
 | `operator` | :no_entry_sign: | string | `==` | See [Available Operators](#available-operators) | The operator used to compare the current state against the `value` |
 | `value` | :no_entry_sign:/[:white_check_mark:](../advanced/js-templates.md) | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity. JS template is **NOT** supported if operator is `regex` |
-| `name` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If defined uses the general config `name` and if undefined uses the entity name. |
+| `name` | [:white_check_mark:](../advanced/js-templates.md) | string \| list | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If defined uses the general config `name` and if undefined uses the entity name. Also accepts a [structured name](../advanced/structured-names.md) on Home Assistant 2026.4 and later. |
 | `icon` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | `mdi:battery` | The icon to display for this state - Defaults to the entity icon. Hide with `show_icon: false`. |
 | `color` | :no_entry_sign: | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
 | `styles` | :no_entry_sign: | string | optional |  | See [styles](../advanced/styling.md) |

@@ -17,6 +17,7 @@ nav:
       - Tooltip object: 'config/tooltip.md'
   - Advanced:
       - JS Templates: 'advanced/js-templates.md'
+      - Structured Names: 'advanced/structured-names.md'
       - Config Templates: 'advanced/config-templates.md'
       - Layouts: 'advanced/layout.md'
       - Aspect Ratio: 'advanced/aspect-ratio.md'

@@ -2,12 +2,19 @@ import { HapticType } from '../forward-haptic';
 import { LovelaceCardConfig, LovelaceCard } from './lovelace';
 import { HassServiceTarget } from 'home-assistant-js-websocket';
 
+/** A `name` option: a plain string, or name parts resolved from the registry. */
+export type EntityName = string | EntityNameItem | EntityNameItem[];
+
+export type EntityNameItem =
+  | { type: 'entity' | 'device' | 'area' | 'floor' }
+  | { type: 'text'; text: string };
+
 export interface ButtonCardConfig {
   template?: string | string[];
   group_expand: boolean;
   type: string;
   entity?: string;
-  name?: string;
+  name?: EntityName;
   icon?: string;
   color_type: ColorType;
   color?: 'auto' | 'auto-no-temperature' | string;
@@ -68,7 +75,7 @@ export interface ExternalButtonCardConfig {
   template?: string | string[];
   group_expand?: boolean;
   entity?: string;
-  name?: string;
+  name?: EntityName;
   icon?: string;
   color_type?: 'icon' | 'card' | 'label-card' | 'blank-card';
   color?: 'auto' | 'auto-no-temperature' | string;
@@ -152,7 +159,7 @@ export interface StateConfig {
   id?: string;
   operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'template' | 'default';
   value?: any;
-  name?: string;
+  name?: EntityName;
   icon?: string;
   color?: 'auto' | 'auto-no-temperature' | string;
   entity_picture_style?: CssStyleConfig[];

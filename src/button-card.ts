@@ -62,6 +62,7 @@ import {
   findEntities,
   lovelaceViewIsSection,
 } from './helpers';
+import { computeEntityName, entityNamesChanged } from './entity-name';
 import { createThing } from './common/create-thing';
 import { styles } from './styles';
 import { computeStateDisplay } from './common/compute_state_display';
@@ -248,7 +249,14 @@ class ButtonCard extends LitElement {
   }
 
   public set hass(hass: HomeAssistant) {
+    const oldHass = this._hass;
     this._hass = hass;
+    // Names resolve against the entity/device/area/floor registries, and HA
+    // swaps the real formatEntityName in asynchronously once translations load.
+    // Neither changes an entity state, so nothing else here would re-render.
+    if (entityNamesChanged(oldHass, hass)) {
+      this.requestUpdate();
+    }
     if (!this._pStates) {
       this._pStates = this._createStateProxy();
     }
@@ -978,17 +986,19 @@ class ButtonCard extends LitElement {
     if (this._config!.show_name === false) {
       return undefined;
     }
-    let name: string | undefined;
+    const nameConfig = configState?.name || this._config!.name;
 
-    if (configState?.name) {
-      name = configState.name;
-    } else if (this._config!.name) {
-      name = this._config!.name;
-    } else if (state) {
-      name =
-        state.attributes && state.attributes.friendly_name
-          ? state.attributes.friendly_name
-          : computeEntity(state.entity_id);
+    // A structured name is resolved from the entity's registry context. Unlike a
+    // string it is not a JS template, so it must not go through the template
+    // engine - _getTemplateOrValue would walk into the object and hand back an
+    // object rather than a name.
+    if (nameConfig && typeof nameConfig !== 'string') {
+      return computeEntityName(this._hass, state, nameConfig);
+    }
+
+    let name: string | undefined = nameConfig;
+    if (!name && state) {
+      name = computeEntityName(this._hass, state, undefined) || computeEntity(state.entity_id);
     }
     return this._getTemplateOrValue(state, name);
   }
