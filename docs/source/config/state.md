@@ -2,18 +2,31 @@
 
 | Name | JS | Type | Default | Supported options | Description |
 | --- | :-: | --- | --- | --- | --- |
+| `id` | :no_entry_sign: | string | optional | Any string | An identifier for this state configuration. |
 | `operator` | :no_entry_sign: | string | `==` | See [Available Operators](#available-operators) | The operator used to compare the current state against the `value` |
 | `value` | :no_entry_sign:/[:white_check_mark:](../advanced/js-templates.md) | string/number | **required** (unless operator is `default`) | If your entity is a sensor with numbers, use a number directly, else use a string | The value which will be compared against the current state of the entity. JS template is **NOT** supported if operator is `regex` |
 | `name` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Any string, `'Alert'`, `'My little switch is on'`, ... | if `show_name` is `true`, the name to display for this state. If defined uses the general config `name` and if undefined uses the entity name. |
 | `icon` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | `mdi:battery` | The icon to display for this state - Defaults to the entity icon. Hide with `show_icon: false`. |
 | `color` | :no_entry_sign: | string | `var(--primary-text-color)` | Any color, eg: `rgb(28, 128, 199)` or `blue` | The color of the icon (if `color_type: icon`) or the background (if `color_type: card`) |
+| `entity_picture_style` | :no_entry_sign: | object | optional | See [styles](../advanced/styling.md) | Styles applied to the state-specific entity picture. |
 | `styles` | :no_entry_sign: | string | optional |  | See [styles](../advanced/styling.md) |
 | `rotate` | [:white_check_mark:](../advanced/js-templates.md) | boolean | `false` | `true` \| `false` | Should the icon spin for this state? |
 | `entity_picture` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Can be any of `/local/*` file or a URL | Will override the icon/the default entity_picture with your own image for this state. Best is to use a square image. |
 | `label` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | Any string that you want | Display a label below the card. See [Layouts](../advanced/layout.md) for more information. |
+| `custom_fields` | [:white_check_mark:](../advanced/js-templates.md) | object or string | optional | See [custom fields](../advanced/custom-fields.md) | Custom fields to render for this state. |
 | `state_display` | [:white_check_mark:](../advanced/js-templates.md) | string | optional | `On` | If defined, override the way the state is displayed. |
 | `spinner` | [:white_check_mark:](../advanced/js-templates.md) | boolean | `false` | `true` or `false` | See [spinner](../advanced/spinner.md). If `true`, it will lock the card and display a spinner. You'll need to use a template or `state` to make this variable. |
 | `tooltip` | [:white_check_mark:](../advanced/js-templates.md) | string or object | optionnal | See [Tooltips](./tooltip.md) | Display a tooltip. (Not supported on touchscreens) |
+
+Protection is configured on the card or action, not inside an individual `state` entry. To vary a PIN by state, use a JS template for the card-level `protect.pin` value:
+
+```yaml
+protect:
+  pin: |
+    [[[ return entity.state === 'on' ? '' : '2841'; ]]]
+```
+
+An empty string disables the PIN for that state; the other states require `2841`.
 
 ## Available operators
 
