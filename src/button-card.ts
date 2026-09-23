@@ -328,7 +328,7 @@ class ButtonCard extends LitElement {
     super.disconnectedCallback();
     this._clearInterval();
     this._updateTimerCancel();
-    window.removeEventListener('haptic', this._hapticInterceptHandler.bind(this), { capture: true });
+    window.removeEventListener('haptic', this._hapticInterceptHandler, { capture: true });
   }
 
   public connectedCallback(): void {
@@ -339,7 +339,7 @@ class ButtonCard extends LitElement {
       this._updateTimerStart();
       this._startTimerCountdown();
     }
-    window.addEventListener('haptic', this._hapticInterceptHandler.bind(this), { capture: true });
+    window.addEventListener('haptic', this._hapticInterceptHandler, { capture: true });
   }
 
   private _finishSetup(): void {
@@ -2105,14 +2105,16 @@ class ButtonCard extends LitElement {
     });
   }
 
-  private _hapticInterceptHandler(ev: Event): void {
+  // An arrow field gives add/removeEventListener the same reference; `.bind(this)` at each call
+  // made a new function, so the listener was never removed and kept every discarded card alive.
+  private _hapticInterceptHandler = (ev: Event): void => {
     if (this._hapticCapture && ev.stopPropagation) {
       const hapticType: HapticType | undefined = (ev as CustomEvent).detail;
       if (hapticType !== 'failure') {
         ev.stopPropagation();
       }
     }
-  }
+  };
 
   private _handleAction(ev: CustomEvent, options: { isIcon: boolean }): void {
     if (options.isIcon && this._hasIconActions && ev.stopPropagation) {
