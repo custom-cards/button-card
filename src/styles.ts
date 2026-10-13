@@ -110,9 +110,13 @@ export const styles = css`
     --iron-icon-height: 100%;
   }
   ha-card.button-card-main {
+      color: var(--primary-text-color, inherit);
+          background-color: var(--ha-card-background, var(--card-background-color, var(--primary-background-color, white)));
+              font-family: var(--primary-font-family, var(--ha-font-family-body, inherit));font-weight: var(--ha-font-weight-normal, 400);
+                  font-size: var(--ha-font-size-m, 1.2rem);font-weight: var(--ha-font-weight-normal, 400);
     padding: 4% 0px;
     text-transform: none;
-    font-weight: 400;
+    font-weight: var(--ha-font-weight-normal, 400);
     font-size: 1.2rem;
     align-items: center;
     text-align: center;
