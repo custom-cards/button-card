@@ -834,7 +834,7 @@ class ButtonCard extends LitElement {
       // we have en entity
       if (stateActive(state)) {
         // entity is on
-        if (state.attributes.rgb_color) {
+        if (cardColorType === 'card' || cardColorType === 'label-card') { color = stateColorCss(state, state.state, cardColorType) || DEFAULT_COLOR; } else if (state.attributes.rgb_color) {
           // entity has RGB attributes
           color = `rgb(${state.attributes.rgb_color.join(',')})`;
         } else if (
@@ -853,7 +853,7 @@ class ButtonCard extends LitElement {
           // all the other lights
           color = stateColorCss(state, state.state, cardColorType) || DEFAULT_COLOR;
         }
-        if (state.attributes.brightness) {
+        if (state.attributes.brightness && cardColorType !== 'card' && cardColorType !== 'label-card') {
           color = applyBrightnessToColor(this, color, (state.attributes.brightness + 245) / 5);
         }
       } else {
